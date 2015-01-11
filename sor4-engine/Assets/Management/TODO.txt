@@ -1,0 +1,24 @@
+ - Review MVC way VC are created, there should be a way of setting at least from constructor?
+  
+ - Physics System
+    - Predefined velocity affectors: gravityControl, collisionControl, impulse
+    - [optional] Fix particle over moving platform with diagonal normal
+    - notion of stationary particle (landed), including moving particle over moving plane
+    - Read / Write static world from / to files ? can be directly on the scene..
+    - World planes editor
+    
+ - States
+ 	- Consider identifying states with string keys, instead of uint ids?
+    - What happens to events during pause / not ready?
+
+ - Network System (note: can be revisited later)
+ 	- Send what players are "Ready" to new joiners
+ 	
+ 	
+ - [optional] FixedVector3 aditional operations
+			MoveTowards 	Moves a point current in a straight line towards a target point.
+			OrthoNormalize 	Makes vectors normalized and orthogonal to each other.
+			Project 		Projects a vector onto another vector.
+			ProjectOnPlane 	Projects a vector onto a plane defined by a normal orthogonal to the plane.
+			Reflect 		Reflects a vector off the plane defined by a normal.
+			RotateTowards 	Rotates a vector current towards target.

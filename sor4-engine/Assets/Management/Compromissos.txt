@@ -1,0 +1,16 @@
+ - Cada entidade do jogo define um Model (data), uma View (renderiza model) e um Controller (altera model)
+ - Existe uma entidade principal, cujo modelo deve referenciar qualquer modelo de qualquer outra sub-entidade
+	MyMainModel{
+		uint subModel1, subModel2... // e.g. spaceship1, shapeship2
+	}
+	
+ - Criação, destruição e reordenação de modelos pode ser ordenada durante um update dum controlador, passando um delegate, para atualizar só mais tarde.
+ Ou seja, um controlador pode ordenar a criação dum certo modelo, ele só vai ser efetivamente criada no final do update, portanto o controlador não pode contar com esse modelo ainda. No fim do update um callback do controlador é chamado para poder atualizar a sua informação sabendo que o modelo foi criado.
+ 
+ 
+ - Cada jogador so pode controlar o seu proprio jogador
+ 
+ - Updating order:
+  	1º - physics positions
+  	2º - world collisions
+  	then everything else

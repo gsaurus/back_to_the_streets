@@ -1,0 +1,10 @@
+sor4-engine/Library/
+sor4-engine/webplayer/
+sor4-engine/Temp/
+*.csproj
+*.unityproj
+*.sln
+*.user
+*.userprefs
+*.DS_store
+sor4-engine/playback.txt

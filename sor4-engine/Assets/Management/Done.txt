@@ -1,0 +1,11 @@
+ - Fix flikering when moving up on elevators
+ - Prevent sliding, perhaps with friction, maybe subtract world velocity to collision restitution, or maybe check difference between world velocity and actual position change
+ - Plane controller (set position)
+ - RandomGenerator: server set a random seed
+ - FixedFloat: Implicit convertions from float 
+ - States: Allow multiple events for each keyframe, do not add lists of events
+ - Physics System: Particle model and controller: position, velocity and forces (see prototype)
+ - Plane model
+ - Gravity
+ - Particle VS Plane collisions
+ - Define static update orders for physics and world collisions
