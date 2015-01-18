@@ -197,9 +197,20 @@ public abstract class Model<T>:Model where T:Model<T>{
 		}
 	}
 
-	public void Destroy(){
-		if (view != null) view.OnDestroy();
+
+	public void InvalidateController(){
 		if (controller != null) controller.OnDestroy();
+		controller = null;
+	}
+
+	public void InvalidateView(){
+		if (view != null) view.OnDestroy();
+		view = null;
+	}
+
+	public void Destroy(){
+		InvalidateView();
+		InvalidateController();
 		OnDestroy();
 	}
 
