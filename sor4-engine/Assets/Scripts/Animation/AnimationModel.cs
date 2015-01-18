@@ -12,6 +12,7 @@ public class AnimationModel:Model<AnimationModel>{
 	public string name;
 
 
+	// Constructor
 	public AnimationModel(uint ownerStateId, string name, int updatingOrder = 0):
 		base(updatingOrder)
 	{
@@ -22,7 +23,7 @@ public class AnimationModel:Model<AnimationModel>{
 
 
 	protected override Controller<AnimationModel> CreateController(){
-
+		// Get the controller that corresponds to the current animation name
 		return AnimationsManager.Instance.GetController(name);
 	}
 
