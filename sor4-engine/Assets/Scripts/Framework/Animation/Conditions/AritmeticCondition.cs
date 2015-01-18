@@ -20,7 +20,7 @@ public enum ArithmeticConditionOperatorType{
 public class ArithmeticCondition<T>: AnimationTriggerCondition where T:IComparable{
 
 	// Delegate of the getters
-	public delegate T GetArithmeticConditionVariable(uint ownerStateId);
+	public delegate T GetArithmeticConditionVariable(AnimationModel model);
 
 	// Left and right value getters delegates
 	private GetArithmeticConditionVariable getLeftVariableDelegate;
@@ -55,13 +55,13 @@ public class ArithmeticCondition<T>: AnimationTriggerCondition where T:IComparab
 
 
 	// Evaluate the condition
-	public bool Evaluate(uint ownerStateId){
+	public bool Evaluate(AnimationModel model){
 
 		// obtain left & right values
 		T lvalue, rvalue;
-		lvalue = getLeftVariableDelegate(ownerStateId);
+		lvalue = getLeftVariableDelegate(model);
 		if (getRightVariableDelegate != null) {
-			rvalue = getRightVariableDelegate(ownerStateId);
+			rvalue = getRightVariableDelegate(model);
 		}else {
 			rvalue = rightValue;
 		}

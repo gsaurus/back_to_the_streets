@@ -10,7 +10,7 @@ using System.Collections.Generic;
 public class BoolCondition: AnimationTriggerCondition{
 
 	// Delegate of the getters
-	public delegate bool BoolConditionDelegate(uint ownerStateId);
+	public delegate bool BoolConditionDelegate(AnimationModel model);
 
 	// Left and right value getters delegates
 	private BoolConditionDelegate getLeftVariableDelegate;
@@ -38,13 +38,13 @@ public class BoolCondition: AnimationTriggerCondition{
 	
 	
 	// Evaluate the condition
-	public bool Evaluate(uint ownerStateId){
+	public bool Evaluate(AnimationModel model){
 		
 		// obtain left & right values
 		bool lvalue, rvalue;
-		lvalue = getLeftVariableDelegate(ownerStateId);
+		lvalue = getLeftVariableDelegate(model);
 		if (getRightVariableDelegate != null) {
-			rvalue = getRightVariableDelegate(ownerStateId);
+			rvalue = getRightVariableDelegate(model);
 		}else {
 			rvalue = rightValue;
 		}
