@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 
-// 
+// An event that can hold a variadic number of parameters to be executed
 public class VariadicAnimationEvent: AnimationEvent{
 
 	// Delegate of the event
