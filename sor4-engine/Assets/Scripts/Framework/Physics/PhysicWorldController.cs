@@ -64,8 +64,8 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 		UpdateWorld(model);
 	}
 
-	public override bool IsCompatibleWithModel(PhysicWorldModel world){
-		return currentWorld.Equals(world.worldName);
+	public override bool IsCompatible(PhysicWorldModel originalModel, PhysicWorldModel newModel){
+		return currentWorld.Equals(newModel.worldName);
 	}
 
 

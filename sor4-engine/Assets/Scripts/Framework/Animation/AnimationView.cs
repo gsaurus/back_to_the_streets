@@ -7,17 +7,12 @@ using System.Collections.Generic;
 
 
 // TODO: Think about how to control layers, at least leave generic to control by layer by derived classes
+// remember layers are for things like walk with heavy pipe
+// TODO: certain animations with custom "speed" control, how to
 public class AnimationView:View<AnimationModel>{
-	
-	private Animator animator;
 
 	private float transitionTime = 0.1f;	 // TODO: depending on transition source -> dest?
 	private float interpolationTime = 0.3f; // TODO: something based on lag?
-
-	public AnimationView(Animator animator){
-		this.animator = animator;
-	}
-	
 
 
 	protected int GetAnimationCurrentFrame(AnimatorStateInfo stateInfo){
@@ -29,6 +24,11 @@ public class AnimationView:View<AnimationModel>{
 	// Visual update
 	public override void Update(AnimationModel model, float deltaTime){
 
+		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.ownerStateId);
+		if (obj == null) return; // can't work without a game object
+		Animator animator = obj.GetComponent<Animator>();
+		if (animator == null) return; // can't work without an animator component
+
 		// Get current animation (if transiting we consider next as current)
 		AnimatorStateInfo stateInfo;
 		if (animator.IsInTransition(0)){
@@ -37,17 +37,17 @@ public class AnimationView:View<AnimationModel>{
 			stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 		}
 
-		if (stateInfo.IsName(model.name)) {
+		if (stateInfo.IsName(model.animationName)) {
 			// if time is not in sync, resync it
 			int currentAnimationFrame = GetAnimationCurrentFrame(stateInfo);
 			if (currentAnimationFrame != model.currentFrame) {
 				float timeToFade = Mathf.Abs(currentAnimationFrame - model.currentFrame) * StateManager.Instance.UpdateRate;
 				timeToFade = Mathf.Min(timeToFade, interpolationTime);
-				animator.CrossFade(model.name, timeToFade);
+				animator.CrossFade(model.animationName, timeToFade);
 			}
 		}else {
 			// We need to make transition to the new animation
-			animator.CrossFade(model.name, transitionTime);
+			animator.CrossFade(model.animationName, transitionTime);
 			// check target offset (note current API doesn't give access to length before starting the transition)
 			AnimatorStateInfo nextStateInfo = animator.GetNextAnimatorStateInfo(0);
 			float nextAnimationOffset = model.currentFrame * StateManager.Instance.UpdateRate;
@@ -55,18 +55,11 @@ public class AnimationView:View<AnimationModel>{
 			if (nextAnimationNormalizedOffset >= StateManager.Instance.UpdateRate){
 				// need to resync transition
 				float timeToFade = Mathf.Min(nextAnimationOffset, interpolationTime);
-				animator.CrossFade(model.name, timeToFade, 0, nextAnimationNormalizedOffset);
+				animator.CrossFade(model.animationName, timeToFade, 0, nextAnimationNormalizedOffset);
 			}
 		}
 
 	}
 
-
-	public override bool IsCompatibleWithModel(AnimationModel model){
-		// TODO: check if the instance is of same type...
-		return false;
-	}
-
-	
 }
 

@@ -123,8 +123,8 @@ public abstract class Model<T>:Model where T:Model<T>{
 		// Even though they are of the same type, only reuse if it's data is compatible with the present VC
 		// Compatibility checks may include if the model use the same resources (textures, AI models, etc)
 		T thisModel = this as T;
-		bool isViewCompatible = otherModel.view != null ? otherModel.view.IsCompatibleWithModel(thisModel) : false;
-		bool isControllerCompatible = otherModel.controller != null ? otherModel.controller.IsCompatibleWithModel(thisModel) : false;
+		bool isViewCompatible = otherModel.view != null ? otherModel.view.IsCompatible(otherModel as T, thisModel) : false;
+		bool isControllerCompatible = otherModel.controller != null ? otherModel.controller.IsCompatible(otherModel as T, thisModel) : false;
 	
 		this.view = isViewCompatible ? otherModel.view : null;
 		this.controller = isControllerCompatible ? otherModel.controller : null;
@@ -199,18 +199,22 @@ public abstract class Model<T>:Model where T:Model<T>{
 
 
 	public void InvalidateController(){
-		if (controller != null) controller.OnDestroy();
+		if (controller != null) controller.OnDestroy(this as T);
 		controller = null;
 	}
 
 	public void InvalidateView(){
-		if (view != null) view.OnDestroy();
+		if (view != null) view.OnDestroy(this as T);
 		view = null;
 	}
 
-	public void Destroy(){
+	public void InvalidateVC(){
 		InvalidateView();
 		InvalidateController();
+	}
+
+	public void Destroy(){
+		InvalidateVC();
 		OnDestroy();
 	}
 

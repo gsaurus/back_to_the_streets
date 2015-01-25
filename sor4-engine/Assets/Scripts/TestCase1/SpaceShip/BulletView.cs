@@ -24,7 +24,7 @@ public class BulletView:View<BulletModel>{
 
 	}
 
-	public override void OnDestroy(){
+	public override void OnDestroy(BulletModel model){
 		GameObject.Destroy(cube);
 	}
 

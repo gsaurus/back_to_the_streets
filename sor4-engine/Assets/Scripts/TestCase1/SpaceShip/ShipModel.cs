@@ -24,7 +24,7 @@ public class ShipModel:PhysicPointModel{
 
 
 	protected override View<PhysicPointModel> CreateView(){
-		return new ShipView(this);
+		return new ShipView();
 	}
 
 

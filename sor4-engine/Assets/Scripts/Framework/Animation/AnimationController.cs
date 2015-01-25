@@ -1,6 +1,5 @@
 
 using System;
-using UnityEngine;
 using System.Collections.Generic;
 
 
@@ -118,9 +117,9 @@ public class AnimationController:Controller<AnimationModel>{
 
 		// If there is a transition pending, move to it
 		if (nextAnimation != null) {
-			model.name = nextAnimation;
+			model.animationName = nextAnimation;
 			model.currentFrame = 0;
-			model.InvalidateController();
+			model.InvalidateVC();
 		}else {
 			// update animation time
 			++model.currentFrame;

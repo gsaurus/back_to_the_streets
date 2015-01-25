@@ -9,14 +9,16 @@ public class AnimationModel:Model<AnimationModel>{
 
 	public uint ownerStateId;
 	public uint currentFrame;
-	public string name;
+	public string characterName;
+	public string animationName;
 
 
 	// Constructor
-	public AnimationModel(uint ownerStateId, string name, int updatingOrder = 0):
+	public AnimationModel(uint ownerStateId, string characterName, string animationName, int updatingOrder = 0):
 		base(updatingOrder)
 	{
-		this.name = name;
+		this.characterName = characterName;
+		this.animationName = animationName;
 		this.currentFrame = 0;
 		this.ownerStateId = ownerStateId;
 	}
@@ -24,7 +26,12 @@ public class AnimationModel:Model<AnimationModel>{
 
 	protected override Controller<AnimationModel> CreateController(){
 		// Get the controller that corresponds to the current animation name
-		return AnimationsManager.Instance.GetController(name);
+		return AnimationsVCPool.Instance.GetController(characterName, animationName);
+	}
+
+	protected override View<AnimationModel> CreateView(){
+		// Get the controller that corresponds to the current animation name
+		return AnimationsVCPool.Instance.GetView(characterName, animationName);
 	}
 
 }

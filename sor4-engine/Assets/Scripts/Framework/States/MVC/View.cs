@@ -19,12 +19,12 @@ public class View<T> where T:Model{
 
 	// Helps identify if this view can be reused for other model
 	// Incompatible if there are heavy resources that must be (re)load
-	public virtual bool IsCompatibleWithModel(T model){
+	public virtual bool IsCompatible(T originalModel, T newModel){
 		return true; // Default 
 	}
 
 
-	public virtual void OnDestroy(){
+	public virtual void OnDestroy(T model){
 		// Nothing by default
 	}
 	
