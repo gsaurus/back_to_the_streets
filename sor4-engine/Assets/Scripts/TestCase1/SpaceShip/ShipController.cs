@@ -4,13 +4,36 @@ using UnityEngine;
 using System.Collections.Generic;
 
 
-public class ShipController:PhysicPointController{
+public class ShipController:Controller<ShipModel>{
 
 	//private BulletModel createdBulletModel;
 
-	public override void Update(PhysicPointModel pointModel){
-		base.Update(pointModel);
-		ShipModel model = pointModel as ShipModel;
+
+	private void EnsureSubModels(ShipModel model){
+		if (model.physicsModelId == StateManager.invalidModelIndex) {
+			// Add a new PhysicPointModel to the world physics state
+		}
+		if (model.animationModelId == StateManager.invalidModelIndex) {
+			// Add a new animation model to the game state
+		}
+	}
+
+	// delegate for when physic point model is added to the game state
+	private void OnPhysicPointModelCreated(Model model, object mainModelObj){
+		ShipModel shipModel = mainModelObj as ShipModel;
+		shipModel.physicsModelId = model.Index;
+	}
+	// delegate for when animation model is added to the game state
+	private void OnAnimationModelCreated(Model model, object mainModelObj){
+		ShipModel shipModel = mainModelObj as ShipModel;
+		shipModel.animationModelId = model.Index;
+	}
+
+	public override void Update(ShipModel model){
+
+		EnsureSubModels(model);
+
+		PhysicPointModel pointModel = StateManager.state.GetModel(model.physicsModelId) as PhysicPointModel;
 		List<Event> playerEvents = StateManager.Instance.GetEventsForPlayer(model.player);
 		if (playerEvents != null){
 			ShipInputEvent shipEvent;
@@ -44,9 +67,9 @@ public class ShipController:PhysicPointController{
 								// FIRE!!!
 								BulletModel createdBulletModel = new BulletModel(
 									model.player,
-									model.position.X,
-									model.position.Y + 0.5f * (model.player % 2 != 0 ? 1.0f : -1.0f),
-									model.position.Z
+									pointModel.position.X,
+									pointModel.position.Y + 0.5f * (model.player % 2 != 0 ? 1.0f : -1.0f),
+									pointModel.position.Z
 								);
 								StateManager.state.AddModel(createdBulletModel);
 							}
@@ -66,13 +89,6 @@ public class ShipController:PhysicPointController{
 		}
 		pointModel.velocityAffectors["inputMovement"] = vel;
 		//SetVelocityAffector("inputMovement", vel);
-
-		// This old way also works
-//		if (model.leftHolded != model.rightHolded) {
-//			model.position.X += 0.2f * (model.leftHolded ? -1f : 1f);
-//			// clamp to boundaries
-//			model.position.X = Mathf.Clamp(model.position.X.ToFloat(), -7f, 7f);
-//		}
 
 	}
 

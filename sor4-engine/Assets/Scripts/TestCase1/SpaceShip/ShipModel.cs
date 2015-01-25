@@ -2,9 +2,11 @@
 using System;
 
 [Serializable]
-public class ShipModel:PhysicPointModel{
+public class ShipModel:Model<ShipModel>{
 
 	public uint player;
+	public uint physicsModelId;
+	public uint animationModelId;
 
 	public bool leftHolded;
 	public bool rightHolded;
@@ -12,9 +14,7 @@ public class ShipModel:PhysicPointModel{
 	public bool downHolded;
 
 
-	public ShipModel(uint player, FixedFloat x, FixedFloat y):
-		base(new FixedVector3(x,y,0), PhysicWorldController.PhysicsUpdateOrder)
-	{
+	public ShipModel(uint player){
 		this.player = player;
 		leftHolded = false;
 		rightHolded = false;
@@ -23,12 +23,12 @@ public class ShipModel:PhysicPointModel{
 	}
 
 
-	protected override View<PhysicPointModel> CreateView(){
+	protected override View<ShipModel> CreateView(){
 		return new ShipView();
 	}
 
 
-	protected override Controller<PhysicPointModel> CreateController(){
+	protected override Controller<ShipModel> CreateController(){
 		return new ShipController();
 	}
 

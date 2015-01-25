@@ -7,20 +7,20 @@ using System;
 [Serializable]
 public class AnimationModel:Model<AnimationModel>{
 
-	public uint ownerStateId;
+	public uint ownerId;
 	public uint currentFrame;
 	public string characterName;
 	public string animationName;
 
 
 	// Constructor
-	public AnimationModel(uint ownerStateId, string characterName, string animationName, int updatingOrder = 0):
+	public AnimationModel(uint ownerId, string characterName, string animationName, int updatingOrder = 0):
 		base(updatingOrder)
 	{
 		this.characterName = characterName;
 		this.animationName = animationName;
 		this.currentFrame = 0;
-		this.ownerStateId = ownerStateId;
+		this.ownerId = ownerId;
 	}
 
 

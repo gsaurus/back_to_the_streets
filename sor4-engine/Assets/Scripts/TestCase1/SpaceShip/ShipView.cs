@@ -3,29 +3,27 @@ using System;
 using UnityEngine;
 
 
-public class ShipView:View<PhysicPointModel>{
+public class ShipView:View<ShipModel>{
 
 	public ShipView(){
 
 	}
 	
 	
-	public override void Update(PhysicPointModel pointModel, float deltaTime){
+	public override void Update(ShipModel model, float deltaTime){
 		string prefabName;
-		ShipModel model = pointModel as ShipModel;
 		if (model.player == NetworkCenter.Instance.GetPlayerNumber()){
 			prefabName = "Rocha";
 		}else {
 			prefabName = "Blaze";
 		}
-		GameObject avatar = UnityObjectsPool.Instance.GetGameObject(model.Index, prefabName);
-
-		avatar.transform.position = (Vector3)model.position;
+		// force creation of prefab, if not existing yet
+		UnityObjectsPool.Instance.GetGameObject(model.Index, prefabName);
 		
 	}
 	
 	
-	public override void OnDestroy(PhysicPointModel model){
+	public override void OnDestroy(ShipModel model){
 		UnityObjectsPool.Instance.ReleaseGameObject(model.Index);
 	}
 

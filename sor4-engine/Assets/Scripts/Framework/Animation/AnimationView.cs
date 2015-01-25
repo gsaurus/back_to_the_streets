@@ -16,7 +16,8 @@ public class AnimationView:View<AnimationModel>{
 
 
 	protected int GetAnimationCurrentFrame(AnimatorStateInfo stateInfo){
-		float currentTime = ((stateInfo.normalizedTime - (int)stateInfo.normalizedTime)*stateInfo.length);
+		//float currentTime = (stateInfo.normalizedTime - (int)stateInfo.normalizedTime)*stateInfo.length;
+		float currentTime = stateInfo.normalizedTime*stateInfo.length;
 		return (int)(currentTime / StateManager.Instance.UpdateRate);
 	}
 
@@ -24,7 +25,7 @@ public class AnimationView:View<AnimationModel>{
 	// Visual update
 	public override void Update(AnimationModel model, float deltaTime){
 
-		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.ownerStateId);
+		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.ownerId);
 		if (obj == null) return; // can't work without a game object
 		Animator animator = obj.GetComponent<Animator>();
 		if (animator == null) return; // can't work without an animator component

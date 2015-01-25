@@ -7,6 +7,9 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 	[NonSerialized]
 	public static readonly string defaultVelocityAffectorName = "defaultVelocityAffectorName";
 
+	// Id of the model that owns this point, used to get the respective gameobject from the owner
+	public uint ownerId;
+
 	// Linear Position
 	public FixedVector3 position;
 
@@ -23,13 +26,15 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 
 
 	// Constructor
-	public PhysicPointModel(FixedVector3 position, int updatingOrder = 0):base(updatingOrder){
+	public PhysicPointModel(uint ownerId, FixedVector3 position, int updatingOrder = 0):base(updatingOrder){
+		this.ownerId = ownerId;
 		velocityAffectors = new SerializableDictionary<string,FixedVector3>();
 		this.position = this.lastPosition = position;
 	}
 
 	// Constructor
-	public PhysicPointModel(int updatingOrder = 0):base(updatingOrder){
+	public PhysicPointModel(uint ownerId, int updatingOrder = 0):base(updatingOrder){
+		this.ownerId = ownerId;
 		velocityAffectors = new SerializableDictionary<string,FixedVector3>();
 	}
 
@@ -37,6 +42,11 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 	// Create controller
 	protected override Controller<PhysicPointModel> CreateController(){
 		return new PhysicPointController();
+	}
+
+	// Create view
+	protected override View<PhysicPointModel> CreateView(){
+		return new PhysicPointView();
 	}
 
 	// Default world velocity affector
