@@ -32,5 +32,17 @@ public class ShipModel:Model<ShipModel>{
 		return new ShipController();
 	}
 
+	public override void OnDestroy(){
+		// Cleanup dependant states
+		Model model = StateManager.state.GetModel(physicsModelId);
+		if (model != null){
+			StateManager.state.RemoveModel(model);
+		}
+		model = StateManager.state.GetModel(animationModelId);
+		if (model != null){
+			StateManager.state.RemoveModel(model);
+		}
+	}
+
 }
 

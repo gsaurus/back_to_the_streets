@@ -18,10 +18,11 @@ public class BulletController:Controller<BulletModel>{
 
 
 	private bool CheckCollisionWithShip(BulletModel model, ShipModel ship){
-		FixedFloat half = 0.5f;
+		return false;
+		//FixedFloat half = 0.5f;
 		//Debug.Log("Model: (" + model.x.ToFloat() + ", " + model.y.ToFloat() + "); ship: (" + ship.x.ToFloat() + ", " + ship.y.ToFloat() + ");");
 
-		return  FixedFloat.Sqrt((model.position.X - ship.position.X)*(model.position.X - ship.position.X) + (model.position.Y - ship.position.Y)*(model.position.Y - ship.position.Y)) <= half;
+		//return  FixedFloat.Sqrt((model.position.X - ship.position.X)*(model.position.X - ship.position.X) + (model.position.Y - ship.position.Y)*(model.position.Y - ship.position.Y)) <= half;
 		//return model.x > ship.x-half && model.x < ship.x+half && model.y > ship.y-half && model.y < ship.y+half;
 	}
 

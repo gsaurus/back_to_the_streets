@@ -12,9 +12,22 @@ public class ShipController:Controller<ShipModel>{
 	private void EnsureSubModels(ShipModel model){
 		if (model.physicsModelId == StateManager.invalidModelIndex) {
 			// Add a new PhysicPointModel to the world physics state
+			SpaceModel spaceModel = StateManager.state.MainModel as SpaceModel;
+			PhysicWorldModel world = StateManager.state.GetModel(spaceModel.worldModelId) as PhysicWorldModel;
+			PhysicPointModel newPointModel = new PhysicPointModel(model.Index);
+			PhysicWorldController worldController = world.GetController() as PhysicWorldController;
+			worldController.AddPoint(newPointModel, OnPhysicPointModelCreated, model);
 		}
 		if (model.animationModelId == StateManager.invalidModelIndex) {
 			// Add a new animation model to the game state
+			string characterName;
+			if (model.player == NetworkCenter.Instance.GetPlayerNumber()){
+				characterName = "Rocha";
+			}else {
+				characterName = "Blaze";
+			}
+			AnimationModel animModel = new AnimationModel(model.Index, characterName, "idle1");
+			StateManager.state.AddModel(animModel, OnAnimationModelCreated, model);
 		}
 	}
 
@@ -34,6 +47,10 @@ public class ShipController:Controller<ShipModel>{
 		EnsureSubModels(model);
 
 		PhysicPointModel pointModel = StateManager.state.GetModel(model.physicsModelId) as PhysicPointModel;
+		if (pointModel == null) {
+			// not ready yet
+			return;
+		}
 		List<Event> playerEvents = StateManager.Instance.GetEventsForPlayer(model.player);
 		if (playerEvents != null){
 			ShipInputEvent shipEvent;
@@ -93,7 +110,7 @@ public class ShipController:Controller<ShipModel>{
 	}
 
 
-	public override void PostUpdate(PhysicPointModel model){
+	public override void PostUpdate(ShipModel model){
 		base.PostUpdate(model);
 	}
 	

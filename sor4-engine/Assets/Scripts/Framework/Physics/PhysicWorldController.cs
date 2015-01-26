@@ -194,13 +194,6 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 #region Add/Rem Points
 
 	// Add a Physic Point to the world
-	public void AddPoint(FixedVector3 position, OnPointModelChanged callback = null, object context = null){
-		PhysicPointModel pointModel = new PhysicPointModel(position, PhysicsUpdateOrder);
-		addPointCallbacks[pointModel] = new Eppy.Tuple<OnPointModelChanged, object>(callback, context);
-		StateManager.state.AddModel(pointModel, OnPointAdded);
-	}
-
-	// Add a Physic Point to the world
 	public void AddPoint(PhysicPointModel pointModel, OnPointModelChanged callback = null, object context = null){
 		addPointCallbacks[pointModel] = new Eppy.Tuple<OnPointModelChanged, object>(callback, context);
 		StateManager.state.AddModel(pointModel, OnPointAdded);
