@@ -5,7 +5,42 @@ using System.Collections.Generic;
 
 
 public class SpaceController:Controller<SpaceModel>{
-	
+
+
+
+	private void SetupRocha(){
+		AnimationController idle1Ctr = new AnimationController();
+		AnimationsVCPool.Instance.RegisterController("Rocha", "idle1", idle1Ctr);
+		AnimationController walkCtr = new AnimationController();
+		AnimationsVCPool.Instance.RegisterController("Rocha", "walk", walkCtr);
+		AnimationView idleView = new AnimationView();
+		AnimationsVCPool.Instance.SetDefaultView("Rocha", idleView);
+
+		List<AnimationTriggerCondition> conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 180));
+		AnimationTransition transition = new AnimationTransition("walk", conditions);
+		idle1Ctr.AddTransition(transition);
+		transition = new AnimationTransition("idle1", conditions);
+		walkCtr.AddTransition(transition);
+	}
+
+
+	private void SetupBlaze(){
+		AnimationController idle1Ctr = new AnimationController();
+		AnimationsVCPool.Instance.RegisterController("Blaze", "idle1", idle1Ctr);
+		AnimationController walkCtr = new AnimationController();
+		AnimationsVCPool.Instance.RegisterController("Blaze", "walk", walkCtr);
+		AnimationView idleView = new AnimationView();
+		AnimationsVCPool.Instance.SetDefaultView("Blaze", idleView);
+
+		List<AnimationTriggerCondition> conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 180));
+		AnimationTransition transition = new AnimationTransition("walk", conditions);
+		idle1Ctr.AddTransition(transition);
+		transition = new AnimationTransition("idle1", conditions);
+		walkCtr.AddTransition(transition);
+	}
+
 
 	public override void Update(SpaceModel model){
 
@@ -16,6 +51,9 @@ public class SpaceController:Controller<SpaceModel>{
 			worldModel = new PhysicWorldModel("test", new FixedVector3(0,-0.008,0));
 			StateManager.state.AddModel(worldModel, OnWorldCreated, model);
 			worldController = worldModel.GetController() as PhysicWorldController;
+
+			SetupRocha();
+			SetupBlaze();
 
 			return; // nothing else until world is created
 		}
@@ -92,20 +130,17 @@ public class SpaceController:Controller<SpaceModel>{
 			if (!allPlayers.Exists(x => x == pair.Key)){
 				// Doesn't exist anymore, remove ship
 				shipModel = StateManager.state.GetModel(pair.Value) as ShipModel;
-				worldController.RemovePoint(shipModel, OnShipDestroyed, model);
-				//StateManager.state.RemoveModel(shipModel, OnShipDestroyed, model);
+				//worldController.RemovePoint(shipModel, OnShipDestroyed, model);
+				StateManager.state.RemoveModel(shipModel, OnShipDestroyed, model);
 			}
 		}
 
 		// Create ships for new players
 		foreach(uint playerId in allPlayers){
 			if (!model.ships.ContainsKey(playerId)){
-				shipModel = new ShipModel(playerId,
-				                          StateManager.state.Random.NextFloat(-4f,4f),
-				                          4 //4 * (playerId%2 == 0 ? 1 : -1)
-				                         ); 
-				worldController.AddPoint(shipModel, OnShipCreated, model);
-				//StateManager.state.AddModel(shipModel, OnShipCreated, model);
+				shipModel = new ShipModel(playerId); 
+				//worldController.AddPoint(shipModel, OnShipCreated, model);
+				StateManager.state.AddModel(shipModel, OnShipCreated, model);
 			}
 		}
 
