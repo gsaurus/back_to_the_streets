@@ -11,16 +11,34 @@ public class SpaceController:Controller<SpaceModel>{
 	private void SetupRocha(){
 		AnimationController idle1Ctr = new AnimationController();
 		AnimationsVCPool.Instance.RegisterController("Rocha", "idle1", idle1Ctr);
+		AnimationController walkCtr = new AnimationController();
+		AnimationsVCPool.Instance.RegisterController("Rocha", "walk", walkCtr);
 		AnimationView idleView = new AnimationView();
 		AnimationsVCPool.Instance.SetDefaultView("Rocha", idleView);
+
+		List<AnimationTriggerCondition> conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 180));
+		AnimationTransition transition = new AnimationTransition("walk", conditions);
+		idle1Ctr.AddTransition(transition);
+		transition = new AnimationTransition("idle1", conditions);
+		walkCtr.AddTransition(transition);
 	}
 
 
 	private void SetupBlaze(){
 		AnimationController idle1Ctr = new AnimationController();
 		AnimationsVCPool.Instance.RegisterController("Blaze", "idle1", idle1Ctr);
+		AnimationController walkCtr = new AnimationController();
+		AnimationsVCPool.Instance.RegisterController("Blaze", "walk", walkCtr);
 		AnimationView idleView = new AnimationView();
 		AnimationsVCPool.Instance.SetDefaultView("Blaze", idleView);
+
+		List<AnimationTriggerCondition> conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 180));
+		AnimationTransition transition = new AnimationTransition("walk", conditions);
+		idle1Ctr.AddTransition(transition);
+		transition = new AnimationTransition("idle1", conditions);
+		walkCtr.AddTransition(transition);
 	}
 
 

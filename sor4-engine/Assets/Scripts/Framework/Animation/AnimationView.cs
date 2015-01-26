@@ -11,8 +11,8 @@ using System.Collections.Generic;
 // TODO: certain animations with custom "speed" control, how to
 public class AnimationView:View<AnimationModel>{
 
-	private float transitionTime = 0.1f;	 // TODO: depending on transition source -> dest?
-	private float interpolationTime = 0.3f; // TODO: something based on lag?
+	private float transitionTime = 0.2f;	 // TODO: depending on transition source -> dest?
+	private float interpolationTime = 0.4f; // TODO: something based on lag?
 
 
 	protected int GetAnimationCurrentFrame(AnimatorStateInfo stateInfo){
@@ -41,14 +41,16 @@ public class AnimationView:View<AnimationModel>{
 		if (stateInfo.IsName(model.animationName)) {
 			// if time is not in sync, resync it
 			int currentAnimationFrame = GetAnimationCurrentFrame(stateInfo);
-			if (currentAnimationFrame != model.currentFrame) {
+			if (currentAnimationFrame > 0 && Math.Abs(currentAnimationFrame - model.currentFrame) > 2) {
 				float timeToFade = Mathf.Abs(currentAnimationFrame - model.currentFrame) * StateManager.Instance.UpdateRate;
 				timeToFade = Mathf.Min(timeToFade, interpolationTime);
 				animator.CrossFade(model.animationName, timeToFade);
+				Debug.Log("fade time not in sync: " + currentAnimationFrame + ", " + model.currentFrame + "; time: " + timeToFade);
 			}
 		}else {
 			// We need to make transition to the new animation
 			animator.CrossFade(model.animationName, transitionTime);
+			Debug.Log("fade normal");
 			// check target offset (note current API doesn't give access to length before starting the transition)
 			AnimatorStateInfo nextStateInfo = animator.GetNextAnimatorStateInfo(0);
 			float nextAnimationOffset = model.currentFrame * StateManager.Instance.UpdateRate;
@@ -57,6 +59,7 @@ public class AnimationView:View<AnimationModel>{
 				// need to resync transition
 				float timeToFade = Mathf.Min(nextAnimationOffset, interpolationTime);
 				animator.CrossFade(model.animationName, timeToFade, 0, nextAnimationNormalizedOffset);
+				Debug.Log("fade forced sync");
 			}
 		}
 
