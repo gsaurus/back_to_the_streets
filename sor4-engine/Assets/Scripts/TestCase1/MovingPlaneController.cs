@@ -28,6 +28,28 @@ public class MovingPlaneController: PhysicPlaneController{
 				if (movingModel.origin.X <= 4) movingModel.origin.X += 0.05;
 				if (movingModel.origin.Y >= -3) movingModel.origin.Y -= 0.05;
 				if (movingModel.origin.Y < -3 && movingModel.origin.X > 4){
+					movingModel.movingState = 3;
+				}
+				break;
+			case 3:
+				// go up left
+				if (movingModel.origin.X > 0) movingModel.origin.X -= 0.05;
+				if (movingModel.origin.Y < 3) movingModel.origin.Y += 0.05;
+				if (movingModel.origin.X <= 0 && movingModel.origin.Y >= 3){
+					movingModel.movingState = 4;
+				}
+				break;
+			case 4:
+				// go right
+				movingModel.origin.X += 0.05;
+				if (movingModel.origin.X > 4){
+					movingModel.movingState = 5;
+				}
+				break;
+			case 5:
+				// go up
+				movingModel.origin.Y -= 0.05;
+				if (movingModel.origin.Y <= -3){
 					movingModel.movingState = 0;
 				}
 				break;

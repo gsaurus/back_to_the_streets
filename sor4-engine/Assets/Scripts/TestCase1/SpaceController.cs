@@ -8,6 +8,12 @@ public class SpaceController:Controller<SpaceModel>{
 
 
 
+	public SpaceController()
+	{
+		SetupRocha();
+		SetupBlaze();
+	}
+
 	private void SetupRocha(){
 		AnimationController idle1Ctr = new AnimationController();
 		AnimationsVCPool.Instance.RegisterController("Rocha", "idle1", idle1Ctr);
@@ -51,10 +57,7 @@ public class SpaceController:Controller<SpaceModel>{
 			worldModel = new PhysicWorldModel("test", new FixedVector3(0,-0.008,0));
 			StateManager.state.AddModel(worldModel, OnWorldCreated, model);
 			worldController = worldModel.GetController() as PhysicWorldController;
-
-			SetupRocha();
-			SetupBlaze();
-
+		
 			return; // nothing else until world is created
 		}
 

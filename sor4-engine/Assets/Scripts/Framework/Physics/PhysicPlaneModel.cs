@@ -120,7 +120,7 @@ public class PhysicPlaneModel: Model<PhysicPlaneModel>, IDeserializationCallback
 	
 		// a small delta due to precision errors
 		// based on deltaPos magnitude (the smaller the magnitude the higher the error)
-		FixedFloat error = 0.001 / pointDeltaPos.Magnitude;
+		FixedFloat error = 0.01 / pointDeltaPos.Magnitude;
 //		if (t > -3 && t < 3){
 //			UnityEngine.Debug.Log("Magnitude: " + pointDeltaPos.Magnitude + ", error: " + error);
 //		}

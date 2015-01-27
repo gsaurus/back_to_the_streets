@@ -45,12 +45,12 @@ public class AnimationView:View<AnimationModel>{
 				float timeToFade = Mathf.Abs(currentAnimationFrame - model.currentFrame) * StateManager.Instance.UpdateRate;
 				timeToFade = Mathf.Min(timeToFade, interpolationTime);
 				animator.CrossFade(model.animationName, timeToFade);
-				Debug.Log("fade time not in sync: " + currentAnimationFrame + ", " + model.currentFrame + "; time: " + timeToFade);
+				//Debug.Log("fade time not in sync: " + currentAnimationFrame + ", " + model.currentFrame + "; time: " + timeToFade);
+				Debug.Log("fade time not in sync");
 			}
 		}else {
 			// We need to make transition to the new animation
 			animator.CrossFade(model.animationName, transitionTime);
-			Debug.Log("fade normal");
 			// check target offset (note current API doesn't give access to length before starting the transition)
 			AnimatorStateInfo nextStateInfo = animator.GetNextAnimatorStateInfo(0);
 			float nextAnimationOffset = model.currentFrame * StateManager.Instance.UpdateRate;
