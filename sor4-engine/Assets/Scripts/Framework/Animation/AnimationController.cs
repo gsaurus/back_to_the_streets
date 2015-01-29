@@ -57,7 +57,7 @@ public class AnimationController:Controller<AnimationModel>{
 	private Dictionary<uint, List<AnimationEvent>> events;
 	private List<AnimationTransition> transitions;
 
-	private string nextAnimation;
+	private bool animationChanged;
 
 	public AnimationController(){
 		events = new Dictionary<uint, List<AnimationEvent>>();
@@ -80,13 +80,8 @@ public class AnimationController:Controller<AnimationModel>{
 	}
 
 
-	// On update we execute animation events 
-	public override void Update(AnimationModel model){
-
-		// Invalidate next animation
-		nextAnimation = null;
-
-		// Execute any events for this keyframe
+	// Execute any events for this keyframe
+	private void ExecuteEvents(AnimationModel model){
 		if (events != null){
 			List<AnimationEvent> currentFrameEvents;
 			if (events.TryGetValue(model.currentFrame, out currentFrameEvents)){
@@ -95,33 +90,56 @@ public class AnimationController:Controller<AnimationModel>{
 				}
 			}
 		}
+	}
 
+
+	private void CheckTransitions(AnimationModel model){
+
+		// TODO: check global transitions (i.e. applicable to any state)
+
+		string nextAnimation = null;
+		foreach(AnimationTransition transition in transitions){
+			nextAnimation = transition.CheckTransition(model);
+			if (nextAnimation != null) break;
+		}
+		
+		// If there is a transition pending, move to it
+		if (nextAnimation != null) {
+			SetAnimation(model, nextAnimation);
+		}
+
+	}
+
+
+
+	// On update we execute animation events 
+	public override void Update(AnimationModel model){
+
+		// reset changed flag
+		animationChanged = false;
+
+		// Check transitions based on how the state is now
+		CheckTransitions(model);
+
+		// Execute any events for this keyframe
+		ExecuteEvents(model);
+		
 	}
 
 	// Allow to force change animation
-	public void SetNextAnimation(string nextAnimation){
-		this.nextAnimation = nextAnimation;
+	public void SetAnimation(AnimationModel model, string nextAnimation, uint initialFrame = 0){
+		model.animationName = nextAnimation;
+		model.currentFrame = initialFrame;
+		model.InvalidateVC();
+		animationChanged = true;
 	}
 
 
-	// On post-update we check and apply transitions
+	// On post-update we move to next frame, if animation didn't change
 	public override void PostUpdate(AnimationModel model){
-
-		// Check transitions to other animations, only if next animation wasn't forced
-		if (nextAnimation == null){
-			foreach(AnimationTransition transition in transitions){
-				nextAnimation = transition.CheckTransition(model);
-				if (nextAnimation != null) break;
-			}
-		}
-
-		// If there is a transition pending, move to it
-		if (nextAnimation != null) {
-			model.animationName = nextAnimation;
-			model.currentFrame = 0;
-			model.InvalidateVC();
-		}else {
-			// update animation time
+		if (!animationChanged) {
+			// move to next frame
+			// Note: even though we increment it here, this update cycle was about currentFrame-1 
 			++model.currentFrame;
 		}
 	}

@@ -1,5 +1,20 @@
 using System;
 
+
+[Serializable]
+public struct CollisionFlags{
+	public bool ground;
+	public bool left;
+	public bool right;
+	public bool far;
+	public bool near;
+
+	public void Clear(){
+		ground = left = right = far = near = false;
+	}
+}
+
+
 [Serializable]
 public class PhysicPointModel : Model<PhysicPointModel>{
 
@@ -15,6 +30,9 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 
 	// Position on the previous frame
 	public FixedVector3 lastPosition;
+
+	// Store here the direction of last collisions:
+	public CollisionFlags collisionFlags;
 
 	// Velocity = difference between current and previous positions
 	public FixedVector3 GetVelocity(){

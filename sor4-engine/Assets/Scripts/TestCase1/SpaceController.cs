@@ -67,6 +67,16 @@ public class SpaceController:Controller<SpaceModel>{
 		if (worldModel.planeModels.Count == 0) {
 			// for now add some "dynamic" planes
 			PhysicPlaneModel plane;
+
+
+			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
+			                             new FixedVector3(-9,-4,7),
+			                             new FixedVector3(-9,4,7),
+			                             new FixedVector3(9,4,7),
+			                             new FixedVector3(9,-4,7)
+			                            );
+			worldController.AddPlane(plane);
+
 			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
 			                             new FixedVector3(-9,-4.1,-9),
 			                             new FixedVector3(-9,-4.1,9),

@@ -50,6 +50,9 @@ public class AnimationFrameCondition: AnimationTriggerCondition{
 			rvalue = rightValue;
 		}
 
+		// +1 because we want this kind of conditions to be checked by the end of the frame
+		++rvalue;
+
 		// compare them
 		int result = lvalue.CompareTo(rvalue);
 		switch (conditionOperator){

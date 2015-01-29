@@ -46,7 +46,7 @@ public class AnimationView:View<AnimationModel>{
 				timeToFade = Mathf.Min(timeToFade, interpolationTime);
 				animator.CrossFade(model.animationName, timeToFade);
 				//Debug.Log("fade time not in sync: " + currentAnimationFrame + ", " + model.currentFrame + "; time: " + timeToFade);
-				Debug.Log("fade time not in sync");
+				//Debug.Log("fade time not in sync");
 			}
 		}else {
 			// We need to make transition to the new animation
@@ -59,7 +59,7 @@ public class AnimationView:View<AnimationModel>{
 				// need to resync transition
 				float timeToFade = Mathf.Min(nextAnimationOffset, interpolationTime);
 				animator.CrossFade(model.animationName, timeToFade, 0, nextAnimationNormalizedOffset);
-				Debug.Log("fade forced sync");
+				//Debug.Log("fade forced sync");
 			}
 		}
 

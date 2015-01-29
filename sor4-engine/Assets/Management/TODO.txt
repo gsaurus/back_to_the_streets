@@ -8,11 +8,14 @@
     - World planes editor
     
  - States
- 	- Consider identifying states with string keys, instead of uint ids?
-    - What happens to events during pause / not ready?
+ 	- Consider identifying modls with string keys, instead of uint ids?
+    - What happens to input events during pause / not ready?
 
  - Network System (note: can be revisited later)
  	- Send what players are "Ready" to new joiners
+ 	
+ - Animation System
+ 	- Global transitions (transitions from any state)
  	
  	
  - [optional] FixedVector3 aditional operations
