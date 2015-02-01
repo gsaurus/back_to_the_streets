@@ -24,6 +24,7 @@ public interface State{
 
 	// Remove a model from the state (it's removed only after the update cycle)
 	void RemoveModel(Model model, InternalState.onModelChanged callback = null, object context = null);
+	void RemoveModel(uint modelId, InternalState.onModelChanged callback = null, object context = null);
 
 	// Reorder model if update ordering changed
 	void ReorderModel(Model model, InternalState.onModelChanged callback = null, object context = null);
@@ -192,6 +193,30 @@ public sealed class InternalState: State{
 	}
 
 
+	private void ReorderModelInternal(ModelChangeInfo sortedModel){
+		sortedModels.Remove(sortedModel.model);
+		sortedModels.Add(sortedModel.model, null);
+		sortedModel.PerformCallback();
+	}
+
+	private void RemoveModelInternal(ModelChangeInfo deletedModel){
+		sortedModels.Remove(deletedModel.model);
+		models.Remove(deletedModel.model.Index);
+		deletedModel.PerformCallback();
+		deletedModel.model.Destroy();
+	}
+
+	private void AddModelInternal(ModelChangeInfo createdModel){
+		if (nextModelIndex == StateManager.invalidModelIndex) ++nextModelIndex;
+		createdModel.model._Index = nextModelIndex;
+		models.Add(nextModelIndex, createdModel.model);
+		sortedModels.Add(createdModel.model, null);
+		++nextModelIndex;
+		createdModel.PerformCallback();
+	}
+
+
+
 	// Once update cycle ends we apply pending changes (creations, removals, ordering changes)
 	private void UpdateConsolidation(){
 
@@ -204,29 +229,19 @@ public sealed class InternalState: State{
 		// Ordering
 		if (updateChanges.reorderedModelsFromUpdate != null) {
 			foreach(ModelChangeInfo sortedModel in updateChanges.reorderedModelsFromUpdate) {
-				sortedModels.Remove(sortedModel.model);
-				sortedModels.Add(sortedModel.model, null);
-				sortedModel.PerformCallback();
+				ReorderModelInternal(sortedModel);
 			}
 		}
 		// Removals
 		if (updateChanges.deletedModelsFromUpdate != null) {
-		foreach(ModelChangeInfo deletedModel in updateChanges.deletedModelsFromUpdate) {
-				sortedModels.Remove(deletedModel.model);
-				models.Remove(deletedModel.model.Index);
-				deletedModel.PerformCallback();
-				deletedModel.model.Destroy();
+			foreach(ModelChangeInfo deletedModel in updateChanges.deletedModelsFromUpdate) {
+				RemoveModelInternal(deletedModel);
 			}
 		}
 		// Additions
 		if (updateChanges.createdModelsFromUpdate != null) {
 			foreach(ModelChangeInfo createdModel in updateChanges.createdModelsFromUpdate) {
-				if (nextModelIndex == StateManager.invalidModelIndex) ++nextModelIndex;
-				createdModel.model._Index = nextModelIndex;
-				models.Add(nextModelIndex, createdModel.model);
-				sortedModels.Add(createdModel.model, null);
-				++nextModelIndex;
-				createdModel.PerformCallback();
+				AddModelInternal(createdModel);
 			}
 		}
 
@@ -247,17 +262,38 @@ public sealed class InternalState: State{
 
 	// Reorder model when the updating order changes
 	public void ReorderModel(Model model, onModelChanged callback, object context){
-		UpdateOperationChange(new ModelChangeInfo(model, callback, context), ref updateChanges.reorderedModelsFromUpdate);
+		if (IsUpdating){
+			UpdateOperationChange(new ModelChangeInfo(model, callback, context), ref updateChanges.reorderedModelsFromUpdate);
+		}else {
+			ReorderModelInternal(new ModelChangeInfo(model, callback, context));
+		}
 	}
 	
 	// Add a new model to the state (it's added only after the update cycle)
 	public void AddModel(Model model, onModelChanged callback, object context){
-		UpdateOperationChange(new ModelChangeInfo(model, callback, context), ref updateChanges.createdModelsFromUpdate);
+		if (IsUpdating){
+			UpdateOperationChange(new ModelChangeInfo(model, callback, context), ref updateChanges.createdModelsFromUpdate);
+		}else {
+			AddModelInternal(new ModelChangeInfo(model, callback, context));
+		}
 	}
+
+
+	public void RemoveModel(uint modelId, onModelChanged callback, object context){
+		Model model = GetModel(modelId);
+		if (model != null){
+			RemoveModel(model, callback, context);
+		}
+	}
+
 	
 	// Remove a model from the state (it's removed only after the update cycle)
 	public void RemoveModel(Model model, onModelChanged callback, object context){
-		UpdateOperationChange(new ModelChangeInfo(model, callback, context), ref updateChanges.deletedModelsFromUpdate);
+		if (IsUpdating){
+			UpdateOperationChange(new ModelChangeInfo(model, callback, context), ref updateChanges.deletedModelsFromUpdate);
+		}else {
+			RemoveModelInternal(new ModelChangeInfo(model, callback, context));
+		}
 	}
 
 	public void SetAsMainModel(Model mainModel, onModelChanged callback, object context){

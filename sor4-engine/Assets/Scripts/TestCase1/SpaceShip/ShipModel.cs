@@ -33,15 +33,16 @@ public class ShipModel:Model<ShipModel>{
 	}
 
 	public override void OnDestroy(){
-		// Cleanup dependant states
-		Model model = StateManager.state.GetModel(physicsModelId);
-		if (model != null){
-			StateManager.state.RemoveModel(model);
-		}
-		model = StateManager.state.GetModel(animationModelId);
-		if (model != null){
-			StateManager.state.RemoveModel(model);
-		}
+		// err, on destroy can be called on resync, model out of state manager
+//		// Cleanup dependant states
+//		Model model = StateManager.state.GetModel(physicsModelId);
+//		if (model != null){
+//			StateManager.state.RemoveModel(model);
+//		}
+//		model = StateManager.state.GetModel(animationModelId);
+//		if (model != null){
+//			StateManager.state.RemoveModel(model);
+//		}
 	}
 
 }

@@ -1,21 +1,30 @@
- - Review MVC way VC are created, there should be a way of setting at least from constructor?
+  - Input events like in the prototype
+  - Let sub-states be created imediately!
+  - Review MVC way VC are created, there should be a way of setting at least from constructor?
   
  - Physics System
     - Predefined velocity affectors: gravityControl, collisionControl, impulse
-    - [optional] Fix particle over moving platform with diagonal normal
-    - notion of stationary particle (landed), including moving particle over moving plane
+    - [optional] Fix point over moving platform with diagonal normal
     - Read / Write static world from / to files ? can be directly on the scene..
     - World planes editor
     
  - States
- 	- Consider identifying modls with string keys, instead of uint ids?
+ 	- When to destroy dependant models?
+ 	- Consider identifying models with string keys, instead of uint ids?
     - What happens to input events during pause / not ready?
 
  - Network System (note: can be revisited later)
  	- Send what players are "Ready" to new joiners
+ 	- Time delay compensation: if events come too much in future, acelerate game; if too much in the past, slowdown
  	
  - Animation System
+    - Pause / resume character animations if the game is paused / resumed
  	- Global transitions (transitions from any state)
+ 	
+ - Beat'em up specific
+ 	- Hit box (box coordinates, enable/disable)
+ 	- Collision boxes, have sub-classes for specific effects
+ 		- common collision data (box coordinates, enable/disable, damage, anim delay, face direction type, target animation...)
  	
  	
  - [optional] FixedVector3 aditional operations

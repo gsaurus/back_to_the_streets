@@ -32,7 +32,7 @@ sealed class NetworkSyncState{
 public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 
 	// Minimum rate in which lag accomodates to network latency changes
-	public static float lagIntegrationRate = 0.1f;
+	public static float lagIntegrationRate = 0.2f;
 
 	// How much of the latency we use in our game input
 	public static float lagCompensationRate = 1.0f; 
@@ -114,6 +114,8 @@ public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 	[RPC]
 	void PingRequest(NetworkMessageInfo messageInfo){
 		float travelTime = (float) (Network.time - messageInfo.timestamp);
+		Debug.Log("Travel time: " + travelTime + ", computed ping is " + 2*travelTime);
+		Debug.Log("Ping: " + Network.GetLastPing(messageInfo.sender) + ", Average Ping: " + Network.GetAveragePing(messageInfo.sender));
 		// We explicitly send our guid in the RPC because of Unity bug not seting sender guid correctly
 		networkView.RPC("PingResponse", messageInfo.sender, travelTime, Network.player.guid);
 	}
