@@ -3,6 +3,8 @@ using System;
 
 
 // Define accessor methods to input
+// Example 1: controller based on standard input events
+// Example 2: controller based on artificial inteligence
 public interface GameEntityInputProvider{
 
 	FixedVector3 GetInputAxis(Model model);

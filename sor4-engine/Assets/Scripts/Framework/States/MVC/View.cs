@@ -9,8 +9,15 @@
 //------------------------------------------------------------------------------
 using System;
 
+
+// Handy interface to encapsulate a view when it's type is unknown
+public interface View{
+	// Nothing to declare
+}
+
+
 // It can have non logical state, but the view must always reflect the current state of the model
-public class View<T> where T:Model{
+public class View<T>:View where T:Model{
 	
 	// Visual update - frame rate dependant
 	public virtual void Update(T model, float deltaTime){

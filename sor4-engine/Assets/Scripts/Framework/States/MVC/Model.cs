@@ -46,6 +46,8 @@ public interface Model{
 	// Unload resources
 	void Destroy();
 
+	Controller Controller();
+
 }
 
 #endregion
@@ -161,6 +163,10 @@ public abstract class Model<T>:Model where T:Model<T>{
 	public Controller<T> GetController() {
 		EnsureController();
 		return controller;
+	}
+
+	public Controller Controller(){
+		return GetController() as Controller;
 	}
 
 	// Create view

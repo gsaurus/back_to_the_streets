@@ -13,10 +13,15 @@ public class BoolCondition: AnimationTriggerCondition{
 	public delegate bool BoolConditionDelegate(AnimationModel model);
 
 	// Left and right value getters delegates
-	private BoolConditionDelegate getLeftVariableDelegate;
-	private BoolConditionDelegate getRightVariableDelegate;
+	protected BoolConditionDelegate getLeftVariableDelegate;
+	protected BoolConditionDelegate getRightVariableDelegate;
 	// A constant for the right value
-	private bool rightValue;
+	protected bool rightValue;
+
+	// Explicit default constructor
+	protected BoolCondition(){
+		// Nothing to do here..
+	}
 	
 	// Constructor with two getter delegates
 	public BoolCondition(

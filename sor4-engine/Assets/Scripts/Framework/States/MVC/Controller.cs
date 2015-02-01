@@ -9,8 +9,15 @@
 //------------------------------------------------------------------------------
 using System;
 
+
+// Handy interface to encapsulate a controller when it's type is unknown
+public interface Controller{
+	// Nothing to declare
+}
+
+
 // Do not keep any state in controllers, unless between Update and PostUpdate calls
-public class Controller<T> where T:Model{
+public class Controller<T>:Controller where T:Model{
 
 	// Called once per logical tick
 	public virtual void Update(T model){

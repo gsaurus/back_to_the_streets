@@ -5,7 +5,7 @@ using System;
 // Adapted from http://stackoverflow.com/questions/605124/fixed-point-math-in-c
 // Also based on https://code.google.com/p/kutil/source/browse/trunk/src/org/kalmeo/util/MathFP.java?r=42
 [Serializable]
-public struct FixedFloat
+public struct FixedFloat: IComparable<FixedFloat>
 {
 	public long RawValue;
 	public static int SHIFT_AMOUNT = 14; //12 is 4096, 14 is 16384, 16 is 65536
@@ -296,6 +296,18 @@ public struct FixedFloat
 		return (FixedFloat)other < one;
 	}
 	#endregion
+
+
+	#region IComparable
+
+	// Implement IComparable CompareTo to provide default sort order.
+	public int CompareTo(FixedFloat otherFloat){
+		return RawValue.CompareTo(otherFloat);
+	}
+
+
+	#endregion
+
 
 	#region conversion operators
 

@@ -17,19 +17,24 @@ public enum ArithmeticConditionOperatorType{
 // Compare two values. Values are obtained via getter delegates
 // Delegates should be obtained from controllers
 // Right value can be a constant
-public class ArithmeticCondition<T>: AnimationTriggerCondition where T:IComparable{
+public class ArithmeticCondition<T>: AnimationTriggerCondition where T:IComparable<T>{
 
 	// Delegate of the getters
 	public delegate T GetArithmeticConditionVariable(AnimationModel model);
 
 	// Left and right value getters delegates
-	private GetArithmeticConditionVariable getLeftVariableDelegate;
-	private GetArithmeticConditionVariable getRightVariableDelegate;
+	protected GetArithmeticConditionVariable getLeftVariableDelegate;
+	protected GetArithmeticConditionVariable getRightVariableDelegate;
 	// A constant for the right value
-	private T rightValue;
+	protected T rightValue;
 
 	// Condition operator
-	private ArithmeticConditionOperatorType conditionOperator;
+	protected ArithmeticConditionOperatorType conditionOperator;
+
+	// Explicit default constructor
+	protected ArithmeticCondition(){
+		// Nothing to do here..
+	}
 
 	// Constructor with two getter delegates
 	public ArithmeticCondition(
