@@ -6,7 +6,8 @@ using System;
 [Serializable]
 public class PlayerInputModel:Model<PlayerInputModel>{
 
-	public static readonly uint ActionCoolerFrames = 12;
+	public static readonly uint ActionPressedCoolerFrames = 12;
+	public static readonly uint ActionReleasedCoolerFrames = 12;
 	public static readonly uint NumButtonsSupported = 6;
 
 	// The player controlling this input
@@ -14,10 +15,11 @@ public class PlayerInputModel:Model<PlayerInputModel>{
 	// axis control (normalized)
 	public FixedVector3 axis;
 
-	// Need to store action coolers to register a button press
-	// during a few frames after it was first pressed
-	public uint[] actionCoolers;
-	public bool[] actionsHolded;
+	// Need to store action coolers to recognize
+	// button presses and releasees during a few frames
+	public uint[] actionPressedCoolers;
+	public uint[] actionReleasedCoolers;
+	public bool[] actionsHold;
 
 
 
@@ -27,8 +29,9 @@ public class PlayerInputModel:Model<PlayerInputModel>{
 		base(updatingOrder)
 	{
 		this.playerId = playerId;
-		actionCoolers = new uint[NumButtonsSupported];
-		actionsHolded = new bool[NumButtonsSupported];
+		actionPressedCoolers = new uint[NumButtonsSupported];
+		actionReleasedCoolers = new uint[NumButtonsSupported];
+		actionsHold = new bool[NumButtonsSupported];
 	}
 
 
