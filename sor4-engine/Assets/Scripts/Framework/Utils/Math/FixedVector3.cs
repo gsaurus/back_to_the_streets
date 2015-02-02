@@ -338,6 +338,11 @@ public struct FixedVector3{
 		return new UnityEngine.Vector3((float)src.x, (float)src.y, (float)src.z);
 	}
 
+	public static explicit operator FixedVector3(UnityEngine.Vector3 src)
+	{
+		return new FixedVector3(src.x, src.y, src.z);
+	}
+
 
 #endregion
 

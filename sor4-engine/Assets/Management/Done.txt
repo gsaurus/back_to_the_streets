@@ -1,3 +1,7 @@
+
+ 
+  
+ - Input events like in the prototype
  - notion of stationary particle (landed), including moving particle over moving plane
  - Fix flikering when moving up on elevators
  - Prevent sliding, perhaps with friction, maybe subtract world velocity to collision restitution, or maybe check difference between world velocity and actual position change

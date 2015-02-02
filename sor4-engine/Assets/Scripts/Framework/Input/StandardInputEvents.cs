@@ -12,6 +12,13 @@ public class ButtonInputEvent: Event{
 	public uint button; 
 	// pressed state
 	public bool isPressed;
+
+
+	public ButtonInputEvent(uint button, bool isPressed){
+		this.button = button;
+		this.isPressed = isPressed;
+	}
+
 }
 
 
@@ -19,5 +26,10 @@ public class ButtonInputEvent: Event{
 [Serializable]
 public class AxisInputEvent: Event{
 	public FixedVector3 axis;
+
+	public AxisInputEvent(FixedVector3 axis){
+		this.axis = axis;
+	}
+
 }
 
