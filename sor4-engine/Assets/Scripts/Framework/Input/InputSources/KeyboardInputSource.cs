@@ -2,11 +2,12 @@
 using System;
 using UnityEngine;
 
+
 enum InputSourceAxisDownDirection {Left, Right, Up, Down, None};
 
+// Used to check when up/down/left/right
+// are down (pressed in a single frame)
 class DirectionDownControl{
-	// Used to check when up/down/left/right
-	// are down (pressed in a single frame)
 	
 	private bool isLeftDown, isRightDown, isUpDown,isDownDown;
 	private bool isLeftHolded, isRightHolded, isUpHolded,isDownHolded;
@@ -74,7 +75,7 @@ public class KeyboardInputSource: MonoBehaviour{
 
 	public float minAxisDelta = 0.1f;
 	public string[] buttonNames = {"A", "B", "C", "D", "E", "F"};
-	private Vector3 lastAxis = Vector3.zero;
+	private Vector2 lastAxis = Vector2.zero;
 
 	// Variables for double tapping detection
 	public bool supportDoubleTap = true;
@@ -172,8 +173,8 @@ public class KeyboardInputSource: MonoBehaviour{
 		}
 
 		Vector3 newAxis = new Vector3(Input.GetAxis("Horizontal") * walkFactorX, 0, Input.GetAxis("Vertical")*walkFactorZ);
-		if (Vector3.Distance(lastAxis,newAxis) >= minAxisDelta){
-			StateManager.Instance.AddEvent(new AxisInputEvent((FixedVector3)newAxis));
+		if (Vector2.Distance(lastAxis,newAxis) >= minAxisDelta){
+			StateManager.Instance.AddEvent(new AxisInputEvent(new FixedVector3(newAxis.x, 0, newAxis.y)));
 			lastAxis = newAxis;
 		}
 
@@ -185,7 +186,7 @@ public class KeyboardInputSource: MonoBehaviour{
 		for (uint i = 0 ; i < buttonNames.Length ; ++i){
 			if (Input.GetButtonDown(buttonNames[i])) {
 				StateManager.Instance.AddEvent(new ButtonInputEvent(i,true));
-			}else if (Input.GetButtonDown(buttonNames[i])) {
+			}else if (Input.GetButtonUp(buttonNames[i])) {
 				StateManager.Instance.AddEvent(new ButtonInputEvent(i,false));
 			}
 		}

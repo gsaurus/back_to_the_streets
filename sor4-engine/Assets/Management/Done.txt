@@ -1,6 +1,5 @@
 
- 
-  
+ - Keyboard input
  - Input events like in the prototype
  - notion of stationary particle (landed), including moving particle over moving plane
  - Fix flikering when moving up on elevators
