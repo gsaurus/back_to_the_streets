@@ -20,7 +20,7 @@ using UnityEngine;
 public interface State{
 
 	// Add a new model to the state (it's added only after the update cycle)
-	void AddModel(Model model, InternalState.onModelChanged callback = null, object context = null);
+	ModelReference AddModel(Model model, InternalState.onModelChanged callback = null, object context = null);
 
 	// Remove a model from the state (it's removed only after the update cycle)
 	void RemoveModel(Model model, InternalState.onModelChanged callback = null, object context = null);
@@ -134,7 +134,7 @@ public sealed class InternalState: State{
 		sortedModels = new SortedList<Model, Model>(new ModelComparerByUpdatingOrder());
 
 		// Setup initial model
-		if (nextModelIndex == StateManager.invalidModelIndex) ++nextModelIndex;
+		if (nextModelIndex == ModelReference.InvalidModelIndex) ++nextModelIndex;
 		mainModelIndex = nextModelIndex;
 		models.Add(mainModelIndex, mainModel);
 		sortedModels.Add(mainModel, null);
@@ -202,13 +202,14 @@ public sealed class InternalState: State{
 	private void RemoveModelInternal(ModelChangeInfo deletedModel){
 		sortedModels.Remove(deletedModel.model);
 		models.Remove(deletedModel.model.Index);
+		deletedModel.model.Index.UpdateIndex(ModelReference.InvalidModelIndex);
 		deletedModel.PerformCallback();
 		deletedModel.model.Destroy();
 	}
 
 	private void AddModelInternal(ModelChangeInfo createdModel){
-		if (nextModelIndex == StateManager.invalidModelIndex) ++nextModelIndex;
-		createdModel.model._Index = nextModelIndex;
+		if (nextModelIndex == ModelReference.InvalidModelIndex) ++nextModelIndex;
+		createdModel.model.Index.UpdateIndex(nextModelIndex);
 		models.Add(nextModelIndex, createdModel.model);
 		sortedModels.Add(createdModel.model, null);
 		++nextModelIndex;
@@ -262,20 +263,23 @@ public sealed class InternalState: State{
 
 	// Reorder model when the updating order changes
 	public void ReorderModel(Model model, onModelChanged callback, object context){
+		ModelChangeInfo changeInfo = new ModelChangeInfo(model, callback, context);
 		if (IsUpdating){
-			UpdateOperationChange(new ModelChangeInfo(model, callback, context), ref updateChanges.reorderedModelsFromUpdate);
+			UpdateOperationChange(changeInfo, ref updateChanges.reorderedModelsFromUpdate);
 		}else {
-			ReorderModelInternal(new ModelChangeInfo(model, callback, context));
+			ReorderModelInternal(changeInfo);
 		}
 	}
 	
 	// Add a new model to the state (it's added only after the update cycle)
-	public void AddModel(Model model, onModelChanged callback, object context){
+	public ModelReference AddModel(Model model, onModelChanged callback, object context){
+		ModelChangeInfo changeInfo = new ModelChangeInfo(model, callback, context);
 		if (IsUpdating){
-			UpdateOperationChange(new ModelChangeInfo(model, callback, context), ref updateChanges.createdModelsFromUpdate);
+			UpdateOperationChange(changeInfo, ref updateChanges.createdModelsFromUpdate);
 		}else {
-			AddModelInternal(new ModelChangeInfo(model, callback, context));
+			AddModelInternal(changeInfo);
 		}
+		return model.Index;
 	}
 
 
@@ -289,10 +293,11 @@ public sealed class InternalState: State{
 	
 	// Remove a model from the state (it's removed only after the update cycle)
 	public void RemoveModel(Model model, onModelChanged callback, object context){
+		ModelChangeInfo changeInfo = new ModelChangeInfo(model, callback, context);
 		if (IsUpdating){
-			UpdateOperationChange(new ModelChangeInfo(model, callback, context), ref updateChanges.deletedModelsFromUpdate);
+			UpdateOperationChange(changeInfo, ref updateChanges.deletedModelsFromUpdate);
 		}else {
-			RemoveModelInternal(new ModelChangeInfo(model, callback, context));
+			RemoveModelInternal(changeInfo);
 		}
 	}
 
@@ -316,7 +321,9 @@ public sealed class InternalState: State{
 }
 
 
-
+// keep callback information for when the model change takes place
+// aditionaly it can store a reference that is updated once the model change takes place
+// (reference currently only used for model additions)
 internal class ModelChangeInfo{
 	public Model model;
 	public object context;

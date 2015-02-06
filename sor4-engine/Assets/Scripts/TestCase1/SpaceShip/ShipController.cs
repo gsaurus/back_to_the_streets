@@ -10,7 +10,7 @@ public class ShipController:Controller<ShipModel>{
 
 
 	private void EnsureSubModels(ShipModel model){
-		if (model.physicsModelId == StateManager.invalidModelIndex) {
+		if (model.physicsModelId == ModelReference.InvalidModelIndex) {
 			// Add a new PhysicPointModel to the world physics state
 			SpaceModel spaceModel = StateManager.state.MainModel as SpaceModel;
 			PhysicWorldModel world = StateManager.state.GetModel(spaceModel.worldModelId) as PhysicWorldModel;
@@ -18,7 +18,7 @@ public class ShipController:Controller<ShipModel>{
 			PhysicWorldController worldController = world.GetController() as PhysicWorldController;
 			worldController.AddPoint(newPointModel, OnPhysicPointModelCreated, model);
 		}
-		if (model.animationModelId == StateManager.invalidModelIndex) {
+		if (model.animationModelId == ModelReference.InvalidModelIndex) {
 			// Add a new animation model to the game state
 			string characterName;
 			if (model.player == NetworkCenter.Instance.GetPlayerNumber()){
@@ -82,13 +82,13 @@ public class ShipController:Controller<ShipModel>{
 						case ShipInputType.Fire:{
 							if (shipEvent.state == ShipInputState.Pressed) {
 								// FIRE!!!
-								BulletModel createdBulletModel = new BulletModel(
-									model.player,
-									pointModel.position.X,
-									pointModel.position.Y + 0.5f * (model.player % 2 != 0 ? 1.0f : -1.0f),
-									pointModel.position.Z
-								);
-								StateManager.state.AddModel(createdBulletModel);
+//								BulletModel createdBulletModel = new BulletModel(
+//									model.player,
+//									pointModel.position.X,
+//									pointModel.position.Y + 0.5f * (model.player % 2 != 0 ? 1.0f : -1.0f),
+//									pointModel.position.Z
+//								);
+//								StateManager.state.AddModel(createdBulletModel);
 							}
 						}break;
 					} // end switch

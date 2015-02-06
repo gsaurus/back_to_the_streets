@@ -7,7 +7,7 @@ public class SpaceModel:Model<SpaceModel>{
 	// Key: player number; value: ship model
 	public SerializableDictionary<uint, uint> ships = new SerializableDictionary<uint, uint>();
 
-	public uint worldModelId = StateManager.invalidModelIndex;
+	public uint worldModelId = ModelReference.InvalidModelIndex;
 
 	// Main state doesn't need a view
 //	protected override View<SpaceModel> CreateView(){

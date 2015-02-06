@@ -52,7 +52,7 @@ public class SpaceController:Controller<SpaceModel>{
 
 		PhysicWorldModel worldModel;
 		PhysicWorldController worldController;
-		if (model.worldModelId == StateManager.invalidModelIndex){
+		if (model.worldModelId == ModelReference.InvalidModelIndex){
 			// create world
 			worldModel = new PhysicWorldModel("test", new FixedVector3(0,-0.008,0));
 			StateManager.state.AddModel(worldModel, OnWorldCreated, model);

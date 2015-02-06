@@ -30,8 +30,6 @@ public struct StateManagerSetup{
 // StateManager is the intermediate between the game state, and all other
 // entities that interact with it - such as network, states history, input and event loggers
 public sealed class StateManager{
-	
-	public static readonly uint invalidModelIndex = 0;
 
 #region Singleton
 	private static readonly StateManager instance = new StateManager();

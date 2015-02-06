@@ -36,7 +36,7 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 	public OnWorldChangedDelegate onWorldChanged = null;
 
 	// we keep the index of the world here to access it from the game state
-	private uint worldModelIndex = StateManager.invalidModelIndex;
+	private uint worldModelIndex = ModelReference.InvalidModelIndex;
 
 
 	// A delegate for physic points added / removed on the world

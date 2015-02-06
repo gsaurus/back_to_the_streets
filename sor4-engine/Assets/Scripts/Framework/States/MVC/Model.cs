@@ -17,8 +17,7 @@ using System.Collections.Generic;
 public interface Model{
 
 	// Unique model index in the StateManager
-	uint _Index { set; }
-	uint Index { get; }
+	ModelReference Index { get; }
 
 	// Models with lower update order updates first
 	// Models within the same update order are updated by index order
@@ -75,22 +74,23 @@ public class ModelComparerByUpdatingOrder:IComparer<Model>{
 public abstract class Model<T>:Model where T:Model<T>{
 
 	// Unique model index in the StateManager
-	// The underscore here denotes "don't touch it!", only State should handle it
-	public uint _Index { private get; set; }
-	public uint Index { get{ return _Index; } }
+	// Note: this class object is the only exception on models serialization policy.
+	// The object is only useful when a new model is created and others reference it.
+	// From there, the reference never change, maintaining the consistency
+	public ModelReference Index { get ; private set; }
 
 	// Models with lower update order updates first
-	private int _updatingOrder;
+	private int updatingOrder;
 
 	// updating order getter/setter, automatically reorders when order changes
 	public int UpdatingOrder {
 		get{
-			return _updatingOrder;
+			return updatingOrder;
 		}
 		set{
 			// only modify if it's during a state update cycle
-			if (StateManager.state.IsUpdating && _updatingOrder != value) {
-				_updatingOrder = value;
+			if (StateManager.state.IsUpdating && updatingOrder != value) {
+				updatingOrder = value;
 				StateManager.state.ReorderModel(this);
 			}
 		}
@@ -106,8 +106,8 @@ public abstract class Model<T>:Model where T:Model<T>{
 
 	// A model should be created with a given updatingOrder
 	public Model(int updatingOrder = 0){
-		_Index = StateManager.invalidModelIndex;
-		_updatingOrder = updatingOrder;
+		Index = new ModelReference();
+		this.updatingOrder = updatingOrder;
 	}
 
 

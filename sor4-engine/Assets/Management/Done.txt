@@ -1,4 +1,6 @@
 
+ - Let sub-states be created imediately!
+ - Touch screen input (delimiter: line perpendicular to the middle point between each 2 buttons)
  - Keyboard input
  - Input events like in the prototype
  - notion of stationary particle (landed), including moving particle over moving plane

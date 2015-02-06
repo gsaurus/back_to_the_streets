@@ -21,7 +21,7 @@ public class VariadicAnimationEvent: AnimationEvent{
 		EventExecutionDelegate eventDelegate,
 		params object[] parameters
 	){
-		this.eventExecutionDelegate = eventExecutionDelegate;
+		this.eventExecutionDelegate = eventDelegate;
 		this.parameters = parameters;
 	}
 	
@@ -47,7 +47,7 @@ public class SingleAnimationEvent<T>: AnimationEvent{
 	
 	// Constructor with delegate and parameters
 	public SingleAnimationEvent(EventExecutionDelegate eventDelegate, T param){
-		this.eventExecutionDelegate = eventExecutionDelegate;
+		this.eventExecutionDelegate = eventDelegate;
 		this.param = param;
 	}
 	
@@ -73,7 +73,7 @@ public class DoubleAnimationEvent<U, V>: AnimationEvent{
 	
 	// Constructor with delegate and parameters
 	public DoubleAnimationEvent(EventExecutionDelegate eventDelegate, U param1, V param2){
-		this.eventExecutionDelegate = eventExecutionDelegate;
+		this.eventExecutionDelegate = eventDelegate;
 		this.param1 = param1;
 		this.param2 = param2;
 	}

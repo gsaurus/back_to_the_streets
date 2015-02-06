@@ -1,9 +1,7 @@
 
 
-  - Touch screen input (delimiter: line perpendicular to the middle point between each 2 closest control buttons)
-  - Game Entity conditions and events
   - Test new input, conditions and events with TestCase1
-  - Let sub-states be created imediately!
+  - Game Entity conditions and events
   - Review MVC way VC are created, there should be a way of setting at least from constructor?
   
  - Physics System
