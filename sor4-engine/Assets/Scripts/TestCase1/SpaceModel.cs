@@ -5,9 +5,9 @@ using System;
 public class SpaceModel:Model<SpaceModel>{
 
 	// Key: player number; value: ship model
-	public SerializableDictionary<uint, uint> ships = new SerializableDictionary<uint, uint>();
+	public SerializableDictionary<uint, ModelReference> ships = new SerializableDictionary<uint, ModelReference>();
 
-	public uint worldModelId = ModelReference.InvalidModelIndex;
+	public ModelReference worldModelId = new ModelReference();
 
 	// Main state doesn't need a view
 //	protected override View<SpaceModel> CreateView(){

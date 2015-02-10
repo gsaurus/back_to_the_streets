@@ -16,10 +16,10 @@ public class SpaceController:Controller<SpaceModel>{
 
 	private void SetupRocha(){
 		AnimationController idle1Ctr = new AnimationController();
-		AnimationsVCPool.Instance.RegisterController("Rocha", "idle1", idle1Ctr);
 		AnimationController walkCtr = new AnimationController();
-		AnimationsVCPool.Instance.RegisterController("Rocha", "walk", walkCtr);
 		AnimationView idleView = new AnimationView();
+		AnimationsVCPool.Instance.RegisterController("Rocha", "idle1", idle1Ctr);
+		AnimationsVCPool.Instance.RegisterController("Rocha", "walk", walkCtr);
 		AnimationsVCPool.Instance.SetDefaultView("Rocha", idleView);
 
 		List<AnimationTriggerCondition> conditions = new List<AnimationTriggerCondition>();
@@ -33,10 +33,10 @@ public class SpaceController:Controller<SpaceModel>{
 
 	private void SetupBlaze(){
 		AnimationController idle1Ctr = new AnimationController();
-		AnimationsVCPool.Instance.RegisterController("Blaze", "idle1", idle1Ctr);
 		AnimationController walkCtr = new AnimationController();
-		AnimationsVCPool.Instance.RegisterController("Blaze", "walk", walkCtr);
 		AnimationView idleView = new AnimationView();
+		AnimationsVCPool.Instance.RegisterController("Blaze", "idle1", idle1Ctr);
+		AnimationsVCPool.Instance.RegisterController("Blaze", "walk", walkCtr);
 		AnimationsVCPool.Instance.SetDefaultView("Blaze", idleView);
 
 		List<AnimationTriggerCondition> conditions = new List<AnimationTriggerCondition>();
@@ -55,14 +55,14 @@ public class SpaceController:Controller<SpaceModel>{
 		if (model.worldModelId == ModelReference.InvalidModelIndex){
 			// create world
 			worldModel = new PhysicWorldModel("test", new FixedVector3(0,-0.008,0));
-			StateManager.state.AddModel(worldModel, OnWorldCreated, model);
+			model.worldModelId = StateManager.state.AddModel(worldModel);
 			worldController = worldModel.GetController() as PhysicWorldController;
 		
-			return; // nothing else until world is created
+//			return; // nothing else until world is created
+		}else {
+			worldModel = StateManager.state.GetModel(model.worldModelId) as PhysicWorldModel;
+			worldController = worldModel.GetController() as PhysicWorldController;
 		}
-
-		worldModel = StateManager.state.GetModel(model.worldModelId) as PhysicWorldModel;
-		worldController = worldModel.GetController() as PhysicWorldController;
 
 		if (worldModel.planeModels.Count == 0) {
 			// for now add some "dynamic" planes
@@ -75,7 +75,7 @@ public class SpaceController:Controller<SpaceModel>{
 			                             new FixedVector3(9,4,7),
 			                             new FixedVector3(9,-4,7)
 			                            );
-			worldController.AddPlane(plane);
+			worldController.AddPlane(worldModel, plane);
 
 			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
 			                             new FixedVector3(-9,-4.1,-9),
@@ -83,7 +83,7 @@ public class SpaceController:Controller<SpaceModel>{
 			                             new FixedVector3(0,0.0,9),
 			                             new FixedVector3(0,0.0,-9)
 			                             );
-			worldController.AddPlane(plane);
+			worldController.AddPlane(worldModel, plane);
 
 			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
 			                             new FixedVector3(0,0,-9),
@@ -91,7 +91,7 @@ public class SpaceController:Controller<SpaceModel>{
 			                             new FixedVector3(4,0.0,9),
 			                             new FixedVector3(4,0.0,-9)
 			                             );
-			worldController.AddPlane(plane);
+			worldController.AddPlane(worldModel, plane);
 
 			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
 			                             new FixedVector3(4,-4.1,9),
@@ -99,7 +99,7 @@ public class SpaceController:Controller<SpaceModel>{
 			                             new FixedVector3(4,0,-9),
 			                             new FixedVector3(4,0,9)
 			                             );
-			worldController.AddPlane(plane);
+			worldController.AddPlane(worldModel, plane);
 
 			// Moving plane:
 			plane = new MovingPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
@@ -108,7 +108,7 @@ public class SpaceController:Controller<SpaceModel>{
 			                             new FixedVector3(9,-3,9),
 			                             new FixedVector3(9,-3,-9)
 			                             );
-			worldController.AddPlane(plane);
+			worldController.AddPlane(worldModel, plane);
 
 			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
 			                             new FixedVector3(4,-2.5,-9),
@@ -116,7 +116,7 @@ public class SpaceController:Controller<SpaceModel>{
 			                             new FixedVector3(9,-2.5,9),
 			                             new FixedVector3(9,-2.5,-9)
 			                             );
-			worldController.AddPlane(plane);
+			worldController.AddPlane(worldModel, plane);
 
 			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
 			                             new FixedVector3(-7.8,-4.1,9),
@@ -124,7 +124,7 @@ public class SpaceController:Controller<SpaceModel>{
 			                             new FixedVector3(-7.8,4.1,-9),
 			                             new FixedVector3(-7.8,4.1,9)
 			                             );
-			worldController.AddPlane(plane);
+			worldController.AddPlane(worldModel, plane);
 
 			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
 			                             new FixedVector3(8,-4.1,-9),
@@ -132,17 +132,17 @@ public class SpaceController:Controller<SpaceModel>{
 			                             new FixedVector3(8,4.1,9),
 			                             new FixedVector3(8,4.1,-9)
 			                             );
-			worldController.AddPlane(plane);
+			worldController.AddPlane(worldModel, plane);
 		}
 
 		List<uint> allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers();
-		ShipModel shipModel;
+		Model shipModel;
 
 		// Remove ships for inactive players
-		foreach (KeyValuePair<uint, uint> pair in model.ships){
+		foreach (KeyValuePair<uint, ModelReference> pair in model.ships){
 			if (!allPlayers.Exists(x => x == pair.Key)){
 				// Doesn't exist anymore, remove ship
-				shipModel = StateManager.state.GetModel(pair.Value) as ShipModel;
+				shipModel = StateManager.state.GetModel(pair.Value);
 				//worldController.RemovePoint(shipModel, OnShipDestroyed, model);
 				StateManager.state.RemoveModel(shipModel, OnShipDestroyed, model);
 			}
@@ -151,34 +151,47 @@ public class SpaceController:Controller<SpaceModel>{
 		// Create ships for new players
 		foreach(uint playerId in allPlayers){
 			if (!model.ships.ContainsKey(playerId)){
-				shipModel = new ShipModel(playerId); 
+				Model inputModel = new PlayerInputModel(playerId);
+				shipModel = new GameEntityModel(playerId % 2 == 0 ? "Blaze" : "Rocha",
+				                                "idle1",
+				                                inputModel,
+				                                new FixedVector3(0,4,0),
+				                                worldModel
+				                                );
+				//shipModel = new ShipModel(playerId); 
 				//worldController.AddPoint(shipModel, OnShipCreated, model);
-				StateManager.state.AddModel(shipModel, OnShipCreated, model);
+				model.ships[playerId] = StateManager.state.AddModel(shipModel);
 			}
 		}
 
 	}
 
 
-	private void OnShipCreated(Model model, object mainModelObj){
-		ShipModel ship = model as ShipModel;
-		SpaceModel mainModel = mainModelObj as SpaceModel;
-		if (ship == null || mainModel == null) return;
-		mainModel.ships[ship.player] = ship.Index;
-	}
+//	private void OnShipCreated(Model model, object mainModelObj){
+//		ShipModel ship = model as ShipModel;
+//		SpaceModel mainModel = mainModelObj as SpaceModel;
+//		if (ship == null || mainModel == null) return;
+//		mainModel.ships[ship.player] = ship.Index;
+//	}
 
 
 	private void OnShipDestroyed(Model model, object mainModelObj){
-		ShipModel ship = model as ShipModel;
 		SpaceModel mainModel = mainModelObj as SpaceModel;
-		if (ship == null || mainModel == null) return;
-		mainModel.ships.Remove(ship.player);
+		if (model == null || mainModel == null) return;
+		uint key = 0;
+		foreach (KeyValuePair<uint,ModelReference> pair in mainModel.ships){
+			if (pair.Value == model.Index){
+				key = pair.Key;
+				break;
+			}
+		}
+		mainModel.ships.Remove(key);
 	}
 
-	private void OnWorldCreated(Model model, object mainModelObj){
-		SpaceModel mainModel = mainModelObj as SpaceModel;
-		mainModel.worldModelId = model.Index;
-	}
+//	private void OnWorldCreated(Model model, object mainModelObj){
+//		SpaceModel mainModel = mainModelObj as SpaceModel;
+//		mainModel.worldModelId = model.Index;
+//	}
 
 
 	public override void PostUpdate(SpaceModel model){

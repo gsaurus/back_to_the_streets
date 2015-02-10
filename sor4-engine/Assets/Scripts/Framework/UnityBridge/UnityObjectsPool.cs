@@ -26,7 +26,18 @@ public class UnityObjectsPool: Singleton<UnityObjectsPool>{
 			return obj;
 		}
 		// Doesn't exist
+
+		GameEntityModel ownerModel = StateManager.state.GetModel(modelId) as GameEntityModel;
+
+		// "guess" character name if necessary
 		if (prefabName == null){
+			if (ownerModel == null) return null;
+			AnimationModel animModel = StateManager.state.GetModel(ownerModel.animationModelId) as AnimationModel;
+			if (animModel == null) return null;
+			prefabName = animModel.characterName;
+		}
+
+		if (prefabName == null || modelId == ModelReference.InvalidModelIndex){
 			// Can't create it at the momment
 			return null;
 		}
@@ -36,6 +47,15 @@ public class UnityObjectsPool: Singleton<UnityObjectsPool>{
 		if (parent != null){
 			obj.transform.SetParent(parent);
 		}
+
+		// If there's a physics point model, translate the newly created obj to there
+		if (ownerModel != null){
+			PhysicPointModel pointModel = StateManager.state.GetModel(ownerModel.physicsModelId) as PhysicPointModel;
+			if (pointModel != null){
+				obj.transform.position = (Vector3) pointModel.position;
+			}
+		}
+
 		return obj;
 	}
 

@@ -17,20 +17,19 @@ public class PhysicPointView:View<PhysicPointModel>{
 
 		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.ownerId);
 		if (obj == null) return; // can't work without a game object
-		Transform transform = obj.transform;
 
 		// Decide on interpolation based on the last position variation against current object position
-		float oldDistance = Vector3.Distance(transform.position, (Vector3)model.lastPosition);
+		float oldDistance = Vector3.Distance(obj.transform.position, (Vector3)model.lastPosition);
 		if (oldDistance < minDistanceToInterpolate || oldDistance > maxDistanceToInterpolate) {
 			// Too close or too far away, just teleport
-			transform.position = (Vector3)model.position;
+			obj.transform.position = (Vector3)model.position;
 		}else {
 			// Something changed abruptaly, interpolate
 			// TODO: better interpolation algorithm?
 			float interpolationFactor = 1f - (oldDistance-minDistanceToInterpolate) / (maxDistanceToInterpolate - minDistanceToInterpolate);
 			interpolationFactor = Mathf.Pow(interpolationFactor, 3);
 			if (interpolationFactor < minInterpolationFactor) interpolationFactor = minInterpolationFactor;
-			transform.position = Vector3.Lerp(transform.position, (Vector3)model.position, interpolationFactor);
+			obj.transform.position = Vector3.Lerp(obj.transform.position, (Vector3)model.position, interpolationFactor);
 		}
 
 	}

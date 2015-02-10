@@ -35,8 +35,8 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 	public delegate void OnWorldChangedDelegate(out SerializableList<PhysicPlaneModel> staticPlanes);
 	public OnWorldChangedDelegate onWorldChanged = null;
 
-	// we keep the index of the world here to access it from the game state
-	private uint worldModelIndex = ModelReference.InvalidModelIndex;
+//	// we keep the index of the world here to access it from the game state
+//	private ModelReference worldModelIndex = new ModelReference();
 
 
 	// A delegate for physic points added / removed on the world
@@ -66,11 +66,6 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 
 	public override bool IsCompatible(PhysicWorldModel originalModel, PhysicWorldModel newModel){
 		return currentWorld.Equals(newModel.worldName);
-	}
-
-
-	private PhysicWorldModel GetWorld(){
-		return StateManager.state.GetModel(worldModelIndex) as PhysicWorldModel;
 	}
 
 
@@ -115,8 +110,7 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 	}
 
 
-	public void SetWorld(string worldName){
-		PhysicWorldModel world = GetWorld();
+	public void SetWorld(PhysicWorldModel world, string worldName){
 		if (world != null){
 			nextWorld = worldName;
 		}
@@ -125,8 +119,7 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 
 	// Check collisions between physic models, and apply gravity to them
 	public override void Update(PhysicWorldModel world){
-		worldModelIndex = world.Index;
-		
+	
 		PhysicPointModel pointModel;
 		PhysicPointController pointController;
 		foreach(uint pointModelId in world.pointModels) {
@@ -194,23 +187,23 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 #region Add/Rem Points
 
 	// Add a Physic Point to the world
-	public void AddPoint(PhysicPointModel pointModel, OnPointModelChanged callback = null, object context = null){
+	public ModelReference AddPoint(PhysicWorldModel world, PhysicPointModel pointModel, OnPointModelChanged callback = null, object context = null){
 		addPointCallbacks[pointModel] = new Eppy.Tuple<OnPointModelChanged, object>(callback, context);
-		StateManager.state.AddModel(pointModel, OnPointAdded);
+		return StateManager.state.AddModel(pointModel, OnPointAdded, world);
 	}
 
 	// Remove a Physic Point from the world
-	public void RemovePoint(PhysicPointModel pointModel, OnPointModelChanged callback = null, object context = null){
+	public void RemovePoint(PhysicWorldModel world, PhysicPointModel pointModel, OnPointModelChanged callback = null, object context = null){
 		removePointCallbacks[pointModel] = new Eppy.Tuple<OnPointModelChanged, object>(callback, context);
-		StateManager.state.RemoveModel(pointModel, OnPointRemoved);
+		StateManager.state.RemoveModel(pointModel, OnPointRemoved, world);
 	}
 
 
 	// Delegate for when a point is added, it redirects to the caller delegate
 	private void OnPointAdded(Model model, object context){
+		PhysicWorldModel worldModel = context as PhysicWorldModel;
 		Eppy.Tuple<OnPointModelChanged, object> callbackTuple;
 		PhysicPointModel pointModel = model as PhysicPointModel;
-		PhysicWorldModel worldModel = GetWorld();
 		if (pointModel == null || worldModel == null){
 			// Something went wrong!
 			return;
@@ -228,7 +221,7 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 	private void OnPointRemoved(Model model, object context){
 		Eppy.Tuple<OnPointModelChanged, object> callbackTuple;
 		PhysicPointModel pointModel = model as PhysicPointModel;
-		PhysicWorldModel worldModel = GetWorld();
+		PhysicWorldModel worldModel = context as PhysicWorldModel;
 		if (pointModel == null || worldModel == null){
 			// Something went wrong!
 			return;
@@ -247,22 +240,22 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 #region Add/Rem Planes
 
 	// Add a Physic Plane to the world
-	public void AddPlane(OnPlaneModelChanged callback, object context, params FixedVector3[] paramPoints){
+	public void AddPlane(PhysicWorldModel worldModel, OnPlaneModelChanged callback, object context, params FixedVector3[] paramPoints){
 		PhysicPlaneModel planeModel = new PhysicPlaneModel(PhysicsUpdateOrder, paramPoints);
 		addPlaneCallbacks[planeModel] = new Eppy.Tuple<OnPlaneModelChanged, object>(callback, context);
-		StateManager.state.AddModel(planeModel, OnPlaneAdded);
+		StateManager.state.AddModel(planeModel, OnPlaneAdded, worldModel);
 	}
 
 	// Add a Physic Plane to the world
-	public void AddPlane(PhysicPlaneModel planeModel, OnPlaneModelChanged callback = null, object context = null){
+	public void AddPlane(PhysicWorldModel worldModel, PhysicPlaneModel planeModel, OnPlaneModelChanged callback = null, object context = null){
 		addPlaneCallbacks[planeModel] = new Eppy.Tuple<OnPlaneModelChanged, object>(callback, context);
-		StateManager.state.AddModel(planeModel, OnPlaneAdded);
+		StateManager.state.AddModel(planeModel, OnPlaneAdded, worldModel);
 	}
 	
 	// Remove a Physic Plane from the world
-	public void RemovePlane(PhysicPlaneModel planeModel, OnPlaneModelChanged callback = null, object context = null){
+	public void RemovePlane(PhysicWorldModel worldModel, PhysicPlaneModel planeModel, OnPlaneModelChanged callback = null, object context = null){
 		removePlaneCallbacks[planeModel] = new Eppy.Tuple<OnPlaneModelChanged, object>(callback, context);
-		StateManager.state.RemoveModel(planeModel, OnPlaneRemoved);
+		StateManager.state.RemoveModel(planeModel, OnPlaneRemoved, worldModel);
 	}
 	
 	
@@ -270,7 +263,7 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 	private void OnPlaneAdded(Model model, object context){
 		Eppy.Tuple<OnPlaneModelChanged, object> callbackTuple;
 		PhysicPlaneModel planeModel = model as PhysicPlaneModel;
-		PhysicWorldModel worldModel = GetWorld();
+		PhysicWorldModel worldModel = context as PhysicWorldModel;
 		if (planeModel == null || worldModel == null){
 			// Something went wrong!
 			return;
@@ -288,7 +281,7 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 	private void OnPlaneRemoved(Model model, object context){
 		Eppy.Tuple<OnPlaneModelChanged, object> callbackTuple;
 		PhysicPlaneModel planeModel = model as PhysicPlaneModel;
-		PhysicWorldModel worldModel = GetWorld();
+		PhysicWorldModel worldModel = context as PhysicWorldModel;
 		if (planeModel == null || worldModel == null){
 			// Something went wrong!
 			return;

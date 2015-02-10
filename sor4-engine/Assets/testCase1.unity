@@ -567,6 +567,7 @@ GameObject:
   - 4: {fileID: 1035801023}
   - 114: {fileID: 1035801022}
   - 114: {fileID: 1035801024}
+  - 114: {fileID: 1035801025}
   m_Layer: 0
   m_Name: SpaceMaker
   m_TagString: Untagged
@@ -606,6 +607,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 216761edcbe63da4899927722e4955e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1035801025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1035801021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fefa3047ce107646ab99461df0e55a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1046359855
