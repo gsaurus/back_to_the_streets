@@ -24,17 +24,20 @@ public class AnimationTransition{
 	// List of conditions for the transition
 	private List<AnimationTriggerCondition> conditions;
 
+	public float transitionTime { get ; private set; }
+
 	// Constructor
-	public AnimationTransition(string nextAnimation, List<AnimationTriggerCondition> conditions){
+	public AnimationTransition(string nextAnimation, List<AnimationTriggerCondition> conditions, float transitionTime = 0.2f ){
 		this.nextAnimation = nextAnimation;
 		this.conditions = conditions;
+		this.transitionTime = transitionTime;
 	}
 
-	// Execute some code when doing the transition
-	// Example: cleanup current animation state variables
-	protected virtual void OnTransition(AnimationModel model){
-		// Nothing by default
-	}
+//	// Execute some code when doing the transition
+//	// Example: cleanup current animation state variables
+//	protected virtual void OnTransition(AnimationModel model){
+//		// Nothing by default
+//	}
 
 	// Evaluate conditions
 	public string CheckTransition(AnimationModel model){
@@ -98,14 +101,23 @@ public class AnimationController:Controller<AnimationModel>{
 		// TODO: check global transitions (i.e. applicable to any state)
 
 		string nextAnimation = null;
+		AnimationTransition theTransition = null;
 		foreach(AnimationTransition transition in transitions){
 			nextAnimation = transition.CheckTransition(model);
-			if (nextAnimation != null) break;
+			if (nextAnimation != null){
+				theTransition = transition;
+				break;
+			}
 		}
 		
 		// If there is a transition pending, move to it
 		if (nextAnimation != null) {
 			SetAnimation(model, nextAnimation);
+			AnimationView view = model.GetView() as AnimationView;
+			if (view != null){
+				view.transitionTime = theTransition.transitionTime;
+				UnityEngine.Debug.Log("Setting to " + view.transitionTime);
+			}
 		}
 
 	}

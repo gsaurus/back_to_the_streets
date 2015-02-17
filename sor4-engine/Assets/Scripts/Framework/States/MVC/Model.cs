@@ -165,6 +165,12 @@ public abstract class Model<T>:Model where T:Model<T>{
 		return controller;
 	}
 
+	public View<T> GetView() {
+		// no need to ensure view here
+		EnsureView();
+		return view;
+	}
+
 	public Controller Controller(){
 		return GetController() as Controller;
 	}

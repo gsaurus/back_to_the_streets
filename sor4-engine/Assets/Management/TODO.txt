@@ -1,7 +1,6 @@
 
 
-  - Test new input, conditions and events with TestCase1
-  - Game Entity conditions and events
+ 
   - Review MVC way VC are created, there should be a way of setting at least from constructor?
   
  - Physics System
@@ -18,9 +17,9 @@
  - Network System (note: can be revisited later)
  	- Send what players are "Ready" to new joiners
  	- Time delay compensation: if events come too much in future, acelerate game; if too much in the past, slowdown
+ 	- Send game state every few seconds?
  	
  - Animation System
-    - Pause / resume character animations if the game is paused / resumed
  	- Global transitions (transitions from any state)
  	- Conditions / Events editor 
  	

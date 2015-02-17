@@ -11,8 +11,9 @@ using System.Collections.Generic;
 // TODO: certain animations with custom "speed" control, how to
 public class AnimationView:View<AnimationModel>{
 
-	private float transitionTime = 0.2f;	 // TODO: depending on transition source -> dest?
-	private float interpolationTime = 0.4f; // TODO: something based on lag?
+	// This is public, so that it can be set from outside
+	public float transitionTime = 0.2f;
+	public float interpolationTime = 0.4f; // TODO: something based on lag?
 
 
 	protected int GetAnimationCurrentFrame(AnimatorStateInfo stateInfo){
@@ -29,6 +30,10 @@ public class AnimationView:View<AnimationModel>{
 		if (obj == null) return; // can't work without a game object
 		Animator animator = obj.GetComponent<Animator>();
 		if (animator == null) return; // can't work without an animator component
+
+		// don't animate if paused
+		animator.enabled = !StateManager.Instance.IsPaused;
+		if (!animator.enabled) return;
 
 		// Get current animation (if transiting we consider next as current)
 		AnimatorStateInfo stateInfo;
@@ -50,6 +55,7 @@ public class AnimationView:View<AnimationModel>{
 			}
 		}else {
 			// We need to make transition to the new animation
+			UnityEngine.Debug.Log("Transition: " + transitionTime);
 			animator.CrossFade(model.animationName, transitionTime);
 			// check target offset (note current API doesn't give access to length before starting the transition)
 			AnimatorStateInfo nextStateInfo = animator.GetNextAnimatorStateInfo(0);
