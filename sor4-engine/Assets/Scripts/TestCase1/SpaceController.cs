@@ -42,6 +42,11 @@ public class SpaceController:Controller<SpaceModel>{
 		conditions.Add(new InputAxisMovingCondition());
 		transition = new AnimationTransition("walk", conditions);
 		idle1Ctr.AddTransition(transition);
+		// Force character to be stopped while idle
+		idle1Ctr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+			GameEntityController.SetMaxInputVelocity,
+			FixedVector3.Zero
+		));
 		
 		// TODO: walk event for speed...
 		
@@ -49,8 +54,14 @@ public class SpaceController:Controller<SpaceModel>{
 		// walk to iddle
 		conditions = new List<AnimationTriggerCondition>();
 		conditions.Add(new NegateCondition(new InputAxisMovingCondition()));
-		transition = new AnimationTransition("walk", conditions);
+		transition = new AnimationTransition("idle1", conditions);
 		walkCtr.AddTransition(transition);
+		// Events that allow the character to move
+		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<bool>(GameEntityController.SetAutomaticFlip, true));
+		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+			GameEntityController.SetMaxInputVelocity,
+			new FixedVector3(0.1f, 0, 0.1f)
+		));
 
 	}
 

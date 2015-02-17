@@ -4,36 +4,29 @@ using UnityEngine;
 using System.Collections.Generic;
 
 
-// An event that can hold a variadic number of parameters to be executed
-public class VariadicAnimationEvent: AnimationEvent{
-
+// Parameterless event
+public class SimpleAnimationEvent: AnimationEvent{
+	
 	// Delegate of the event
-	public delegate void EventExecutionDelegate(AnimationModel model, params object[] parameters);
-
+	public delegate void EventExecutionDelegate(AnimationModel model);
+	
 	private EventExecutionDelegate eventExecutionDelegate;
 	
-	// Parameters
-	private object[] parameters;
 	
-
 	// Constructor with delegate and parameters
-	public VariadicAnimationEvent(
-		EventExecutionDelegate eventDelegate,
-		params object[] parameters
-	){
+	public SimpleAnimationEvent(EventExecutionDelegate eventDelegate){
 		this.eventExecutionDelegate = eventDelegate;
-		this.parameters = parameters;
 	}
 	
 	
 	// Execute event trough the delegate
 	public void Execute(AnimationModel model){
-		eventExecutionDelegate(model, parameters);
+		eventExecutionDelegate(model);
 	}
-	
 }
 
 
+// Event with a single parameter
 public class SingleAnimationEvent<T>: AnimationEvent{
 	
 	// Delegate of the event
@@ -59,6 +52,7 @@ public class SingleAnimationEvent<T>: AnimationEvent{
 }
 
 
+// Event with two parameters
 public class DoubleAnimationEvent<U, V>: AnimationEvent{
 	
 	// Delegate of the event
@@ -85,3 +79,33 @@ public class DoubleAnimationEvent<U, V>: AnimationEvent{
 	}
 }
 
+
+
+// An event that can hold a variadic number of parameters to be executed
+public class VariadicAnimationEvent: AnimationEvent{
+	
+	// Delegate of the event
+	public delegate void EventExecutionDelegate(AnimationModel model, params object[] parameters);
+	
+	private EventExecutionDelegate eventExecutionDelegate;
+	
+	// Parameters
+	private object[] parameters;
+	
+	
+	// Constructor with delegate and parameters
+	public VariadicAnimationEvent(
+		EventExecutionDelegate eventDelegate,
+		params object[] parameters
+		){
+		this.eventExecutionDelegate = eventDelegate;
+		this.parameters = parameters;
+	}
+	
+	
+	// Execute event trough the delegate
+	public void Execute(AnimationModel model){
+		eventExecutionDelegate(model, parameters);
+	}
+	
+}

@@ -172,8 +172,8 @@ public class KeyboardInputSource: MonoBehaviour{
 			}
 		}
 
-		Vector3 newAxis = new Vector3(Input.GetAxis("Horizontal") * walkFactorX, 0, Input.GetAxis("Vertical")*walkFactorZ);
-		if (Vector2.Distance(lastAxis,newAxis) >= minAxisDelta){
+		Vector2 newAxis = new Vector2(Input.GetAxis("Horizontal") * walkFactorX, Input.GetAxis("Vertical")*walkFactorZ);
+		if ((Vector2.Distance(lastAxis,newAxis) >= minAxisDelta) || (newAxis == Vector2.zero && lastAxis != Vector2.zero)){
 			StateManager.Instance.AddEvent(new AxisInputEvent(new FixedVector3(newAxis.x, 0, newAxis.y)));
 			lastAxis = newAxis;
 		}

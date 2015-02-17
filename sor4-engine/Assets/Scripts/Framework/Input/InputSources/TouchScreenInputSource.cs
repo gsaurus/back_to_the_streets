@@ -65,13 +65,13 @@ public class TouchScreenInputSource: MonoBehaviour{
 			}
 		}
 
-		Vector3 newAxis = Vector3.zero;
+		Vector2 newAxis = Vector2.zero;
 		if (newButtonsDown[0]){
 			newAxis = axisPos - buttonsLocation[0];
 			newAxis = newAxis / axisMaxRadius;
 		}
 
-		if (Vector2.Distance(lastAxis, newAxis) >= minAxisDelta){
+		if ((Vector2.Distance(lastAxis, newAxis) >= minAxisDelta) || (newAxis == Vector2.zero && lastAxis != Vector2.zero)){
 			StateManager.Instance.AddEvent(new AxisInputEvent(new FixedVector3(newAxis.x, 0, newAxis.y)));
 			lastAxis = newAxis;
 		}
