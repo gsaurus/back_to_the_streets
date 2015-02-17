@@ -71,7 +71,12 @@ public class TouchScreenInputSource: MonoBehaviour{
 			newAxis = newAxis / axisMaxRadius;
 		}
 
-		if ((Vector2.Distance(lastAxis, newAxis) >= minAxisDelta) || (newAxis == Vector2.zero && lastAxis != Vector2.zero)){
+		if (
+			(Vector2.Distance(lastAxis,newAxis) >= minAxisDelta)
+			|| (newAxis == Vector2.zero && lastAxis != Vector2.zero)
+			|| (newAxis != Vector2.zero && lastAxis == Vector2.zero)
+			|| (newAxis != Vector2.zero && lastAxis == Vector2.zero && newAxis.x > 0 != lastAxis.x > 0)
+		){
 			StateManager.Instance.AddEvent(new AxisInputEvent(new FixedVector3(newAxis.x, 0, newAxis.y)));
 			lastAxis = newAxis;
 		}

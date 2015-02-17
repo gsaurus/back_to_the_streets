@@ -4,7 +4,7 @@
   - Review MVC way VC are created, there should be a way of setting at least from constructor?
   
  - Physics System
-    - Predefined velocity affectors: gravityControl, collisionControl, impulse
+    - Predefined velocity affectors: gravityControl, collisionControl, impulse00
     - [optional] Fix point over moving platform with diagonal normal
     - Read / Write static world from / to files ? can be directly on the scene..
     - World planes editor

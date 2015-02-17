@@ -116,7 +116,6 @@ public class AnimationController:Controller<AnimationModel>{
 			AnimationView view = model.GetView() as AnimationView;
 			if (view != null){
 				view.transitionTime = theTransition.transitionTime;
-				UnityEngine.Debug.Log("Setting to " + view.transitionTime);
 			}
 		}
 
