@@ -60,3 +60,17 @@ public class BoolCondition: AnimationTriggerCondition{
 	
 }
 
+
+public class NegateCondition: AnimationTriggerCondition{
+	private AnimationTriggerCondition originalCondition;
+
+	public NegateCondition(AnimationTriggerCondition originalCondition){
+		this.originalCondition = originalCondition;
+	}
+
+	public bool Evaluate(AnimationModel model){
+		return !originalCondition.Evaluate(model);
+	}
+
+}
+

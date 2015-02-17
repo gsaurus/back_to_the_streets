@@ -16,6 +16,12 @@ public class GameEntityModel: Model<GameEntityModel> {
 	// flag telling if the character is facing left or right
 	public bool isFacingRight;
 
+	// flag telling that the character can flip automatically depending on animation velocity
+	public bool automaticFlip;
+
+	// How much input velocity is applied to the entity
+	public FixedVector3 maxInputVelocity;
+
 
 	// Create a default Game Entity model
 	public GameEntityModel(string characterName, string animationName, Model inputModel, FixedVector3 position, PhysicWorldModel worldModel, int updatingOrder = 0):base(updatingOrder){

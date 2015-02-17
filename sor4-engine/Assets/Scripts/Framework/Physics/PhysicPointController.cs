@@ -11,7 +11,7 @@ public class PhysicPointController: Controller<PhysicPointModel>{
 	private Dictionary<string,FixedVector3> affectorsIncremented = new Dictionary<string,FixedVector3>();
 	private List<string> affectorsRemoved = new List<string>();
 
-	private CollisionFlags newCollisionFlags = new CollisionFlags();
+	private FixedVector3 newCollisionInpact = FixedVector3.Zero;
 
 	private FixedVector3 newPosition;
 	private bool hasNewPosition;
@@ -23,7 +23,7 @@ public class PhysicPointController: Controller<PhysicPointModel>{
 	// Update natural physics 
 	public override void Update(PhysicPointModel model){
 
-		newCollisionFlags.Clear();
+		newCollisionInpact = FixedVector3.Zero;
 
 		model.lastPosition = model.position;
 
@@ -65,12 +65,12 @@ public class PhysicPointController: Controller<PhysicPointModel>{
 			model.position = newPosition;
 			model.lastPosition = newPosition;
 			hasNewPosition = false;
-			model.collisionFlags.Clear();
+			model.collisionInpact = FixedVector3.Zero;
 		}else {
-			// no teleport, store new collision flags
-			model.collisionFlags = newCollisionFlags;
+			// no teleport, store new collision inpact
+			model.collisionInpact = newCollisionInpact;
 		}
-		newCollisionFlags.Clear();
+		newCollisionInpact = FixedVector3.Zero;
 
 	}
 
@@ -241,24 +241,30 @@ public class PhysicPointController: Controller<PhysicPointModel>{
 			// check direction against 4 walls
 			FixedFloat maxDelta = FixedFloat.PI * 0.4;
 			planeAngle = FixedVector3.Angle(planeModel.Normal, FixedVector3.Left);
-			if (planeAngle <= maxDelta){
-				newCollisionFlags.right = true;
-			}else if (planeAngle >= FixedFloat.PI - maxDelta){
-				newCollisionFlags.left = true;
+			if (planeAngle <= maxDelta || planeAngle >= FixedFloat.PI - maxDelta){
+				// collision in the X axis
+				FixedFloat inpactX = pointModel.GetVelocity().X - planeModel.GetVelocity().X;
+				if (FixedFloat.Abs(inpactX) > FixedFloat.Abs(newCollisionInpact.X)){
+					newCollisionInpact.X = inpactX;
+				}
 			}
 			planeAngle = FixedVector3.Angle(planeModel.Normal, FixedVector3.Forward);
-			if (planeAngle <= maxDelta){
-				newCollisionFlags.near = true;
-			}else if (planeAngle >= FixedFloat.PI - maxDelta){
-				newCollisionFlags.far = true;
+			if (planeAngle <= maxDelta || planeAngle >= FixedFloat.PI - maxDelta){
+				// collision in the Z axis
+				FixedFloat inpactZ = pointModel.GetVelocity().Z - planeModel.GetVelocity().Z;
+				if (FixedFloat.Abs(inpactZ) > FixedFloat.Abs(newCollisionInpact.Z)){
+					newCollisionInpact.Z = inpactZ;
+				}
 			}
-
 			return CollisionNaturalReaction(world, pointModel, planeModel, intersection);
 
 		}else {
 
 			// Otherwise we're hitting the ground, do not slide
-			newCollisionFlags.ground = true;
+			FixedFloat inpactY = pointModel.GetVelocity().Y - planeModel.GetVelocity().Y;
+			if (FixedFloat.Abs(inpactY) > FixedFloat.Abs(newCollisionInpact.Y)){
+				newCollisionInpact.Y = inpactY;
+			}
 			// We use a lot of arguments here just to avoid recalculating them
 			return CollisionGroundReaction(world, pointModel, planeModel, intersection);
 

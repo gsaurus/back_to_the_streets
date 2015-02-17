@@ -2,20 +2,6 @@ using System;
 
 
 [Serializable]
-public struct CollisionFlags{
-	public bool ground;
-	public bool left;
-	public bool right;
-	public bool far;
-	public bool near;
-
-	public void Clear(){
-		ground = left = right = far = near = false;
-	}
-}
-
-
-[Serializable]
 public class PhysicPointModel : Model<PhysicPointModel>{
 
 	// Key of default world velocity affector
@@ -31,8 +17,8 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 	// Position on the previous frame
 	public FixedVector3 lastPosition;
 
-	// Store here the direction of last collisions:
-	public CollisionFlags collisionFlags;
+	// Collision impact is the maximum difference of point VS plane velocities
+	public FixedVector3 collisionInpact;
 
 	// Velocity = difference between current and previous positions
 	public FixedVector3 GetVelocity(){

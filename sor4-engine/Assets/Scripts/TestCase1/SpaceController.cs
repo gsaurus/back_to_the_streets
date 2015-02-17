@@ -15,37 +15,46 @@ public class SpaceController:Controller<SpaceModel>{
 	}
 
 	private void SetupRocha(){
-		AnimationController idle1Ctr = new AnimationController();
-		AnimationController walkCtr = new AnimationController();
-		AnimationView idleView = new AnimationView();
-		AnimationsVCPool.Instance.RegisterController("Rocha", "idle1", idle1Ctr);
-		AnimationsVCPool.Instance.RegisterController("Rocha", "walk", walkCtr);
-		AnimationsVCPool.Instance.SetDefaultView("Rocha", idleView);
-
-		List<AnimationTriggerCondition> conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 180));
-		AnimationTransition transition = new AnimationTransition("walk", conditions);
-		idle1Ctr.AddTransition(transition);
-		transition = new AnimationTransition("idle1", conditions);
-		walkCtr.AddTransition(transition);
+		SetupCharacter("Rocha");
 	}
 
 
 	private void SetupBlaze(){
+		SetupCharacter("Blaze");
+	}
+
+
+	private void SetupCharacter(string charName){
+	
 		AnimationController idle1Ctr = new AnimationController();
 		AnimationController walkCtr = new AnimationController();
 		AnimationView idleView = new AnimationView();
-		AnimationsVCPool.Instance.RegisterController("Blaze", "idle1", idle1Ctr);
-		AnimationsVCPool.Instance.RegisterController("Blaze", "walk", walkCtr);
-		AnimationsVCPool.Instance.SetDefaultView("Blaze", idleView);
+		AnimationsVCPool.Instance.RegisterController(charName, "idle1", idle1Ctr);
+		AnimationsVCPool.Instance.RegisterController(charName, "walk", walkCtr);
+		AnimationsVCPool.Instance.SetDefaultView(charName, idleView);
 
-		List<AnimationTriggerCondition> conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 180));
-		AnimationTransition transition = new AnimationTransition("walk", conditions);
+
+		List<AnimationTriggerCondition> conditions;
+		AnimationTransition transition;
+		
+		// idle to walk
+		conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new InputAxisMovingCondition());
+		transition = new AnimationTransition("walk", conditions);
 		idle1Ctr.AddTransition(transition);
-		transition = new AnimationTransition("idle1", conditions);
+		
+		// TODO: walk event for speed...
+		
+		
+		// walk to iddle
+		conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new NegateCondition(new InputAxisMovingCondition()));
+		transition = new AnimationTransition("walk", conditions);
 		walkCtr.AddTransition(transition);
+
 	}
+
+
 
 
 	public override void Update(SpaceModel model){
