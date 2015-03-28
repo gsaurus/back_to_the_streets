@@ -91,9 +91,9 @@ public class PhysicPlaneModel: Model<PhysicPlaneModel>, IDeserializationCallback
 	}
 
 
-	protected override View<PhysicPlaneModel> CreateView(){
-		return new DebugPhysicPlaneView(this);
-	}
+//	protected override View<PhysicPlaneModel> CreateView(){
+//		return new DebugPhysicPlaneView(this);
+//	}
 
 
 	// TODO: this should move to PhysicPlaneController!

@@ -209,11 +209,11 @@ public class WorldController:Controller<WorldModel>{
 		                             );
 		physicsController.AddPlane(physicsModel, plane);
 		plane = new MovingPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-		                             new FixedVector3[]{new FixedVector3(23.75,8.95,1), new FixedVector3(23.75,1.25,1)},
-									 new FixedVector3(23.75,1.25,1),
-									 new FixedVector3(23.75,1.25,-1),
+		                             new FixedVector3[]{new FixedVector3(17.75,8.95,-1), new FixedVector3(17.75,1.25,-1)},
 									 new FixedVector3(17.75,1.25,-1),
-									 new FixedVector3(17.75,1.25,1)
+									 new FixedVector3(17.75,1.25,1),
+									 new FixedVector3(23.75,1.25,1),
+									 new FixedVector3(23.75,1.25,-1)
 		);
 		physicsController.AddPlane(physicsModel, plane);
 

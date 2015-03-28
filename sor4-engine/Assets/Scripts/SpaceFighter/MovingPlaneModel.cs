@@ -31,5 +31,9 @@ public class MovingPlaneModel: PhysicPlaneModel{
 		return new MovingPlaneController(path);
 	}
 
+	protected override View<PhysicPlaneModel> CreateView(){
+		return new MovingPlaneView();
+	}
+
 }
 
