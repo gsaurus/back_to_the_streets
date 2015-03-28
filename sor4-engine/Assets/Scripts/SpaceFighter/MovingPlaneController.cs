@@ -3,56 +3,36 @@ using System.Collections.Generic;
 
 public class MovingPlaneController: PhysicPlaneController{
 
+	private FixedVector3[] points;
+	private static readonly FixedFloat deltaTime = FixedFloat.One / 200;
+
+
+	public MovingPlaneController(FixedVector3[] points) {
+		this.points = points;
+	}
+	
+
 
 	// Update natural physics 
 	public override void Update(PhysicPlaneModel model){
 		base.Update(model);
 		MovingPlaneModel movingModel = model as MovingPlaneModel;
-		switch (movingModel.movingState){
-			case 0:
-				// go up
-				movingModel.origin.Y += 0.05;
-				if (movingModel.origin.Y > 3){
-					movingModel.movingState = 1;
-				}
-				break; 
-			case 1:
-				// go left
-				movingModel.origin.X -= 0.05;
-				if (movingModel.origin.X < 0){
-					movingModel.movingState = 2;
-				}
-				break;
-			case 2:
-				// go down right
-				if (movingModel.origin.X <= 4) movingModel.origin.X += 0.05;
-				if (movingModel.origin.Y >= -3) movingModel.origin.Y -= 0.05;
-				if (movingModel.origin.Y < -3 && movingModel.origin.X > 4){
-					movingModel.movingState = 3;
-				}
-				break;
-			case 3:
-				// go up left
-				if (movingModel.origin.X > 0) movingModel.origin.X -= 0.05;
-				if (movingModel.origin.Y < 3) movingModel.origin.Y += 0.05;
-				if (movingModel.origin.X <= 0 && movingModel.origin.Y >= 3){
-					movingModel.movingState = 4;
-				}
-				break;
-			case 4:
-				// go right
-				movingModel.origin.X += 0.05;
-				if (movingModel.origin.X > 4){
-					movingModel.movingState = 5;
-				}
-				break;
-			case 5:
-				// go up
-				movingModel.origin.Y -= 0.05;
-				if (movingModel.origin.Y <= -3){
-					movingModel.movingState = 0;
-				}
-				break;
+
+		FixedVector3 pt1 = points[movingModel.movingState % points.Length];
+		FixedVector3 pt2 = points[(movingModel.movingState +1) % points.Length];
+
+		movingModel.blendFactor += deltaTime;
+		if (movingModel.blendFactor >= 1){
+			movingModel.origin = pt2;
+			if (movingModel.blendFactor > 1.2){
+				++movingModel.movingState;
+				movingModel.blendFactor = 0;
+			}
+		}else {
+			FixedFloat square = movingModel.blendFactor * movingModel.blendFactor * movingModel.blendFactor;
+			FixedFloat oneMinusXSquared = (1 - movingModel.blendFactor)*(1 - movingModel.blendFactor) * (1 - movingModel.blendFactor);
+			FixedFloat easedBlend = square / (square + oneMinusXSquared);
+			movingModel.origin = FixedVector3.Lerp(pt1, pt2, easedBlend);
 		}
 
 	}

@@ -17,16 +17,18 @@ using System.Runtime.Serialization;
 public class MovingPlaneModel: PhysicPlaneModel{
 
 	public int movingState;
+	public FixedFloat blendFactor;
+	private FixedVector3[] path; 
 
 	// Constructor giving world points
-	public MovingPlaneModel(int updatingOrder, params FixedVector3[] paramPoints):base(updatingOrder, paramPoints){
-		// Nothing else to add
+	public MovingPlaneModel(int updatingOrder, FixedVector3[] path, params FixedVector3[] paramPoints):base(updatingOrder, paramPoints){
+		this.path = path;
 	}
 
 
 	// Create controller
 	protected override Controller<PhysicPlaneModel> CreateController(){
-		return new MovingPlaneController();
+		return new MovingPlaneController(path);
 	}
 
 }

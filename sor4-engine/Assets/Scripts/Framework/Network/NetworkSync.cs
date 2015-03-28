@@ -103,7 +103,7 @@ public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 		yield return new WaitForSeconds(0.1f);
 		if (syncStates == null || !NetworkCenter.Instance.IsConnected()) yield break;
 		while(syncStates.Count > 0){
-			networkView.RPC("PingRequest", RPCMode.Others);
+			GetComponent<NetworkView>().RPC("PingRequest", RPCMode.Others);
 			yield return new WaitForSeconds(pingRate);
 		}
 		//Debug.Log("Coroutine finished");
@@ -117,7 +117,7 @@ public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 		//Debug.Log("Travel time: " + travelTime + ", computed ping is " + 2*travelTime);
 		//Debug.Log("Ping: " + Network.GetLastPing(messageInfo.sender) + ", Average Ping: " + Network.GetAveragePing(messageInfo.sender));
 		// We explicitly send our guid in the RPC because of Unity bug not seting sender guid correctly
-		networkView.RPC("PingResponse", messageInfo.sender, travelTime, Network.player.guid);
+		GetComponent<NetworkView>().RPC("PingResponse", messageInfo.sender, travelTime, Network.player.guid);
 	}
 
 	// On receiving the ping response we integrate the travel time
@@ -141,7 +141,7 @@ public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 	// Mark this player as ready
 	public void SetReady(bool ready){
 		if (ready != isReady){
-			networkView.RPC("SetPlayerReady", RPCMode.All, Network.player.guid, ready);
+			GetComponent<NetworkView>().RPC("SetPlayerReady", RPCMode.All, Network.player.guid, ready);
 		}
 	}
 
