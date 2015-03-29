@@ -27,13 +27,34 @@ public class AnimationView:View<AnimationModel>{
 	}
 
 
+
+	private void LegacyUpdate(AnimationModel model, Animation animation, float deltaTime){
+		// don't animate if paused
+		animation.enabled = !StateManager.Instance.IsPaused;
+		if (!animation.enabled) return;
+		
+		if (!animation.IsPlaying(model.animationName)) {
+			//animation.Play(model.animationName);
+			animation.CrossFade(model.animationName, interpolationTime);
+		}
+	}
+
+
+
 	// Visual update
 	public override void Update(AnimationModel model, float deltaTime){
 
 		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.ownerId);
 		if (obj == null) return; // can't work without a game object
 		Animator animator = obj.GetComponent<Animator>();
-		if (animator == null) return; // can't work without an animator component
+		if (animator == null) {
+			// No animator, use legacy animation
+			Animation animation = obj.GetComponent<Animation>();
+			if (animation != null) {
+				LegacyUpdate(model, animation, deltaTime);
+			}
+			return;
+		}
 
 		// don't animate if paused
 		animator.enabled = !StateManager.Instance.IsPaused;

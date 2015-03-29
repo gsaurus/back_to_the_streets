@@ -13,55 +13,6 @@ public class WorldController:Controller<WorldModel>{
 		SetupGameCharacters();
 	}
 
-	/*private void SetupRocha(){
-		SetupCharacter("Rocha");
-	}
-
-
-	private void SetupBlaze(){
-		SetupCharacter("Blaze");
-	}
-
-
-	private void SetupCharacter(string charName){
-	
-		AnimationController idle1Ctr = new AnimationController();
-		AnimationController walkCtr = new AnimationController();
-		AnimationView idleView = new AnimationView();
-		AnimationsVCPool.Instance.RegisterController(charName, "idle1", idle1Ctr);
-		AnimationsVCPool.Instance.RegisterController(charName, "walk", walkCtr);
-		AnimationsVCPool.Instance.SetDefaultView(charName, idleView);
-
-
-		List<AnimationTriggerCondition> conditions;
-		AnimationTransition transition;
-		
-		// idle to walk
-		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new InputAxisMovingCondition());
-		transition = new AnimationTransition("walk", conditions, 0.15f);
-		idle1Ctr.AddTransition(transition);
-		// Force character to be stopped while idle
-		idle1Ctr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
-			GameEntityController.SetMaxInputVelocity,
-			FixedVector3.Zero
-		));
-		
-		// walk to iddle
-		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new NegateCondition(new InputAxisMovingCondition()));
-		transition = new AnimationTransition("idle1", conditions, 0.2f);
-		walkCtr.AddTransition(transition);
-		// Events that allow the character to move
-		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<bool>(GameEntityController.SetAutomaticFlip, true));
-		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
-			GameEntityController.SetMaxInputVelocity,
-			new FixedVector3(0.1f, 0, 0.1f)
-		));
-
-	}*/
-
-
 
 
 	public override void Update(WorldModel model){
@@ -85,29 +36,41 @@ public class WorldController:Controller<WorldModel>{
 		List<uint> allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers();
 		Model playerModel;
 
-//		// Remove characters for inactive players
-//		foreach (KeyValuePair<uint, ModelReference> pair in model.players){
-//			if (!allPlayers.Exists(x => x == pair.Key)){
-//				// Doesn't exist anymore, remove ship
-//				playerModel = StateManager.state.GetModel(pair.Value);
-//				//worldController.RemovePoint(shipModel, OnShipDestroyed, model);
-//				StateManager.state.RemoveModel(playerModel, OnPlayerRemoved, model);
-//			}
-//		}
-//
-//		// Create characters for new players
-//		foreach(uint playerId in allPlayers){
-//			if (!model.players.ContainsKey(playerId)){
-//				Model inputModel = new PlayerInputModel(playerId);
-//				playerModel = new GameEntityModel(playerId % 2 == 0 ? "Blaze" : "Rocha",
-//				                                  "idle1",
-//				                                  inputModel,
-//				                                  new FixedVector3(0,4,0),
-//				                                  physicsModel
-//				                                );
-//				model.players[playerId] = StateManager.state.AddModel(playerModel);
-//			}
-//		}
+		// Remove characters for inactive players
+		foreach (KeyValuePair<uint, ModelReference> pair in model.players){
+			if (!allPlayers.Exists(x => x == pair.Key)){
+				// Doesn't exist anymore, remove ship
+				playerModel = StateManager.state.GetModel(pair.Value);
+				//worldController.RemovePoint(shipModel, OnShipDestroyed, model);
+				StateManager.state.RemoveModel(playerModel, OnPlayerRemoved, model);
+			}
+		}
+
+		// Create characters for new players
+		foreach(uint playerId in allPlayers){
+			if (!model.players.ContainsKey(playerId)){
+				Model inputModel = new PlayerInputModel(playerId);
+				playerModel = new GameEntityModel("soldier", //playerId % 2 == 0 ? "Blaze" : "Rocha",
+				                                  "soldierIdle",
+				                                  inputModel,
+				                                  new FixedVector3(40 * (playerId % 2 == 0 ? -1 : 1),9,0),
+				                                  physicsModel
+				                                );
+				// Model initial state
+				GameEntityModel playerEntity = (GameEntityModel)playerModel;
+				playerEntity.isFacingRight = playerId % 2 == 0;
+				model.players[playerId] = StateManager.state.AddModel(playerModel);
+			}
+
+			GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.players[playerId]);
+			if (obj != null){
+				SkinnedMeshRenderer[] comps = obj.GetComponentsInChildren<SkinnedMeshRenderer>();
+				foreach (SkinnedMeshRenderer c in comps){
+					c.material.color = (playerId % 2 == 0 ? Color.blue : Color.red);
+				}
+			}
+
+		}
 
 	}
 	
@@ -234,6 +197,46 @@ public class WorldController:Controller<WorldModel>{
 	
 	private void SetupGameCharacters(){
 		// TODO: read from somewhere.. right now, this is hardcoded..
+		SetupCharacter("soldier");
+	}
+
+
+	private void SetupCharacter(string charName){
+		
+		AnimationController idle1Ctr = new AnimationController();
+		AnimationController walkCtr = new AnimationController();
+		AnimationView idleView = new AnimationView();
+		AnimationsVCPool.Instance.RegisterController(charName, "soldierIdle", idle1Ctr);
+		AnimationsVCPool.Instance.RegisterController(charName, "soldierRun", walkCtr);
+		AnimationsVCPool.Instance.SetDefaultView(charName, idleView);
+		
+		
+		List<AnimationTriggerCondition> conditions;
+		AnimationTransition transition;
+		
+		// idle to walk
+		conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new InputAxisMovingCondition());
+		transition = new AnimationTransition("soldierRun", conditions, 0.15f);
+		idle1Ctr.AddTransition(transition);
+		// Force character to be stopped while idle
+		idle1Ctr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+			GameEntityController.SetMaxInputVelocity,
+			FixedVector3.Zero
+			));
+		
+		// walk to iddle
+		conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new NegateCondition(new InputAxisMovingCondition()));
+		transition = new AnimationTransition("soldierIdle", conditions, 0.2f);
+		walkCtr.AddTransition(transition);
+		// Events that allow the character to move
+		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<bool>(GameEntityController.SetAutomaticFlip, true));
+		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+			GameEntityController.SetMaxInputVelocity,
+			new FixedVector3(0.25f, 0, 0.0f)
+			));
+		
 	}
 	
 }
