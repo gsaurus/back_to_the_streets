@@ -55,7 +55,7 @@ public class BoolCondition: AnimationTriggerCondition{
 		}
 		
 		// compare them
-		return rvalue == rightValue;
+		return lvalue == rvalue;
 	}
 	
 }

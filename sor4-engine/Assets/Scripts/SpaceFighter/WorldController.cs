@@ -206,9 +206,13 @@ public class WorldController:Controller<WorldModel>{
 		
 		AnimationController idle1Ctr = new AnimationController();
 		AnimationController walkCtr = new AnimationController();
+		AnimationController jumpCtr = new AnimationController();
+		AnimationController fallCtr = new AnimationController();
 		AnimationView idleView = new AnimationView();
 		AnimationsVCPool.Instance.RegisterController(charName, "soldierIdle", idle1Ctr);
 		AnimationsVCPool.Instance.RegisterController(charName, "soldierRun", walkCtr);
+		AnimationsVCPool.Instance.RegisterController(charName, "soldierJump", jumpCtr);
+		AnimationsVCPool.Instance.RegisterController(charName, "soldierFalling", fallCtr);
 		AnimationsVCPool.Instance.SetDefaultView(charName, idleView);
 		
 		
@@ -218,7 +222,7 @@ public class WorldController:Controller<WorldModel>{
 		// idle to walk
 		conditions = new List<AnimationTriggerCondition>();
 		conditions.Add(new InputAxisMovingCondition());
-		transition = new AnimationTransition("soldierRun", conditions, 0.15f);
+		transition = new AnimationTransition("soldierRun", conditions, 0.1f);
 		idle1Ctr.AddTransition(transition);
 		// Force character to be stopped while idle
 		idle1Ctr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
@@ -229,14 +233,48 @@ public class WorldController:Controller<WorldModel>{
 		// walk to iddle
 		conditions = new List<AnimationTriggerCondition>();
 		conditions.Add(new NegateCondition(new InputAxisMovingCondition()));
-		transition = new AnimationTransition("soldierIdle", conditions, 0.2f);
+		transition = new AnimationTransition("soldierIdle", conditions, 0.05f);
 		walkCtr.AddTransition(transition);
 		// Events that allow the character to move
 		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<bool>(GameEntityController.SetAutomaticFlip, true));
 		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
 			GameEntityController.SetMaxInputVelocity,
-			new FixedVector3(0.25f, 0, 0.0f)
+			new FixedVector3(0.22f, 0, 0.0f)
+		));
+
+
+		// iddle, walk to jump
+		conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
+		transition = new AnimationTransition("soldierJump", conditions, 0.05f);
+		idle1Ctr.AddTransition(transition);
+		walkCtr.AddTransition(transition);
+		// Events to push the character up
+		jumpCtr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+			GameEntityController.SetMaxInputVelocity,
+			new FixedVector3(0.1f, 0, 0.0f)
+		));
+		jumpCtr.AddEvent(4, new SingleEntityAnimationEvent<FixedVector3>(
+			GameEntityController.SetMaxInputVelocity,
+			new FixedVector3(0.26f, 0, 0.0f)
 			));
+		jumpCtr.AddEvent(4, new SingleEntityAnimationEvent<bool>(GameEntityController.SetAutomaticFlip, false));
+		jumpCtr.AddEvent(4, new SingleEntityAnimationEvent<FixedVector3>(
+			GameEntityController.AddImpulse,
+			new FixedVector3(0.0f, 0.18f, 0.0f)
+		));
+
+		// iddle, walk to fall
+//		conditions = new List<AnimationTriggerCondition>();
+//		conditions.Add(new );
+//		transition = new AnimationTransition("soldierIdle", conditions, 0.05f);
+//		walkCtr.AddTransition(transition);
+//		// Events that allow the character to move
+//		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<bool>(GameEntityController.SetAutomaticFlip, true));
+//		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+//			GameEntityController.SetMaxInputVelocity,
+//			new FixedVector3(0.22f, 0, 0.0f)
+//			));
 		
 	}
 	
