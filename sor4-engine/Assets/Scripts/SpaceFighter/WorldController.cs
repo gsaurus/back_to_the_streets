@@ -52,9 +52,10 @@ public class WorldController:Controller<WorldModel>{
 				Model inputModel = new PlayerInputModel(playerId);
 				playerModel = new GameEntityModel("soldier", //playerId % 2 == 0 ? "Blaze" : "Rocha",
 				                                  "soldierIdle",
+				                                  physicsModel,
 				                                  inputModel,
 				                                  new FixedVector3(40 * (playerId % 2 == 0 ? -1 : 1),9,0),
-				                                  physicsModel
+				                                  new FixedVector3(0, 0.5, 0)
 				                                );
 				// Model initial state
 				GameEntityModel playerEntity = (GameEntityModel)playerModel;
@@ -138,24 +139,24 @@ public class WorldController:Controller<WorldModel>{
 
 
 			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-			                             new FixedVector3(-45.65*flip,8.95,-1*flip),
-			                             new FixedVector3(-45.65*flip,8.95,1*flip),
-			                             new FixedVector3(-23.75*flip,8.95,1*flip),
-			                             new FixedVector3(-23.75*flip,8.95,-1*flip)
+			                             new FixedVector3(-46.05*flip,8.95,-1*flip),
+			                             new FixedVector3(-46.05*flip,8.95,1*flip),
+			                             new FixedVector3(-23.00*flip,8.95,1*flip),
+			                             new FixedVector3(-23.00*flip,8.95,-1*flip)
 			                             );
 			physicsController.AddPlane(physicsModel, plane);
 			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-			                             new FixedVector3(-45.65*flip,-11.5,-1*flip),
-			                             new FixedVector3(-45.65*flip,-11.5,1*flip),
-			                             new FixedVector3(-45.65*flip,8.95,1*flip),
-			                             new FixedVector3(-45.65*flip,8.95,-1*flip)
+			                             new FixedVector3(-46.0*flip,-11.5,-1*flip),
+			                             new FixedVector3(-46.0*flip,-11.5,1*flip),
+			                             new FixedVector3(-46.0*flip,8.8,1*flip),
+			                             new FixedVector3(-46.0*flip,8.8,-1*flip)
 			                             );
 			physicsController.AddPlane(physicsModel, plane);
 			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-			                             new FixedVector3(-23.75*flip,8.95,-1*flip),
-			                             new FixedVector3(-23.75*flip,8.95,1*flip),
-			                             new FixedVector3(-23.75*flip,-11.5,1*flip),
-			                             new FixedVector3(-23.75*flip,-11.5,-1*flip)
+			                             new FixedVector3(-23.05*flip,8.8,-1*flip),
+			                             new FixedVector3(-23.05*flip,8.8,1*flip),
+			                             new FixedVector3(-23.05*flip,-11.5,1*flip),
+			                             new FixedVector3(-23.05*flip,-11.5,-1*flip)
 			                             );
 			physicsController.AddPlane(physicsModel, plane);
 		}
@@ -181,7 +182,7 @@ public class WorldController:Controller<WorldModel>{
 		physicsController.AddPlane(physicsModel, plane);
 
 		plane = new MovingPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-		                             new FixedVector3[]{new FixedVector3(-7.65,11.62,-1), new FixedVector3(1.65,11.62,1)},
+		                             new FixedVector3[]{new FixedVector3(-7.65,11.62,-1), new FixedVector3(1.65,11.62,-1)},
 							 		 new FixedVector3(-7.65,11.62,-1),
 									 new FixedVector3(-7.65,11.62,1),
 									 new FixedVector3(-1.65,11.62,1),

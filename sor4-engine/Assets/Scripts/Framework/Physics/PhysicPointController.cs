@@ -186,7 +186,7 @@ public class PhysicPointController: Controller<PhysicPointModel>{
 		
 		// Also kill gravity effect
 		KillGravityEffectAgainstPlane(world, pointModel, planeModel);
-		
+
 		return !intersectionChanged; // if intersection didn't change, it's considered stable
 	}
 

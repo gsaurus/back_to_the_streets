@@ -8,9 +8,9 @@ using System.Collections.Generic;
 
 // 
 public class PhysicPointView:View<PhysicPointModel>{
-	private float minInterpolationFactor = 0.1f;
-	private float minDistanceToInterpolate = 0.1f;	// TODO: based on world coordinates system..
-	private float maxDistanceToInterpolate = 5.0f; 	// TODO: based on world coordinates system..		
+	private float minInterpolationFactor = 0.005f;
+	private float minDistanceToInterpolate = 0.05f;	// TODO: based on world coordinates system..
+	private float maxDistanceToInterpolate = 2.0f; 	// TODO: based on world coordinates system..		
 
 	// Visual update
 	public override void Update(PhysicPointModel model, float deltaTime){
@@ -27,7 +27,7 @@ public class PhysicPointView:View<PhysicPointModel>{
 			// Something changed abruptaly, interpolate
 			// TODO: better interpolation algorithm?
 			float interpolationFactor = 1f - (oldDistance-minDistanceToInterpolate) / (maxDistanceToInterpolate - minDistanceToInterpolate);
-			interpolationFactor = Mathf.Pow(interpolationFactor, 3);
+			interpolationFactor = Mathf.Pow(interpolationFactor, 4);
 			if (interpolationFactor < minInterpolationFactor) interpolationFactor = minInterpolationFactor;
 			obj.transform.position = Vector3.Lerp(obj.transform.position, (Vector3)model.position, interpolationFactor);
 		}

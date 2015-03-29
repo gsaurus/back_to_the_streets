@@ -224,7 +224,7 @@ public sealed class StateManager{
 		uint oldestEventKeyframe = eventsBuffer.GetOldestEventKeyframeSinceLastCheck();
 		uint presentKeyframe = currentState.Keyframe;
 		if (oldestEventKeyframe < presentKeyframe){
-			UnityEngine.Debug.Log("Need to rewind " + (presentKeyframe - oldestEventKeyframe) + "frames");
+			//UnityEngine.Debug.Log("Need to rewind " + (presentKeyframe - oldestEventKeyframe) + "frames");
 			if (!LoadBufferedState(oldestEventKeyframe, false)) {
 				UnityEngine.Debug.LogWarning("Can't rewind, no buffered state is old enough");
 				// TODO: ask network server for a state update

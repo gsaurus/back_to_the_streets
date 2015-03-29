@@ -94,7 +94,7 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 //			}
 			collisionsAreStable = true;
 			foreach(PhysicPlaneModel planeModel in planes){
-				if (planeModel.CheckIntersection(pointModel.lastPosition, pointModel.position, out intersection)){
+				if (planeModel.CheckIntersection(pointModel, out intersection)){
 					collisionsAreStable &= pointController.OnCollision(world, pointModel, planeModel, intersection);
 					planeController = planeModel.GetController() as PhysicPlaneController;
 					if (planeController != null){
@@ -107,6 +107,9 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 				}
 			}
 		}
+//		if (!collisionsAreStable){
+//			UnityEngine.Debug.LogWarning("Unstable colisions!");
+//		}
 	}
 
 

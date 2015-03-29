@@ -24,9 +24,17 @@ public class GameEntityModel: Model<GameEntityModel> {
 
 
 	// Create a default Game Entity model
-	public GameEntityModel(string characterName, string animationName, Model inputModel, FixedVector3 position, PhysicWorldModel worldModel, int updatingOrder = 0):base(updatingOrder){
+	public GameEntityModel(
+		string characterName,
+		string animationName,
+		PhysicWorldModel worldModel,
+		Model inputModel,
+		FixedVector3 position,
+		FixedVector3 stepTolerance,
+		int updatingOrder = 0
+	):base(updatingOrder){
 		PhysicWorldController worldController = worldModel.GetController() as PhysicWorldController;
-		physicsModelId = worldController.AddPoint(worldModel, new PhysicPointModel(this.Index, position));
+		physicsModelId = worldController.AddPoint(worldModel, new PhysicPointModel(this.Index, position, stepTolerance));
 		//physicsModelId = StateManager.state.AddModel(new PhysicPointModel(this.Index, position));
 		animationModelId = StateManager.state.AddModel(new AnimationModel(this.Index, characterName, animationName));
 		inputModelId = StateManager.state.AddModel(inputModel);

@@ -17,6 +17,9 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 	// Position on the previous frame
 	public FixedVector3 lastPosition;
 
+	// Step tolerance, used to try to climb small steps
+	public FixedVector3 stepTolerance;
+
 	// Collision impact is the maximum difference of point VS plane velocities
 	public FixedVector3 collisionInpact;
 
@@ -30,10 +33,11 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 
 
 	// Constructor
-	public PhysicPointModel(ModelReference ownerId, FixedVector3 position, int updatingOrder = 0):base(updatingOrder){
+	public PhysicPointModel(ModelReference ownerId, FixedVector3 position, FixedVector3 stepTolerance, int updatingOrder = 0):base(updatingOrder){
 		this.ownerId = ownerId;
 		velocityAffectors = new SerializableDictionary<string,FixedVector3>();
 		this.position = this.lastPosition = position;
+		this.stepTolerance = stepTolerance;
 	}
 
 	// Constructor

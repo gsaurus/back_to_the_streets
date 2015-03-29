@@ -89,17 +89,20 @@ public class PhysicPlaneModel: Model<PhysicPlaneModel>, IDeserializationCallback
 	protected override Controller<PhysicPlaneModel> CreateController(){
 		return new PhysicPlaneController();
 	}
-
-
-//	protected override View<PhysicPlaneModel> CreateView(){
-//		return new DebugPhysicPlaneView(this);
-//	}
+	
+#if UNITY_EDITOR
+	protected override View<PhysicPlaneModel> CreateView(){
+		return new DebugPhysicPlaneView(this);
+	}
+#endif
 
 
 	// TODO: this should move to PhysicPlaneController!
 	// Compute the intersection point against a line segment
-	public bool CheckIntersection(FixedVector3 pos1, FixedVector3 pos2, out FixedVector3 intersection){
+	public bool CheckIntersection(PhysicPointModel pointModel, out FixedVector3 intersection){
 		// plane may be moving, sum velocity to initial point position
+		FixedVector3 pos1 = pointModel.lastPosition;
+		FixedVector3 pos2 = pointModel.position;
 		pos1 += GetVelocity();
 	
 		// check collision with the hiperplane
@@ -112,7 +115,8 @@ public class PhysicPlaneModel: Model<PhysicPlaneModel>, IDeserializationCallback
 		FixedFloat dotDeltaPosNormal = FixedVector3.Dot(pointDeltaPos,normal);
 		if (dotDeltaPosNormal >= 0){
 			// Point moving away from the plane
-			intersection = FixedVector3.Zero;return false;
+			intersection = FixedVector3.Zero;
+			return false;
 		}
 
 		// Find intersection location in the deltapos vector
@@ -121,9 +125,20 @@ public class PhysicPlaneModel: Model<PhysicPlaneModel>, IDeserializationCallback
 		// a small delta due to precision errors
 		// based on deltaPos magnitude (the smaller the magnitude the higher the error)
 		FixedFloat error = 0.01 / pointDeltaPos.Magnitude;
+
+		if (t < -error){
+			// falling through the plane, try step tolerance to recover
+			pos1 += pointModel.stepTolerance;
+			pointDeltaPos = pos2 - pos1;
+			pos1ToOrigin = origin - pos1;
+			dotDeltaPosNormal = FixedVector3.Dot(pointDeltaPos,normal);
+			t = FixedVector3.Dot(pos1ToOrigin, normal) / dotDeltaPosNormal;
+			error = 0.01 / pointDeltaPos.Magnitude;
+		}
 //		if (t > -3 && t < 3){
 //			UnityEngine.Debug.Log("Magnitude: " + pointDeltaPos.Magnitude + ", error: " + error);
 //		}
+		// give some step tolerance
 		if (t < -error || t > 1 + error) {
 			// not colliding
 			intersection = FixedVector3.Zero;
