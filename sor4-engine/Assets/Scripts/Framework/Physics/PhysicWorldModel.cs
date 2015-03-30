@@ -26,7 +26,7 @@ public class PhysicWorldModel: Model<PhysicWorldModel> {
 	public SerializableList<uint> planeModels = new SerializableList<uint>();
 	
 	// Constructor with name 	
-	public PhysicWorldModel(string name, FixedVector3 gravity):base(PhysicWorldController.WorldUpdateOrder){
+	public PhysicWorldModel(string name, FixedVector3 gravity, int updateOrder = DefaultUpdateOrder.WorldUpdateOrder):base(updateOrder){
 		worldName = name;
 		this.gravity = gravity;
 	}

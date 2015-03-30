@@ -13,15 +13,15 @@ using System;
 public struct FixedVector3{
 
 	// Static helper variables
-	public static FixedVector3 Back		= new FixedVector3( 0, 0,-1);
-	public static FixedVector3 Down		= new FixedVector3( 0,-1, 0);
-	public static FixedVector3 Forward	= new FixedVector3( 0, 0, 1);
-	public static FixedVector3 Left		= new FixedVector3(-1, 0, 0);
-	public static FixedVector3 Right	= new FixedVector3( 1, 0, 0);
-	public static FixedVector3 Up		= new FixedVector3( 0, 1, 0);
+	public static readonly FixedVector3 Back		= new FixedVector3( 0, 0,-1);
+	public static readonly FixedVector3 Down		= new FixedVector3( 0,-1, 0);
+	public static readonly FixedVector3 Forward		= new FixedVector3( 0, 0, 1);
+	public static readonly FixedVector3 Left		= new FixedVector3(-1, 0, 0);
+	public static readonly FixedVector3 Right		= new FixedVector3( 1, 0, 0);
+	public static readonly FixedVector3 Up			= new FixedVector3( 0, 1, 0);
 
-	public static FixedVector3 One		= new FixedVector3(1, 1, 1);
-	public static FixedVector3 Zero		= new FixedVector3(0, 0, 0);
+	public static readonly FixedVector3 One			= new FixedVector3(1, 1, 1);
+	public static readonly FixedVector3 Zero		= new FixedVector3(0, 0, 0);
 
 #region Variables
 

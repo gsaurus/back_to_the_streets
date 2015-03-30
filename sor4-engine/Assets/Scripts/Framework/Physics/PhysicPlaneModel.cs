@@ -65,6 +65,11 @@ public class PhysicPlaneModel: Model<PhysicPlaneModel>, IDeserializationCallback
 
 
 	// Constructor giving world points
+	public PhysicPlaneModel(params FixedVector3[] paramPoints):
+	this(DefaultUpdateOrder.PhysicsUpdateOrder, paramPoints){}
+
+
+	// Constructor giving world points
 	public PhysicPlaneModel(int updatingOrder, params FixedVector3[] paramPoints):base(updatingOrder){
 		if (paramPoints.Length < 3){
 			// Can't build a plane with less than 3 points

@@ -14,7 +14,7 @@ public class AnimationModel:Model<AnimationModel>{
 
 
 	// Constructor
-	public AnimationModel(ModelReference ownerId, string characterName, string animationName, int updatingOrder = 0):
+	public AnimationModel(ModelReference ownerId, string characterName, string animationName, int updatingOrder = DefaultUpdateOrder.AnimationsUpdateOrder):
 		base(updatingOrder)
 	{
 		this.characterName = characterName;

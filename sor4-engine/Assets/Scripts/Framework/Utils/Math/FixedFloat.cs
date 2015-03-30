@@ -8,19 +8,19 @@ using System;
 public struct FixedFloat: IComparable<FixedFloat>
 {
 	public long RawValue;
-	public static int SHIFT_AMOUNT = 14; //12 is 4096, 14 is 16384, 16 is 65536
-	public static int PRECISION_LIMIT = (int)Math.Pow(2,SHIFT_AMOUNT);
+	public const int SHIFT_AMOUNT = 14; //12 is 4096, 14 is 16384, 16 is 65536
+	public static readonly int PRECISION_LIMIT = (int)Math.Pow(2,SHIFT_AMOUNT);
 	
-	public static long OneL = 1 << SHIFT_AMOUNT;
-	public static int OneI = 1 << SHIFT_AMOUNT;
-	public static FixedFloat One = FixedFloat.Create( 1, true );
-	public static FixedFloat Zero = FixedFloat.Create( 0, true );
+	public const long OneL = 1 << SHIFT_AMOUNT;
+	public const int OneI = 1 << SHIFT_AMOUNT;
+	public static readonly FixedFloat One = FixedFloat.Create( 1, true );
+	public static readonly FixedFloat Zero = FixedFloat.Create( 0, true );
 	#region PI, HalfPI, DoublePI
-	public static FixedFloat PI = FixedFloat.Create(3.141592653589793);
-	public static FixedFloat HalfPI = PI * 0.5;
-	public static FixedFloat TwoPI = PI * 2;
-	public static FixedFloat DegreesToRadiansConversionRatio = PI / 180;
-	public static FixedFloat RadiansToDegreesConversionRatio = 180 / PI;
+	public static readonly FixedFloat PI = FixedFloat.Create(3.141592653589793);
+	public static readonly FixedFloat HalfPI = PI * 0.5;
+	public static readonly FixedFloat TwoPI = PI * 2;
+	public static readonly FixedFloat DegreesToRadiansConversionRatio = PI / 180;
+	public static readonly FixedFloat RadiansToDegreesConversionRatio = 180 / PI;
 	#endregion
 	
 	#region Constructors

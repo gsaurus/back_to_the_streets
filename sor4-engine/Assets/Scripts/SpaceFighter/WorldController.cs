@@ -99,22 +99,19 @@ public class WorldController:Controller<WorldModel>{
 
 		for (int flip = 1; flip >= -1 ; flip -= 2){
 
-			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-			                             new FixedVector3(-7.65*flip,3.9,-1*flip),
+			plane = new PhysicPlaneModel(new FixedVector3(-7.65*flip,3.9,-1*flip),
 			                             new FixedVector3(-7.65*flip,3.9,1*flip),
 			                             new FixedVector3(-1.5*flip,3.9,1*flip),
 			                             new FixedVector3(-1.5*flip,3.9,-1*flip)
 			                             );
 			physicsController.AddPlane(physicsModel, plane);
-			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-			                             new FixedVector3(-11.85*flip,1.25,-1*flip),
+			plane = new PhysicPlaneModel(new FixedVector3(-11.85*flip,1.25,-1*flip),
 			                             new FixedVector3(-11.85*flip,1.25,1*flip),
 			                             new FixedVector3(-7.65*flip,3.9,1*flip),
 			                             new FixedVector3(-7.65*flip,3.9,-1*flip)
 			                             );
 			physicsController.AddPlane(physicsModel, plane);
-			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-			                             new FixedVector3(-17.75*flip,1.25,-1*flip),
+			plane = new PhysicPlaneModel(new FixedVector3(-17.75*flip,1.25,-1*flip),
 			                             new FixedVector3(-17.75*flip,1.25,1*flip),
 			                             new FixedVector3(-11.85*flip,1.25,1*flip),
 			                             new FixedVector3(-11.85*flip,1.25,-1*flip)
@@ -122,15 +119,13 @@ public class WorldController:Controller<WorldModel>{
 			physicsController.AddPlane(physicsModel, plane);
 
 
-			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-			                             new FixedVector3(-17.75*flip,8.95,-1*flip),
+			plane = new PhysicPlaneModel(new FixedVector3(-17.75*flip,8.95,-1*flip),
 			                             new FixedVector3(-17.75*flip,8.95,1*flip),
 			                             new FixedVector3(-11.85*flip,8.95,1*flip),
 			                             new FixedVector3(-11.85*flip,8.95,-1*flip)
 			                             );
 			physicsController.AddPlane(physicsModel, plane);
-			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-			                             new FixedVector3(-11.85*flip,8.95,-1*flip),
+			plane = new PhysicPlaneModel(new FixedVector3(-11.85*flip,8.95,-1*flip),
 			                             new FixedVector3(-11.85*flip,8.95,1*flip),
 			                             new FixedVector3(-7.65*flip,11.62,1*flip),
 			                             new FixedVector3(-7.65*flip,11.62,-1*flip)
@@ -138,22 +133,19 @@ public class WorldController:Controller<WorldModel>{
 			physicsController.AddPlane(physicsModel, plane);
 
 
-			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-			                             new FixedVector3(-46.05*flip,8.95,-1*flip),
+			plane = new PhysicPlaneModel(new FixedVector3(-46.05*flip,8.95,-1*flip),
 			                             new FixedVector3(-46.05*flip,8.95,1*flip),
 			                             new FixedVector3(-23.00*flip,8.95,1*flip),
 			                             new FixedVector3(-23.00*flip,8.95,-1*flip)
 			                             );
 			physicsController.AddPlane(physicsModel, plane);
-			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-			                             new FixedVector3(-46.0*flip,-11.5,-1*flip),
+			plane = new PhysicPlaneModel(new FixedVector3(-46.0*flip,-11.5,-1*flip),
 			                             new FixedVector3(-46.0*flip,-11.5,1*flip),
 			                             new FixedVector3(-46.0*flip,8.8,1*flip),
 			                             new FixedVector3(-46.0*flip,8.8,-1*flip)
 			                             );
 			physicsController.AddPlane(physicsModel, plane);
-			plane = new PhysicPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-			                             new FixedVector3(-23.05*flip,8.8,-1*flip),
+			plane = new PhysicPlaneModel(new FixedVector3(-23.05*flip,8.8,-1*flip),
 			                             new FixedVector3(-23.05*flip,8.8,1*flip),
 			                             new FixedVector3(-23.05*flip,-11.5,1*flip),
 			                             new FixedVector3(-23.05*flip,-11.5,-1*flip)
@@ -164,16 +156,14 @@ public class WorldController:Controller<WorldModel>{
 
 
 		// Moving planes:
-		plane = new MovingPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-		                             new FixedVector3[]{new FixedVector3(-23.75,1.25,-1), new FixedVector3(-23.75,8.95,-1)},
+		plane = new MovingPlaneModel(new FixedVector3[]{new FixedVector3(-23.75,1.25,-1), new FixedVector3(-23.75,8.95,-1)},
 		                             new FixedVector3(-23.75,1.25,-1),
 		                             new FixedVector3(-23.75,1.25,1),
 		                             new FixedVector3(-17.75,1.25,1),
 		                             new FixedVector3(-17.75,1.25,-1)
 		                             );
 		physicsController.AddPlane(physicsModel, plane);
-		plane = new MovingPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-		                             new FixedVector3[]{new FixedVector3(17.75,8.95,-1), new FixedVector3(17.75,1.25,-1)},
+		plane = new MovingPlaneModel(new FixedVector3[]{new FixedVector3(17.75,8.95,-1), new FixedVector3(17.75,1.25,-1)},
 									 new FixedVector3(17.75,1.25,-1),
 									 new FixedVector3(17.75,1.25,1),
 									 new FixedVector3(23.75,1.25,1),
@@ -181,8 +171,7 @@ public class WorldController:Controller<WorldModel>{
 		);
 		physicsController.AddPlane(physicsModel, plane);
 
-		plane = new MovingPlaneModel(PhysicWorldController.PhysicsUpdateOrder,
-		                             new FixedVector3[]{new FixedVector3(-7.65,11.62,-1), new FixedVector3(1.65,11.62,-1)},
+		plane = new MovingPlaneModel(new FixedVector3[]{new FixedVector3(-7.65,11.62,-1), new FixedVector3(1.65,11.62,-1)},
 							 		 new FixedVector3(-7.65,11.62,-1),
 									 new FixedVector3(-7.65,11.62,1),
 									 new FixedVector3(-1.65,11.62,1),
@@ -265,17 +254,24 @@ public class WorldController:Controller<WorldModel>{
 		));
 
 		// iddle, walk to fall
-//		conditions = new List<AnimationTriggerCondition>();
-//		conditions.Add(new );
-//		transition = new AnimationTransition("soldierIdle", conditions, 0.05f);
-//		walkCtr.AddTransition(transition);
-//		// Events that allow the character to move
-//		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<bool>(GameEntityController.SetAutomaticFlip, true));
-//		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
-//			GameEntityController.SetMaxInputVelocity,
-//			new FixedVector3(0.22f, 0, 0.0f)
-//			));
-		
+		conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded)));
+		transition = new AnimationTransition("soldierFalling", conditions, 0.05f);
+		idle1Ctr.AddTransition(transition);
+		walkCtr.AddTransition(transition);
+		// Events that allow the character to move in air
+		fallCtr.AddEvent(0, new SingleEntityAnimationEvent<bool>(GameEntityController.SetAutomaticFlip, true));
+		fallCtr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+			GameEntityController.SetMaxInputVelocity,
+			new FixedVector3(0.22f, 0, 0.0f)
+		));
+
+		// jump / fall to idle
+		conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new EntityBoolCondition(GameEntityController.IsGrounded));
+		transition = new AnimationTransition("soldierIdle", conditions, 0.05f);
+		fallCtr.AddTransition(transition);
+		jumpCtr.AddTransition(transition); // TODO: err.. supposed to be more complex than this, like moving down
 	}
 	
 }

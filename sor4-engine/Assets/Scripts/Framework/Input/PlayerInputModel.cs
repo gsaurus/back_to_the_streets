@@ -25,7 +25,7 @@ public class PlayerInputModel:Model<PlayerInputModel>{
 
 	// Constructor
 	// TODO: updating order before animations
-	public PlayerInputModel(uint playerId, int updatingOrder = 0):
+	public PlayerInputModel(uint playerId, int updatingOrder = DefaultUpdateOrder.InputUpdateOrder):
 		base(updatingOrder)
 	{
 		this.playerId = playerId;

@@ -31,7 +31,7 @@ public class GameEntityModel: Model<GameEntityModel> {
 		Model inputModel,
 		FixedVector3 position,
 		FixedVector3 stepTolerance,
-		int updatingOrder = 0
+		int updatingOrder = DefaultUpdateOrder.EntitiesUpdateOrder
 	):base(updatingOrder){
 		PhysicWorldController worldController = worldModel.GetController() as PhysicWorldController;
 		physicsModelId = worldController.AddPoint(worldModel, new PhysicPointModel(this.Index, position, stepTolerance));

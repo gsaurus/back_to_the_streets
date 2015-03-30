@@ -11,14 +11,7 @@ using System;
 using System.Collections.Generic;
 
 public class PhysicWorldController: Controller<PhysicWorldModel>{
-
-	// Ordering of world updates
-	// First point updates (forces over points and planes)
-	public static readonly int PhysicsUpdateOrder 	= -780;
-	// Then world updates (collisions, consolidations, etc)
-	public static readonly int WorldUpdateOrder 	= -770;
-
-	
+		
 	// world static planes, serializable because it can be read from a file
 	private SerializableList<PhysicPlaneModel> staticPlanes = null;
 
@@ -244,7 +237,7 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 
 	// Add a Physic Plane to the world
 	public void AddPlane(PhysicWorldModel worldModel, OnPlaneModelChanged callback, object context, params FixedVector3[] paramPoints){
-		PhysicPlaneModel planeModel = new PhysicPlaneModel(PhysicsUpdateOrder, paramPoints);
+		PhysicPlaneModel planeModel = new PhysicPlaneModel(paramPoints);
 		addPlaneCallbacks[planeModel] = new Eppy.Tuple<OnPlaneModelChanged, object>(callback, context);
 		StateManager.state.AddModel(planeModel, OnPlaneAdded, worldModel);
 	}

@@ -33,7 +33,7 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 
 
 	// Constructor
-	public PhysicPointModel(ModelReference ownerId, FixedVector3 position, FixedVector3 stepTolerance, int updatingOrder = 0):base(updatingOrder){
+	public PhysicPointModel(ModelReference ownerId, FixedVector3 position, FixedVector3 stepTolerance, int updatingOrder = DefaultUpdateOrder.PhysicsUpdateOrder):base(updatingOrder){
 		this.ownerId = ownerId;
 		velocityAffectors = new SerializableDictionary<string,FixedVector3>();
 		this.position = this.lastPosition = position;
@@ -41,7 +41,7 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 	}
 
 	// Constructor
-	public PhysicPointModel(ModelReference ownerId, int updatingOrder = 0):base(updatingOrder){
+	public PhysicPointModel(ModelReference ownerId, int updatingOrder = DefaultUpdateOrder.PhysicsUpdateOrder):base(updatingOrder){
 		this.ownerId = ownerId;
 		velocityAffectors = new SerializableDictionary<string,FixedVector3>();
 	}

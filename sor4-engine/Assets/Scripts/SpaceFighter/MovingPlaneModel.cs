@@ -21,6 +21,10 @@ public class MovingPlaneModel: PhysicPlaneModel{
 	private FixedVector3[] path; 
 
 	// Constructor giving world points
+	public MovingPlaneModel(FixedVector3[] path, params FixedVector3[] paramPoints):
+	this(DefaultUpdateOrder.PhysicsUpdateOrder, path, paramPoints){}
+
+	// Constructor giving world points
 	public MovingPlaneModel(int updatingOrder, FixedVector3[] path, params FixedVector3[] paramPoints):base(updatingOrder, paramPoints){
 		this.path = path;
 	}

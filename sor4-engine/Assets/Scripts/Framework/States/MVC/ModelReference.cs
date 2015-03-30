@@ -12,11 +12,11 @@ using System;
 [Serializable]
 public sealed class ModelReference: IComparable<ModelReference>{
 
-	public static readonly uint InvalidModelIndex = 0;
+	public const uint InvalidModelIndex = 0;
 
 	private uint index;
 
-	public ModelReference(uint index = 0){
+	public ModelReference(uint index = InvalidModelIndex){
 		this.index = index;
 	}
 
