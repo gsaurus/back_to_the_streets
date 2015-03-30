@@ -116,11 +116,7 @@ public class GameEntityController: Controller<GameEntityModel> {
 	public static bool IsGrounded(GameEntityModel model){
 		PhysicPointModel pointModel = GetPointModel(model);
 		if (pointModel == null) return false;
-		return pointModel.collisionInpact.Y < 0;
-
-//		// checl angle against up vector
-//		FixedFloat impactAngle = FixedVector3.Angle(pointModel.collisionInpact, FixedVector3.Up);
-//		return impactAngle > FixedFloat.PI * 0.4;
+		return pointModel.collisionInpact.Y != 0;
 	}
 
 	public static bool IsHittingLeftWall(GameEntityModel model){

@@ -22,7 +22,7 @@ public class WorldController:Controller<WorldModel>{
 		PhysicWorldController physicsController;
 		if (model.physicsModelId == ModelReference.InvalidModelIndex){
 			// create world with map name and gravity
-			physicsModel = new PhysicWorldModel("map 1", new FixedVector3(0,-0.008,0));
+			physicsModel = new PhysicWorldModel("map 1", new FixedVector3(0,-0.009,0));
 			model.physicsModelId = StateManager.state.AddModel(physicsModel);
 			physicsController = physicsModel.GetController() as PhysicWorldController;
 			// populate world
@@ -207,6 +207,21 @@ public class WorldController:Controller<WorldModel>{
 		
 		List<AnimationTriggerCondition> conditions;
 		AnimationTransition transition;
+
+		// force walk move character against ground
+		SingleEntityAnimationEvent<FixedVector3> zeroVelEvent = new SingleEntityAnimationEvent<FixedVector3>(
+			GameEntityController.SetAnimationVelocity,
+			FixedVector3.Zero
+		);
+		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+			GameEntityController.SetAnimationVelocity,
+			new FixedVector3(0,-0.1, 0)
+			));
+		idle1Ctr.AddEvent(0, zeroVelEvent);
+		jumpCtr.AddEvent(0, zeroVelEvent);
+		fallCtr.AddEvent(0, zeroVelEvent);
+
+
 		
 		// idle to walk
 		conditions = new List<AnimationTriggerCondition>();
@@ -228,7 +243,7 @@ public class WorldController:Controller<WorldModel>{
 		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<bool>(GameEntityController.SetAutomaticFlip, true));
 		walkCtr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
 			GameEntityController.SetMaxInputVelocity,
-			new FixedVector3(0.22f, 0, 0.0f)
+			new FixedVector3(0.1f, 0, 0.0f)
 		));
 
 
@@ -241,14 +256,14 @@ public class WorldController:Controller<WorldModel>{
 		// Events to push the character up
 		jumpCtr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
 			GameEntityController.SetMaxInputVelocity,
-			new FixedVector3(0.1f, 0, 0.0f)
+			new FixedVector3(0.025f, 0, 0.0f)
 		));
-		jumpCtr.AddEvent(4, new SingleEntityAnimationEvent<FixedVector3>(
+		jumpCtr.AddEvent(2, new SingleEntityAnimationEvent<FixedVector3>(
 			GameEntityController.SetMaxInputVelocity,
-			new FixedVector3(0.26f, 0, 0.0f)
+			new FixedVector3(0.1f, 0, 0.0f)
 			));
-		jumpCtr.AddEvent(4, new SingleEntityAnimationEvent<bool>(GameEntityController.SetAutomaticFlip, false));
-		jumpCtr.AddEvent(4, new SingleEntityAnimationEvent<FixedVector3>(
+		jumpCtr.AddEvent(2, new SingleEntityAnimationEvent<bool>(GameEntityController.SetAutomaticFlip, false));
+		jumpCtr.AddEvent(2, new SingleEntityAnimationEvent<FixedVector3>(
 			GameEntityController.AddImpulse,
 			new FixedVector3(0.0f, 0.18f, 0.0f)
 		));
@@ -263,14 +278,19 @@ public class WorldController:Controller<WorldModel>{
 		fallCtr.AddEvent(0, new SingleEntityAnimationEvent<bool>(GameEntityController.SetAutomaticFlip, true));
 		fallCtr.AddEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
 			GameEntityController.SetMaxInputVelocity,
-			new FixedVector3(0.22f, 0, 0.0f)
+			new FixedVector3(0.1f, 0, 0.0f)
 		));
 
-		// jump / fall to idle
+		// fall to idle
 		conditions = new List<AnimationTriggerCondition>();
 		conditions.Add(new EntityBoolCondition(GameEntityController.IsGrounded));
 		transition = new AnimationTransition("soldierIdle", conditions, 0.05f);
 		fallCtr.AddTransition(transition);
+
+		// jump to fall (rough version on this demo, cose no really jump anim exists)
+		conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded)));
+		transition = new AnimationTransition("soldierFalling", conditions, 0.05f);
 		jumpCtr.AddTransition(transition); // TODO: err.. supposed to be more complex than this, like moving down
 	}
 	

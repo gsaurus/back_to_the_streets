@@ -78,7 +78,7 @@ public class KeyboardInputSource: MonoBehaviour{
 	private Vector2 lastAxis = Vector2.zero;
 
 	// Variables for double tapping detection
-	public bool supportDoubleTap = true;
+	public bool supportDoubleTap = false; //true;
 	public float directionKeyCooler = 0.2f;
 	public float walkHorizontalFactor = 0.5f;
 	public float walkVerticalFactor = 0.6f;
