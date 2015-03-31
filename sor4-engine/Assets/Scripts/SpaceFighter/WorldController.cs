@@ -64,11 +64,26 @@ public class WorldController:Controller<WorldModel>{
 			}
 
 			GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.players[playerId]);
-			if (obj != null){
+			// using the name as a hack around having a variable in a script to tell the object is "initialized"
+			// should be done in a better way.. but whatever, will do for the demo
+			if (obj != null && !obj.name.EndsWith("[initiated]")){
 				SkinnedMeshRenderer[] comps = obj.GetComponentsInChildren<SkinnedMeshRenderer>();
+
+				bool isOwnPlayer = playerId == NetworkCenter.Instance.GetPlayerNumber();
 				foreach (SkinnedMeshRenderer c in comps){
-					c.material.color = (playerId % 2 == 0 ? Color.blue : Color.red);
+					c.material.color = (isOwnPlayer ? Color.blue : Color.red);
 				}
+				if (isOwnPlayer){
+					// Add camera tracking to own player :)
+					obj.AddComponent<CameraTracker>();
+					
+					// TODO: add HUD tracking to this player
+					// Note: I'm doing this here at the moment, but if I need to derive GameEntity
+					// this can go inside it's view.
+					// However I can create a new model just to keep player stats (kills, energy, etc)
+					// and use the respective view to display the stats in the HUD
+				}
+				obj.name += "[initiated]";
 			}
 
 		}
