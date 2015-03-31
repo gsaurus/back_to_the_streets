@@ -152,7 +152,12 @@ public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 		if (guid == Network.player.guid){
 			isReady = ready;
 		}else {
-			syncStates[guid].isReady = ready;
+			NetworkSyncState state;
+			if (syncStates.TryGetValue(guid, out state)){
+				state.isReady = ready;
+			}else{
+				UnityEngine.Debug.LogWarning("SetReady: Player with guid \"" + guid + "\" not found");
+			}
 		}
 
 		// dispatch events about players being ready or not
