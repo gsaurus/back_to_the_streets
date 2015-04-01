@@ -280,7 +280,7 @@ public class WorldController:Controller<WorldModel>{
 		jumpCtr.AddEvent(2, new SingleEntityAnimationEvent<bool>(GameEntityController.SetAutomaticFlip, false));
 		jumpCtr.AddEvent(2, new SingleEntityAnimationEvent<FixedVector3>(
 			GameEntityController.AddImpulse,
-			new FixedVector3(0.0f, 0.18f, 0.0f)
+			new FixedVector3(0.0f, 0.2f, 0.0f)
 		));
 
 		// iddle, walk to fall

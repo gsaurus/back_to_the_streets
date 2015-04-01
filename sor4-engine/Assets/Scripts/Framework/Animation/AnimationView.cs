@@ -13,7 +13,7 @@ public class AnimationView:View<AnimationModel>{
 
 	// This is public, so that it can be set from outside
 	public float transitionTime = 0.2f;
-	public float interpolationTime = 0.2f; // TODO: something based on lag?
+	public float interpolationTime = 0.4f; // TODO: something based on lag?
 
 	// This flag lets derived classes to turn off frame synchronization
 	// E.g. walk animation needs a different timing than model frames
