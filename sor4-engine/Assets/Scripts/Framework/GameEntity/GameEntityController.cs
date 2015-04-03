@@ -73,6 +73,9 @@ public class GameEntityController: Controller<GameEntityModel> {
 	public static void SetAnimationVelocity(GameEntityModel model, FixedVector3 velocity){
 		PhysicPointModel pointModel = GetPointModel(model);
 		if (pointModel == null) return;
+		if (!model.isFacingRight){
+			velocity.X *= -1;
+		}
 		pointModel.velocityAffectors[animVelocityAffector] = velocity;
 	}
 
@@ -80,6 +83,9 @@ public class GameEntityController: Controller<GameEntityModel> {
 	public static void AddImpulse(GameEntityModel model, FixedVector3 impulse){
 		PhysicPointModel pointModel = GetPointModel(model);
 		if (pointModel == null) return;
+		if (!model.isFacingRight){
+			impulse.X *= -1;
+		}
 		pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName] += impulse;
 	}
 

@@ -8,7 +8,7 @@ public class ShooterEntityController: GameEntityController {
 	public const uint maxInvincibilityFrames = 120;
 	public const float maxGunPower = 1f;
 	public const float gunPowerPerFrame = 0.005f;
-	public const float gunPowerPerShot = 0.33f;
+	public const float gunPowerPerShot = 0.3f;
 	public const float worldLowerBound = -20f;
 
 	// How much damage taken during a frame
@@ -93,6 +93,7 @@ public class ShooterEntityController: GameEntityController {
 
 		shooterModel.gunPower -= gunPowerPerShot;
 		// TODO: instantiate new bullet
+		UnityEngine.Debug.Log("Shoot!");
 	}
 
 	
@@ -112,6 +113,12 @@ public class ShooterEntityController: GameEntityController {
 		ShooterEntityModel shooterModel = model as ShooterEntityModel;
 		if (shooterModel == null) return false;
 		return shooterModel.gotHit;
+	}
+
+	public static bool HasEnoughPowerToShoot(GameEntityModel model){
+		ShooterEntityModel shooterModel = model as ShooterEntityModel;
+		if (shooterModel == null) return false;
+		return shooterModel.gunPower >= gunPowerPerShot;
 	}
 	
 

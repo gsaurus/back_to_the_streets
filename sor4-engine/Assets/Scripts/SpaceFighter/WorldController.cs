@@ -223,11 +223,13 @@ public class WorldController:Controller<WorldModel>{
 		AnimationController walkCtr = new AnimationController();
 		AnimationController jumpCtr = new AnimationController();
 		AnimationController fallCtr = new AnimationController();
+		AnimationController fireCtr = new AnimationController();
 		AnimationView idleView = new AnimationView();
 		AnimationsVCPool.Instance.RegisterController(charName, "soldierIdle", idle1Ctr);
 		AnimationsVCPool.Instance.RegisterController(charName, "soldierRun", walkCtr);
 		AnimationsVCPool.Instance.RegisterController(charName, "soldierJump", jumpCtr);
 		AnimationsVCPool.Instance.RegisterController(charName, "soldierFalling", fallCtr);
+		AnimationsVCPool.Instance.RegisterController(charName, "soldierFiring", fireCtr);
 		AnimationsVCPool.Instance.SetDefaultView(charName, idleView);
 		
 		
@@ -246,6 +248,7 @@ public class WorldController:Controller<WorldModel>{
 		idle1Ctr.AddEvent(0, zeroVelEvent);
 		jumpCtr.AddEvent(0, zeroVelEvent);
 		fallCtr.AddEvent(0, zeroVelEvent);
+		fireCtr.AddEvent(0, zeroVelEvent);
 
 
 		
@@ -318,6 +321,34 @@ public class WorldController:Controller<WorldModel>{
 		conditions.Add(new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded)));
 		transition = new AnimationTransition("soldierFalling", conditions, 0.05f);
 		jumpCtr.AddTransition(transition); // TODO: err.. supposed to be more complex than this, like moving down
+
+
+		// Shoot!
+		conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 1));
+		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
+		transition = new AnimationTransition("soldierFiring", conditions, 0.01f);
+		idle1Ctr.AddTransition(transition);
+		walkCtr.AddTransition(transition);
+		jumpCtr.AddTransition(transition);
+		fallCtr.AddTransition(transition);
+		// fire event
+		fireCtr.AddEvent(2, new SimpleEntityAnimationEvent(ShooterEntityController.Shoot));
+//		fireCtr.AddEvent(2, new SingleEntityAnimationEvent<FixedVector3>(
+//			GameEntityController.SetAnimationVelocity,
+//			new FixedVector3(-0.05,-0.01, 0)
+//		));
+//		fireCtr.AddEvent(6, new SingleEntityAnimationEvent<FixedVector3>(
+//			GameEntityController.SetAnimationVelocity,
+//			FixedVector3.Zero
+//			));
+		// back to idle
+		conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
+		transition = new AnimationTransition("soldierIdle", conditions, 0.05f);
+		fireCtr.AddTransition(transition);
+
+
 	}
 	
 }
