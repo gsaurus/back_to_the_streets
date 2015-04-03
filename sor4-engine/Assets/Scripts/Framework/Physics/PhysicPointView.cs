@@ -13,12 +13,9 @@ public class PhysicPointView:View<PhysicPointModel>{
 	private float minDistanceToInterpolate = 0.01f;	// TODO: based on world coordinates system..
 	private float maxDistanceToInterpolate = 5.0f; 		// TODO: based on world coordinates system..		
 
-	// Visual update
-	public override void Update(PhysicPointModel model, float deltaTime){
 
-		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.ownerId);
-		if (obj == null) return; // can't work without a game object
 
+	protected void UpdateGameObjectPosition(GameObject obj, PhysicPointModel model, float deltaTime){
 		// Decide on interpolation based on the last position variation against current object position
 		float oldDistance = Vector3.Distance(obj.transform.position, (Vector3)model.lastPosition);
 		if (oldDistance < minDistanceToInterpolate || oldDistance > maxDistanceToInterpolate) {
@@ -33,6 +30,16 @@ public class PhysicPointView:View<PhysicPointModel>{
 			if (interpolationFactor < minInterpolationFactor) interpolationFactor = minInterpolationFactor;
 			obj.transform.position = Vector3.Lerp(obj.transform.position, (Vector3)model.position, interpolationFactor);
 		}
+	}
+
+
+	// Visual update
+	public override void Update(PhysicPointModel model, float deltaTime){
+
+		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.ownerId);
+		if (obj == null) return; // can't work without a game object
+
+		UpdateGameObjectPosition(obj, model, deltaTime);
 
 	}
 

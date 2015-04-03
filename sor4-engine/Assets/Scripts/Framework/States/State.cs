@@ -202,7 +202,6 @@ public sealed class InternalState: State{
 	private void RemoveModelInternal(ModelChangeInfo deletedModel){
 		sortedModels.Remove(deletedModel.model);
 		models.Remove(deletedModel.model.Index);
-		deletedModel.model.Index.UpdateIndex(ModelReference.InvalidModelIndex);
 		deletedModel.PerformCallback();
 		deletedModel.model.Destroy();
 	}

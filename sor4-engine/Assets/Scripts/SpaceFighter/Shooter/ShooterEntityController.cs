@@ -7,8 +7,8 @@ public class ShooterEntityController: GameEntityController {
 	public const float maxEnergy = 1f;
 	public const uint maxInvincibilityFrames = 120;
 	public const float maxGunPower = 1f;
-	public const float gunPowerPerFrame = 0.005f;
-	public const float gunPowerPerShot = 0.3f;
+	public const float gunPowerPerFrame = 0.008f;
+	public const float gunPowerPerShot = 0.0f; //0.3f;
 	public const float worldLowerBound = -20f;
 
 	// How much damage taken during a frame
@@ -92,8 +92,17 @@ public class ShooterEntityController: GameEntityController {
 		if (shooterModel == null) return;
 
 		shooterModel.gunPower -= gunPowerPerShot;
-		// TODO: instantiate new bullet
-		UnityEngine.Debug.Log("Shoot!");
+
+		PhysicPointModel shooterPointModel = StateManager.state.GetModel(shooterModel.physicsModelId) as PhysicPointModel;
+		if (shooterPointModel == null) return;
+
+		// instantiate new bullet
+		FixedVector3 bulletInitialPosition = shooterPointModel.position + new FixedVector3(0.6f, 2.1f, 0f);
+		BulletPointModel bulletModel = new BulletPointModel(bulletInitialPosition, shooterModel.isFacingRight);
+		WorldModel worldModel = StateManager.state.MainModel as WorldModel;
+		PhysicWorldModel physicWorldModel =  StateManager.state.GetModel(worldModel.physicsModelId) as PhysicWorldModel;
+		PhysicWorldController worldController = physicWorldModel.GetController() as PhysicWorldController;
+		worldController.AddPoint(physicWorldModel, bulletModel);
 	}
 
 	

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class WorldController:Controller<WorldModel>{
 
-
+	public const float gravityY = -0.009f;
 
 	public WorldController(){
 		// Setup character animations
@@ -29,7 +29,7 @@ public class WorldController:Controller<WorldModel>{
 		PhysicWorldController physicsController;
 		if (model.physicsModelId == ModelReference.InvalidModelIndex){
 			// create world with map name and gravity
-			physicsModel = new PhysicWorldModel("map 1", new FixedVector3(0,-0.009,0));
+			physicsModel = new PhysicWorldModel("map 1", new FixedVector3(0,gravityY,0));
 			model.physicsModelId = StateManager.state.AddModel(physicsModel);
 			physicsController = physicsModel.GetController() as PhysicWorldController;
 			// populate world
