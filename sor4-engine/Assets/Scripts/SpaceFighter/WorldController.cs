@@ -14,6 +14,13 @@ public class WorldController:Controller<WorldModel>{
 	}
 
 
+	public FixedVector3 GetRandomSpawnPosition(WorldModel model){
+		FixedVector3 res = new FixedVector3((40 + StateManager.state.Random.NextFloat(-4f, 4f)) * (model.lastSpawnWasLeft ? 1 : -1),9,0);
+		model.lastSpawnWasLeft = !model.lastSpawnWasLeft;
+		return res;
+	}
+
+
 
 	public override void Update(WorldModel model){
 
@@ -50,16 +57,20 @@ public class WorldController:Controller<WorldModel>{
 		foreach(uint playerId in allPlayers){
 			if (!model.players.ContainsKey(playerId)){
 				Model inputModel = new PlayerInputModel(playerId);
-				playerModel = new GameEntityModel("soldier", //playerId % 2 == 0 ? "Blaze" : "Rocha",
-				                                  "soldierIdle",
-				                                  physicsModel,
-				                                  inputModel,
-				                                  new FixedVector3(40 * (playerId % 2 == 0 ? -1 : 1),9,0),
-				                                  new FixedVector3(0, 0.5, 0)
-				                                );
+				FixedVector3 initialPosition = GetRandomSpawnPosition(model);
+				playerModel = new ShooterEntityModel("soldier", //playerId % 2 == 0 ? "Blaze" : "Rocha",
+				                                	 "soldierIdle",
+				                                	 physicsModel,
+				                                	 inputModel,
+				                                     initialPosition,
+				                                	 new FixedVector3(0, 0.5, 0), // step tolerance
+				                                     ShooterEntityController.maxEnergy,
+				                                     ShooterEntityController.maxInvincibilityFrames,
+				                                     0
+				                                	);
 				// Model initial state
-				GameEntityModel playerEntity = (GameEntityModel)playerModel;
-				playerEntity.isFacingRight = playerId % 2 == 0;
+				ShooterEntityModel playerEntity = (ShooterEntityModel)playerModel;
+				playerEntity.isFacingRight = initialPosition.X < 0;
 				model.players[playerId] = StateManager.state.AddModel(playerModel);
 			}
 
