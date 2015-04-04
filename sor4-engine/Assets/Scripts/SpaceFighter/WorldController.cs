@@ -366,22 +366,53 @@ public class WorldController:Controller<WorldModel>{
 		walkCtr.AddTransition(transition);
 		jumpCtr.AddTransition(transition);
 		fallCtr.AddTransition(transition);
+		// keep shooting!
+		conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 1));
+		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
+		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
+		conditions.Add(new NegateCondition(new InputAxisMovingCondition()));
+		conditions.Add(new EntityBoolCondition(GameEntityController.IsGrounded));
+		transition = new AnimationTransition("soldierIdle", conditions, 0.05f);
+		fireCtr.AddTransition(transition);
+		walkFireCtr.AddTransition(transition);
+		conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 1));
+		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
+		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
+		conditions.Add(new InputAxisMovingCondition());
+		transition = new AnimationTransition("soldierRun", conditions, 0.05f);
+		fireCtr.AddTransition(transition);
+		walkFireCtr.AddTransition(transition);
+		conditions = new List<AnimationTriggerCondition>();
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 1));
+		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
+		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
+		conditions.Add(new NegateCondition(new InputAxisMovingCondition()));
+		conditions.Add(new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded)));
+		transition = new AnimationTransition("soldierRun", conditions, 0.05f);
+		fireCtr.AddTransition(transition);
+		walkFireCtr.AddTransition(transition);
+
 		// fire event
 		fireCtr.AddEvent(3, new SimpleEntityAnimationEvent(ShooterEntityController.Shoot));
 		walkFireCtr.AddEvent(3, new SimpleEntityAnimationEvent(ShooterEntityController.Shoot));
 
 		// back to idle
 		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
+		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 18));
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 1));
 		transition = new AnimationTransition("soldierIdleRelaxed", conditions, 0.15f);
 		fireCtr.AddTransition(transition);
 		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
+		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 18));
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 1));
 		conditions.Add(new EntityBoolCondition(GameEntityController.IsGrounded));
 		transition = new AnimationTransition("soldierSprint", conditions, 0.15f);
 		walkFireCtr.AddTransition(transition);
 		conditions = new List<AnimationTriggerCondition>();
 		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 1));
 		conditions.Add(new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded)));
 		transition = new AnimationTransition("soldierFalling", conditions, 0.15f);
 		walkFireCtr.AddTransition(transition);
@@ -410,7 +441,7 @@ public class WorldController:Controller<WorldModel>{
 		// once die animation finishes, respawn
 		dieCtr.AddEvent(60, new SimpleEntityAnimationEvent(ShooterEntityController.KillAndRespawn));
 		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 60));
+		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.equal, 60));
 		transition = new AnimationTransition("soldierIdleRelaxed", conditions, 0f);
 		dieCtr.AddTransition(transition);
 

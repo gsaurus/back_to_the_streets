@@ -181,7 +181,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 
 		// Then see if we have room for this user
 		uint playerNumber = FindSlotForPlayer(playerData);
-		if (playerNumber >= Network.maxConnections) {
+		if (playerNumber > Network.maxConnections) {
 			// No room for it
 			Debug.Log("No room in server for " + playerData.playerName);
 			TryCloseConnection(info.sender);

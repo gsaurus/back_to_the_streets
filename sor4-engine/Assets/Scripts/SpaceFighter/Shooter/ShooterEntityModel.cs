@@ -9,6 +9,9 @@ public class ShooterEntityModel: GameEntityModel {
 	// Shooter's energy
 	public FixedFloat energy;
 
+	// How much damage taken during a frame
+	//public FixedFloat damageTaken;
+
 	// bool telling the entity got hit on the last frame
 	public bool gotHit;
 

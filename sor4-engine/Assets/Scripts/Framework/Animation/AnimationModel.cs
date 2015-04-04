@@ -12,6 +12,9 @@ public class AnimationModel:Model<AnimationModel>{
 	public string characterName;
 	public string animationName;
 
+	// This variable is used during each frame only
+	[NonSerialized]
+	public bool animationChanged;
 
 	// Constructor
 	public AnimationModel(ModelReference ownerId, string characterName, string animationName, int updatingOrder = DefaultUpdateOrder.AnimationsUpdateOrder):

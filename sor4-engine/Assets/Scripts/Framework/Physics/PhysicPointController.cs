@@ -72,6 +72,12 @@ public class PhysicPointController: Controller<PhysicPointModel>{
 		}
 		newCollisionInpact = FixedVector3.Zero;
 
+		if (model.collisionInpact == FixedVector3.Zero){
+			++model.framesSinceLastTimeGrounded;
+		}else{
+			model.framesSinceLastTimeGrounded = 0;
+		}
+
 	}
 
 	// Teleport to a new position

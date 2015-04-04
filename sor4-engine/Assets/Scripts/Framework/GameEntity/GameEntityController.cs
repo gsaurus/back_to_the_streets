@@ -4,6 +4,8 @@ using System.Collections;
 // 
 public class GameEntityController: Controller<GameEntityModel> {
 
+	public const uint groundFramesTolerance = 2;
+
 	// Animations can setup this velocity affector
 	public static readonly string animVelocityAffector = "anim_vel_affector";
 
@@ -122,7 +124,7 @@ public class GameEntityController: Controller<GameEntityModel> {
 	public static bool IsGrounded(GameEntityModel model){
 		PhysicPointModel pointModel = GetPointModel(model);
 		if (pointModel == null) return false;
-		return pointModel.collisionInpact.Y != 0;
+		return pointModel.collisionInpact.Y != 0 || pointModel.framesSinceLastTimeGrounded <= groundFramesTolerance;
 	}
 
 	public static bool IsHittingLeftWall(GameEntityModel model){

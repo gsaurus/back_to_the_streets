@@ -23,6 +23,11 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 	// Collision impact is the maximum difference of point VS plane velocities
 	public FixedVector3 collisionInpact;
 
+	// how many frames passed since it was grounded last time.
+	// Usefull to know if it was grounded just a few momments ago,
+	// providing a safer ground interval
+	public uint framesSinceLastTimeGrounded;
+
 	// Velocity = difference between current and previous positions
 	public FixedVector3 GetVelocity(){
 		return position - lastPosition;

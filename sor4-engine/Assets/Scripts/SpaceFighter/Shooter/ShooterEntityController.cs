@@ -14,7 +14,6 @@ public class ShooterEntityController: GameEntityController {
 
 	// How much damage taken during a frame
 	public FixedFloat damageTaken;
-	
 
 //	public override void Update(GameEntityModel model){
 //

@@ -60,7 +60,8 @@ public class AnimationController:Controller<AnimationModel>{
 	private Dictionary<uint, List<AnimationEvent>> events;
 	private List<AnimationTransition> transitions;
 
-	private bool animationChanged;
+	// can't hold it here cose same controller can act over various models
+	//private bool animationChanged;
 
 	public AnimationController(){
 		events = new Dictionary<uint, List<AnimationEvent>>();
@@ -127,7 +128,7 @@ public class AnimationController:Controller<AnimationModel>{
 	public override void Update(AnimationModel model){
 
 		// reset changed flag
-		animationChanged = false;
+		model.animationChanged = false;
 
 		// Check transitions based on how the state is now
 		CheckTransitions(model);
@@ -142,13 +143,13 @@ public class AnimationController:Controller<AnimationModel>{
 		model.animationName = nextAnimation;
 		model.currentFrame = initialFrame;
 		model.InvalidateVC();
-		animationChanged = true;
+		model.animationChanged = true;
 	}
 
 
 	// On post-update we move to next frame, if animation didn't change
 	public override void PostUpdate(AnimationModel model){
-		if (!animationChanged) {
+		if (!model.animationChanged) {
 			// move to next frame
 			// Note: even though we increment it here, this update cycle was about currentFrame-1 
 			++model.currentFrame;
