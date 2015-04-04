@@ -102,8 +102,21 @@ public sealed class StateManager{
 
 	// When events arrive from the network we add them to the events buffer
 	private void OnEventsAdded(SerializableList<Event> newEvents){
+		uint oldestKeyframe = uint.MaxValue;
 		foreach (Event e in newEvents){
 			eventsBuffer.AddEvent(e);
+			if (e.Keyframe < oldestKeyframe){
+				oldestKeyframe = e.Keyframe;
+			}
+		}
+		// if frames are considerably different, delay or advance game time
+		if (NetworkGame.Instance.enabled){
+			uint lagFrames = NetworkGame.Instance.GetLagFrames();
+			int frameDifference = (int)(state.Keyframe - oldestKeyframe);
+			if (frameDifference > 2 || frameDifference < lagFrames + 2){
+				latestUpdateDeltatimeRemainder -= frameDifference*UpdateRate * 0.1f;
+				UnityEngine.Debug.Log("remainder: " + frameDifference + " = " + latestUpdateDeltatimeRemainder);
+			}
 		}
 	}
 

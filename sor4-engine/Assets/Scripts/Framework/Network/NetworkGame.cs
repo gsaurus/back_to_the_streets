@@ -155,14 +155,19 @@ public sealed class NetworkGame : SingletonMonoBehaviour<NetworkGame>{
 
 #region Game Events
 
+
+	public uint GetLagFrames(){
+		float lagTime = NetworkSync.Instance.GetLagTime();
+		return (uint) Math.Ceiling(NetworkSync.lagCompensationRate * lagTime / StateManager.Instance.UpdateRate);
+	}
+
+
 	// Apply lag compensation on the given events
 	private void ApplyLagCompensationOnEvent(Event e){
-		uint currentKeyframe = StateManager.state.Keyframe;
-		float lagTime = NetworkSync.Instance.GetLagTime();
-		uint laggedKeyframe = (uint) Math.Ceiling(NetworkSync.lagCompensationRate * lagTime / StateManager.Instance.UpdateRate);
-		laggedKeyframe += currentKeyframe;
-		if (e.Keyframe < laggedKeyframe){
-			e.Keyframe = laggedKeyframe;
+		uint newKeyframe = StateManager.state.Keyframe;
+		newKeyframe += GetLagFrames();
+		if (e.Keyframe < newKeyframe){
+			e.Keyframe = newKeyframe;
 		}
 	}
 

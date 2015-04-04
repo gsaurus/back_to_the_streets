@@ -155,6 +155,11 @@ public class AnimationController:Controller<AnimationModel>{
 			++model.currentFrame;
 		}
 	}
+
+
+	public override bool IsCompatible(AnimationModel originalModel, AnimationModel newModel){
+		return originalModel.characterName == newModel.characterName && originalModel.animationName == newModel.animationName;
+	}
 	
 }
 
