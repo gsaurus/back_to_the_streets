@@ -4,6 +4,8 @@ using System.Collections;
 
 public class ShooterEntityView: GameEntityView {
 
+	private const uint invincibilityFramesCycle = 20;
+
 
 	// Visual update
 	public override void Update(GameEntityModel model, float deltaTime){
@@ -14,10 +16,34 @@ public class ShooterEntityView: GameEntityView {
 		if (shooterModel == null) return;
 
 		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.Index);
+		if (obj == null) return;
+
+		Transform helmet = obj.transform.transform.Find("Bip01/Bip01 Pelvis/Bip01 Spine/Bip01 Spine1/Bip01 Spine2/Bip01 Neck/Bip01 Head/soldierHelmet");
+		if (helmet != null){
+			helmet.gameObject.SetActive(shooterModel.energy >= ShooterEntityController.maxEnergy*0.5f);
+		}
+		Transform head = obj.transform.transform.Find("head");
+		if (head != null){
+			head.gameObject.SetActive(shooterModel.energy > 0);
+		}
 
 		if (shooterModel.invincibilityFrames > 0){
-			// let game object look like a ghost
-
+			// let game object look like a super blinking hero
+			Transform t1 = obj.transform.Find("armorBody");
+			Transform t2 = obj.transform.Find("armorArms");
+			SkinnedMeshRenderer[] comps = new SkinnedMeshRenderer[2];
+			comps[0] = t1.gameObject.GetComponent<SkinnedMeshRenderer>();
+			comps[1] = t2.gameObject.GetComponent<SkinnedMeshRenderer>();
+			float greenComponent = 0;
+			if (shooterModel.invincibilityFrames > 1){
+				greenComponent = (shooterModel.invincibilityFrames % invincibilityFramesCycle) / (float)invincibilityFramesCycle;
+				if ((shooterModel.invincibilityFrames / (invincibilityFramesCycle*0.5f)) % 2 == 0){
+					greenComponent = 1 - greenComponent;
+				}
+			}
+			foreach (SkinnedMeshRenderer c in comps){
+				c.material.color = new Color(c.material.color.r, greenComponent, c.material.color.b);
+			}
 		}
 
 		// TODO: update hud stuff

@@ -17,6 +17,13 @@ public class BulletPointView:PhysicPointView{
 
 		UpdateGameObjectPosition(obj, model, deltaTime);
 
+		BulletPointModel bulletModel = model as BulletPointModel;
+		if (bulletModel == null) return;
+
+		float scaleX = bulletModel.lifetimeFrames*2f;
+		if (scaleX > 3) scaleX = 3;
+		obj.transform.localScale = new Vector3(scaleX, obj.transform.localScale.y, obj.transform.localScale.z);
+
 	}
 	
 	public override void OnDestroy (PhysicPointModel model)

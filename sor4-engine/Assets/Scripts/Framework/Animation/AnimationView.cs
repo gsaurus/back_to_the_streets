@@ -35,7 +35,7 @@ public class AnimationView:View<AnimationModel>{
 		
 		if (!animation.IsPlaying(model.animationName)) {
 			//animation.Play(model.animationName);
-			animation.CrossFade(model.animationName, interpolationTime);
+			animation.CrossFade(model.animationName, transitionTime);
 		}
 	}
 

@@ -1,18 +1,19 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 // 
 public class ShooterEntityController: GameEntityController {
 
 	public const float maxEnergy = 1f;
-	public const uint maxInvincibilityFrames = 120;
+	public const float bulletDamage = 0.2f;
+	public const uint maxInvincibilityFrames = 240;
 	public const float maxGunPower = 1f;
 	public const float gunPowerPerFrame = 0.008f;
 	public const float gunPowerPerShot = 0.0f; //0.3f;
 	public const float worldLowerBound = -20f;
 
 	// How much damage taken during a frame
-	private FixedFloat damageTaken;
+	public FixedFloat damageTaken;
 	
 
 //	public override void Update(GameEntityModel model){
@@ -49,6 +50,8 @@ public class ShooterEntityController: GameEntityController {
 				shooterModel.energy = 0;
 			}
 			damageTaken = 0;
+		}else {
+			shooterModel.gotHit = false;
 		}
 
 		// if going too low, instantly kill it
@@ -97,8 +100,8 @@ public class ShooterEntityController: GameEntityController {
 		if (shooterPointModel == null) return;
 
 		// instantiate new bullet
-		FixedVector3 bulletInitialPosition = shooterPointModel.position + new FixedVector3(0.6f, 2.1f, 0f);
-		BulletPointModel bulletModel = new BulletPointModel(bulletInitialPosition, shooterModel.isFacingRight);
+		FixedVector3 bulletInitialPosition = shooterPointModel.position + new FixedVector3(0.3f * (shooterModel.isFacingRight ? 1 : -1), 2.1f, 0f);
+		BulletPointModel bulletModel = new BulletPointModel(model.Index, bulletInitialPosition, shooterModel.isFacingRight);
 		WorldModel worldModel = StateManager.state.MainModel as WorldModel;
 		PhysicWorldModel physicWorldModel =  StateManager.state.GetModel(worldModel.physicsModelId) as PhysicWorldModel;
 		PhysicWorldController worldController = physicWorldModel.GetController() as PhysicWorldController;
