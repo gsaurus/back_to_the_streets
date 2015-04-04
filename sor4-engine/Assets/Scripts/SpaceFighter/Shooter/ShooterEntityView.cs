@@ -20,7 +20,11 @@ public class ShooterEntityView: GameEntityView {
 
 		Transform helmet = obj.transform.transform.Find("Bip01/Bip01 Pelvis/Bip01 Spine/Bip01 Spine1/Bip01 Spine2/Bip01 Neck/Bip01 Head/soldierHelmet");
 		if (helmet != null){
-			helmet.gameObject.SetActive(shooterModel.energy >= ShooterEntityController.maxEnergy*0.5f);
+			bool shouldBeActive = shooterModel.energy >= ShooterEntityController.maxEnergy*0.5f;
+			if (helmet.gameObject.activeSelf && !shouldBeActive){
+				GameObject lostHelmet = GameObject.Instantiate(Resources.Load("helmet"), helmet.position, helmet.rotation) as GameObject;
+			}
+			helmet.gameObject.SetActive(shouldBeActive);
 		}
 		Transform head = obj.transform.transform.Find("head");
 		if (head != null){

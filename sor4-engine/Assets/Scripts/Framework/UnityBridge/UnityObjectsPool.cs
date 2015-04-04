@@ -43,7 +43,7 @@ public class UnityObjectsPool: Singleton<UnityObjectsPool>{
 		}
 		// Instantiate it far, far away
 		obj = GameObject.Instantiate(Resources.Load(prefabName)) as GameObject;
-		obj.transform.position = new Vector3(-9999,9999, -9999);
+		obj.transform.position = new Vector3(float.MinValue,float.MaxValue, float.MinValue);
 		gameObjects[modelId] = obj;
 		if (parent != null){
 			obj.transform.SetParent(parent);
