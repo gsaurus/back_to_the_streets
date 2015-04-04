@@ -38,6 +38,9 @@ public sealed class StateManager{
 	private StateManager(){}
 #endregion
 
+	// If received input keyframe differs this number of frames from current keyframe, sync time
+	private const int clockSinkToleranceFrames = 2; 
+
 	// Buffers are typically used on Netplay only
 	private StatesBuffer statesBuffer;
 	private EventsBuffer eventsBuffer;
@@ -112,10 +115,10 @@ public sealed class StateManager{
 		// if frames are considerably different, delay or advance game time
 		if (NetworkGame.Instance.enabled){
 			uint lagFrames = NetworkGame.Instance.GetLagFrames();
-			int frameDifference = (int)(state.Keyframe - oldestKeyframe);
-			if (frameDifference > 2 || frameDifference < lagFrames + 2){
-				latestUpdateDeltatimeRemainder -= frameDifference*UpdateRate * 0.1f;
-				UnityEngine.Debug.Log("remainder: " + frameDifference + " = " + latestUpdateDeltatimeRemainder);
+			int frameDifference = (int)(oldestKeyframe - state.Keyframe);
+			if (frameDifference < -clockSinkToleranceFrames || frameDifference > lagFrames + clockSinkToleranceFrames){
+				latestUpdateDeltatimeRemainder += frameDifference*UpdateRate * 0.1f;
+				//UnityEngine.Debug.Log("remainder: " + frameDifference);
 			}
 		}
 	}
