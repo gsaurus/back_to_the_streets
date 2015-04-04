@@ -40,6 +40,8 @@ public sealed class StateManager{
 
 	// If received input keyframe differs this number of frames from current keyframe, sync time
 	private const int clockSinkToleranceFrames = 2; 
+	// how much clock is sinked on each frame
+	private const float clockSinkPercentagePerFrame = 0.025f;
 
 	// Buffers are typically used on Netplay only
 	private StatesBuffer statesBuffer;
@@ -55,7 +57,10 @@ public sealed class StateManager{
 
 	// logics update frequency
 	public float UpdateRate { get; private set; }
-	private float latestUpdateDeltatimeRemainder;	// how much remaining time is kept for next update?
+	// how much remaining time is kept for next update?
+	private float latestUpdateDeltatimeRemainder;	
+	// extra time added to update to sync clocks smootly
+	private float clockSynkTime;
 
 	// Control if controllers are updated, or only views
 	public bool IsPaused { get; private set; }
@@ -117,7 +122,7 @@ public sealed class StateManager{
 			uint lagFrames = NetworkGame.Instance.GetLagFrames();
 			int frameDifference = (int)(oldestKeyframe - state.Keyframe);
 			if (frameDifference < -clockSinkToleranceFrames || frameDifference > lagFrames + clockSinkToleranceFrames){
-				latestUpdateDeltatimeRemainder += frameDifference*UpdateRate * 0.1f;
+				clockSynkTime = frameDifference*UpdateRate;
 				//UnityEngine.Debug.Log("remainder: " + frameDifference);
 			}
 		}
@@ -227,6 +232,11 @@ public sealed class StateManager{
 
 		// Do as many cycles as possible, and store the remainder deltatime for next time
 		deltaTime += latestUpdateDeltatimeRemainder;
+		if (clockSynkTime != 0){
+			float synkTimeFraction = clockSynkTime * clockSinkPercentagePerFrame;
+			clockSynkTime -= synkTimeFraction;
+			deltaTime += synkTimeFraction;
+		}
 		while (deltaTime > UpdateRate) {
 			deltaTime -= UpdateRate;
 			UpdateLogicsTick();
