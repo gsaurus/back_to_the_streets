@@ -49,6 +49,10 @@ public class ShooterEntityController: GameEntityController {
 				shooterModel.energy = 0;
 			}
 			damageTaken = 0;
+			ShooterEntityView view = shooterModel.GetView() as ShooterEntityView;
+			if (view != null){
+				view.OnHit(shooterModel);
+			}
 		}else {
 			shooterModel.gotHit = false;
 		}

@@ -28,8 +28,13 @@ public class BulletPointView:PhysicPointView{
 	
 	public override void OnDestroy (PhysicPointModel model)
 	{
-		base.OnDestroy (model);
-		// TODO: throw sparckles
+		base.OnDestroy(model);
+		// Throw sparckles
+		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.Index, "bullet");
+		if (obj == null) return;
+
+		GameObject.Instantiate(Resources.Load("sparks"), (Vector3)model.position, Quaternion.identity);
+
 		UnityObjectsPool.Instance.ReleaseGameObject(model.Index);
 	}
 

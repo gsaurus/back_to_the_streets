@@ -21,9 +21,9 @@ public class BulletPointController: PhysicPointController{
 		// Check collisions against players
 		WorldModel worldModel = StateManager.state.MainModel as WorldModel;
 		// find the first target being hit, and hit only that one
-		//ShooterEntityModel choosenPlayerModel = null;
+		PhysicPointModel choosenPlayerPointModel = null;
 		ShooterEntityController choosenPlayerController = null;
-		FixedFloat minDeltaX = 99999;
+		FixedFloat minDeltaX = 9999;
 		foreach (ModelReference playerId in worldModel.players.Values){
 			if (playerId != bulletModel.shooterId){
 				ShooterEntityModel playerModel = StateManager.state.GetModel(playerId) as ShooterEntityModel;
@@ -41,7 +41,7 @@ public class BulletPointController: PhysicPointController{
 					if (bulletModel.position.Y > playerPhysics.position.Y && bulletModel.position.Y < playerPhysics.position.Y + 2.6){
 						// potentially Hit!!
 						minDeltaX = deltaX; 
-						//choosenPlayerModel = playerModel;
+						choosenPlayerPointModel = playerPhysics;
 						choosenPlayerController = playerController;
 					}
 				}
@@ -49,6 +49,7 @@ public class BulletPointController: PhysicPointController{
 		}
 		if (choosenPlayerController != null){
 			choosenPlayerController.damageTaken += ShooterEntityController.bulletDamage;
+			bulletModel.position.X = choosenPlayerPointModel.position.X + UnityEngine.Random.Range(0.1f, 0.6f) * (bulletModel.lastPosition.X < choosenPlayerPointModel.position.X ? -1 : 1);
 			StateManager.state.RemoveModel(bulletModel);
 		}
 //		if (choosenPlayerModel != null){
@@ -69,6 +70,7 @@ public class BulletPointController: PhysicPointController{
 	// Collision reaction.
 	public override bool OnCollision(PhysicWorldModel world, PhysicPointModel pointModel, PhysicPlaneModel planeModel, FixedVector3 intersection){
 		// On Collision, kill bullet
+		pointModel.position = intersection;
 		StateManager.state.RemoveModel(pointModel);
 		return true;
 	}

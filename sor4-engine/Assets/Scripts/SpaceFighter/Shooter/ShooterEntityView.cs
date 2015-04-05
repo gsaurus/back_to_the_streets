@@ -53,10 +53,27 @@ public class ShooterEntityView: GameEntityView {
 		// TODO: update hud stuff
 		
 	}
+
+
+	public void OnHit(ShooterEntityModel model){
+		PhysicPointModel pointModel = StateManager.state.GetModel(model.physicsModelId) as PhysicPointModel;
+		if (pointModel == null || model.energy > 0) return;
+		Vector3 bloodPosition = (Vector3)pointModel.position;
+		bloodPosition.y += 2.3f;
+		GameObject bloodObj = GameObject.Instantiate(Resources.Load("blood"), bloodPosition, Quaternion.identity) as GameObject;
+		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.Index);
+		if (obj == null) return;
+		Transform headTransform = obj.transform.transform.Find("Bip01/Bip01 Pelvis/Bip01 Spine/Bip01 Spine1/Bip01 Spine2/Bip01 Neck/Bip01 Head");
+		if (headTransform != null){
+			bloodObj.transform.SetParent(headTransform.transform);
+		}
+	}
+
 	
 	public override bool IsCompatible(GameEntityModel originalModel, GameEntityModel newModel){
 		// No local data stored so it's always compatible with any PhysicPointModel
 		return true;
 	}
+
 
 }
