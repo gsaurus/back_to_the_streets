@@ -95,11 +95,11 @@ public class PhysicPlaneModel: Model<PhysicPlaneModel>, IDeserializationCallback
 		return new PhysicPlaneController();
 	}
 	
-#if UNITY_EDITOR
-	protected override View<PhysicPlaneModel> CreateView(){
-		return new DebugPhysicPlaneView(this);
-	}
-#endif
+//#if UNITY_EDITOR
+//	protected override View<PhysicPlaneModel> CreateView(){
+//		return new DebugPhysicPlaneView(this);
+//	}
+//#endif
 
 
 	// TODO: this should move to PhysicPlaneController!
