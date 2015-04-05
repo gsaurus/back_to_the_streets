@@ -316,6 +316,12 @@ public sealed class InternalState: State{
 			pair.Value.Destroy();
 		}
 	}
+
+	public void Destroy(){
+		foreach (Model model in models.Values){
+			model.Destroy();
+		}
+	}
 	
 }
 

@@ -56,6 +56,11 @@ public class ShooterEntityModel: GameEntityModel {
 	protected override Controller<GameEntityModel> CreateController(){
 		return new ShooterEntityController();
 	}
+
+
+	public int GetBalance(){
+		return (int)(totalKills - totalDeaths);
+	}
 	
 
 }

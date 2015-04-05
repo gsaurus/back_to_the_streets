@@ -8,7 +8,7 @@ public class WorldController:Controller<WorldModel>{
 
 	public const float gravityY = -0.009f;
 
-	public const uint totalGameFrames = 720; // 2 minutes
+	public const uint totalGameFrames = 7200; // 2 minutes
 
 	public WorldController(){
 		// Setup character animations
@@ -476,7 +476,7 @@ public class WorldController:Controller<WorldModel>{
 				sortedPlayers.Add(new Eppy.Tuple<NetworkPlayerData,ShooterEntityModel>(playerData, playerModel));
 			}
 			sortedPlayers.Sort(delegate(Eppy.Tuple<NetworkPlayerData,ShooterEntityModel> p1, Eppy.Tuple<NetworkPlayerData,ShooterEntityModel> p2){
-					return ((int)(p2.Item2.totalKills - p2.Item2.totalDeaths)).CompareTo((int)(p1.Item2.totalKills - p1.Item2.totalDeaths));
+					return p2.Item2.GetBalance().CompareTo(p1.Item2.GetBalance());
 				}
 			);
 			if (sortedPlayers.Count == 0) return true;
@@ -487,7 +487,7 @@ public class WorldController:Controller<WorldModel>{
 
 			for (int i = 0 ; i < sortedPlayers.Count ; ++i){
 				playerModel = sortedPlayers[i].Item2;
-				difference = (int)(playerModel.totalKills - playerModel.totalDeaths);
+				difference = playerModel.GetBalance();
 				networkChat.AddBotTextMessage("# " + (i+1) + ": " + "(" + (difference > 0 ? "+" : "") + difference + ") "
 				                             + sortedPlayers[i].Item1.playerName);
 				networkChat.AddBotTextMessage("\tKills: " + playerModel.totalKills + "\tDeaths: " + playerModel.totalDeaths);

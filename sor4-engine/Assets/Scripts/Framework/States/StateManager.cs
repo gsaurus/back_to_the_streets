@@ -83,6 +83,9 @@ public sealed class StateManager{
 	private void LateSetup(StateManagerSetup setup){
 		
 		// TODO: init state with proper seed, either random or agreed with network
+		if (this.currentState != null){
+			currentState.Destroy();
+		}
 		this.currentState = new InternalState(setup.initialModel, 0);
 		
 		UpdateRate = setup.updateRate;

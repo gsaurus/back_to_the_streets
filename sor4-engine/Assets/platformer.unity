@@ -2773,6 +2773,7 @@ GameObject:
   - 4: {fileID: 1875803923}
   - 114: {fileID: 1875803922}
   - 114: {fileID: 1875803920}
+  - 114: {fileID: 1875803921}
   m_Layer: 0
   m_Name: EntryPoint
   m_TagString: Untagged
@@ -2789,6 +2790,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fefa3047ce107646ab99461df0e55a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1875803921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1875803919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bfd3d312d10afd42b9296a92dec3d1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1875803922
