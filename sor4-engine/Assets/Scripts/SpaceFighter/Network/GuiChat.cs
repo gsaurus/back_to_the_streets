@@ -29,7 +29,22 @@ public class GuiChat : MonoBehaviour
 //		GUI.skin.toggle.active.textColor = Color.black;
 //		GUI.skin.label.normal.textColor = Color.black;
 
+		if (StateManager.state.Keyframe > WorldController.totalGameFrames + 16){
+			GameObject entryPointObject = GameObject.Find("EntryPoint");
+			if (entryPointObject != null){
+				EntryPoint entryPoint = entryPointObject.GetComponent<EntryPoint>();
+				if (entryPoint != null){
+					entryPoint.Restart();
+				}
+			}
+			StateManager.Instance.SetPaused(true);
+		}
+
 		bool isReady = GUI.Toggle(new Rect(Screen.width-100, Screen.height - 27, 80, 27), NetworkSync.Instance.IsPlayerReady(), "READY");
+
+		if (isReady && StateManager.state != null && StateManager.state.Keyframe > WorldController.totalGameFrames){
+
+		}
 		NetworkSync.Instance.SetReady(isReady);
 
 		if (NetworkSync.Instance.IsEveryoneReady()) {

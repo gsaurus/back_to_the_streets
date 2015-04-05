@@ -10,7 +10,6 @@ GameObject:
   - 4: {fileID: 486938}
   - 198: {fileID: 19870388}
   - 199: {fileID: 19931322}
-  - 114: {fileID: 11445484}
   m_Layer: 0
   m_Name: Sparks
   m_TagString: Untagged
@@ -45,6 +44,7 @@ GameObject:
   - 4: {fileID: 492528}
   - 198: {fileID: 19880060}
   - 199: {fileID: 19999996}
+  - 114: {fileID: 11453008}
   m_Layer: 0
   m_Name: sparks
   m_TagString: Untagged
@@ -90,18 +90,18 @@ Transform:
   - {fileID: 486938}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &11445484
+--- !u!114 &11453008
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 122616}
+  m_GameObject: {fileID: 182406}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebc9c9f8ba8976d43b87c9e6f7f97b42, type: 3}
+  m_Script: {fileID: 11500000, guid: 6dbce7225acfe74429e83da7194a4621, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 1
+  lifetime: 1.5
 --- !u!198 &19827492
 ParticleSystem:
   m_ObjectHideFlags: 1

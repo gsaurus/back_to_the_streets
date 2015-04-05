@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 
 // Used to initialize StateManager
-public struct StateManagerSetup{
+public class StateManagerSetup{
 	public Model initialModel;			// first model of the game
 	public float updateRate;			// logics update in frames per second
 	public uint saveStateFrequency;		// how often to save state, in frames
@@ -62,6 +62,8 @@ public sealed class StateManager{
 	// extra time added to update to sync clocks smootly
 	private float clockSynkTime;
 
+	private StateManagerSetup delayedSetup;
+
 	// Control if controllers are updated, or only views
 	public bool IsPaused { get; private set; }
 
@@ -70,12 +72,22 @@ public sealed class StateManager{
 	// TODO: what to setup here? Networked game or not, loggers, properties etc..
 	public void Setup(StateManagerSetup setup){
 	
-		// TODO: init state with proper seed, either random or agreed with network
-		this.currentState = new InternalState(setup.initialModel, new Random().Next());
+		if (currentState != null && currentState.IsUpdating){
+			// can't stop at the middle of an update
+			delayedSetup = setup;
+		}else {
+			LateSetup(setup);
+		}
+	}
 
+	private void LateSetup(StateManagerSetup setup){
+		
+		// TODO: init state with proper seed, either random or agreed with network
+		this.currentState = new InternalState(setup.initialModel, 0);
+		
 		UpdateRate = setup.updateRate;
 		this.latestUpdateDeltatimeRemainder = 0;
-
+		
 		// TODO: only create this if necessary, else set it to null
 		this.statesBuffer = new StatesBuffer();
 		this.eventsBuffer = new EventsBuffer();
@@ -83,7 +95,7 @@ public sealed class StateManager{
 		latestKeyframeBuffered = 0;
 		// buffer state zero imediately
 		statesBuffer.SetState(currentState);
-
+		
 		// TODO: add listeners and pause only if on networked game
 		NetworkGame.Instance.onEventsAddedEvent += OnEventsAdded;
 		NetworkGame.Instance.onPauseEvent += OnPause;
@@ -288,6 +300,13 @@ public sealed class StateManager{
 			// logics update cycles
 			UpdateLogics(deltaTime);
 
+		}
+
+		// If the game was requested to restart during the previous update, do it now
+		if (delayedSetup != null){
+			LateSetup(delayedSetup);
+			delayedSetup = null;
+			return;
 		}
 
 		if (currentState.Keyframe > 0) {

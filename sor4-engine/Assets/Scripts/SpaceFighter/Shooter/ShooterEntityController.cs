@@ -14,6 +14,7 @@ public class ShooterEntityController: GameEntityController {
 
 	// How much damage taken during a frame
 	public FixedFloat damageTaken;
+	public ModelReference lastHitter;
 
 //	public override void Update(GameEntityModel model){
 //
@@ -47,6 +48,10 @@ public class ShooterEntityController: GameEntityController {
 			if (shooterModel.energy < 0){
 				// energy is left as zero, but not killed yet, animation will handle it
 				shooterModel.energy = 0;
+				ShooterEntityModel hitterModel = StateManager.state.GetModel(lastHitter) as ShooterEntityModel;
+				if (hitterModel != null){
+					++hitterModel.totalKills;
+				}
 			}
 			damageTaken = 0;
 			ShooterEntityView view = shooterModel.GetView() as ShooterEntityView;

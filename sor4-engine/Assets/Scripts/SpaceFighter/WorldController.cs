@@ -8,6 +8,8 @@ public class WorldController:Controller<WorldModel>{
 
 	public const float gravityY = -0.009f;
 
+	public const uint totalGameFrames = 720; // 2 minutes
+
 	public WorldController(){
 		// Setup character animations
 		SetupGameCharacters();
@@ -19,7 +21,7 @@ public class WorldController:Controller<WorldModel>{
 		model.lastSpawnWasLeft = !model.lastSpawnWasLeft;
 		return res;
 	}
-
+	
 
 
 	public override void Update(WorldModel model){
@@ -101,6 +103,12 @@ public class WorldController:Controller<WorldModel>{
 				obj.name += "[initiated]";
 			}
 
+		}
+
+		// check end of the game
+		if (CheckGameOver(model)){
+			// game over
+			return;
 		}
 
 	}
@@ -446,6 +454,48 @@ public class WorldController:Controller<WorldModel>{
 		dieCtr.AddTransition(transition);
 
 
+	}
+	
+
+	public bool CheckGameOver(WorldModel worldModel){
+		if (StateManager.state == null) return false;
+		if (StateManager.state.Keyframe == totalGameFrames){
+			GameObject networkObject = GameObject.Find("Network");
+			if (networkObject == null) return true;
+			NetworkChat networkChat = networkObject.GetComponent<NetworkChat>();
+			if (networkChat == null) return true;
+
+			List<Eppy.Tuple<NetworkPlayerData,ShooterEntityModel>> sortedPlayers = new List<Eppy.Tuple<NetworkPlayerData,ShooterEntityModel>>();
+			ShooterEntityModel playerModel;
+			NetworkPlayerData playerData;
+			foreach (KeyValuePair<uint, ModelReference> pair in worldModel.players){
+				playerModel = StateManager.state.GetModel(pair.Value) as ShooterEntityModel;
+				if (playerModel == null) continue;
+				playerData = NetworkCenter.Instance.GetPlayerData(pair.Key);
+				if (playerData == null) continue;
+				sortedPlayers.Add(new Eppy.Tuple<NetworkPlayerData,ShooterEntityModel>(playerData, playerModel));
+			}
+			sortedPlayers.Sort(delegate(Eppy.Tuple<NetworkPlayerData,ShooterEntityModel> p1, Eppy.Tuple<NetworkPlayerData,ShooterEntityModel> p2){
+					return ((int)(p2.Item2.totalKills - p2.Item2.totalDeaths)).CompareTo((int)(p1.Item2.totalKills - p1.Item2.totalDeaths));
+				}
+			);
+			if (sortedPlayers.Count == 0) return true;
+
+			networkChat.AddBotTextMessage("###################################");
+			networkChat.AddBotTextMessage("########## FINAL SCORE!! ##########");
+			int difference;
+
+			for (int i = 0 ; i < sortedPlayers.Count ; ++i){
+				playerModel = sortedPlayers[i].Item2;
+				difference = (int)(playerModel.totalKills - playerModel.totalDeaths);
+				networkChat.AddBotTextMessage("# " + (i+1) + ": " + "(" + (difference > 0 ? "+" : "") + difference + ") "
+				                             + sortedPlayers[i].Item1.playerName);
+				networkChat.AddBotTextMessage("\tKills: " + playerModel.totalKills + "\tDeaths: " + playerModel.totalDeaths);
+			}
+			networkChat.AddBotTextMessage("###################################");
+			return true;
+		}
+		return false;
 	}
 	
 }

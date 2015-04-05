@@ -73,6 +73,27 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 		return GetPlayerData(Network.player);
 	}
 
+
+	private string GetPlayerUniqueId(uint playerNumber){
+		foreach(KeyValuePair<string, uint> pair in playerNumbers){
+			if (pair.Value == playerNumber){
+				return pair.Key;
+			}
+		}
+		return null;
+	}
+
+	public NetworkPlayerData GetPlayerData(uint playerNumber){
+		string uniqueId = GetPlayerUniqueId(playerNumber);
+		if (uniqueId == null) return null;
+		foreach(NetworkPlayerData playerData in players.Values){
+			if (playerData.uniqueId == uniqueId){
+				return playerData;
+			}
+		}
+		return null;
+	}
+
 	// Get the number of the player given it's network player data
 	public int GetPlayerNumber(NetworkPlayerData playerData){
 		if (playerData == null) return -1;
