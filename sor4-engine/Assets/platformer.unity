@@ -20,12 +20,12 @@ RenderSettings:
   m_FogDensity: .00999999978
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: .200000003, g: .200000003, b: .200000003, a: 1}
-  m_AmbientEquatorColor: {r: .200000003, g: .200000003, b: .200000003, a: 1}
-  m_AmbientGroundColor: {r: .200000003, g: .200000003, b: .200000003, a: 1}
-  m_AmbientIntensity: 1
-  m_AmbientMode: 3
-  m_SkyboxMaterial: {fileID: 0}
+  m_AmbientSkyColor: {r: 1, g: .68275857, b: 0, a: 1}
+  m_AmbientEquatorColor: {r: .860294104, g: .409555823, b: .0632569268, a: 1}
+  m_AmbientGroundColor: {r: .588235259, g: .221333936, b: .0562283546, a: 1}
+  m_AmbientIntensity: .561999977
+  m_AmbientMode: 1
+  m_SkyboxMaterial: {fileID: 2100000, guid: 361dab9c2b852485aa772a32c0291264, type: 2}
   m_HaloStrength: .5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -1164,10 +1164,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 11172770, guid: 59d9ea21223da2541b79f105724f9334, type: 2}
-      propertyPath: m_Animations.Array.size
-      value: 26
-      objectReference: {fileID: 0}
     - target: {fileID: 488230, guid: 59d9ea21223da2541b79f105724f9334, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1204,14 +1200,6 @@ Prefab:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11172770, guid: 59d9ea21223da2541b79f105724f9334, type: 2}
-      propertyPath: m_Animation
-      value: 
-      objectReference: {fileID: 7400000, guid: d0ec108969f85dc45a7aab2347e8d300, type: 2}
-    - target: {fileID: 11172770, guid: 59d9ea21223da2541b79f105724f9334, type: 2}
-      propertyPath: m_Animations.Array.data[26]
-      value: 
-      objectReference: {fileID: 7400000, guid: 701b856c84ca7c74d914a612e8db2d70, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 59d9ea21223da2541b79f105724f9334, type: 2}
   m_IsPrefabParent: 0
