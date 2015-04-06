@@ -14,7 +14,7 @@ public class BulletPointModel : PhysicPointModel{
 	{
 		// setup initial velocity
 		this.shooterId = shooterId;
-		velocityAffectors[defaultVelocityAffectorName] = new FixedVector3(1.5f * (moveRight ? 1 : -1), 0f, 0f);
+		velocityAffectors[defaultVelocityAffectorName] = new FixedVector3(1.2f * (moveRight ? 1 : -1), 0f, 0f);
 		this.position = position;
 		lifetimeFrames = 0;
 	}

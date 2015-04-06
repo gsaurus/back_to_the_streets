@@ -87,7 +87,7 @@ public class KeyboardInputSource: MonoBehaviour{
 	private InputSourceAxisDownDirection tappedDirection = InputSourceAxisDownDirection.None;
 	private DirectionDownControl directionControl = new DirectionDownControl();
 
-
+#if !UNITY_IPHONE && !UNITY_ANDROID
 
 	private bool CheckBothAxisHoldedAtOnce() {
 		return Input.GetAxisRaw("Horizontal") != 0 && Input.GetAxisRaw("Vertical") != 0;
@@ -207,6 +207,8 @@ public class KeyboardInputSource: MonoBehaviour{
 		ProcessAxis();
 		ProcessButtons();
 	}
+
+#endif
 
 }
 

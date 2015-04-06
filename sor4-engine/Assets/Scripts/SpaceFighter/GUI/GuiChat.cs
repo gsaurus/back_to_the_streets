@@ -8,6 +8,7 @@ public class GuiChat : MonoBehaviour
 	private NetworkChat chat;
 	private string currentMessage = string.Empty;
 	private Vector2 scrollPosition;
+	private int lastNumMessages;
 
 
 	void Start(){
@@ -40,7 +41,7 @@ public class GuiChat : MonoBehaviour
 			StateManager.Instance.SetPaused(true);
 		}
 
-		bool isReady = GUI.Toggle(new Rect(Screen.width-100, Screen.height - 27, 80, 27), NetworkSync.Instance.IsPlayerReady(), "READY");
+		bool isReady = GUI.Toggle(new Rect(Screen.width-100, Screen.height - 40, 80, 27), NetworkSync.Instance.IsPlayerReady(), "READY");
 
 		if (isReady && StateManager.state != null && StateManager.state.Keyframe > WorldController.totalGameFrames){
 
@@ -70,12 +71,20 @@ public class GuiChat : MonoBehaviour
 		                                           GUILayout.Width(Screen.width),
 		                                           GUILayout.Height(Screen.height - 50)
 		                                           );
+		int count = 0;
 		foreach(NetworkChatMessage message in chat.ChatHistory){
 			if (message.type == NetworkChatMessageType.botMessage) {
 				GUILayout.Label(message.timeStamp.ToShortTimeString() + "-BOT: "  + message.text);
 			}else {
 				GUILayout.Label(message.timeStamp.ToShortTimeString() + "-" + message.senderName + ": "  + message.text);
 			}
+			++count;
+		}
+		int newNumMessages = count - lastNumMessages;
+		lastNumMessages = count;
+		// force scroll to go to bottom
+		if (newNumMessages > 0){
+			scrollPosition = new Vector2(scrollPosition.x, float.MaxValue);
 		}
 
 		GUILayout.EndScrollView();
