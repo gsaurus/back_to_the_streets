@@ -2300,7 +2300,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -260, y: -121}
+  m_AnchoredPosition: {x: -233.199997, y: -121}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: .5, y: .5}
 --- !u!1001 &1404503991
@@ -3009,10 +3009,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonsLocation:
   - {x: .200000003, y: .300000012}
-  - {x: .800000012, y: .75}
+  - {x: .800000012, y: .660000026}
   - {x: .699999988, y: .300000012}
   buttonsMaxRadius: 1
-  axisMaxRadius: .0149999997
+  axisMaxRadius: .0109999999
   minAxisDelta: .00999999978
 --- !u!114 &1875803921
 MonoBehaviour:
