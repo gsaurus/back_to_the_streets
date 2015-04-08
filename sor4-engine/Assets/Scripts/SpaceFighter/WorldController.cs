@@ -312,7 +312,7 @@ public class WorldController:Controller<WorldModel>{
 
 		// iddle, walk to jump
 		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 1));
 		transition = new AnimationTransition("soldierJump", conditions, 0.3f);
 		idle1Ctr.AddTransition(transition);
 		walkCtr.AddTransition(transition);
@@ -366,7 +366,7 @@ public class WorldController:Controller<WorldModel>{
 
 		// Shoot!
 		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 1));
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
 		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
 		transition = new AnimationTransition("soldierIdle", conditions, 0.05f);
 		idle1Ctr.AddTransition(transition);
@@ -376,7 +376,7 @@ public class WorldController:Controller<WorldModel>{
 		fallCtr.AddTransition(transition);
 		// keep shooting!
 		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 1));
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
 		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
 		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
 		conditions.Add(new NegateCondition(new InputAxisMovingCondition()));
@@ -385,7 +385,7 @@ public class WorldController:Controller<WorldModel>{
 		fireCtr.AddTransition(transition);
 		walkFireCtr.AddTransition(transition);
 		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 1));
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
 		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
 		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
 		conditions.Add(new InputAxisMovingCondition());
@@ -393,7 +393,7 @@ public class WorldController:Controller<WorldModel>{
 		fireCtr.AddTransition(transition);
 		walkFireCtr.AddTransition(transition);
 		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 1));
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
 		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
 		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
 		conditions.Add(new NegateCondition(new InputAxisMovingCondition()));
@@ -409,18 +409,18 @@ public class WorldController:Controller<WorldModel>{
 		// back to idle
 		conditions = new List<AnimationTriggerCondition>();
 		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 18));
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 1));
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 0));
 		transition = new AnimationTransition("soldierIdleRelaxed", conditions, 0.15f);
 		fireCtr.AddTransition(transition);
 		conditions = new List<AnimationTriggerCondition>();
 		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 18));
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 1));
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 0));
 		conditions.Add(new EntityBoolCondition(GameEntityController.IsGrounded));
 		transition = new AnimationTransition("soldierSprint", conditions, 0.15f);
 		walkFireCtr.AddTransition(transition);
 		conditions = new List<AnimationTriggerCondition>();
 		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 1));
+		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 0));
 		conditions.Add(new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded)));
 		transition = new AnimationTransition("soldierFalling", conditions, 0.15f);
 		walkFireCtr.AddTransition(transition);
