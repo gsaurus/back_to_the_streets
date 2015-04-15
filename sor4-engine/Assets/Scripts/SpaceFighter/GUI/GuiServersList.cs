@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using RetroBread;
+using RetroBread.Network;
 
 public class GuiServersList : MonoBehaviour
 {

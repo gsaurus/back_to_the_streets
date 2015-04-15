@@ -1,7 +1,10 @@
-
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+
+
+
+namespace RetroBread{
 
 
 // Check if there is any axis movement happening
@@ -81,3 +84,5 @@ public class EntityArithmeticCondition<T>: ArithmeticCondition<T> where T:ICompa
 }
 
 
+
+}

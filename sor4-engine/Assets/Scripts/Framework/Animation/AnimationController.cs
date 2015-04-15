@@ -1,6 +1,8 @@
-
 using System;
 using System.Collections.Generic;
+
+
+namespace RetroBread{
 
 
 // An animation event is something we can execute at a certain keyframe
@@ -161,5 +163,8 @@ public class AnimationController:Controller<AnimationModel>{
 		return originalModel.characterName == newModel.characterName && originalModel.animationName == newModel.animationName;
 	}
 	
+}
+
+
 }
 

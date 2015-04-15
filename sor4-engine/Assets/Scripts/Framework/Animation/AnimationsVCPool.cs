@@ -1,6 +1,9 @@
-
 using System;
 using System.Collections.Generic;
+
+
+
+namespace RetroBread{
 
 
 // Holds the views and controllers of all animations of a character
@@ -84,3 +87,5 @@ public class AnimationsVCPool: Singleton<AnimationsVCPool>{
 }
 
 
+
+}

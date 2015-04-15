@@ -1,6 +1,9 @@
 using System;
 
 
+namespace RetroBread{
+
+
 [Serializable]
 public class PhysicPointModel : Model<PhysicPointModel>{
 
@@ -69,6 +72,10 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 			return vec;
 		return FixedVector3.Zero;
 	}
+
+}
+
+
 
 }
 

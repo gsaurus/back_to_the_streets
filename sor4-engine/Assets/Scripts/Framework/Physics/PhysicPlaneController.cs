@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 
+
+namespace RetroBread{
+
+
 public class PhysicPlaneController: Controller<PhysicPlaneModel>{
 
 	// TODO: set position, which also updates the oldPosition..
@@ -33,6 +37,9 @@ public class PhysicPlaneController: Controller<PhysicPlaneModel>{
 		// Nothing by default
 		return true;
 	}
+
+}
+
 
 }
 

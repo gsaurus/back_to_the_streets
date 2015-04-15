@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using RetroBread;
+using RetroBread.Network;
 
 public class GuiChat : MonoBehaviour
 {

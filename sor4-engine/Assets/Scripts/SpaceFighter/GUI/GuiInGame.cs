@@ -2,6 +2,8 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using RetroBread;
+using RetroBread.Network;
 
 public class GuiInGame : MonoBehaviour
 {

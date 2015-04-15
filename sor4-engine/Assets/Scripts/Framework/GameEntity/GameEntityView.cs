@@ -2,6 +2,10 @@
 using System.Collections;
 
 
+
+namespace RetroBread{
+
+
 public class GameEntityView: View<GameEntityModel> {
 
 
@@ -24,5 +28,9 @@ public class GameEntityView: View<GameEntityModel> {
 		// No local data stored so it's always compatible with any PhysicPointModel
 		return true;
 	}
+
+}
+
+
 
 }

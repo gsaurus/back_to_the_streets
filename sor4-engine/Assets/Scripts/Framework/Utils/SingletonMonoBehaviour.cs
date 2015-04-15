@@ -2,6 +2,8 @@ using UnityEngine;
 using System;
 using System.Collections;
 
+namespace RetroBread{
+
 // Singleton pattern for MonoBehaviours, persistent across scenes
 public class SingletonMonoBehaviour<T>: MonoBehaviour where T : MonoBehaviour{
 	
@@ -21,6 +23,8 @@ public class SingletonMonoBehaviour<T>: MonoBehaviour where T : MonoBehaviour{
 			return instance;
 		}
 	}
+
+}
 
 }
 

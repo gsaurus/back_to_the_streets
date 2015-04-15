@@ -4,6 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+
+namespace RetroBread{
+namespace Network{
+
+
 // Stores all players information
 // Handles connections, reconnections and server promotions
 public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
@@ -40,7 +45,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 
 	// Set our own player data
 	public void SetPlayerData(NetworkPlayerData data) {
-		players[Network.player.guid] = data;
+				players[UnityEngine.Network.player.guid] = data;
 	}
 
 	// Get a player's data
@@ -52,7 +57,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 
 	// Get our own player data
 	public T GetPlayerData<T>() where T:NetworkPlayerData{
-		return GetPlayerData<T>(Network.player);
+		return GetPlayerData<T>(UnityEngine.Network.player);
 	}
 
 	// Get a player's data
@@ -62,7 +67,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 
 	// Get a player's data from it's network guid
 	public NetworkPlayerData GetPlayerData(string guid){
-		if (guid == "" || guid == "0") guid = Network.player.guid;
+		if (guid == "" || guid == "0") guid = UnityEngine.Network.player.guid;
 		NetworkPlayerData data;
 		players.TryGetValue(guid, out data);
 		return data;
@@ -70,7 +75,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 	
 	// Get our own player data
 	public NetworkPlayerData GetPlayerData(){
-		return GetPlayerData(Network.player);
+		return GetPlayerData(UnityEngine.Network.player);
 	}
 
 
@@ -118,7 +123,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 
 	// Get our player number
 	public int GetPlayerNumber(){
-		return GetPlayerNumber(Network.player);
+		return GetPlayerNumber(UnityEngine.Network.player);
 	}
 
 	// Number of connected players
@@ -128,7 +133,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 
 	// Are we connected with someone?
 	public bool IsConnected(){
-		return Network.connections.Length > 0;
+		return UnityEngine.Network.connections.Length > 0;
 	}
 
 	public List<uint> GetAllNumbersOfConnectedPlayers(){
@@ -141,7 +146,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 
 
 	public static bool TryGetNetworkPlayerForGuid(string guid, out NetworkPlayer player){
-		foreach (NetworkPlayer p in Network.connections){
+		foreach (NetworkPlayer p in UnityEngine.Network.connections){
 			if (guid == p.guid){
 				player = p;
 				return true;
@@ -162,7 +167,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 		NetworkPlayerData playerData = GetPlayerData();
 		playerNumbers[playerData.uniqueId] = FindSlotForPlayer(playerData);
 		if (playerConnectedEvent != null) {
-			playerConnectedEvent(Network.player.guid);
+			playerConnectedEvent(UnityEngine.Network.player.guid);
 		}
 	}
 	
@@ -189,7 +194,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 	void OnClientPlayerDataAnounced(byte[] data, NetworkMessageInfo info) {
 
 		// ignore if not server
-		if (!Network.isServer) return;
+		if (!UnityEngine.Network.isServer) return;
 
 		// Deserialize data
 		NetworkPlayerData playerData = serializer.Deserialize(data) as NetworkPlayerData;
@@ -202,7 +207,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 
 		// Then see if we have room for this user
 		uint playerNumber = FindSlotForPlayer(playerData);
-		if (playerNumber > Network.maxConnections) {
+		if (playerNumber > UnityEngine.Network.maxConnections) {
 			// No room for it
 			Debug.Log("No room in server for " + playerData.playerName);
 			TryCloseConnection(info.sender);
@@ -314,8 +319,8 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 		}
 
 		// Remove only after notification so others can still access it's data
-		Network.RemoveRPCs(player);
-		Network.DestroyPlayerObjects(player);
+		UnityEngine.Network.RemoveRPCs(player);
+		UnityEngine.Network.DestroyPlayerObjects(player);
 		players.Remove(player.guid);
 	}
 
@@ -334,7 +339,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 		if (playerData == null) {
 			// Wops, we can't play without data
 			Debug.LogWarning("No Player Data to anounce to server");
-			Network.Disconnect();
+			UnityEngine.Network.Disconnect();
 			return;
 		}
 		byte[] data = serializer.Serialize(playerData);
@@ -348,7 +353,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 	IEnumerator WaitForServerData(){
 		yield return new WaitForSeconds(5);
 		if (GetNumPlayersOnline() <= 1) {
-			Network.Disconnect();
+			UnityEngine.Network.Disconnect();
 		}
 	}
 
@@ -389,10 +394,10 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 
 
 	void TryCloseConnection(NetworkPlayer player){
-		foreach (NetworkPlayer p in Network.connections){
+		foreach (NetworkPlayer p in UnityEngine.Network.connections){
 			if (p.guid == player.guid){
 				Debug.Log("Closing client: " + player.ipAddress + ", guid: " + player.guid);
-				Network.CloseConnection(p, true);
+				UnityEngine.Network.CloseConnection(p, true);
 			}
 		}
 	}
@@ -400,7 +405,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 
 	void OnApplicationQuit() {
 		// TODO: store info so we can restore the networked game
-		Network.Disconnect();
+		UnityEngine.Network.Disconnect();
 	}
 
 
@@ -423,3 +428,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 	//	}
 
 }
+
+
+
+}}

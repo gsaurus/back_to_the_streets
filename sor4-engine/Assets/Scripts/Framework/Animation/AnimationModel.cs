@@ -1,5 +1,7 @@
-
 using System;
+
+
+namespace RetroBread{
 
 
 // Animation model keeps the name of the animation and it's current frame
@@ -39,3 +41,6 @@ public class AnimationModel:Model<AnimationModel>{
 
 }
 
+
+
+}

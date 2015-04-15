@@ -1,7 +1,10 @@
-
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+
+
+namespace RetroBread{
+
 
 
 // Boolean condition with delegates
@@ -71,6 +74,10 @@ public class NegateCondition: AnimationTriggerCondition{
 	public bool Evaluate(AnimationModel model){
 		return !originalCondition.Evaluate(model);
 	}
+
+}
+
+
 
 }
 

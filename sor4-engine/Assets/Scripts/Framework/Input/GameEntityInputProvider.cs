@@ -1,5 +1,7 @@
-
 using System;
+
+
+namespace RetroBread{
 
 
 // Define accessor methods to input
@@ -17,3 +19,5 @@ public interface GameEntityInputProvider{
 
 }
 
+
+}

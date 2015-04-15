@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 
+
+namespace RetroBread{
+
+
 public class PhysicPointController: Controller<PhysicPointModel>{
 
 	// Key of collision reaction velocity affector
@@ -276,6 +280,10 @@ public class PhysicPointController: Controller<PhysicPointModel>{
 
 		}
 	}
+
+
+}
+
 
 
 }

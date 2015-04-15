@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 
 
+namespace RetroBread{
+
+
 
 // TODO: Think about how to control layers, at least leave generic to control by layer by derived classes
 // remember layers are for things like walk with heavy pipe
@@ -101,6 +104,10 @@ public class AnimationView:View<AnimationModel>{
 	public override bool IsCompatible(AnimationModel originalModel, AnimationModel newModel){
 		return originalModel.characterName == newModel.characterName && originalModel.animationName == newModel.animationName;
 	}
+
+}
+
+
 
 }
 

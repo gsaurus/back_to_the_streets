@@ -1,7 +1,10 @@
-
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+
+
+
+namespace RetroBread{
 
 
 // Parameterless event
@@ -108,4 +111,8 @@ public class VariadicAnimationEvent: AnimationEvent{
 		eventExecutionDelegate(model, parameters);
 	}
 	
+}
+
+
+
 }

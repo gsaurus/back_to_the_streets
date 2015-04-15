@@ -1,9 +1,8 @@
-
 using System;
 using UnityEngine;
 using System.Collections.Generic;
 
-
+namespace RetroBread{
 
 // Holds the GameObjects used by views
 // GameObjects are associated to owner models
@@ -68,6 +67,8 @@ public class UnityObjectsPool: Singleton<UnityObjectsPool>{
 			GameObject.Destroy(obj);
 		}
 	}
+
+}
 
 }
 

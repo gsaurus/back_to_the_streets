@@ -1,0 +1,41 @@
+Framework/Utils/Math
+	FixedFloat
+	FixedVector3
+	RandomGenerator
+	SimpleRandomGenerator
+
+Framework/States/MVC
+	Model
+	ModelReference
+	
+Framework/States
+	Event
+	State
+	
+Framework/Physics
+	PhysicPointModel
+	PhysicPlaneModel
+	PhysicWorldModel
+	
+Framework/Input
+	PlayerInputModel
+	StandardInputEvents
+	
+Framework/GameEntity
+	GameEntityModel
+	
+Framework/Animation
+	AnimationModel
+	
+	
+--------------------------------
+// Fighter
+
+SpaceFighter
+	WorldModel
+	MovingPlaneModel
+	
+SpaceFighter/Shooter
+	BulletPointModel
+	ShooterEntityModel
+

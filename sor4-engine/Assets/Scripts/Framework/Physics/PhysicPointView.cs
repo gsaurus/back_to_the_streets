@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 
 
+namespace RetroBread{
+
+
 
 // 
 public class PhysicPointView:View<PhysicPointModel>{
@@ -47,6 +50,9 @@ public class PhysicPointView:View<PhysicPointModel>{
 		// No local data stored so it's always compatible with any PhysicPointModel
 		return true;
 	}
+
+}
+
 
 }
 

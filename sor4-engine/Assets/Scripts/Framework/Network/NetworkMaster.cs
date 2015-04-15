@@ -4,6 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+namespace RetroBread{
+namespace Network{
+
+
 // List available servers
 // Let player connect to an existing server
 // Let player create a new server
@@ -70,9 +74,9 @@ public sealed class NetworkMaster: SingletonMonoBehaviour<NetworkMaster>{
 
 
 	public void CreateServer(int maxPlayers, string password = null){
-		Network.incomingPassword = password;
-		bool useNat = !Network.HavePublicAddress();
-		Network.InitializeServer(maxPlayers-1, port, useNat);
+		UnityEngine.Network.incomingPassword = password;
+		bool useNat = !UnityEngine.Network.HavePublicAddress();
+		UnityEngine.Network.InitializeServer(maxPlayers-1, port, useNat);
 	}
 
 	public void CancelServer(){
@@ -90,7 +94,7 @@ public sealed class NetworkMaster: SingletonMonoBehaviour<NetworkMaster>{
 
 
 	public void ConnectToServer(HostData host, string password = null) {
-		Network.Connect(host, password);
+		UnityEngine.Network.Connect(host, password);
 	}
 
 	void OnConnectedToServer() {
@@ -113,3 +117,7 @@ public sealed class NetworkMaster: SingletonMonoBehaviour<NetworkMaster>{
 	}
 
 }
+
+
+
+}}

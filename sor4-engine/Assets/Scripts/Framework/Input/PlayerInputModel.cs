@@ -1,5 +1,8 @@
-
 using System;
+
+
+
+namespace RetroBread{
 
 
 // Model storing real player input information (based on input events)
@@ -39,6 +42,9 @@ public class PlayerInputModel:Model<PlayerInputModel>{
 		// Get the controller that corresponds to the current animation name
 		return new PlayerInputController();
 	}
+
+}
+
 
 }
 

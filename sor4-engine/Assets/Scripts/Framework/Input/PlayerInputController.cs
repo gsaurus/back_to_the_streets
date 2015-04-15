@@ -3,6 +3,10 @@ using System;
 using System.Collections.Generic;
 
 
+
+namespace RetroBread{
+
+
 // Check input events and traduce them into input state
 public class PlayerInputController:Controller<PlayerInputModel>, GameEntityInputProvider{
 
@@ -85,3 +89,6 @@ public class PlayerInputController:Controller<PlayerInputModel>, GameEntityInput
 
 } // PlayerInputController
 
+
+
+}

@@ -1,5 +1,9 @@
-
 using System;
+
+
+
+namespace RetroBread{
+
 
 
 // Handy static helper class, to get the input provider
@@ -34,5 +38,9 @@ public static class InputConditionsHelper{
 		return ownerModel.isFacingRight;
 	}
 	
+}
+
+
+
 }
 

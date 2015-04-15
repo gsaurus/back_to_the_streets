@@ -4,6 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+
+namespace RetroBread{
+namespace Network{
+
+
 // Controls the network flow of a networked game
 public sealed class NetworkGame : SingletonMonoBehaviour<NetworkGame>{
 
@@ -53,7 +58,7 @@ public sealed class NetworkGame : SingletonMonoBehaviour<NetworkGame>{
 	// 1) game allow players to join on middle game: server send him current state
 	// 2) game doesn't allow joining on middle game: if all ready, server send state to all
 	void OnPlayerReadyEvent(string guid){
-		if (Network.isServer && NetworkSync.Instance.IsPlayerReady()){
+		if (UnityEngine.Network.isServer && NetworkSync.Instance.IsPlayerReady()){
 			State currentState = StateManager.state;
 			State oldestState = StateManager.Instance.GetOldestBufferedState();
 
@@ -63,7 +68,7 @@ public sealed class NetworkGame : SingletonMonoBehaviour<NetworkGame>{
 					SendResumeMessage(currentState, oldestState);
 				}
 			}else {
-				if (guid == Network.player.guid) {
+				if (guid == UnityEngine.Network.player.guid) {
 					// Server got ready, send resume to every ready client
 					List<string> readyGuids = NetworkSync.Instance.GetReadyPlayerGuids();
 					foreach (string readyGuid in readyGuids){
@@ -127,7 +132,7 @@ public sealed class NetworkGame : SingletonMonoBehaviour<NetworkGame>{
 	void ResumeGame(byte[] newStateData, byte[] oldestStateData, float timeToResume, NetworkMessageInfo messageInfo){
 		State newState = NetworkCenter.Instance.serializer.Deserialize(newStateData) as State;
 		State oldestState = NetworkCenter.Instance.serializer.Deserialize(oldestStateData) as State;
-		float travelTime = (float) (Network.time - messageInfo.timestamp);
+		float travelTime = (float) (UnityEngine.Network.time - messageInfo.timestamp);
 		timeToResume -= travelTime;
 		if (timeToResume > 0){
 			// wait until we're ready to resume
@@ -211,4 +216,7 @@ public sealed class NetworkGame : SingletonMonoBehaviour<NetworkGame>{
 
 
 }
+
+
+}}
 

@@ -1,7 +1,10 @@
-
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+
+
+
+namespace RetroBread{
 
 
 // Condition based on the animation current frame number
@@ -72,6 +75,10 @@ public class AnimationFrameCondition: AnimationTriggerCondition{
 		// won't reach here, but compiler complains, so..
 		return false;
 	}
+
+}
+
+
 
 }
 

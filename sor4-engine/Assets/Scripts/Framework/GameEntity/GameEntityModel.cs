@@ -2,6 +2,10 @@
 using System;
 using System.Collections;
 
+
+namespace RetroBread{
+
+
 // Game entity used as base for characters and other game elements
 [Serializable]
 public class GameEntityModel: Model<GameEntityModel> {
@@ -61,5 +65,8 @@ public class GameEntityModel: Model<GameEntityModel> {
 //		StateManager.state.RemoveModel(animationModelId);
 //		StateManager.state.RemoveModel(inputModelId);
 	}
+
+}
+
 
 }

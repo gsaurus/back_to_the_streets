@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
+namespace RetroBread{
 
 // Serializer provides a simple way to serialize / deserialize data
 public class Serializer
@@ -182,4 +183,6 @@ public class SerializableList<T>: List<T>, ISerializable{
 
 
 // TODO: add more SerializableClasses on need
+
+}
 

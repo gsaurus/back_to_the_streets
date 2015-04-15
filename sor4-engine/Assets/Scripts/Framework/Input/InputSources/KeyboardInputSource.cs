@@ -3,6 +3,9 @@ using System;
 using UnityEngine;
 
 
+namespace RetroBread{
+
+
 enum InputSourceAxisDownDirection {Left, Right, Up, Down, None};
 
 // Used to check when up/down/left/right
@@ -209,6 +212,9 @@ public class KeyboardInputSource: MonoBehaviour{
 	}
 
 #endif
+
+}
+
 
 }
 

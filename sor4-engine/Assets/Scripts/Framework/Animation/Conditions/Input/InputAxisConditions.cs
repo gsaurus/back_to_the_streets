@@ -1,7 +1,11 @@
-
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+
+
+
+namespace RetroBread{
+
 
 
 #region movement detection
@@ -171,4 +175,8 @@ public class InputAxisComponentCondition: ArithmeticCondition<FixedFloat>{
 }
 
 #endregion
+
+
+
+}
 

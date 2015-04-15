@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+namespace RetroBread{
+
+
 public class DebugPhysicPlaneView: View<PhysicPlaneModel>{
 
 	private GameObject[] meshObjects = new GameObject[2];
@@ -142,6 +146,9 @@ public class DebugPhysicPlaneView: View<PhysicPlaneModel>{
 //		Debug.DrawLine((Vector3)points[points.Count-1], (Vector3)points[0], debugPlaneColor);
 //		Debug.DrawLine((Vector3)points[0], (Vector3)(points[0] + model.Normal), UnityEngine.Color.red);
 //	}
+
+}
+
 
 }
 

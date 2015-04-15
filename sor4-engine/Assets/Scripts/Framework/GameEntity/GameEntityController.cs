@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+namespace RetroBread{
+
+
 // 
 public class GameEntityController: Controller<GameEntityModel> {
 
@@ -173,5 +177,9 @@ public class GameEntityController: Controller<GameEntityModel> {
 
 #endregion
 	
+
+}
+
+
 
 }

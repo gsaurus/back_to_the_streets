@@ -2,6 +2,13 @@
 using System;
 using System.Collections.Generic;
 
+
+
+namespace RetroBread{
+namespace Network{
+
+
+
 // Base class for player data which is transversal between game sessions
 // It can contain things like avatar, rank, etc
 [Serializable]
@@ -31,3 +38,7 @@ public class NetworkPlayerData{
 	}
 
 }
+
+
+
+}}

@@ -4,6 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+namespace RetroBread{
+namespace Network{
+
+
 public enum NetworkChatMessageType{
 	normalMessage,
 	privateMessage,
@@ -97,17 +101,17 @@ public class NetworkChat: MonoBehaviour{
 
 	// Send a message to all
 	public void SendTextMessage(string text) {
-		GetComponent<NetworkView>().RPC("ChatMessageReceived", RPCMode.All, Network.player.guid, text);
+		GetComponent<NetworkView>().RPC("ChatMessageReceived", RPCMode.All, UnityEngine.Network.player.guid, text);
 	}
 
 	// Send a private message to all
 	public void SendPrivateTextMessage(string text, NetworkPlayer player) {
-		GetComponent<NetworkView>().RPC("PrivateChatMessageReceived", player, Network.player.guid, text);
+		GetComponent<NetworkView>().RPC("PrivateChatMessageReceived", player, UnityEngine.Network.player.guid, text);
 	}
 
 	// Add a local bot message
 	public void AddBotTextMessage(string text) {
-		AddTextMessage(text, Network.player.guid, NetworkChatMessageType.botMessage);
+		AddTextMessage(text, UnityEngine.Network.player.guid, NetworkChatMessageType.botMessage);
 	}
 
 	// Remove all messages from history
@@ -205,3 +209,7 @@ public class NetworkChat: MonoBehaviour{
 	}
 	
 }
+
+
+
+}}

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+namespace RetroBread{
+
 public class FixedSizedQueue<T>: Queue<T>
 {
 	private int size;
@@ -26,5 +28,7 @@ public class FixedSizedQueue<T>: Queue<T>
 			base.Dequeue();
 		}
 	}
+}
+
 }
 

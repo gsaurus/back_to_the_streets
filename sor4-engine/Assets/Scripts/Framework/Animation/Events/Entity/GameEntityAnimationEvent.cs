@@ -1,7 +1,10 @@
-
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+
+
+
+namespace RetroBread{
 
 
 // Parameterless event// Parameterless event
@@ -83,4 +86,8 @@ public class DoubleEntityAnimationEvent<U,V>: AnimationEvent{
 		if (entityModel == null) return;
 		eventExecutionDelegate(entityModel, param1, param2);
 	}
+}
+
+
+
 }

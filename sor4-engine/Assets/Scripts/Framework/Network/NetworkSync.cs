@@ -3,6 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+
+
+namespace RetroBread{
+namespace Network{
 	
 
 // information about each peer state
@@ -113,11 +117,11 @@ public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 	// When we get a ping request, we send the travel time back to sender
 	[RPC]
 	void PingRequest(NetworkMessageInfo messageInfo){
-		float travelTime = (float) (Network.time - messageInfo.timestamp);
+		float travelTime = (float) (UnityEngine.Network.time - messageInfo.timestamp);
 		//Debug.Log("Travel time: " + travelTime + ", computed ping is " + 2*travelTime);
 		//Debug.Log("Ping: " + Network.GetLastPing(messageInfo.sender) + ", Average Ping: " + Network.GetAveragePing(messageInfo.sender));
 		// We explicitly send our guid in the RPC because of Unity bug not seting sender guid correctly
-		GetComponent<NetworkView>().RPC("PingResponse", messageInfo.sender, travelTime, Network.player.guid);
+		GetComponent<NetworkView>().RPC("PingResponse", messageInfo.sender, travelTime, UnityEngine.Network.player.guid);
 	}
 
 	// On receiving the ping response we integrate the travel time
@@ -141,7 +145,7 @@ public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 	// Mark this player as ready
 	public void SetReady(bool ready){
 		if (ready != isReady){
-			GetComponent<NetworkView>().RPC("SetPlayerReady", RPCMode.All, Network.player.guid, ready);
+			GetComponent<NetworkView>().RPC("SetPlayerReady", RPCMode.All, UnityEngine.Network.player.guid, ready);
 		}
 	}
 
@@ -149,7 +153,7 @@ public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 	void SetPlayerReady(string guid, bool ready){
 		if (syncStates == null) return;
 
-		if (guid == Network.player.guid){
+		if (guid == UnityEngine.Network.player.guid){
 			isReady = ready;
 		}else {
 			NetworkSyncState state;
@@ -186,7 +190,7 @@ public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 	
 	// Check if a specific player is ready
 	public bool IsPlayerReady(string guid){
-		if (guid == Network.player.guid) {
+		if (guid == UnityEngine.Network.player.guid) {
 			return isReady;
 		}
 		if (syncStates == null) return false;
@@ -206,7 +210,7 @@ public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 	public List<string> GetReadyPlayerGuids(){
 		if (syncStates == null) return null;
 		List<string> readyPlayers = new List<string>(syncStates.Count);
-		if (isReady) readyPlayers.Add(Network.player.guid);
+		if (isReady) readyPlayers.Add(UnityEngine.Network.player.guid);
 
 		foreach(KeyValuePair<string, NetworkSyncState> entry in syncStates){
 			if (entry.Value.isReady){
@@ -220,7 +224,7 @@ public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 	
 	// When the player first connects with someone else we start the ping coroutine
 	void OnPlayerConnectionConfirmed(string guid) {
-		if (guid != Network.player.guid) {
+		if (guid != UnityEngine.Network.player.guid) {
 			NetworkSyncState syncState = new NetworkSyncState();
 			if (syncStates == null) {
 				syncStates = new Dictionary<string, NetworkSyncState>();
@@ -237,7 +241,7 @@ public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 	// When a player discommects we remove it's state
 	// If it's the player itself we stop the ping coroutine
 	void OnPlayerDisconnectionConfirmed(string guid) {
-		if (guid == Network.player.guid) {
+		if (guid == UnityEngine.Network.player.guid) {
 			StopCoroutine(PingPeers());
 			isReady = false;
 		}else if (syncStates != null){
@@ -247,4 +251,7 @@ public sealed class NetworkSync: SingletonMonoBehaviour<NetworkSync>{
 
 
 }
+
+
+}}
 

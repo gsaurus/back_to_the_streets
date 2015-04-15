@@ -1,12 +1,15 @@
-
+using ProtoBuf;
 using System;
 
+namespace RetroBread{
 
 // Adapted from http://stackoverflow.com/questions/605124/fixed-point-math-in-c
 // Also based on https://code.google.com/p/kutil/source/browse/trunk/src/org/kalmeo/util/MathFP.java?r=42
 [Serializable]
+[ProtoContract]
 public struct FixedFloat: IComparable<FixedFloat>
 {
+	[ProtoMember(1)]
 	public long RawValue;
 	public const int SHIFT_AMOUNT = 14; //12 is 4096, 14 is 16384, 16 is 65536
 	public static readonly int PRECISION_LIMIT = (int)Math.Pow(2,SHIFT_AMOUNT);
@@ -575,6 +578,8 @@ public struct FixedFloat: IComparable<FixedFloat>
 		return f1 < f2 ? f1 : f2;
 	}
 	#endregion
+
+}
 
 }
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-
+namespace RetroBread{
 
 // Simple Singleton pattern
 // Assumes a public default constructor
@@ -48,4 +48,6 @@ public class Singleton<T> where T : class, new(){
 //		internal static readonly T instance = new T();
 //	}
 //}
+
+}
 

@@ -1,6 +1,8 @@
-
 using System;
 using UnityEngine;
+
+
+namespace RetroBread{
 
 
 public class TouchScreenInputSource: MonoBehaviour{
@@ -90,3 +92,6 @@ public class TouchScreenInputSource: MonoBehaviour{
 
 }
 
+
+
+}

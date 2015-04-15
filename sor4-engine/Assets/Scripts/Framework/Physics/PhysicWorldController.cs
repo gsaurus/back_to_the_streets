@@ -10,6 +10,10 @@
 using System;
 using System.Collections.Generic;
 
+
+namespace RetroBread{
+
+
 public class PhysicWorldController: Controller<PhysicWorldModel>{
 		
 	// world static planes, serializable because it can be read from a file
@@ -292,6 +296,10 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 	}
 
 #endregion
+
+}
+
+
 
 }
 

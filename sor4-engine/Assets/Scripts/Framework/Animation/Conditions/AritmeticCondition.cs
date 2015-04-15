@@ -1,7 +1,10 @@
-
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+
+
+
+namespace RetroBread{
 
 
 // Possible operators of arithmetic conditions
@@ -93,3 +96,6 @@ public class ArithmeticCondition<T>: AnimationTriggerCondition where T:IComparab
 
 }
 
+
+
+}
