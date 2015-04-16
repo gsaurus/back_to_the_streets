@@ -25,7 +25,7 @@ public class PhysicPointController: Controller<PhysicPointModel>{
 
 
 	// Update natural physics 
-	public override void Update(PhysicPointModel model){
+	protected override void Update(PhysicPointModel model){
 
 		newCollisionInpact = FixedVector3.Zero;
 
@@ -41,7 +41,7 @@ public class PhysicPointController: Controller<PhysicPointModel>{
 	}
 	
 	// Post update used to consolidate direct modifications
-	public override void PostUpdate(PhysicPointModel model){
+	protected override void PostUpdate(PhysicPointModel model){
 
 		// Modified affectors (first increments, then sets, sets have priority over increments)
 		foreach (KeyValuePair<string, FixedVector3> pair in affectorsIncremented){

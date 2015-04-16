@@ -12,12 +12,12 @@ public class PhysicPlaneController: Controller<PhysicPlaneModel>{
 	private bool hasNewPosition;
 
 	// Update natural physics 
-	public override void Update(PhysicPlaneModel model){
+	protected override void Update(PhysicPlaneModel model){
 		model.lastOriginPosition = model.origin;
 	}
 
 	// Post update used to consolidate direct modifications
-	public override void PostUpdate(PhysicPlaneModel model){
+	protected override void PostUpdate(PhysicPlaneModel model){
 		// New position (teleport)
 		if (hasNewPosition){
 			model.origin = newPosition;

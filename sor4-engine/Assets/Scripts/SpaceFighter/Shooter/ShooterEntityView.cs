@@ -9,7 +9,7 @@ public class ShooterEntityView: GameEntityView {
 
 
 	// Visual update
-	public override void Update(GameEntityModel model, float deltaTime){
+	protected override void Update(GameEntityModel model, float deltaTime){
 
 		base.Update(model, deltaTime);
 

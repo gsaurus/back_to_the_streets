@@ -121,7 +121,7 @@ public class DebugPhysicPlaneView: View<PhysicPlaneModel>{
 	}
 
 
-	public override void Update(PhysicPlaneModel model, float deltaTime){
+	protected override void Update(PhysicPlaneModel model, float deltaTime){
 		foreach (GameObject obj in meshObjects){
 			obj.transform.position = (Vector3) model.origin;
 		}
@@ -137,7 +137,7 @@ public class DebugPhysicPlaneView: View<PhysicPlaneModel>{
 //	private UnityEngine.Color debugPlaneColor = new UnityEngine.Color(200,200,50);
 
 //	// Visual update - frame rate dependant
-//	public override void Update(PhysicPlaneModel model, float deltaTime){
+//	protected override void Update(PhysicPlaneModel model, float deltaTime){
 //		// Default view does nothing
 //		List<FixedVector3> points = model.GetPointsList();
 //		for (int i = 1 ; i < points.Count ; ++i){

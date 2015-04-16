@@ -45,7 +45,7 @@ public class PlayerInputController:Controller<PlayerInputModel>, GameEntityInput
 	
 
 	// Update coolers and input state based on input events
-	public override void Update(PlayerInputModel model){
+	protected override void Update(PlayerInputModel model){
 
 		// Update action coolers
 		for (int i = 0 ; i < PlayerInputModel.NumButtonsSupported ; ++i) {

@@ -35,7 +35,7 @@ public class GameEntityController: Controller<GameEntityModel> {
 
 
 	// Update automated stuff
-	public override void Update(GameEntityModel model){
+	protected override void Update(GameEntityModel model){
 		// first update the input velocity
 		UpdateInputVelocityAffector(model);
 		// if input velocity goes against current direction, flip

@@ -16,7 +16,7 @@ public class MovingPlaneController: PhysicPlaneController{
 
 
 	// Update natural physics 
-	public override void Update(PhysicPlaneModel model){
+	protected override void Update(PhysicPlaneModel model){
 		base.Update(model);
 		MovingPlaneModel movingModel = model as MovingPlaneModel;
 

@@ -6,373 +6,380 @@ using UnityEngine;
 namespace RetroBread{
 
 
-// A State contains a set of game data models, and has the ability to use
-// the corresponding controllers and views for logic updates and visualisation
+	// A State contains a set of game data models, and has the ability to use
+	// the corresponding controllers and views for logic updates and visualisation
 
-// State interface from the Controllers point of view
-// I.e. what controllers can access while updating
-public interface State{
+	// State interface from the Controllers point of view
+	// I.e. what controllers can access while updating
+	public interface State{
 
-	// Add a new model to the state (it's added only after the update cycle)
-	ModelReference AddModel(Model model, InternalState.onModelChanged callback = null, object context = null);
+		// Add a new model to the state (it's added only after the update cycle)
+		ModelReference AddModel(Model model, InternalState.onModelChanged callback = null, object context = null);
 
-	// Remove a model from the state (it's removed only after the update cycle)
-	void RemoveModel(Model model, InternalState.onModelChanged callback = null, object context = null);
-	void RemoveModel(uint modelId, InternalState.onModelChanged callback = null, object context = null);
+		// Remove a model from the state (it's removed only after the update cycle)
+		void RemoveModel(Model model, InternalState.onModelChanged callback = null, object context = null);
+		void RemoveModel(uint modelId, InternalState.onModelChanged callback = null, object context = null);
 
-	// Reorder model if update ordering changed
-	void ReorderModel(Model model, InternalState.onModelChanged callback = null, object context = null);
+		// Reorder model if update ordering changed
+		void ReorderModel(Model model, InternalState.onModelChanged callback = null, object context = null);
 
-	// Set the main model
-	void SetAsMainModel(Model mainModel, InternalState.onModelChanged callback = null, object context = null);
+		// Set the main model
+		void SetAsMainModel(Model mainModel, InternalState.onModelChanged callback = null, object context = null);
 
-	// Get the model with the given index
-	Model GetModel(uint modelIndex);
+		// Get the model with the given index
+		Model GetModel(uint modelIndex);
 
-	// Get the main model (perhaps to gain access to other models)
-	Model MainModel { get; }
+		// Get the main model (perhaps to gain access to other models)
+		Model MainModel { get; }
 
-	// Is it on the middle of an update cycle?
-	bool IsUpdating { get; }
+		// Is it on the middle of an update cycle?
+		bool IsUpdating { get; }
 
-	// The keyframe in which this state happened
-	uint Keyframe { get; }
+		// The keyframe in which this state happened
+		uint Keyframe { get; }
 
-	// Access to the random generator
-	RandomGenerator Random { get; }
+		// Access to the random generator
+		RandomGenerator Random { get; }
 
-}
-
-// In a nutshell, State has all the information necessary to roll deterministic gameplay.
-// A state contains a set of models, and updates their views and controllers
-// State can be serialized / deserialized for save/load state, send throgh network, etc
-// It also contains a random number generator, which state is also serialized
-//
-//
-// Conventions to take in account:
-//
-// A state is always initiated with a single (main) model
-// The main model may create other models during the first update cycle
-// Any model can create, remove, or reorder models only during the update cycle
-// Main model can be set only during update cycle
-// All changes to the state (creation, remotion, reordering, main model set) made
-// during the update cycle only take place once it finishes
-[Serializable]
-public sealed class InternalState: State{
-
-	public delegate void onModelChanged(Model model, object context);
-
-	// A dictionary holds all models,
-	// new models are added with an incremental key
-	private uint nextModelIndex;
-	private uint mainModelIndex;
-	private SerializableDictionary<uint,Model> models;
-
-	// The keyframe in which this state happened
-	// This is handled by the StateManager
-	public uint Keyframe {get ; set; }
-
-
-	// Random generator, it's state is also serialized
-	private RandomGenerator random;
-	public RandomGenerator Random {
-		get{
-			// return null when it's not updating
-			return updateChanges.IsUpdating ? random : null;
-		}
-		private set{
-			random = value;
-		}
 	}
 
-	// Models sorted by updating order, no need to serialize this
-	[NonSerialized]
-	private SortedList<Model, Model> sortedModels; // SortedSet isn't supported by Unity
+	// In a nutshell, State has all the information necessary to roll deterministic gameplay.
+	// A state contains a set of models, and updates their views and controllers
+	// State can be serialized / deserialized for save/load state, send throgh network, etc
+	// It also contains a random number generator, which state is also serialized
+	//
+	//
+	// Conventions to take in account:
+	//
+	// A state is always initiated with a single (main) model
+	// The main model may create other models during the first update cycle
+	// Any model can create, remove, or reorder models only during the update cycle
+	// Main model can be set only during update cycle
+	// All changes to the state (creation, remotion, reordering, main model set) made
+	// during the update cycle only take place once it finishes
+	[Serializable]
+	public sealed class InternalState: State{
 
-	// Store update changes that must happen after update cycle
-	[NonSerialized]
-	TemporaryUpdateChanges updateChanges;
+		public delegate void onModelChanged(Model model, object context);
 
-	// Give access to the main model
-	public Model MainModel{
-		get{
+		// A dictionary holds all models,
+		// new models are added with an incremental key
+		private uint nextModelIndex;
+		private uint mainModelIndex;
+		private SerializableDictionary<uint,Model> models;
+
+		// The keyframe in which this state happened
+		// This is handled by the StateManager
+		public uint Keyframe {get ; set; }
+
+
+		// Random generator, it's state is also serialized
+		private RandomGenerator random;
+		public RandomGenerator Random {
+			get{
+				// return null when it's not updating
+				return updateChanges.IsUpdating ? random : null;
+			}
+			private set{
+				random = value;
+			}
+		}
+
+		// Models sorted by updating order, no need to serialize this
+		[NonSerialized]
+		private SortedList<Model, Model> sortedModels; // SortedSet isn't supported by Unity
+
+		// Store update changes that must happen after update cycle
+		[NonSerialized]
+		TemporaryUpdateChanges updateChanges;
+
+		// Give access to the main model
+		public Model MainModel{
+			get{
+				Model ret;
+				models.TryGetValue(mainModelIndex, out ret);
+				return ret;
+			}
+		}
+
+		// Is it doing an update cycle?
+		public bool IsUpdating{
+			get{
+				return updateChanges.IsUpdating;
+			}
+		}
+
+		// Access a model from it's index
+		public Model GetModel(uint modelIndex) {
 			Model ret;
-			models.TryGetValue(mainModelIndex, out ret);
+			models.TryGetValue(modelIndex, out ret);
 			return ret;
 		}
-	}
-
-	// Is it doing an update cycle?
-	public bool IsUpdating{
-		get{
-			return updateChanges.IsUpdating;
-		}
-	}
-
-	// Access a model from it's index
-	public Model GetModel(uint modelIndex) {
-		Model ret;
-		models.TryGetValue(modelIndex, out ret);
-		return ret;
-	}
 
 
-	// CTOR: create a State with an initial model (set as main model) and random seed
-	public InternalState(Model mainModel, long randomSeed){
+		// CTOR: create a State with an initial model (set as main model) and random seed
+		public InternalState(Model mainModel, long randomSeed){
 
-		// Initialize the random generator
-		random = new SimpleRandomGenerator(randomSeed);
+			// Initialize the random generator
+			random = new SimpleRandomGenerator(randomSeed);
 
-		// Create necessary structures
-		models = new SerializableDictionary<uint, Model>();
-		sortedModels = new SortedList<Model, Model>(new ModelComparerByUpdatingOrder());
+			// Create necessary structures
+			models = new SerializableDictionary<uint, Model>();
+			sortedModels = new SortedList<Model, Model>(new ModelComparerByUpdatingOrder());
 
-		// Setup initial model
-		if (nextModelIndex == ModelReference.InvalidModelIndex) ++nextModelIndex;
-		mainModelIndex = nextModelIndex;
-		models.Add(mainModelIndex, mainModel);
-		sortedModels.Add(mainModel, null);
-		++nextModelIndex;
+			// Setup initial model
+			if (nextModelIndex == ModelReference.InvalidModelIndex) ++nextModelIndex;
+			mainModelIndex = nextModelIndex;
+			models.Add(mainModelIndex, mainModel);
+			sortedModels.Add(mainModel, null);
+			++nextModelIndex;
 
-	}
-
-	// Update all views
-	public void UpdateViews(float deltaTime) {
-
-		foreach(Model model in models.Values) {
-			model.EnsureView(); // TODO: should this be called somewhere else?
-			model.UpdateView(deltaTime);
 		}
 
-	}
+		// Update all views
+		public void UpdateViews(float deltaTime) {
 
-	// Update cycle (tick)
-	public void UpdateControllers(){
-
-		// Enable update changes
-		updateChanges.IsUpdating = true;
-		// ensure sorted models are up to date
-		EnsureSortedModelsList();
-
-		// First update all
-		foreach(Model model in sortedModels.Keys) {
-			model.EnsureController(); // TODO: should this be called somewhere else?
-			model.UpdateController();
-		}
-		// Then post update all
-		foreach(Model model in sortedModels.Keys) {
-			model.PostUpdateController();
-		}
-
-		// All temporary changes apply now
-		UpdateConsolidation();
-		// Disable update changes
-		updateChanges.IsUpdating = false;
-
-		// In the end increment keyframe
-		++Keyframe;
-
-	}
-
-
-	// (roughly) check if sorted models are up to date and rebuild it if necessary
-	private void EnsureSortedModelsList(){
-		if (sortedModels == null || sortedModels.Count != models.Count){
-			sortedModels = new SortedList<Model, Model>(models.Count, new ModelComparerByUpdatingOrder());
-			foreach (Model model in models.Values) {
-				sortedModels.Add(model, null);
+			foreach(Model model in models.Values) {
+				View view = model.View();
+				if (view != null){
+					view.Update(view, deltaTime);
+				}
 			}
-			//sortedModels = new SortedList<Model, Model>(models.Values);
-		}
-	}
 
-
-	private void ReorderModelInternal(ModelChangeInfo sortedModel){
-		sortedModels.Remove(sortedModel.model);
-		sortedModels.Add(sortedModel.model, null);
-		sortedModel.PerformCallback();
-	}
-
-	private void RemoveModelInternal(ModelChangeInfo deletedModel){
-		sortedModels.Remove(deletedModel.model);
-		models.Remove(deletedModel.model.Index);
-		deletedModel.PerformCallback();
-		deletedModel.model.Destroy();
-	}
-
-	private void AddModelInternal(ModelChangeInfo createdModel){
-		if (nextModelIndex == ModelReference.InvalidModelIndex) ++nextModelIndex;
-		createdModel.model.Index.UpdateIndex(nextModelIndex);
-		models.Add(nextModelIndex, createdModel.model);
-		sortedModels.Add(createdModel.model, null);
-		++nextModelIndex;
-		createdModel.PerformCallback();
-	}
-
-
-
-	// Once update cycle ends we apply pending changes (creations, removals, ordering changes)
-	private void UpdateConsolidation(){
-
-		// Main model
-		if (updateChanges.newMainModel != null && updateChanges.newMainModel.model != null) {
-			mainModelIndex = updateChanges.newMainModel.model.Index;
-			updateChanges.newMainModel.PerformCallback();
 		}
 
-		// Ordering
-		if (updateChanges.reorderedModelsFromUpdate != null) {
-			foreach(ModelChangeInfo sortedModel in updateChanges.reorderedModelsFromUpdate) {
-				ReorderModelInternal(sortedModel);
+		// Update cycle (tick)
+		public void UpdateControllers(){
+
+			// Enable update changes
+			updateChanges.IsUpdating = true;
+			// ensure sorted models are up to date
+			EnsureSortedModelsList();
+
+			// First update all
+			foreach(Model model in sortedModels.Keys) {
+				Controller controller = model.Controller();
+				if (controller != null){
+					controller.Update(model);
+				}
 			}
-		}
-		// Removals
-		if (updateChanges.deletedModelsFromUpdate != null) {
-			foreach(ModelChangeInfo deletedModel in updateChanges.deletedModelsFromUpdate) {
-				RemoveModelInternal(deletedModel);
+			// Then post update all
+			foreach(Model model in sortedModels.Keys) {
+				Controller controller = model.Controller();
+				if (controller != null){
+					controller.PostUpdate(model);
+				}
 			}
+
+			// All temporary changes apply now
+			UpdateConsolidation();
+			// Disable update changes
+			updateChanges.IsUpdating = false;
+
+			// In the end increment keyframe
+			++Keyframe;
+
 		}
-		// Additions
-		if (updateChanges.createdModelsFromUpdate != null) {
-			foreach(ModelChangeInfo createdModel in updateChanges.createdModelsFromUpdate) {
-				AddModelInternal(createdModel);
+
+
+		// (roughly) check if sorted models are up to date and rebuild it if necessary
+		private void EnsureSortedModelsList(){
+			if (sortedModels == null || sortedModels.Count != models.Count){
+				sortedModels = new SortedList<Model, Model>(models.Count, new ModelComparerByUpdatingOrder());
+				foreach (Model model in models.Values) {
+					sortedModels.Add(model, null);
+				}
+				//sortedModels = new SortedList<Model, Model>(models.Values);
 			}
 		}
 
-	}
+
+		private void ReorderModelInternal(ModelChangeInfo sortedModel){
+			sortedModels.Remove(sortedModel.model);
+			sortedModels.Add(sortedModel.model, null);
+			sortedModel.PerformCallback();
+		}
+
+		private void RemoveModelInternal(ModelChangeInfo deletedModel){
+			sortedModels.Remove(deletedModel.model);
+			models.Remove(deletedModel.model.Index);
+			deletedModel.PerformCallback();
+			deletedModel.model.Destroy();
+		}
+
+		private void AddModelInternal(ModelChangeInfo createdModel){
+			if (nextModelIndex == ModelReference.InvalidModelIndex) ++nextModelIndex;
+			createdModel.model.Index.UpdateIndex(nextModelIndex);
+			models.Add(nextModelIndex, createdModel.model);
+			sortedModels.Add(createdModel.model, null);
+			++nextModelIndex;
+			createdModel.PerformCallback();
+		}
 
 
-	// Internal update change operation
-	private void UpdateOperationChange(ModelChangeInfo modelInfo, ref List<ModelChangeInfo> list){
-		// Do not do updating operations outside of update cycles
-		if (!updateChanges.IsUpdating) return;
+
+		// Once update cycle ends we apply pending changes (creations, removals, ordering changes)
+		private void UpdateConsolidation(){
+
+			// Main model
+			if (updateChanges.newMainModel != null && updateChanges.newMainModel.model != null) {
+				mainModelIndex = updateChanges.newMainModel.model.Index;
+				updateChanges.newMainModel.PerformCallback();
+			}
+
+			// Ordering
+			if (updateChanges.reorderedModelsFromUpdate != null) {
+				foreach(ModelChangeInfo sortedModel in updateChanges.reorderedModelsFromUpdate) {
+					ReorderModelInternal(sortedModel);
+				}
+			}
+			// Removals
+			if (updateChanges.deletedModelsFromUpdate != null) {
+				foreach(ModelChangeInfo deletedModel in updateChanges.deletedModelsFromUpdate) {
+					RemoveModelInternal(deletedModel);
+				}
+			}
+			// Additions
+			if (updateChanges.createdModelsFromUpdate != null) {
+				foreach(ModelChangeInfo createdModel in updateChanges.createdModelsFromUpdate) {
+					AddModelInternal(createdModel);
+				}
+			}
+
+		}
+
+
+		// Internal update change operation
+		private void UpdateOperationChange(ModelChangeInfo modelInfo, ref List<ModelChangeInfo> list){
+			// Do not do updating operations outside of update cycles
+			if (!updateChanges.IsUpdating) return;
+			
+			if (list == null) {
+				list = new List<ModelChangeInfo>();
+			}
+			list.Add(modelInfo);
+		}
+
+
+		// Reorder model when the updating order changes
+		public void ReorderModel(Model model, onModelChanged callback, object context){
+			ModelChangeInfo changeInfo = new ModelChangeInfo(model, callback, context);
+			if (IsUpdating){
+				UpdateOperationChange(changeInfo, ref updateChanges.reorderedModelsFromUpdate);
+			}else {
+				ReorderModelInternal(changeInfo);
+			}
+		}
 		
-		if (list == null) {
-			list = new List<ModelChangeInfo>();
-		}
-		list.Add(modelInfo);
-	}
-
-
-	// Reorder model when the updating order changes
-	public void ReorderModel(Model model, onModelChanged callback, object context){
-		ModelChangeInfo changeInfo = new ModelChangeInfo(model, callback, context);
-		if (IsUpdating){
-			UpdateOperationChange(changeInfo, ref updateChanges.reorderedModelsFromUpdate);
-		}else {
-			ReorderModelInternal(changeInfo);
-		}
-	}
-	
-	// Add a new model to the state (it's added only after the update cycle)
-	public ModelReference AddModel(Model model, onModelChanged callback, object context){
-		ModelChangeInfo changeInfo = new ModelChangeInfo(model, callback, context);
-		if (IsUpdating){
-			UpdateOperationChange(changeInfo, ref updateChanges.createdModelsFromUpdate);
-		}else {
-			AddModelInternal(changeInfo);
-		}
-		return model.Index;
-	}
-
-
-	public void RemoveModel(uint modelId, onModelChanged callback, object context){
-		Model model = GetModel(modelId);
-		if (model != null){
-			RemoveModel(model, callback, context);
-		}
-	}
-
-	
-	// Remove a model from the state (it's removed only after the update cycle)
-	public void RemoveModel(Model model, onModelChanged callback, object context){
-		ModelChangeInfo changeInfo = new ModelChangeInfo(model, callback, context);
-		if (IsUpdating){
-			UpdateOperationChange(changeInfo, ref updateChanges.deletedModelsFromUpdate);
-		}else {
-			RemoveModelInternal(changeInfo);
-		}
-	}
-
-	public void SetAsMainModel(Model mainModel, onModelChanged callback, object context){
-		updateChanges.newMainModel = new ModelChangeInfo(mainModel, callback, context);
-	}
-
-
-	// This will try to match models and reuse views and controllers as much as possible
-	// All unmatching views and controllers are destroyed from the other state
-	public void ReuseVCFromOtherState(InternalState otherState){
-		Model myModel;
-		foreach (KeyValuePair<uint, Model> pair in otherState.models) {
-			if (models.TryGetValue(pair.Key, out myModel)) {
-				myModel.SetVCFromModel(pair.Value);
+		// Add a new model to the state (it's added only after the update cycle)
+		public ModelReference AddModel(Model model, onModelChanged callback, object context){
+			ModelChangeInfo changeInfo = new ModelChangeInfo(model, callback, context);
+			if (IsUpdating){
+				UpdateOperationChange(changeInfo, ref updateChanges.createdModelsFromUpdate);
+			}else {
+				AddModelInternal(changeInfo);
 			}
-			pair.Value.Destroy();
+			return model.Index;
 		}
-	}
-
-	public void Destroy(){
-		foreach (Model model in models.Values){
-			model.Destroy();
-		}
-	}
-	
-}
 
 
-// keep callback information for when the model change takes place
-// aditionaly it can store a reference that is updated once the model change takes place
-// (reference currently only used for model additions)
-internal class ModelChangeInfo{
-	public Model model;
-	public object context;
-	public InternalState.onModelChanged callback;
-
-	public ModelChangeInfo(Model model, InternalState.onModelChanged callback, object context){
-		this.model = model;
-		this.callback = callback;
-		this.context = context;
-	}
-
-	public void PerformCallback(){
-		if (model != null && callback != null) {
-			callback(model, context);
-		}
-	}
-}
-
-
-// Struct used during an update cycle to store changes that must happen in the end of the cycle
-internal struct TemporaryUpdateChanges{
-
-	private bool isUpdating;
-	public bool IsUpdating {
-		get{
-			return isUpdating;
-		}
-		set{
-			// reset all information
-			if (isUpdating) {
-				createdModelsFromUpdate = null;
-				deletedModelsFromUpdate = null;
-				reorderedModelsFromUpdate = null;
-				newMainModel = null;
+		public void RemoveModel(uint modelId, onModelChanged callback, object context){
+			Model model = GetModel(modelId);
+			if (model != null){
+				RemoveModel(model, callback, context);
 			}
-			isUpdating = value;
+		}
+
+		
+		// Remove a model from the state (it's removed only after the update cycle)
+		public void RemoveModel(Model model, onModelChanged callback, object context){
+			ModelChangeInfo changeInfo = new ModelChangeInfo(model, callback, context);
+			if (IsUpdating){
+				UpdateOperationChange(changeInfo, ref updateChanges.deletedModelsFromUpdate);
+			}else {
+				RemoveModelInternal(changeInfo);
+			}
+		}
+
+		public void SetAsMainModel(Model mainModel, onModelChanged callback, object context){
+			updateChanges.newMainModel = new ModelChangeInfo(mainModel, callback, context);
+		}
+
+
+		// This will try to match models and reuse views and controllers as much as possible
+		// All unmatching views and controllers are destroyed from the other state
+		public void ReuseVCFromOtherState(InternalState otherState){
+			Model myModel;
+			foreach (KeyValuePair<uint, Model> pair in otherState.models) {
+				if (models.TryGetValue(pair.Key, out myModel)) {
+					myModel.SetVCFromModel(pair.Value);
+				}
+				pair.Value.Destroy();
+			}
+		}
+
+		public void Destroy(){
+			foreach (Model model in models.Values){
+				model.Destroy();
+			}
+		}
+		
+	}
+
+
+	// keep callback information for when the model change takes place
+	// aditionaly it can store a reference that is updated once the model change takes place
+	// (reference currently only used for model additions)
+	internal class ModelChangeInfo{
+		public Model model;
+		public object context;
+		public InternalState.onModelChanged callback;
+
+		public ModelChangeInfo(Model model, InternalState.onModelChanged callback, object context){
+			this.model = model;
+			this.callback = callback;
+			this.context = context;
+		}
+
+		public void PerformCallback(){
+			if (model != null && callback != null) {
+				callback(model, context);
+			}
 		}
 	}
-	
-	// The next lists are temporarily created during update cycle and consolidated after
-	// New models can be created
-	public List<ModelChangeInfo> createdModelsFromUpdate;
-	//Some models can be removed
-	public List<ModelChangeInfo> deletedModelsFromUpdate;
-	// Some models may change their updaing order
-	public List<ModelChangeInfo> reorderedModelsFromUpdate;
-	// Main model may change
-	public ModelChangeInfo newMainModel;
-	
-}
+
+
+	// Struct used during an update cycle to store changes that must happen in the end of the cycle
+	internal struct TemporaryUpdateChanges{
+
+		private bool isUpdating;
+		public bool IsUpdating {
+			get{
+				return isUpdating;
+			}
+			set{
+				// reset all information
+				if (isUpdating) {
+					createdModelsFromUpdate = null;
+					deletedModelsFromUpdate = null;
+					reorderedModelsFromUpdate = null;
+					newMainModel = null;
+				}
+				isUpdating = value;
+			}
+		}
+		
+		// The next lists are temporarily created during update cycle and consolidated after
+		// New models can be created
+		public List<ModelChangeInfo> createdModelsFromUpdate;
+		//Some models can be removed
+		public List<ModelChangeInfo> deletedModelsFromUpdate;
+		// Some models may change their updaing order
+		public List<ModelChangeInfo> reorderedModelsFromUpdate;
+		// Main model may change
+		public ModelChangeInfo newMainModel;
+		
+	}
 
 
 }

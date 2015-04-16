@@ -17,7 +17,7 @@ public class ShooterEntityController: GameEntityController {
 	public FixedFloat damageTaken;
 	public ModelReference lastHitter;
 
-//	public override void Update(GameEntityModel model){
+//	protected override void Update(GameEntityModel model){
 //
 //		base.Update(model);
 //
@@ -26,7 +26,7 @@ public class ShooterEntityController: GameEntityController {
 //		
 //	}
 
-	public override void PostUpdate(GameEntityModel model){
+	protected override void PostUpdate(GameEntityModel model){
 		
 		base.PostUpdate(model);
 		

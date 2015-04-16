@@ -8,7 +8,7 @@ public class BulletPointController: PhysicPointController{
 
 
 	// Update natural physics 
-	public override void Update(PhysicPointModel model){
+	protected override void Update(PhysicPointModel model){
 		base.Update(model);
 
 		BulletPointModel bulletModel = model as BulletPointModel;

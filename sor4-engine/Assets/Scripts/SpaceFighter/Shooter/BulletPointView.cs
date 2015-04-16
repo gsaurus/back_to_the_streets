@@ -9,7 +9,7 @@ using RetroBread;
 public class BulletPointView:PhysicPointView{
 
 	// Visual update
-	public override void Update(PhysicPointModel model, float deltaTime){
+	protected override void Update(PhysicPointModel model, float deltaTime){
 
 		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.Index, "bullet");
 		if (obj == null) return; // can't work without a game object

@@ -118,7 +118,7 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 
 
 	// Check collisions between physic models, and apply gravity to them
-	public override void Update(PhysicWorldModel world){
+	protected override void Update(PhysicWorldModel world){
 	
 		PhysicPointModel pointModel;
 		PhysicPointController pointController;
@@ -173,7 +173,7 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 		}
 	}
 
-	public override void PostUpdate(PhysicWorldModel model){
+	protected override void PostUpdate(PhysicWorldModel model){
 		if (nextWorld != null){
 			model.worldName = nextWorld;
 			nextWorld = null;

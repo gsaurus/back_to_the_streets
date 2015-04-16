@@ -25,7 +25,7 @@ public class WorldController:Controller<WorldModel>{
 	
 
 
-	public override void Update(WorldModel model){
+	protected override void Update(WorldModel model){
 
 		// Get physics model. If doesn't exist, create it
 		PhysicWorldModel physicsModel;

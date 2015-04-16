@@ -10,7 +10,7 @@ public class GameEntityView: View<GameEntityModel> {
 
 
 	// Visual update
-	public override void Update(GameEntityModel model, float deltaTime){
+	protected override void Update(GameEntityModel model, float deltaTime){
 		
 		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.Index);
 		if (obj == null) return; // can't work without a game object

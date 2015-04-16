@@ -37,7 +37,7 @@ public class PhysicPointView:View<PhysicPointModel>{
 
 
 	// Visual update
-	public override void Update(PhysicPointModel model, float deltaTime){
+	protected override void Update(PhysicPointModel model, float deltaTime){
 
 		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.ownerId);
 		if (obj == null) return; // can't work without a game object
