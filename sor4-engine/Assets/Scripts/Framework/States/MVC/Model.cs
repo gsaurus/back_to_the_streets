@@ -76,7 +76,7 @@ namespace RetroBread{
 				}
 			}
 		}
-
+		// used to obtain the VC factories
 		private string viewFactoryId;
 		private string controllerFactoryId;
 
@@ -109,8 +109,10 @@ namespace RetroBread{
 		
 
 		// A model should be created with a given updatingOrder
-		public Model(int updatingOrder = 0){
+		public Model(string controllerFactoryId, string viewFactoryId = null, int updatingOrder = 0){
 			Index = new ModelReference();
+			this.controllerFactoryId = controllerFactoryId;
+			this.viewFactoryId = viewFactoryId;
 			this.updatingOrder = updatingOrder;
 		}
 
@@ -159,7 +161,7 @@ namespace RetroBread{
 		// Make sure view exists
 		public View View() {
 			if (view == null && viewFactoryId != null) {
-				view = VCFactoriesManager.Instance.CreateView<T>(viewFactoryId, this);
+				view = VCFactoriesManager.Instance.CreateView<T>(viewFactoryId, this as T);
 			}
 			return view;
 		}
@@ -167,7 +169,7 @@ namespace RetroBread{
 		// Make sure controller exists
 		public Controller Controller() {
 			if (controller == null && controllerFactoryId != null) {
-				controller = VCFactoriesManager.Instance.CreateController<T>(controllerFactoryId, this);
+				controller = VCFactoriesManager.Instance.CreateController<T>(controllerFactoryId, this as T);
 			}
 			return controller;
 		}

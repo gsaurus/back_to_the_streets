@@ -55,7 +55,7 @@ public class ShooterEntityController: GameEntityController {
 				}
 			}
 			damageTaken = 0;
-			ShooterEntityView view = shooterModel.GetView() as ShooterEntityView;
+			ShooterEntityView view = shooterModel.View() as ShooterEntityView;
 			if (view != null){
 				view.OnHit(shooterModel);
 			}
@@ -84,7 +84,7 @@ public class ShooterEntityController: GameEntityController {
 		WorldModel world = StateManager.state.MainModel as WorldModel;
 		if (world != null){
 			PhysicPointModel pointModel = GetPointModel(model);
-			PhysicPointController pointController = pointModel.GetController() as PhysicPointController;
+			PhysicPointController pointController = pointModel.Controller() as PhysicPointController;
 			WorldController worldController = world.Controller() as WorldController;
 			FixedVector3 respawnPosition = worldController.GetRandomSpawnPosition(world);
 			pointController.SetPosition(respawnPosition);
@@ -113,7 +113,7 @@ public class ShooterEntityController: GameEntityController {
 		BulletPointModel bulletModel = new BulletPointModel(model.Index, bulletInitialPosition, shooterModel.isFacingRight);
 		WorldModel worldModel = StateManager.state.MainModel as WorldModel;
 		PhysicWorldModel physicWorldModel =  StateManager.state.GetModel(worldModel.physicsModelId) as PhysicWorldModel;
-		PhysicWorldController worldController = physicWorldModel.GetController() as PhysicWorldController;
+		PhysicWorldController worldController = physicWorldModel.Controller() as PhysicWorldController;
 		worldController.AddPoint(physicWorldModel, bulletModel);
 	}
 

@@ -142,7 +142,7 @@ namespace RetroBread{
 			foreach(Model model in models.Values) {
 				View view = model.View();
 				if (view != null){
-					view.Update(view, deltaTime);
+					view.Update(model, deltaTime);
 				}
 			}
 

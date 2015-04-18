@@ -4,6 +4,8 @@ using System;
 [Serializable]
 public class WorldModel:Model<WorldModel>{
 
+	public const string WorldControllerFactoryId = "my_worldc";
+
 	// Reference to player models
 	// Key: player number; value: player model
 	public SerializableDictionary<uint, ModelReference> players = new SerializableDictionary<uint, ModelReference>();
@@ -14,9 +16,11 @@ public class WorldModel:Model<WorldModel>{
 	// used to decide where to spawn next player
 	public bool lastSpawnWasLeft;
 
-	// Create controller
-	protected override Controller<WorldModel> CreateController(){
-		return new WorldController();
+
+	// Constructor
+	public WorldModel():base(WorldControllerFactoryId)
+	{
+		// Nothing to do
 	}
 
 }

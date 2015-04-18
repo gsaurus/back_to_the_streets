@@ -14,7 +14,7 @@ namespace RetroBread{
 
 
 	// Do not keep any state in controllers, unless between Update and PostUpdate calls
-	public class Controller<T>:Controller where T:Model{
+	public class Controller<T>:Controller where T:Model<T>{
 
 		// Translate to inner method
 		public void Update(Model model){

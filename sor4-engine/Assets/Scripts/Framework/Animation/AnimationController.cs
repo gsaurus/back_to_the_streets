@@ -116,7 +116,7 @@ namespace RetroBread{
 			// If there is a transition pending, move to it
 			if (nextAnimation != null) {
 				SetAnimation(model, nextAnimation);
-				AnimationView view = model.GetView() as AnimationView;
+				AnimationView view = model.View() as AnimationView;
 				if (view != null){
 					view.transitionTime = theTransition.transitionTime;
 				}

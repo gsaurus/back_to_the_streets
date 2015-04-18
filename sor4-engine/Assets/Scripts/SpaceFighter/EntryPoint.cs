@@ -8,6 +8,7 @@ public class EntryPoint : MonoBehaviour
 
 	// Use this for initialization
 	void Start(){
+		ShooterVCFactories.RegisterFactories();
 		Restart();
 	}
 	

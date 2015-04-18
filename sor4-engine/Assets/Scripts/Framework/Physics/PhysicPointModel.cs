@@ -9,7 +9,7 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 
 	// Key of default world velocity affector
 	[NonSerialized]
-	public static readonly string defaultVelocityAffectorName = "defaultVelocityAffectorName";
+	public static readonly string defaultVelocityAffectorName = "_rb_default_velocity";
 
 	// Id of the model that owns this point, used to get the respective gameobject from the owner
 	public ModelReference ownerId;
@@ -41,7 +41,13 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 
 
 	// Constructor
-	public PhysicPointModel(ModelReference ownerId, FixedVector3 position, FixedVector3 stepTolerance, int updatingOrder = DefaultUpdateOrder.PhysicsUpdateOrder):base(updatingOrder){
+	public PhysicPointModel(ModelReference ownerId,
+		                        FixedVector3 position,
+		                        FixedVector3 stepTolerance,
+		                        string controllerFactoryId	 = DefaultVCFactoryIds.PhysicPointControllerFactoryId,
+		                        string viewFactoryId		 = DefaultVCFactoryIds.PhysicPointViewFactoryId,
+		                        int updatingOrder			 = DefaultUpdateOrder.PhysicsUpdateOrder
+	):base(controllerFactoryId, viewFactoryId, updatingOrder){
 		this.ownerId = ownerId;
 		velocityAffectors = new SerializableDictionary<string,FixedVector3>();
 		this.position = this.lastPosition = position;
@@ -49,21 +55,15 @@ public class PhysicPointModel : Model<PhysicPointModel>{
 	}
 
 	// Constructor
-	public PhysicPointModel(ModelReference ownerId, int updatingOrder = DefaultUpdateOrder.PhysicsUpdateOrder):base(updatingOrder){
+	public PhysicPointModel(ModelReference ownerId,
+		                        string controllerFactoryId	 = DefaultVCFactoryIds.PhysicPointControllerFactoryId,
+		                        string viewFactoryId		 = DefaultVCFactoryIds.PhysicPointViewFactoryId,
+		                        int updatingOrder			 = DefaultUpdateOrder.PhysicsUpdateOrder
+	):base(controllerFactoryId, viewFactoryId, updatingOrder){
 		this.ownerId = ownerId;
 		velocityAffectors = new SerializableDictionary<string,FixedVector3>();
 	}
 
-
-	// Create controller
-	protected override Controller<PhysicPointModel> CreateController(){
-		return new PhysicPointController();
-	}
-
-	// Create view
-	protected override View<PhysicPointModel> CreateView(){
-		return new PhysicPointView();
-	}
 
 	// Default world velocity affector
 	public FixedVector3 GetDefaultVelocityAffector(){

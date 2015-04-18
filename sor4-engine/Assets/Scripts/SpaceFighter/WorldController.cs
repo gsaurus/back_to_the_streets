@@ -34,13 +34,13 @@ public class WorldController:Controller<WorldModel>{
 			// create world with map name and gravity
 			physicsModel = new PhysicWorldModel("map 1", new FixedVector3(0,gravityY,0));
 			model.physicsModelId = StateManager.state.AddModel(physicsModel);
-			physicsController = physicsModel.GetController() as PhysicWorldController;
+			physicsController = physicsModel.Controller() as PhysicWorldController;
 			// populate world
 			PopulatePhysicsWorld(physicsModel, physicsController);
 
 		}else {
 			physicsModel = StateManager.state.GetModel(model.physicsModelId) as PhysicWorldModel;
-			physicsController = physicsModel.GetController() as PhysicWorldController;
+			physicsController = physicsModel.Controller() as PhysicWorldController;
 		}
 
 		List<uint> allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers();

@@ -77,7 +77,7 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 	// Find collisions between a point model and a set of world planes
 	// For each collision found, notify point and plane controllers so that they can react to the collision
 	private void CheckCollisionsAgainstPlanes(PhysicWorldModel world, PhysicPointModel pointModel, PhysicPointController pointController, List<PhysicPlaneModel> planes){
-		pointController = pointModel.GetController() as PhysicPointController;
+		pointController = pointModel.Controller() as PhysicPointController;
 		if (pointController == null) return;
 
 		PhysicPlaneController planeController;
@@ -93,7 +93,7 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 			foreach(PhysicPlaneModel planeModel in planes){
 				if (planeModel.CheckIntersection(pointModel, out intersection)){
 					collisionsAreStable &= pointController.OnCollision(world, pointModel, planeModel, intersection);
-					planeController = planeModel.GetController() as PhysicPlaneController;
+					planeController = planeModel.Controller() as PhysicPlaneController;
 					if (planeController != null){
 						collisionsAreStable &= planeController.OnCollision(world, pointModel, planeModel, intersection);
 					}
@@ -128,7 +128,7 @@ public class PhysicWorldController: Controller<PhysicWorldModel>{
 				// someone removed it in some other way!!
 				continue;
 			}
-			pointController = pointModel.GetController() as PhysicPointController;
+			pointController = pointModel.Controller() as PhysicPointController;
 			if (pointController == null){
 				// not controlled, can't react to anything
 				continue;

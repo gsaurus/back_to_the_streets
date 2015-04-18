@@ -31,7 +31,7 @@ public class BulletPointController: PhysicPointController{
 				if (playerModel == null || playerModel.invincibilityFrames > 0 || playerModel.energy <= 0) continue;
 				PhysicPointModel playerPhysics = StateManager.state.GetModel(playerModel.physicsModelId) as PhysicPointModel;
 				if (playerPhysics == null) continue;
-				ShooterEntityController playerController = playerModel.GetController() as ShooterEntityController;
+				ShooterEntityController playerController = playerModel.Controller() as ShooterEntityController;
 				if (playerController == null) continue;
 				// check bounding box
 				FixedFloat deltaX = FixedFloat.Abs(playerPhysics.position.X - bulletModel.lastPosition.X); 

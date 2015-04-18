@@ -6,6 +6,9 @@ using RetroBread;
 // Shooter Model
 [Serializable]
 public class ShooterEntityModel: GameEntityModel {
+
+	public const string ShooterEntityControllerFactoryId	= "my_sec";
+	public const string ShooterEntityViewFactoryId			= "my_sev";
 	
 	// Shooter's energy
 	public FixedFloat energy;
@@ -40,23 +43,22 @@ public class ShooterEntityModel: GameEntityModel {
 		uint initialInvincibility,
 		FixedFloat initialGunPower,
 		int updatingOrder = DefaultUpdateOrder.EntitiesUpdateOrder
-	):base(characterName, animationName, worldModel, inputModel, position, stepTolerance, updatingOrder)
-	{
+	):base(characterName,
+	       animationName,
+	       worldModel,
+	       inputModel,
+	       position,
+	       stepTolerance,
+	       ShooterEntityControllerFactoryId,
+	       ShooterEntityViewFactoryId,
+	       updatingOrder
+	){
 		energy = initialEnergy;
 		invincibilityFrames = initialInvincibility;
 		gunPower = initialGunPower;
 		gotHit = false;
 	}
-
-
-	protected override View<GameEntityModel> CreateView(){
-		return new ShooterEntityView();
-	}
 	
-	
-	protected override Controller<GameEntityModel> CreateController(){
-		return new ShooterEntityController();
-	}
 
 
 	public int GetBalance(){
