@@ -5,40 +5,40 @@ using System.Collections.Generic;
 namespace RetroBread{
 
 
-public class PhysicPlaneController: Controller<PhysicPlaneModel>{
+	public class PhysicPlaneController: Controller<PhysicPlaneModel>{
 
-	// TODO: set position, which also updates the oldPosition..
-	private FixedVector3 newPosition;
-	private bool hasNewPosition;
+		// TODO: set position, which also updates the oldPosition..
+		private FixedVector3 newPosition;
+		private bool hasNewPosition;
 
-	// Update natural physics 
-	protected override void Update(PhysicPlaneModel model){
-		model.lastOriginPosition = model.origin;
-	}
-
-	// Post update used to consolidate direct modifications
-	protected override void PostUpdate(PhysicPlaneModel model){
-		// New position (teleport)
-		if (hasNewPosition){
-			model.origin = newPosition;
-			model.lastOriginPosition = newPosition;
-			hasNewPosition = false;
+		// Update natural physics 
+		protected override void Update(PhysicPlaneModel model){
+			model.lastOriginPosition = model.origin;
 		}
-	}
 
-	// Teleport to a new position
-	public void SetPosition(FixedVector3 newPos){
-		newPosition = newPos;
-		hasNewPosition = true;
-	}
+		// Post update used to consolidate direct modifications
+		protected override void PostUpdate(PhysicPlaneModel model){
+			// New position (teleport)
+			if (hasNewPosition){
+				model.origin = newPosition;
+				model.lastOriginPosition = newPosition;
+				hasNewPosition = false;
+			}
+		}
 
-	// Collision reaction, return true if collision is considered stable (no position modifications occured)
-	public virtual bool OnCollision(PhysicWorldModel world, PhysicPointModel pointModel, PhysicPlaneModel planeModel, FixedVector3 intersection){
-		// Nothing by default
-		return true;
-	}
+		// Teleport to a new position
+		public void SetPosition(FixedVector3 newPos){
+			newPosition = newPos;
+			hasNewPosition = true;
+		}
 
-}
+		// Collision reaction, return true if collision is considered stable (no position modifications occured)
+		public virtual bool OnCollision(PhysicWorldModel world, PhysicPointModel pointModel, PhysicPlaneModel planeModel, FixedVector3 intersection){
+			// Nothing by default
+			return true;
+		}
+
+	}
 
 
 }

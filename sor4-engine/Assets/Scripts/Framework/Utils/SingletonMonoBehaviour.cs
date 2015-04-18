@@ -4,27 +4,27 @@ using System.Collections;
 
 namespace RetroBread{
 
-// Singleton pattern for MonoBehaviours, persistent across scenes
-public class SingletonMonoBehaviour<T>: MonoBehaviour where T : MonoBehaviour{
-	
-	private static T instance;
-	
-	public static T Instance {
-		get {
-			if (instance == null)	{			
-				instance = (T)MonoBehaviour.FindObjectOfType(typeof(T));
-				if (instance == null){
-					GameObject container = new GameObject();
-					container.name = "__" + typeof(T).ToString();
-					instance = container.AddComponent<T>();
+	// Singleton pattern for MonoBehaviours, persistent across scenes
+	public class SingletonMonoBehaviour<T>: MonoBehaviour where T : MonoBehaviour{
+		
+		private static T instance;
+		
+		public static T Instance {
+			get {
+				if (instance == null)	{			
+					instance = (T)MonoBehaviour.FindObjectOfType(typeof(T));
+					if (instance == null){
+						GameObject container = new GameObject();
+						container.name = "__" + typeof(T).ToString();
+						instance = container.AddComponent<T>();
+					}
+					MonoBehaviour.DontDestroyOnLoad(instance.gameObject);
 				}
-				MonoBehaviour.DontDestroyOnLoad(instance.gameObject);
+				return instance;
 			}
-			return instance;
 		}
-	}
 
-}
+	}
 
 }
 

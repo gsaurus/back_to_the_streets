@@ -5,119 +5,120 @@ using System.Collections.Generic;
 
 
 namespace RetroBread{
-namespace Network{
+	namespace Network{
 
 
-// List available servers
-// Let player connect to an existing server
-// Let player create a new server
-public sealed class NetworkMaster: SingletonMonoBehaviour<NetworkMaster>{
+		// List available servers
+		// Let player connect to an existing server
+		// Let player create a new server
+		public sealed class NetworkMaster: SingletonMonoBehaviour<NetworkMaster>{
 
-	// A host state indicating it's open to new connections
-	public static readonly string networkHostAvailable = "open";
+			// A host state indicating it's open to new connections
+			public static readonly string networkHostAvailable = "open";
 
-	// When new hosts are discovered we send OnHostFound events 
-	public delegate void OnHostFound(HostData host);
-	public event OnHostFound hostFoundEvent;
+			// When new hosts are discovered we send OnHostFound events 
+			public delegate void OnHostFound(HostData host);
+			public event OnHostFound hostFoundEvent;
 
-	// game unique identifier
-	public string gameIdentifier = "Put Game Name here";
+			// game unique identifier
+			public string gameIdentifier = "Put Game Name here";
 
-	public int port = 27886; // Use same as kaillera on this example..
+			public int port = 27886; // Use same as kaillera on this example..
 
-	// list of hosts found so far
-	public List<HostData> hosts { get; private set; }
+			// list of hosts found so far
+			public List<HostData> hosts { get; private set; }
 
-	public bool IsAnouncingServer { get; private set; }
-
-
-
-	// We start by refreshing servers list
-	void OnEnable(){
-		RefreshServersList();
-		IsAnouncingServer = false;
-	}
+			public bool IsAnouncingServer { get; private set; }
 
 
-	public void RefreshServersList() {
-		MasterServer.ClearHostList();
-		hosts = new List<HostData>();
-		MasterServer.RequestHostList(gameIdentifier);
-	}
+
+			// We start by refreshing servers list
+			void OnEnable(){
+				RefreshServersList();
+				IsAnouncingServer = false;
+			}
 
 
-	public static bool IsServerAvailable(HostData host) {
-		return host.comment == networkHostAvailable && host.connectedPlayers < host.playerLimit;
-	}
-
-	public static bool IsServerPasswordProtected(HostData host){
-		return host.passwordProtected;
-	}
+			public void RefreshServersList() {
+				MasterServer.ClearHostList();
+				hosts = new List<HostData>();
+				MasterServer.RequestHostList(gameIdentifier);
+			}
 
 
-	void Update() {
-		// Check if we received any hosts so far
-		if (MasterServer.PollHostList().Length != 0) {
-			HostData[] receivedHosts = MasterServer.PollHostList();
+			public static bool IsServerAvailable(HostData host) {
+				return host.comment == networkHostAvailable && host.connectedPlayers < host.playerLimit;
+			}
 
-			foreach (HostData hostData in receivedHosts){
-				hosts.Add(hostData);
-				// Notify listeners
-				if (hostFoundEvent != null) {
-					hostFoundEvent(hostData);
+			public static bool IsServerPasswordProtected(HostData host){
+				return host.passwordProtected;
+			}
+
+
+			void Update() {
+				// Check if we received any hosts so far
+				if (MasterServer.PollHostList().Length != 0) {
+					HostData[] receivedHosts = MasterServer.PollHostList();
+
+					foreach (HostData hostData in receivedHosts){
+						hosts.Add(hostData);
+						// Notify listeners
+						if (hostFoundEvent != null) {
+							hostFoundEvent(hostData);
+						}
+					}
+
+					MasterServer.ClearHostList();
 				}
 			}
 
-			MasterServer.ClearHostList();
+
+			public void CreateServer(int maxPlayers, string password = null){
+				UnityEngine.Network.incomingPassword = password;
+				bool useNat = !UnityEngine.Network.HavePublicAddress();
+				UnityEngine.Network.InitializeServer(maxPlayers-1, port, useNat);
+			}
+
+			public void CancelServer(){
+				MasterServer.UnregisterHost();
+				IsAnouncingServer = false;
+			}
+
+
+			void OnServerInitialized() {
+				NetworkPlayerData myPlayerData = NetworkCenter.Instance.GetPlayerData();
+				string gameName = myPlayerData != null ? myPlayerData.playerName : "guest";
+				MasterServer.RegisterHost(gameIdentifier, gameName, networkHostAvailable);
+				IsAnouncingServer = true;
+			}
+
+
+			public void ConnectToServer(HostData host, string password = null) {
+				UnityEngine.Network.Connect(host, password);
+			}
+
+			void OnConnectedToServer() {
+				// Once connected, disable NetworkMaster
+				enabled = false;
+			}
+
+			// Let other components handle failure
+		//	void OnFailedToConnect(NetworkConnectionError error) {
+		//		//Debug.Log("Could not connect to server: " + error);
+		//	}
+
+
+			void OnDisable(){
+				CancelServer();
+			}
+
+			void OnApplicationQuit() {
+				CancelServer();
+			}
+
 		}
+
+
+
 	}
-
-
-	public void CreateServer(int maxPlayers, string password = null){
-		UnityEngine.Network.incomingPassword = password;
-		bool useNat = !UnityEngine.Network.HavePublicAddress();
-		UnityEngine.Network.InitializeServer(maxPlayers-1, port, useNat);
-	}
-
-	public void CancelServer(){
-		MasterServer.UnregisterHost();
-		IsAnouncingServer = false;
-	}
-
-
-	void OnServerInitialized() {
-		NetworkPlayerData myPlayerData = NetworkCenter.Instance.GetPlayerData();
-		string gameName = myPlayerData != null ? myPlayerData.playerName : "guest";
-		MasterServer.RegisterHost(gameIdentifier, gameName, networkHostAvailable);
-		IsAnouncingServer = true;
-	}
-
-
-	public void ConnectToServer(HostData host, string password = null) {
-		UnityEngine.Network.Connect(host, password);
-	}
-
-	void OnConnectedToServer() {
-		// Once connected, disable NetworkMaster
-		enabled = false;
-	}
-
-	// Let other components handle failure
-//	void OnFailedToConnect(NetworkConnectionError error) {
-//		//Debug.Log("Could not connect to server: " + error);
-//	}
-
-
-	void OnDisable(){
-		CancelServer();
-	}
-
-	void OnApplicationQuit() {
-		CancelServer();
-	}
-
 }
-
-
-
-}}
