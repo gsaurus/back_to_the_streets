@@ -61,7 +61,8 @@ public class WorldController:Controller<WorldModel>{
 			if (!model.players.ContainsKey(playerId)){
 				Model inputModel = new PlayerInputModel(playerId);
 				FixedVector3 initialPosition = GetRandomSpawnPosition(model);
-				playerModel = new ShooterEntityModel("soldier", //playerId % 2 == 0 ? "Blaze" : "Rocha",
+				playerModel = new ShooterEntityModel(StateManager.state,
+													 "soldier", //playerId % 2 == 0 ? "Blaze" : "Rocha",
 				                                	 "soldierIdleRelaxed",
 				                                	 physicsModel,
 				                                	 inputModel,

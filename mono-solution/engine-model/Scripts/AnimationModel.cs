@@ -18,19 +18,39 @@ namespace RetroBread{
 		[NonSerialized]
 		public bool animationChanged;
 
+
+		#region Constructors
+
+
+		// Constructor
+		public AnimationModel(ModelReference ownerId,
+		                      string characterName,
+		                      string animationName
+		):this(ownerId,
+		       characterName,
+		       animationName,
+		       DefaultVCFactoryIds.AnimationControllerFactoryId,
+		       DefaultVCFactoryIds.AnimationViewFactoryId,
+		       DefaultUpdateOrder.AnimationsUpdateOrder
+		){}
+
+
+
 		// Constructor
 		public AnimationModel(ModelReference ownerId,
 		                      string characterName,
 		                      string animationName,
-		                      string controllerFactoryId	= DefaultVCFactoryIds.AnimationControllerFactoryId,
-		                      string viewFactoryId			= DefaultVCFactoryIds.AnimationViewFactoryId,
-		                      int updatingOrder 			= DefaultUpdateOrder.AnimationsUpdateOrder):
-		base(controllerFactoryId, viewFactoryId, updatingOrder){
+		                      string controllerFactoryId,
+		                      string viewFactoryId,
+		                      int updatingOrder
+		):base(controllerFactoryId, viewFactoryId, updatingOrder){
 			this.characterName = characterName;
 			this.animationName = animationName;
 			this.currentFrame = 0;
 			this.ownerId = ownerId;
 		}
+
+		#endregion
 	
 
 	}

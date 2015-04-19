@@ -40,13 +40,27 @@ namespace RetroBread{
 		public SerializableDictionary<string,FixedVector3> velocityAffectors;
 
 
+		#region Constructors
+
+
+		// Constructor
+		public PhysicPointModel(ModelReference ownerId, FixedVector3 position, FixedVector3 stepTolerance)
+		:this(ownerId,
+			  position,
+			  stepTolerance,
+			  DefaultVCFactoryIds.PhysicPointControllerFactoryId,
+			  DefaultVCFactoryIds.PhysicPointViewFactoryId,
+			  DefaultUpdateOrder.PhysicsUpdateOrder
+		){}
+
+
 		// Constructor
 		public PhysicPointModel(ModelReference ownerId,
 			                        FixedVector3 position,
 			                        FixedVector3 stepTolerance,
-			                        string controllerFactoryId	 = DefaultVCFactoryIds.PhysicPointControllerFactoryId,
-			                        string viewFactoryId		 = DefaultVCFactoryIds.PhysicPointViewFactoryId,
-			                        int updatingOrder			 = DefaultUpdateOrder.PhysicsUpdateOrder
+			                        string controllerFactoryId,
+			                        string viewFactoryId,
+			                        int updatingOrder
 		):base(controllerFactoryId, viewFactoryId, updatingOrder){
 			this.ownerId = ownerId;
 			velocityAffectors = new SerializableDictionary<string,FixedVector3>();
@@ -54,15 +68,26 @@ namespace RetroBread{
 			this.stepTolerance = stepTolerance;
 		}
 
+
+		// Constructor
+		public PhysicPointModel(ModelReference ownerId)
+		:this(ownerId,
+			  DefaultVCFactoryIds.PhysicPointControllerFactoryId,
+			  DefaultVCFactoryIds.PhysicPointViewFactoryId,
+			  DefaultUpdateOrder.PhysicsUpdateOrder
+		 ){}
+
 		// Constructor
 		public PhysicPointModel(ModelReference ownerId,
-			                        string controllerFactoryId	 = DefaultVCFactoryIds.PhysicPointControllerFactoryId,
-			                        string viewFactoryId		 = DefaultVCFactoryIds.PhysicPointViewFactoryId,
-			                        int updatingOrder			 = DefaultUpdateOrder.PhysicsUpdateOrder
+			                        string controllerFactoryId,
+			                        string viewFactoryId,
+			                        int updatingOrder
 		):base(controllerFactoryId, viewFactoryId, updatingOrder){
 			this.ownerId = ownerId;
 			velocityAffectors = new SerializableDictionary<string,FixedVector3>();
 		}
+
+		#endregion
 
 
 		// Default world velocity affector

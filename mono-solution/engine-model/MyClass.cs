@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 using System;
-namespace protomodel
+namespace enginemodel
 {
 		public class MyClass
 		{

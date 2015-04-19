@@ -25,18 +25,31 @@ namespace RetroBread{
 		public bool[] actionsHold;
 
 
+		#region Constructors
+
+		// Constructor
+		public PlayerInputModel(uint playerId)
+		:this(playerId, DefaultVCFactoryIds.PlayerInputControllerFactoryId, null, DefaultUpdateOrder.InputUpdateOrder)
+		{}
+
+		// Constructor
+		public PlayerInputModel(uint playerId, int updatingOrder)
+			:this(playerId, DefaultVCFactoryIds.PlayerInputControllerFactoryId, null, updatingOrder)
+		{}
 
 		// Constructor
 		public PlayerInputModel(uint playerId,
-			                        string controllerFactoryId	= DefaultVCFactoryIds.PlayerInputControllerFactoryId,
-			                        string viewFactoryId		= null,
-			                        int updatingOrder			= DefaultUpdateOrder.InputUpdateOrder
+		                        string controllerFactoryId,
+		                        string viewFactoryId,
+		                        int updatingOrder
 		):base(controllerFactoryId, viewFactoryId, updatingOrder){
 			this.playerId = playerId;
 			actionPressedCoolers = new uint[NumButtonsSupported];
 			actionReleasedCoolers = new uint[NumButtonsSupported];
 			actionsHold = new bool[NumButtonsSupported];
 		}
+
+		#endregion
 
 
 	}

@@ -19,17 +19,31 @@ namespace RetroBread{
 
 		// Id of the dynamic plane models to wich we want to detect collisions against points
 		public SerializableList<ModelReference> planeModels = new SerializableList<ModelReference>();
-		
+
+
+		#region Constructors
+
+
+		// Constructor	
+		public PhysicWorldModel(string name, FixedVector3 gravity)
+		:this(name, gravity, DefaultVCFactoryIds.PhysicWorldControllerFactoryId, null, DefaultUpdateOrder.WorldUpdateOrder){}
+
+		// Constructor	
+		public PhysicWorldModel(string name, FixedVector3 gravity, string controllerFactoryId)
+		:this(name, gravity, controllerFactoryId, null, DefaultUpdateOrder.WorldUpdateOrder){}
+
 		// Constructor with name 	
 		public PhysicWorldModel(string name,
 			                        FixedVector3 gravity,
-			                        string controllerFactoryId	 = DefaultVCFactoryIds.PhysicWorldControllerFactoryId,
-			                        string viewFactoryId		 = null,
-			                        int updateOrder				 = DefaultUpdateOrder.WorldUpdateOrder
+			                        string controllerFactoryId,
+			                        string viewFactoryId,
+			                        int updateOrder
 		):base(controllerFactoryId, viewFactoryId, updateOrder){
 			worldName = name;
 			this.gravity = gravity;
 		}
+
+		#endregion
 		
 	}
 

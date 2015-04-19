@@ -33,6 +33,7 @@ public class ShooterEntityModel: GameEntityModel {
 	
 
 	public ShooterEntityModel(
+		State state,
 		string characterName,
 		string animationName,
 		PhysicWorldModel worldModel,
@@ -43,7 +44,8 @@ public class ShooterEntityModel: GameEntityModel {
 		uint initialInvincibility,
 		FixedFloat initialGunPower,
 		int updatingOrder = DefaultUpdateOrder.EntitiesUpdateOrder
-	):base(characterName,
+	):base(state,
+	       characterName,
 	       animationName,
 	       worldModel,
 	       inputModel,

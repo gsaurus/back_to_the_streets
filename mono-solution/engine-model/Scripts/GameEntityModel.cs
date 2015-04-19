@@ -27,25 +27,54 @@ namespace RetroBread{
 		public FixedVector3 maxInputVelocity;
 
 
+
+		#region Constructors
+
+
+		public GameEntityModel(
+			State state,
+			string characterName,
+			string animationName,
+			PhysicWorldModel worldModel,
+			Model inputModel,
+			FixedVector3 position,
+			FixedVector3 stepTolerance
+		):this(state,
+		       characterName,
+		       animationName,
+		       worldModel,
+		       inputModel,
+		       position,
+		       stepTolerance,
+		       DefaultVCFactoryIds.GameEntityControllerFactoryId,
+		       DefaultVCFactoryIds.GameEntityViewFactoryId,
+		       DefaultUpdateOrder.EntitiesUpdateOrder
+		 ){}
+
+
 		// Create a default Game Entity model
 		public GameEntityModel(
+			State state,
 			string characterName,
 			string animationName,
 			PhysicWorldModel worldModel,
 			Model inputModel,
 			FixedVector3 position,
 			FixedVector3 stepTolerance,
-			string controllerFactoryId	= DefaultVCFactoryIds.GameEntityControllerFactoryId,
-			string viewFactoryId		= DefaultVCFactoryIds.GameEntityViewFactoryId,
-			int updatingOrder			= DefaultUpdateOrder.EntitiesUpdateOrder
+			string controllerFactoryId,
+			string viewFactoryId,
+			int updatingOrder
 		):base(controllerFactoryId, viewFactoryId, updatingOrder){
-			physicsModelId = StateManager.state.AddModel(new PhysicPointModel(this.Index, position, stepTolerance));
+			physicsModelId = state.AddModel(new PhysicPointModel(this.Index, position, stepTolerance));
 			worldModel.pointModels.Add(physicsModelId);
-			animationModelId = StateManager.state.AddModel(new AnimationModel(this.Index, characterName, animationName));
-			inputModelId = StateManager.state.AddModel(inputModel);
+			animationModelId = state.AddModel(new AnimationModel(this.Index, characterName, animationName));
+			inputModelId = state.AddModel(inputModel);
 		}
 
 		// TODO: other constructors receiving pre-made sub-models, etc?
+		// TODO: simplify arguments with a builder object?
+
+		#endregion
 
 
 		

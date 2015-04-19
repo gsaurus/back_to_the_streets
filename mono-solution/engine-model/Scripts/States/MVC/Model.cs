@@ -61,21 +61,7 @@ namespace RetroBread{
 		public ModelReference Index { get ; private set; }
 
 		// Models with lower update order updates first
-		private int updatingOrder;
-
-		// updating order getter/setter, automatically reorders when order changes
-		public int UpdatingOrder {
-			get{
-				return updatingOrder;
-			}
-			set{
-				// only modify if it's during a state update cycle
-				if (StateManager.state.IsUpdating && updatingOrder != value) {
-					updatingOrder = value;
-					StateManager.state.ReorderModel(this);
-				}
-			}
-		}
+		public int UpdatingOrder { get; set; }
 		// used to obtain the VC factories
 		private string viewFactoryId;
 		private string controllerFactoryId;
@@ -108,13 +94,20 @@ namespace RetroBread{
 		private Controller<T> controller;
 		
 
-		// A model should be created with a given updatingOrder
-		public Model(string controllerFactoryId, string viewFactoryId = null, int updatingOrder = 0){
+		#region Constructors
+
+		// Simpler Constructor
+		public Model(string controllerFactoryId):this(controllerFactoryId, null, 0){}
+
+		// Constructor given factory ids and updatingOrder
+		public Model(string controllerFactoryId, string viewFactoryId, int updatingOrder){
 			Index = new ModelReference();
 			this.controllerFactoryId = controllerFactoryId;
 			this.viewFactoryId = viewFactoryId;
-			this.updatingOrder = updatingOrder;
+			this.UpdatingOrder = updatingOrder;
 		}
+
+		#endregion
 
 
 		// Set View and Controller from other model, if compatible.

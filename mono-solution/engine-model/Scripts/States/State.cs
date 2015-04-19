@@ -14,17 +14,22 @@ namespace RetroBread{
 	public interface State{
 
 		// Add a new model to the state (it's added only after the update cycle)
-		ModelReference AddModel(Model model, InternalState.onModelChanged callback = null, object context = null);
+		ModelReference AddModel(Model model);
+		ModelReference AddModel(Model model, InternalState.onModelChanged callback, object context);
 
 		// Remove a model from the state (it's removed only after the update cycle)
-		void RemoveModel(Model model, InternalState.onModelChanged callback = null, object context = null);
-		void RemoveModel(uint modelId, InternalState.onModelChanged callback = null, object context = null);
+		void RemoveModel(Model model);
+		void RemoveModel(Model model, InternalState.onModelChanged callback, object context);
+		void RemoveModel(uint modelId);
+		void RemoveModel(uint modelId, InternalState.onModelChanged callback, object context);
 
 		// Reorder model if update ordering changed
-		void ReorderModel(Model model, InternalState.onModelChanged callback = null, object context = null);
+		void ReorderModel(Model model, int newUpdatingOrder);
+		void ReorderModel(Model model, int newUpdatingOrder, InternalState.onModelChanged callback, object context);
 
 		// Set the main model
-		void SetAsMainModel(Model mainModel, InternalState.onModelChanged callback = null, object context = null);
+		void SetAsMainModel(Model mainModel);
+		void SetAsMainModel(Model mainModel, InternalState.onModelChanged callback, object context);
 
 		// Get the model with the given index
 		Model GetModel(uint modelIndex);
@@ -262,7 +267,12 @@ namespace RetroBread{
 
 
 		// Reorder model when the updating order changes
-		public void ReorderModel(Model model, onModelChanged callback, object context){
+		public void ReorderModel(Model model, int newUpdatingOrder){
+			ReorderModel(model, newUpdatingOrder, null, null);
+		}
+
+		public void ReorderModel(Model model, int newUpdatingOrder, onModelChanged callback, object context){
+			model.UpdatingOrder = newUpdatingOrder;
 			ModelChangeInfo changeInfo = new ModelChangeInfo(model, callback, context);
 			if (IsUpdating){
 				UpdateOperationChange(changeInfo, ref updateChanges.reorderedModelsFromUpdate);
@@ -272,6 +282,10 @@ namespace RetroBread{
 		}
 		
 		// Add a new model to the state (it's added only after the update cycle)
+		public ModelReference AddModel(Model model){
+			return AddModel(model, null, null);
+		}
+
 		public ModelReference AddModel(Model model, onModelChanged callback, object context){
 			ModelChangeInfo changeInfo = new ModelChangeInfo(model, callback, context);
 			if (IsUpdating){
@@ -283,15 +297,11 @@ namespace RetroBread{
 		}
 
 
-		public void RemoveModel(uint modelId, onModelChanged callback, object context){
-			Model model = GetModel(modelId);
-			if (model != null){
-				RemoveModel(model, callback, context);
-			}
+		// Remove a model from the state (it's removed only after the update cycle)
+		public void RemoveModel(Model model){
+			RemoveModel(model, null, null);
 		}
 
-		
-		// Remove a model from the state (it's removed only after the update cycle)
 		public void RemoveModel(Model model, onModelChanged callback, object context){
 			ModelChangeInfo changeInfo = new ModelChangeInfo(model, callback, context);
 			if (IsUpdating){
@@ -299,6 +309,24 @@ namespace RetroBread{
 			}else {
 				RemoveModelInternal(changeInfo);
 			}
+		}
+
+
+		public void RemoveModel(uint modelId){
+			RemoveModel(modelId, null, null);
+		}
+
+		public void RemoveModel(uint modelId, onModelChanged callback, object context){
+			Model model = GetModel(modelId);
+			if (model != null){
+				RemoveModel(model, callback, context);
+			}
+		}
+
+
+
+		public void SetAsMainModel(Model mainModel){
+			SetAsMainModel(mainModel, null, null);
 		}
 
 		public void SetAsMainModel(Model mainModel, onModelChanged callback, object context){

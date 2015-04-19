@@ -9,7 +9,9 @@ namespace RetroBread{
 
 		private uint index;
 
-		public ModelReference(uint index = InvalidModelIndex){
+		public ModelReference():this(InvalidModelIndex){}
+
+		public ModelReference(uint index){
 			this.index = index;
 		}
 
