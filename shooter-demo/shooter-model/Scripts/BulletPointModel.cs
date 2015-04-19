@@ -13,8 +13,8 @@ public class BulletPointModel : PhysicPointModel{
 	public uint lifetimeFrames;
 
 	// Constructor
-	public BulletPointModel(ModelReference shooterId, FixedVector3 position, bool moveRight, int updatingOrder = DefaultUpdateOrder.PhysicsUpdateOrder)
-	:base(null, BulletPointControllerFactoryId, BulletPointViewFactoryId, updatingOrder)
+	public BulletPointModel(ModelReference shooterId, FixedVector3 position, bool moveRight)
+	:base(null, BulletPointControllerFactoryId, BulletPointViewFactoryId, DefaultUpdateOrder.PhysicsUpdateOrder)
 	{
 		// setup initial velocity
 		this.shooterId = shooterId;

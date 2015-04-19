@@ -135,9 +135,6 @@ namespace RetroBread{
 				t = FixedVector3.Dot(pos1ToOrigin, normal) / dotDeltaPosNormal;
 				error = 0.01 / pointDeltaPos.Magnitude;
 			}
-	//		if (t > -3 && t < 3){
-	//			UnityEngine.Debug.Log("Magnitude: " + pointDeltaPos.Magnitude + ", error: " + error);
-	//		}
 			// give some step tolerance
 			if (t < -error || t > 1 + error) {
 				// not colliding
@@ -160,7 +157,6 @@ namespace RetroBread{
 			}
 			// last vertex with origin
 			anglesSum += FixedVector3.Angle(vec2, originVector);
-			//UnityEngine.Debug.Log("Check inside --> anglesSum: " + anglesSum);
 
 			// a small delta due to precision errors
 			return FixedFloat.Abs(anglesSum - FixedFloat.TwoPI) < 0.05;

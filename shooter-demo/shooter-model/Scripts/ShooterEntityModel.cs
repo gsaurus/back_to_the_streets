@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
+﻿using System;
 using RetroBread;
 
 // Shooter Model
@@ -42,8 +40,7 @@ public class ShooterEntityModel: GameEntityModel {
 		FixedVector3 stepTolerance,
 		FixedFloat initialEnergy,
 		uint initialInvincibility,
-		FixedFloat initialGunPower,
-		int updatingOrder = DefaultUpdateOrder.EntitiesUpdateOrder
+		FixedFloat initialGunPower
 	):base(state,
 	       characterName,
 	       animationName,
@@ -53,7 +50,7 @@ public class ShooterEntityModel: GameEntityModel {
 	       stepTolerance,
 	       ShooterEntityControllerFactoryId,
 	       ShooterEntityViewFactoryId,
-	       updatingOrder
+	       DefaultUpdateOrder.EntitiesUpdateOrder
 	){
 		energy = initialEnergy;
 		invincibilityFrames = initialInvincibility;
