@@ -4,6 +4,23 @@ using System.Collections.Generic;
 
 namespace RetroBread{
 
+
+	// Class to hold handy type conversions to/from unity
+	public static class UnityConversions{
+		
+		public static explicit operator UnityEngine.Vector3(FixedVector3 src)
+		{
+			return new UnityEngine.Vector3((float)src.X, (float)src.Y, (float)src.Z);
+		}
+		
+		public static explicit operator FixedVector3(UnityEngine.Vector3 src)
+		{
+			return new FixedVector3(src.x, src.y, src.z);
+		}
+	
+	}
+
+
 	// Holds the GameObjects used by views
 	// GameObjects are associated to owner models
 	// Owner models are responsible for releasing the object from the pool on destruction

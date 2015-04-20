@@ -12,7 +12,6 @@ namespace RetroBread{
 	/// 
 	/// Original document: http://www.codeproject.com/Articles/25172/Simple-Random-Number-Generation 
 	/// <summary>
-	[Serializable]
 	[ProtoContract]
 	public class SimpleRandomGenerator: RandomGenerator
 	{

@@ -1,32 +1,79 @@
 using System;
 using System.Collections.Generic;
+using ProtoBuf;
 
 namespace RetroBread{
 
 	#region Interface
 
 	// Model interface, not generic so we can have polymorphism in game state
-	public interface Model{
+	// This was turned into an abstract class to avoid issues with protobuf-net
+	[ProtoContract]
+	[ProtoInclude(10, typeof(PlayerInputModel))]
+	[ProtoInclude(11, typeof(GameEntityModel))]
+	[ProtoInclude(12, typeof(AnimationModel))]
+	[ProtoInclude(13, typeof(PhysicPointModel))]
+	[ProtoInclude(14, typeof(PhysicPlaneModel))]
+	[ProtoInclude(15, typeof(PhysicWorldModel))]
+	public abstract class Model{
 
 		// Unique model index in the StateManager
-		ModelReference Index { get; }
-
+		// Note: this class object is the only exception on models serialization policy.
+		// The object is only useful when a new model is created and others reference it.
+		// From there, the reference never change, maintaining the consistency
+		[ProtoMember(1)]
+		public ModelReference Index { get ; set; }
+		
 		// Models with lower update order updates first
-		// Models within the same update order are updated by index order
-		int UpdatingOrder { get; set; }
+		[ProtoMember(2)]
+		public int UpdatingOrder { get; set; }
+		
+		// used to obtain the VC factories
+		protected string viewFactoryId;
+		protected string controllerFactoryId;
+
+		[ProtoMember(3)]
+		public string ViewFactoryId {
+			get{
+				return viewFactoryId;
+			}
+			set{
+				viewFactoryId = value;
+				InvalidateView();
+			}
+		}
+
+		[ProtoMember(4)]
+		public string ControllerFactoryId {
+			get{
+				return controllerFactoryId;
+			}
+			set{
+				controllerFactoryId = value;
+				InvalidateController();
+			}
+		}
 		
 		// Set View and Controller from other model, if compatible.
 		// If this is a compatible state, we want to reuse our VC
-		bool SetVCFromModel(Model other);
+		public abstract bool SetVCFromModel(Model other);
 
 		// Get the view associated to this model
-		View View();
+		public abstract View View();
 
 		// Get the controller associated to this model
-		Controller Controller();
+		public abstract Controller Controller();
 
 		// Unload resources
-		void Destroy();
+		public abstract void Destroy();
+
+		public abstract void InvalidateView();
+		public abstract void InvalidateController();
+
+		// Default constructor
+		public Model(){
+			Index = new ModelReference();
+		}
 
 	}
 
@@ -48,60 +95,26 @@ namespace RetroBread{
 
 	#endregion
 
-	#region Class
+	#region Generic class
 
 	// We use the Curiously Recurring Template Pattern here to enforce types
-	[Serializable]
 	public abstract class Model<T>:Model where T:Model<T>{
-
-		// Unique model index in the StateManager
-		// Note: this class object is the only exception on models serialization policy.
-		// The object is only useful when a new model is created and others reference it.
-		// From there, the reference never change, maintaining the consistency
-		public ModelReference Index { get ; private set; }
-
-		// Models with lower update order updates first
-		public int UpdatingOrder { get; set; }
-		// used to obtain the VC factories
-		private string viewFactoryId;
-		private string controllerFactoryId;
-
-		public string ViewFactoryId {
-			get{
-				return viewFactoryId;
-			}
-			set{
-				viewFactoryId = value;
-				InvalidateView();
-			}
-		}
-
-		public string ControllerFactoryId {
-			get{
-				return controllerFactoryId;
-			}
-			set{
-				controllerFactoryId = value;
-				InvalidateController();
-			}
-		}
-
-
-		[NonSerialized]
+	
 		private View<T> view;
 
-		[NonSerialized]
 		private Controller<T> controller;
 		
 
 		#region Constructors
+
+		// Default Constructor
+		public Model():this(null, null, 0){}
 
 		// Simpler Constructor
 		public Model(string controllerFactoryId):this(controllerFactoryId, null, 0){}
 
 		// Constructor given factory ids and updatingOrder
 		public Model(string controllerFactoryId, string viewFactoryId, int updatingOrder){
-			Index = new ModelReference();
 			this.controllerFactoryId = controllerFactoryId;
 			this.viewFactoryId = viewFactoryId;
 			this.UpdatingOrder = updatingOrder;
@@ -112,7 +125,7 @@ namespace RetroBread{
 
 		// Set View and Controller from other model, if compatible.
 		// If this is a compatible state, we want to reuse our VC
-		public bool SetVCFromModel(Model other) {
+		public override bool SetVCFromModel(Model other) {
 
 			// Only use same View and Controller if they are of same type
 			// otherwise proper VC should be created afterwards
@@ -152,7 +165,7 @@ namespace RetroBread{
 		}
 
 		// Make sure view exists
-		public View View() {
+		public override View View() {
 			if (view == null && viewFactoryId != null) {
 				view = VCFactoriesManager.Instance.CreateView<T>(viewFactoryId, this as T);
 			}
@@ -160,7 +173,7 @@ namespace RetroBread{
 		}
 
 		// Make sure controller exists
-		public Controller Controller() {
+		public override Controller Controller() {
 			if (controller == null && controllerFactoryId != null) {
 				controller = VCFactoriesManager.Instance.CreateController<T>(controllerFactoryId, this as T);
 			}
@@ -168,12 +181,12 @@ namespace RetroBread{
 		}
 
 
-		public void InvalidateController(){
+		public override void InvalidateController(){
 			if (controller != null) controller.OnDestroy(this as T);
 			controller = null;
 		}
 
-		public void InvalidateView(){
+		public override void InvalidateView(){
 			if (view != null) view.OnDestroy(this as T);
 			view = null;
 		}
@@ -183,12 +196,12 @@ namespace RetroBread{
 			InvalidateController();
 		}
 
-		public void Destroy(){
+		public sealed override void Destroy(){
 			InvalidateVC();
 			OnDestroy();
 		}
 
-		public virtual void OnDestroy(){
+		protected virtual void OnDestroy(){
 			// Nothing by default
 		}
 			

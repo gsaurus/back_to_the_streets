@@ -15,10 +15,10 @@ namespace RetroBread{
 		public string worldName;
 
 		// Id of the point models to wich we want to detect collisions against planes
-		public SerializableList<ModelReference> pointModels = new SerializableList<ModelReference>();
+		public List<ModelReference> pointModels = new List<ModelReference>();
 
 		// Id of the dynamic plane models to wich we want to detect collisions against points
-		public SerializableList<ModelReference> planeModels = new SerializableList<ModelReference>();
+		public List<ModelReference> planeModels = new List<ModelReference>();
 
 
 		#region Constructors

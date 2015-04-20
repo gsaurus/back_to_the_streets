@@ -5,7 +5,6 @@ namespace RetroBread{
 
 	// Adapted from http://stackoverflow.com/questions/605124/fixed-point-math-in-c
 	// Also based on https://code.google.com/p/kutil/source/browse/trunk/src/org/kalmeo/util/MathFP.java?r=42
-	[Serializable]
 	[ProtoContract]
 	public struct FixedFloat: IComparable<FixedFloat>
 	{

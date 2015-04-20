@@ -3,7 +3,6 @@ using ProtoBuf;
 
 namespace RetroBread{
 
-	[Serializable]
 	[ProtoContract]
 	public struct FixedVector3{
 
@@ -21,13 +20,12 @@ namespace RetroBread{
 	#region Variables
 
 		// Vector components (x,y)
-		[ProtoMember(1)]
+
 		private FixedFloat x;
-		[ProtoMember(2)]
 		private FixedFloat y;
-		[ProtoMember(3)]
 		private FixedFloat z;
-		
+
+		[ProtoMember(1)]
 		public FixedFloat X {
 
 			get {
@@ -40,6 +38,7 @@ namespace RetroBread{
 			}
 		}
 
+		[ProtoMember(2)]
 		public FixedFloat Y {
 			
 			get {
@@ -52,6 +51,7 @@ namespace RetroBread{
 			}
 		}
 
+		[ProtoMember(3)]
 		public FixedFloat Z {
 			
 			get {
@@ -64,9 +64,8 @@ namespace RetroBread{
 			}
 		}
 
-		[NonSerialized]
+		// Magnitude (lazy update)
 		private FixedFloat magnitude;
-		[NonSerialized]
 		private bool magnitudeIsUpToDate;
 		public FixedFloat Magnitude {
 			get{
@@ -131,7 +130,6 @@ namespace RetroBread{
 	#endregion
 
 	#region Constructors
-
 
 		public FixedVector3(FixedFloat x, FixedFloat y, FixedFloat z){
 			this.x = x;
@@ -328,21 +326,6 @@ namespace RetroBread{
 
 	#endregion
 
-
-	#region conversions
-
-		public static explicit operator UnityEngine.Vector3(FixedVector3 src)
-		{
-			return new UnityEngine.Vector3((float)src.x, (float)src.y, (float)src.z);
-		}
-
-		public static explicit operator FixedVector3(UnityEngine.Vector3 src)
-		{
-			return new FixedVector3(src.x, src.y, src.z);
-		}
-
-
-	#endregion
 
 	}
 

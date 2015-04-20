@@ -15,7 +15,7 @@ namespace RetroBread{
 
 		// List of offsets of the other points to the plane's origin.
 		// They must be convex and coplanar
-		public SerializableList<FixedVector3> offsets;
+		public List<FixedVector3> offsets;
 
 		// Position of first point on the previous frame
 		public FixedVector3 lastOriginPosition;
@@ -82,7 +82,7 @@ namespace RetroBread{
 				return;
 			}
 			origin = lastOriginPosition = paramPoints[0];
-			offsets = new SerializableList<FixedVector3>(paramPoints.Length-1);
+			offsets = new List<FixedVector3>(paramPoints.Length-1);
 			for(int i = 1 ; i < paramPoints.Length; ++i){
 				offsets.Add(paramPoints[i] - origin);
 			}

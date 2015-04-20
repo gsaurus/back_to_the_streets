@@ -1,13 +1,16 @@
 using System;
+using ProtoBuf;
 
 namespace RetroBread{
 
-	[Serializable]
+	[ProtoContract]
 	public sealed class ModelReference: IComparable<ModelReference>{
 
+		[ProtoMember(1)]
 		public const uint InvalidModelIndex = 0;
 
-		private uint index;
+		[ProtoMember(2)]
+		public uint index; // private
 
 		public ModelReference():this(InvalidModelIndex){}
 

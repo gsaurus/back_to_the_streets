@@ -2,10 +2,9 @@ using ProtoBuf;
 using System;
 
 namespace RetroBread{
-
-	[Serializable]
+	
 	[ProtoContract]
-	[ProtoInclude(15041936, typeof(SimpleRandomGenerator))]
+	[ProtoInclude(1, typeof(SimpleRandomGenerator))]
 	public abstract class RandomGenerator{
 
 		// Random unsigned int between [0, uint.MAX]

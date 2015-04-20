@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
+﻿using System;
 
 
 namespace RetroBread{
@@ -79,7 +77,7 @@ namespace RetroBread{
 
 		
 		// called when the game entity model is destroyed
-		public override void OnDestroy(){
+		protected override void OnDestroy(){
 			// err.. don't cleanup dependant states, destroy may be called via resync,
 			// the state may be out of the state manager
 	//		// Cleanup dependant states

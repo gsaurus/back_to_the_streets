@@ -1,4 +1,58 @@
 using System;
+using ProtoBuf.Meta;
+
+//namespace RetroBread{
+//
+//		
+//	public class Serializer{
+//	
+//		public static Serializer defaultSerializer = new Serializer();
+//		public static Serializer DefaultSerializer {
+//			get{
+//				return defaultSerializer;
+//			}
+//		}
+//
+//		public object ProtoSerializer;
+//
+//
+//
+//		// Encode an object into a byte array
+//		public byte[] Serialize(Object obj){
+//			using (MemoryStream stream = new MemoryStream()){
+//				formatter.Serialize(stream, obj);
+//				return stream.ToArray();
+//			}
+//		}
+//		
+//		// Decode an object from a byte array
+//		public object Deserialize(byte[] data){
+//			using (MemoryStream stream = new MemoryStream(data)){
+//				return formatter.Deserialize(stream);
+//			}
+//		}
+//		
+//		// Write an object to a stream
+//		public void Serialize(Object obj, Stream stream) {
+//			formatter.Serialize(stream, obj);
+//		}
+//		
+//		// Read an object from a stream
+//		public object Deserialize(Stream stream) {
+//			return formatter.Deserialize(stream);
+//		}
+//
+//
+//	
+//	}
+//
+//
+//}
+
+
+// The old Serializer, for reference
+/*
+
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
@@ -60,7 +114,7 @@ namespace RetroBread{
 		}
 
 
-	/* // This is here just for reference
+	// This is here just for reference
 	#region Workarounds to the security errors on Webplayer when serializing/deserializing certain containers
 
 		public byte[] SerializeDictionary<K,V>(Dictionary<K,V> dict){
@@ -109,7 +163,6 @@ namespace RetroBread{
 		}
 
 	#endregion
-		*/
 
 	}
 
@@ -185,4 +238,6 @@ namespace RetroBread{
 	// TODO: add more SerializableClasses on need
 
 }
+
+*/
 

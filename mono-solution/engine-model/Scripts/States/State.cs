@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using ProtoBuf;
 
 
 namespace RetroBread{
@@ -62,24 +62,29 @@ namespace RetroBread{
 	// Main model can be set only during update cycle
 	// All changes to the state (creation, remotion, reordering, main model set) made
 	// during the update cycle only take place once it finishes
-	[Serializable]
+	[ProtoContract]
 	public sealed class InternalState: State{
 
 		public delegate void onModelChanged(Model model, object context);
 
 		// A dictionary holds all models,
 		// new models are added with an incremental key
-		private uint nextModelIndex;
-		private uint mainModelIndex;
-		private SerializableDictionary<uint,Model> models;
+		[ProtoMember(1)]
+		public uint nextModelIndex; // private
+		[ProtoMember(2)]
+		public uint mainModelIndex; // private
+		[ProtoMember(3)]
+		public Dictionary<uint,Model> models; // private
 
 		// The keyframe in which this state happened
 		// This is handled by the StateManager
+		[ProtoMember(4)]
 		public uint Keyframe {get ; set; }
 
 
 		// Random generator, it's state is also serialized
 		private RandomGenerator random;
+		[ProtoMember(5)]
 		public RandomGenerator Random {
 			get{
 				// return null when it's not updating
@@ -91,11 +96,9 @@ namespace RetroBread{
 		}
 
 		// Models sorted by updating order, no need to serialize this
-		[NonSerialized]
 		private SortedList<Model, Model> sortedModels; // SortedSet isn't supported by Unity
 
 		// Store update changes that must happen after update cycle
-		[NonSerialized]
 		TemporaryUpdateChanges updateChanges;
 
 		// Give access to the main model
@@ -122,14 +125,21 @@ namespace RetroBread{
 		}
 
 
-		// CTOR: create a State with an initial model (set as main model) and random seed
+		// Default constructor
+		public InternalState(){
+			// Create necessary structures
+			models = new Dictionary<uint, Model>();
+			sortedModels = new SortedList<Model, Model>(new ModelComparerByUpdatingOrder());
+		}
+
+		// Constructor: create a State with an initial model (set as main model) and random seed
 		public InternalState(Model mainModel, long randomSeed){
 
 			// Initialize the random generator
 			random = new SimpleRandomGenerator(randomSeed);
 
 			// Create necessary structures
-			models = new SerializableDictionary<uint, Model>();
+			models = new Dictionary<uint, Model>();
 			sortedModels = new SortedList<Model, Model>(new ModelComparerByUpdatingOrder());
 
 			// Setup initial model

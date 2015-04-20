@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 
 namespace RetroBread{
@@ -37,7 +38,7 @@ namespace RetroBread{
 		}
 
 		// Forces applied to this point, identified by a string (force source)
-		public SerializableDictionary<string,FixedVector3> velocityAffectors;
+		public Dictionary<string,FixedVector3> velocityAffectors;
 
 
 		#region Constructors
@@ -63,7 +64,7 @@ namespace RetroBread{
 			                        int updatingOrder
 		):base(controllerFactoryId, viewFactoryId, updatingOrder){
 			this.ownerId = ownerId;
-			velocityAffectors = new SerializableDictionary<string,FixedVector3>();
+			velocityAffectors = new Dictionary<string,FixedVector3>();
 			this.position = this.lastPosition = position;
 			this.stepTolerance = stepTolerance;
 		}
@@ -84,7 +85,7 @@ namespace RetroBread{
 			                        int updatingOrder
 		):base(controllerFactoryId, viewFactoryId, updatingOrder){
 			this.ownerId = ownerId;
-			velocityAffectors = new SerializableDictionary<string,FixedVector3>();
+			velocityAffectors = new Dictionary<string,FixedVector3>();
 		}
 
 		#endregion
