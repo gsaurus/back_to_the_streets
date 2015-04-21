@@ -83,8 +83,9 @@ namespace RetroBread{
 
 
 		// Random generator, it's state is also serialized
-		private RandomGenerator random;
 		[ProtoMember(5)]
+		public RandomGenerator random;
+
 		public RandomGenerator Random {
 			get{
 				// return null when it's not updating

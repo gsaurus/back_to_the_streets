@@ -18,6 +18,8 @@ namespace ShooterSerializer
 			model[typeof(PhysicPlaneModel)].AddSubType(100, typeof(MovingPlaneModel));
 			model[typeof(PhysicPointModel)].AddSubType(100, typeof(BulletPointModel));
 
+			// There seems to be a bug in protobuf-net,
+			// if I don't do those deepclones they doesn't get registered...
 			if (model.CanSerialize(typeof(InternalState))){
 				Console.WriteLine("Can serialize InternalState");
 				InternalState state = new InternalState();
@@ -45,6 +47,13 @@ namespace ShooterSerializer
 				data.Add("stuff", 5);
 				model.DeepClone(data);
 				Console.WriteLine("deep cloned Dictionary<string, uint>");
+			}
+
+			if (model.CanSerialize(typeof(AxisInputEvent))){
+				Console.WriteLine("Can serialize AxisInputEvent");
+				Event e = new AxisInputEvent();
+				model.DeepClone(e);
+				Console.WriteLine("deep cloned AxisInputEvent as Event");
 			}
 
 			model.Compile(SerializationConstants.SerializerName, SerializationConstants.SerializerDllName);

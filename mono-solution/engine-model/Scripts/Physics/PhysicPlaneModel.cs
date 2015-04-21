@@ -60,6 +60,11 @@ namespace RetroBread{
 		}
 
 
+		// Default constructor
+		public PhysicPlaneModel(){
+			// Nothing to do
+		}
+
 		// Constructor giving world points
 		public PhysicPlaneModel(params FixedVector3[] paramPoints):
 		this(DefaultVCFactoryIds.PhysicPlaneControllerFactoryId, null, DefaultUpdateOrder.PhysicsUpdateOrder, paramPoints){}
