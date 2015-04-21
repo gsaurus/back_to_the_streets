@@ -22,7 +22,7 @@ public class GuiServersList : MonoBehaviour
 //		Debug.Log(FixedFloat.Create(0.214124500751495361328125));
 //		Debug.Log(FixedFloat.Create(1.570787847042083740234375));
 
-		NetworkCenter.Instance.SetPlayerData(new NetworkPlayerData("guest_" + Random.Range(0,int.MaxValue)));
+		NetworkCenter.Instance.SetPlayerData(new NetworkPlayerData(SystemInfo.deviceUniqueIdentifier, "guest_" + Random.Range(0,int.MaxValue)));
 		NetworkCenter.Instance.playersLocked = true;
 //		NetworkCenter.Instance.playerConnectedEvent += OnPlayerConnectionConfirmed;
 //		NetworkCenter.Instance.playerDisconnectedEvent += OnPlayerDisconnectionConfirmed;

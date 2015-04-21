@@ -16,9 +16,9 @@ namespace RetroBread{
 	public class SimpleRandomGenerator: RandomGenerator
 	{
 		[ProtoMember(1)]
-		private uint m_z;
+		public uint m_z;
 		[ProtoMember(2)]
-		private uint m_w;
+		public uint m_w;
 
 		public SimpleRandomGenerator(){
 			// Default seed

@@ -130,8 +130,8 @@ namespace RetroBread{
 			// Receiving a resume request, we sync and make sure to resume at the expected time
 			[RPC]
 			void ResumeGame(byte[] newStateData, byte[] oldestStateData, float timeToResume, NetworkMessageInfo messageInfo){
-				State newState = NetworkCenter.Instance.serializer.Deserialize<State>(newStateData);
-				State oldestState = NetworkCenter.Instance.serializer.Deserialize<State>(oldestStateData);
+				State newState = NetworkCenter.Instance.serializer.Deserialize<InternalState>(newStateData);
+				State oldestState = NetworkCenter.Instance.serializer.Deserialize<InternalState>(oldestStateData);
 				float travelTime = (float) (UnityEngine.Network.time - messageInfo.timestamp);
 				timeToResume -= travelTime;
 				if (timeToResume > 0){
