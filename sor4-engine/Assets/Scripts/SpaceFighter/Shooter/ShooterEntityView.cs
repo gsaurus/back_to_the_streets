@@ -59,7 +59,7 @@ public class ShooterEntityView: GameEntityView {
 	public void OnHit(ShooterEntityModel model){
 		PhysicPointModel pointModel = StateManager.state.GetModel(model.physicsModelId) as PhysicPointModel;
 		if (pointModel == null || model.energy > 0) return;
-		Vector3 bloodPosition = (Vector3)pointModel.position;
+		Vector3 bloodPosition = pointModel.position.AsVector3();
 		bloodPosition.y += 2.3f;
 		GameObject bloodObj = GameObject.Instantiate(Resources.Load("blood"), bloodPosition, Quaternion.identity) as GameObject;
 		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.Index);

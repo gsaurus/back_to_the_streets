@@ -17,7 +17,7 @@ namespace RetroBread{
 	public class PhysicWorldController: Controller<PhysicWorldModel>{
 			
 		// world static planes, serializable because it can be read from a file
-		private SerializableList<PhysicPlaneModel> staticPlanes = null;
+		private List<PhysicPlaneModel> staticPlanes = null;
 
 		// We keep track of the current world loaded so that
 		// if the model world changes, we need to load the new world
@@ -29,7 +29,7 @@ namespace RetroBread{
 		// TODO: we can rework this a bit later, perhaps tell what was the old world or even do it some other way
 		// A delegate for when the game requests the world to change
 		// This should be used to load the respective static planes
-		public delegate void OnWorldChangedDelegate(out SerializableList<PhysicPlaneModel> staticPlanes);
+		public delegate void OnWorldChangedDelegate(out List<PhysicPlaneModel> staticPlanes);
 		public OnWorldChangedDelegate onWorldChanged = null;
 
 	//	// we keep the index of the world here to access it from the game state

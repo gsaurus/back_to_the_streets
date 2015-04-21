@@ -20,10 +20,10 @@ namespace RetroBread{
 
 		protected void UpdateGameObjectPosition(GameObject obj, PhysicPointModel model, float deltaTime){
 			// Decide on interpolation based on the last position variation against current object position
-			float oldDistance = Vector3.Distance(obj.transform.position, (Vector3)model.lastPosition);
+			float oldDistance = Vector3.Distance(obj.transform.position, model.lastPosition.AsVector3());
 			if (oldDistance < minDistanceToInterpolate || oldDistance > maxDistanceToInterpolate) {
 				// Too close or too far away, just teleport
-				obj.transform.position = (Vector3)model.position;
+				obj.transform.position = model.position.AsVector3();
 			}else {
 				// Something changed abruptaly, interpolate
 				// TODO: better interpolation algorithm?
@@ -31,7 +31,7 @@ namespace RetroBread{
 				float interpolationFactor = 1f - (oldDistance-minDistanceToInterpolate) / (maxDistanceToInterpolate - minDistanceToInterpolate);
 				interpolationFactor = Mathf.Pow(interpolationFactor, 3);
 				if (interpolationFactor < minInterpolationFactor) interpolationFactor = minInterpolationFactor;
-				obj.transform.position = Vector3.Lerp(obj.transform.position, (Vector3)model.position, interpolationFactor);
+				obj.transform.position = Vector3.Lerp(obj.transform.position, model.position.AsVector3(), interpolationFactor);
 			}
 		}
 

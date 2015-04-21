@@ -37,7 +37,7 @@ public class BulletPointView:PhysicPointView{
 		if (obj == null) return;
 
 		if (bulletModel.lifetimeFrames < BulletPointController.totalBulletLifetimeFrames){
-			Vector3 sparksPosition = (Vector3)model.position;
+			Vector3 sparksPosition = model.position.AsVector3();
 			sparksPosition += new Vector3(0f, UnityEngine.Random.Range(-0.1f, 0.1f), UnityEngine.Random.Range(-0.1f, 0.1f));
 			GameObject.Instantiate(Resources.Load("sparks"), sparksPosition, Quaternion.identity);
 		}

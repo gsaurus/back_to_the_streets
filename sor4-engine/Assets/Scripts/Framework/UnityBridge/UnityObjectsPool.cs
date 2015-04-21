@@ -8,13 +8,11 @@ namespace RetroBread{
 	// Class to hold handy type conversions to/from unity
 	public static class UnityConversions{
 		
-		public static explicit operator UnityEngine.Vector3(FixedVector3 src)
-		{
+		public static UnityEngine.Vector3 AsVector3(this FixedVector3 src){
 			return new UnityEngine.Vector3((float)src.X, (float)src.Y, (float)src.Z);
 		}
 		
-		public static explicit operator FixedVector3(UnityEngine.Vector3 src)
-		{
+		public static FixedVector3 AsFixedVetor3(this UnityEngine.Vector3 src){
 			return new FixedVector3(src.x, src.y, src.z);
 		}
 	
@@ -69,7 +67,7 @@ namespace RetroBread{
 			if (ownerModel != null){
 				PhysicPointModel pointModel = StateManager.state.GetModel(ownerModel.physicsModelId) as PhysicPointModel;
 				if (pointModel != null){
-					obj.transform.position = (Vector3) pointModel.position;
+					obj.transform.position = pointModel.position.AsVector3();
 				}
 			}
 

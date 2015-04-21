@@ -21,12 +21,12 @@ namespace RetroBread{
 
 
 			// All information about all connected players is here, by guid
-			private SerializableDictionary<string, NetworkPlayerData> players = new SerializableDictionary<string, NetworkPlayerData>();
+			private Dictionary<string, NetworkPlayerData> players = new Dictionary<string, NetworkPlayerData>();
 
 			// Matching between the players uniqueId and their number in the game
 			// If a player reconnects he's assigned to the same player number, if available
 			// Player numbers are tentaptively kept even if a player goes offline
-			private SerializableDictionary<string, uint> playerNumbers = new SerializableDictionary<string, uint>();
+			private Dictionary<string, uint> playerNumbers = new Dictionary<string, uint>();
 
 			// If locked, new players won't overtake disconnected players place
 			// If unlocked, new players take the first free slot
@@ -197,7 +197,7 @@ namespace RetroBread{
 				if (!UnityEngine.Network.isServer) return;
 
 				// Deserialize data
-				NetworkPlayerData playerData = serializer.Deserialize(data) as NetworkPlayerData;
+				NetworkPlayerData playerData = serializer.Deserialize<NetworkPlayerData>(data);
 				if (playerData == null) {
 					// Woops, invalid player data! Disconnect it
 					Debug.LogWarning("Invalid player data from " + info.sender.ipAddress);
@@ -278,8 +278,8 @@ namespace RetroBread{
 			// Add all received players to our dictionaries
 			[RPC]
 			void SetAllPlayersData(byte[] playersData, byte[] playerNumsData){
-				players = serializer.Deserialize(playersData) as SerializableDictionary<string, NetworkPlayerData>;
-				playerNumbers = serializer.Deserialize(playerNumsData) as SerializableDictionary<string, uint>;
+				players = serializer.Deserialize<Dictionary<string, NetworkPlayerData>>(playersData);
+				playerNumbers = serializer.Deserialize<Dictionary<string, uint>>(playerNumsData);
 
 				// Send one notification about each received player
 				if (playerConnectedEvent != null){
@@ -293,7 +293,7 @@ namespace RetroBread{
 			[RPC]
 			void AddPlayerData(int playerNumber, byte[] data, NetworkPlayer sender){
 
-				NetworkPlayerData playerData = serializer.Deserialize(data) as NetworkPlayerData;
+				NetworkPlayerData playerData = serializer.Deserialize<NetworkPlayerData>(data);
 				if (playerData == null) {
 					// Woops, invalid player data!
 					Debug.LogWarning("Invalid player data from " + sender.ipAddress);

@@ -30,15 +30,17 @@ namespace RetroBread{
 		public const string PhysicPointViewFactoryId			= "_rb_ppv";
 		public const string PhysicWorldControllerFactoryId		= "_rb_pwc";
 		public const string PhysicPlaneControllerFactoryId		= "_rb_pplc";
-		#if UNITY_EDITOR
-		public const string PhysicPlaneDebugViewFactoryId		= "_rb_ppldv";
-		#endif
 		public const string PlayerInputControllerFactoryId		= "_rb_pic";
 		public const string AnimationControllerFactoryId		= "_rb_ac";
 		public const string AnimationViewFactoryId				= "_rb_av";
 		public const string GameEntityControllerFactoryId		= "_rb_gec";
 		public const string GameEntityViewFactoryId				= "_rb_gev";
 		
+	}
+
+	public class SerializationConstants{
+		public const string SerializerName = "RbSerializer";
+		public const string SerializerDllName = "rb-serializer.dll";
 	}
 
 }

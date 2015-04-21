@@ -119,7 +119,7 @@ namespace RetroBread{
 		}
 
 		// When events arrive from the network we add them to the events buffer
-		private void OnEventsAdded(SerializableList<Event> newEvents){
+		private void OnEventsAdded(List<Event> newEvents){
 			uint oldestKeyframe = uint.MaxValue;
 			foreach (Event e in newEvents){
 				eventsBuffer.AddEvent(e);

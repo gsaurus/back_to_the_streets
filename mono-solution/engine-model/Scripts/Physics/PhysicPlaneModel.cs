@@ -1,27 +1,29 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using ProtoBuf;
 
 
 namespace RetroBread{
 
 
 	// Plane model
-	[Serializable]
-	public class PhysicPlaneModel: Model<PhysicPlaneModel>, IDeserializationCallback{
+	[ProtoContract]
+	public class PhysicPlaneModel: Model<PhysicPlaneModel>{
 
 		// The first point is considered the plane's origin
+		[ProtoMember(1)]
 		public FixedVector3 origin;
 
 		// List of offsets of the other points to the plane's origin.
 		// They must be convex and coplanar
+		[ProtoMember(2)]
 		public List<FixedVector3> offsets;
 
 		// Position of first point on the previous frame
+		[ProtoMember(3)]
 		public FixedVector3 lastOriginPosition;
 
 		// Normal isn't serialized
-		[NonSerialized]
 		private FixedVector3 normal;
 		public FixedVector3 Normal { get{ return normal; }}
 
@@ -89,9 +91,8 @@ namespace RetroBread{
 			ComputeNormal();
 		}
 
-		// Called once the object is deserialized
-		void IDeserializationCallback.OnDeserialization(Object sender)
-		{
+		[ProtoAfterDeserialization]
+		public void OnDeserialization(){
 			// Once deserialized, compute normal
 			ComputeNormal();
 		}

@@ -1,32 +1,47 @@
 ﻿using System;
+using ProtoBuf;
 
 
 namespace RetroBread{
 
 
 	// Game entity used as base for characters and other game elements
-	[Serializable]
+	[ProtoContract]
 	public class GameEntityModel: Model<GameEntityModel> {
 
 		// Physic model
+		[ProtoMember(1)]
 		public ModelReference physicsModelId;
+
 		// Animation model
+		[ProtoMember(2)]
 		public ModelReference animationModelId;
+
 		// Input model (we store input info when necessary, specially if controlled by AI)
+		[ProtoMember(3)]
 		public ModelReference inputModelId;
 
 		// flag telling if the character is facing left or right
+		[ProtoMember(4)]
 		public bool isFacingRight;
 
 		// flag telling that the character can flip automatically depending on animation velocity
+		[ProtoMember(5)]
 		public bool automaticFlip;
 
 		// How much input velocity is applied to the entity
+		[ProtoMember(6)]
 		public FixedVector3 maxInputVelocity;
 
 
 
 		#region Constructors
+
+
+		// Default Constructor
+		public GameEntityModel(){
+			// nothing to do
+		}
 
 
 		public GameEntityModel(

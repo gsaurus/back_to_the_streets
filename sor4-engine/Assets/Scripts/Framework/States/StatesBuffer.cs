@@ -51,7 +51,7 @@ namespace RetroBread{
 				data = bufferedStates[keys[closestIndex]];
 			}
 
-			return serializer.Deserialize(data) as State;
+			return serializer.Deserialize<State>(data);
 				
 		}
 
@@ -62,7 +62,7 @@ namespace RetroBread{
 			List<uint> keys = new List<uint>(bufferedStates.Keys);
 			keys.Sort();
 			data = bufferedStates[keys[0]];
-			return serializer.Deserialize(data) as State;
+			return serializer.Deserialize<State>(data);
 		}
 
 
@@ -72,7 +72,7 @@ namespace RetroBread{
 			if (!bufferedStates.TryGetValue(keyframe, out data)){
 				return null;
 			}
-			return serializer.Deserialize(data) as State;
+			return serializer.Deserialize<State>(data);
 		}
 		
 		

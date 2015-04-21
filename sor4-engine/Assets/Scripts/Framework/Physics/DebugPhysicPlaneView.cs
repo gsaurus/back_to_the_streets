@@ -46,7 +46,7 @@ namespace RetroBread{
 			List<Vector3> vertexes = new List<Vector3>(model.offsets.Count + 1);
 			vertexes.Add(new Vector3());
 			foreach (FixedVector3 offset in model.offsets){
-				vertexes.Add((Vector3)offset);
+				vertexes.Add(offset.AsVector3());
 			}
 			
 			//UVs
@@ -123,15 +123,15 @@ namespace RetroBread{
 
 		protected override void Update(PhysicPlaneModel model, float deltaTime){
 			foreach (GameObject obj in meshObjects){
-				obj.transform.position = (Vector3) model.origin;
+				obj.transform.position = model.origin.AsVector3();
 			}
 
 			List<FixedVector3> points = model.GetPointsList();
 			for (int i = 1 ; i < points.Count ; ++i){
-				Debug.DrawLine((Vector3)points[i-1], (Vector3)points[i], UnityEngine.Color.grey);
+				Debug.DrawLine(points[i-1].AsVector3(), points[i].AsVector3(), UnityEngine.Color.grey);
 			}
-			Debug.DrawLine((Vector3)points[points.Count-1], (Vector3)points[0], UnityEngine.Color.grey);
-			Debug.DrawLine((Vector3)points[0], (Vector3)(points[0] + model.Normal), UnityEngine.Color.red);
+			Debug.DrawLine(points[points.Count-1].AsVector3(), points[0].AsVector3(), UnityEngine.Color.grey);
+			Debug.DrawLine(points[0].AsVector3(), (points[0] + model.Normal).AsVector3(), UnityEngine.Color.red);
 		}
 
 	//	private UnityEngine.Color debugPlaneColor = new UnityEngine.Color(200,200,50);

@@ -1,16 +1,24 @@
 using System;
 using RetroBread;
+using ProtoBuf;
 
-[Serializable]
+[ProtoContract]
 public class BulletPointModel : PhysicPointModel{
 
 	public const string BulletPointControllerFactoryId = "my_bpc";
 	public const string BulletPointViewFactoryId = "my_bpv";
 
-
+	[ProtoMember(1)]
 	public ModelReference shooterId;
 
+	[ProtoMember(2)]
 	public uint lifetimeFrames;
+
+	// Default Constructor
+	public BulletPointModel(){
+		// Nothing to do
+	}
+
 
 	// Constructor
 	public BulletPointModel(ModelReference shooterId, FixedVector3 position, bool moveRight)

@@ -1,4 +1,5 @@
 using System;
+using ProtoBuf;
 
 
 namespace RetroBread{
@@ -6,20 +7,22 @@ namespace RetroBread{
 
 	// Animation model keeps the name of the animation and it's current frame
 	// We also keep a reference to the state of the owner, to use during animation updates
-	[Serializable]
+	[ProtoContract]
 	public class AnimationModel:Model<AnimationModel>{
 
-		public ModelReference ownerId;
-		public uint currentFrame;
-		public string characterName;
-		public string animationName;
+		[ProtoMember(1)] public ModelReference ownerId;
+		[ProtoMember(2)] public uint currentFrame;
+		[ProtoMember(3)] public string characterName;
+		[ProtoMember(4)] public string animationName;
 
 		// This variable is used during each frame only
-		[NonSerialized]
 		public bool animationChanged;
 
 
 		#region Constructors
+
+		// Default Constructor
+		public AnimationModel():this(new ModelReference(), null, null){}
 
 
 		// Constructor

@@ -17,7 +17,7 @@ namespace RetroBread{
 			public bool pauseWhenPlayersNotReady = true;
 
 			// Events when game events are added
-			public delegate void OnEventsAddedDelegate(SerializableList<Event> events);
+			public delegate void OnEventsAddedDelegate(List<Event> events);
 			public event OnEventsAddedDelegate onEventsAddedEvent;
 
 			// Event for pause game
@@ -34,7 +34,7 @@ namespace RetroBread{
 			public event StateCorrection stateCorrectionEvent;
 
 			// We gatter input events here to flush out once per frame
-			private SerializableList<Event> eventsBuffer = new SerializableList<Event>();
+			private List<Event> eventsBuffer = new List<Event>();
 			
 			// On awake, register delegates
 			void Awake(){
@@ -130,8 +130,8 @@ namespace RetroBread{
 			// Receiving a resume request, we sync and make sure to resume at the expected time
 			[RPC]
 			void ResumeGame(byte[] newStateData, byte[] oldestStateData, float timeToResume, NetworkMessageInfo messageInfo){
-				State newState = NetworkCenter.Instance.serializer.Deserialize(newStateData) as State;
-				State oldestState = NetworkCenter.Instance.serializer.Deserialize(oldestStateData) as State;
+				State newState = NetworkCenter.Instance.serializer.Deserialize<State>(newStateData);
+				State oldestState = NetworkCenter.Instance.serializer.Deserialize<State>(oldestStateData);
 				float travelTime = (float) (UnityEngine.Network.time - messageInfo.timestamp);
 				timeToResume -= travelTime;
 				if (timeToResume > 0){
@@ -203,8 +203,8 @@ namespace RetroBread{
 			[RPC]
 			void OnEventsAdded(byte[] eventsData){
 				if (onEventsAddedEvent != null){
-					SerializableList<Event> events;
-					events = NetworkCenter.Instance.serializer.Deserialize(eventsData) as SerializableList<Event>;
+					List<Event> events;
+					events = NetworkCenter.Instance.serializer.Deserialize<List<Event>>(eventsData);
 					if (events != null){
 						onEventsAddedEvent(events);
 					}
