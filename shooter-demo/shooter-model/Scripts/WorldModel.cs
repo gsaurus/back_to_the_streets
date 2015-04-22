@@ -23,8 +23,7 @@ public class WorldModel:Model<WorldModel>{
 
 
 	// Constructor
-	public WorldModel():base(WorldControllerFactoryId)
-	{
+	public WorldModel():base(WorldControllerFactoryId){
 		// Nothing to do
 	}
 

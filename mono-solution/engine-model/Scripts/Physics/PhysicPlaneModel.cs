@@ -38,6 +38,7 @@ namespace RetroBread{
 		// Normal computed from the first 2 consecutive offsets
 		public void ComputeNormal(){
 			// Normal vector
+			if (offsets == null || offsets.Count < 2) return;
 			normal = FixedVector3.Cross(offsets[0], offsets[1]); //(origin + offsets[1]) - (origin + offsets[0]));
 			normal.Normalize();
 		}

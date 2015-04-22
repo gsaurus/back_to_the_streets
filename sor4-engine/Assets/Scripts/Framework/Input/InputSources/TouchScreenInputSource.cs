@@ -19,6 +19,7 @@ namespace RetroBread{
 
 
 		public void Awake(){
+
 			Input.simulateMouseWithTouches = true;
 			buttonsDown = new bool[PlayerInputModel.NumButtonsSupported];
 		}
@@ -63,9 +64,9 @@ namespace RetroBread{
 			Vector2 newAxis = Vector2.zero;
 			if (newButtonsDown[0]){
 				newAxis = axisPos - buttonsLocation[0];
-				float axisStrength = newAxis.magnitude / axisMaxRadius;
-				if (axisStrength > 1) axisStrength = 1;
-				newAxis = newAxis.normalized * axisStrength;
+				newAxis /= axisMaxRadius;
+				newAxis.x = Mathf.Clamp(newAxis.x, -1, 1);
+				newAxis.y = Mathf.Clamp(newAxis.y, -1, 1);
 			}
 
 			if (

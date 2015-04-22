@@ -35,7 +35,9 @@ public class ShooterEntityModel: GameEntityModel {
 
 
 	// Default Constructor
-	public ShooterEntityModel():base(){}
+	public ShooterEntityModel(){
+		// Nothing to do
+	}
 
 	// Constructor
 	public ShooterEntityModel(

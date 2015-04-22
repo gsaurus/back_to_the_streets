@@ -92,6 +92,14 @@ namespace RetroBread{
 
 	#if !UNITY_IPHONE && !UNITY_ANDROID
 
+
+		public void Awake(){
+			// Deactivate mobile HUD
+			GameObject canvas = GameObject.Find("/Canvas");
+			canvas.SetActive(false);
+		}
+
+
 		private bool CheckBothAxisHoldedAtOnce() {
 			return Input.GetAxisRaw("Horizontal") != 0 && Input.GetAxisRaw("Vertical") != 0;
 		}

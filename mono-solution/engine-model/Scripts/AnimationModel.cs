@@ -22,7 +22,9 @@ namespace RetroBread{
 		#region Constructors
 
 		// Default Constructor
-		public AnimationModel():this(new ModelReference(), null, null){}
+		public AnimationModel(){
+			// Nothing to do
+		}
 
 
 		// Constructor

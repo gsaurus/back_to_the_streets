@@ -34,7 +34,9 @@ namespace RetroBread{
 		#region Constructors
 
 		// Default constructor
-		public PlayerInputModel():this(1){}
+		public PlayerInputModel(){
+			// Nothing to do
+		}
 
 		// Constructor
 		public PlayerInputModel(uint playerId)

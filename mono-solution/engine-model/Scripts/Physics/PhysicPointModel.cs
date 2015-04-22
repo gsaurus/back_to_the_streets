@@ -53,7 +53,7 @@ namespace RetroBread{
 
 		// Default Constructor
 		public PhysicPointModel(){
-			velocityAffectors = new Dictionary<string,FixedVector3>();
+			// Nothing to do
 		}
 
 		// Constructor

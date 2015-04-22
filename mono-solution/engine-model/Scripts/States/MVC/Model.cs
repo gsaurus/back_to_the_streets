@@ -108,7 +108,9 @@ namespace RetroBread{
 		#region Constructors
 
 		// Default Constructor
-		public Model():this(null, null, 0){}
+		public Model(){
+			// Nothing to do
+		}
 
 		// Simpler Constructor
 		public Model(string controllerFactoryId):this(controllerFactoryId, null, 0){}

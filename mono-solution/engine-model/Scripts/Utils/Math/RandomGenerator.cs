@@ -26,6 +26,11 @@ namespace RetroBread{
 			return min + NextFloat() * (max-min);
 		}
 
+		// Default Constructor
+		public RandomGenerator(){
+			// Nothing to do
+		}
+
 	}
 
 }

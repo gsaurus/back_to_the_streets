@@ -29,7 +29,9 @@ namespace RetroBread{
 		#region Constructors
 
 		// Default constructor
-		public PhysicWorldModel():this(null, FixedVector3.Zero){}
+		public PhysicWorldModel(){
+			// Nothing to do
+		}
 
 		// Constructor	
 		public PhysicWorldModel(string name, FixedVector3 gravity)
