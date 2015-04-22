@@ -13,7 +13,7 @@ namespace RetroBread{
 
 
 	// It can have non logical state, but the view must always reflect the current state of the model
-	public class View<T>:View where T:Model<T>{
+	public class View<T>:View where T:Model<T>, new(){
 
 		// Translate to inner method
 		public void Update(Model model, float deltaTime){

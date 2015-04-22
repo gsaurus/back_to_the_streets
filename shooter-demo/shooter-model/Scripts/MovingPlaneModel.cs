@@ -29,5 +29,26 @@ public class MovingPlaneModel: PhysicPlaneModel{
 	}
 
 
+	protected override void AssignCopy(PhysicPlaneModel other){
+		base.AssignCopy(other);
+
+		MovingPlaneModel otherPlane = other as MovingPlaneModel;
+		if (otherPlane == null) return;
+		movingState = otherPlane.movingState;
+		blendFactor = otherPlane.blendFactor;
+		path = new FixedVector3[otherPlane.path.Length];
+		for (int i = 0 ; i < otherPlane.path.Length ; ++i){
+			path[i] = otherPlane.path[i];
+		}
+
+		/*
+		int[] a = new int[] {1,2,3,4,5,6,7,8};
+		int[] b = new int[a.Length];
+		int size = sizeof(int);
+		int length = a.Length * size;               
+		System.Buffer.BlockCopy(a, 0, b, 0, length);
+		*/
+	}
+
 }
 

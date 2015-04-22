@@ -18,12 +18,6 @@ namespace RetroBread{
 		// Usefull if we need to rewind the game state to process old events
 		private uint oldestEventKeyframeSinceLastCheck;
 
-		// Serializer to encode events to a stream
-		private Serializer serializer = Serializer.defaultSerializer;
-		public Serializer Serializer {
-			private get{ return serializer; }
-			set{ serializer = value; }
-		}
 
 		public EventsBuffer (){
 			Clear();

@@ -13,16 +13,8 @@ namespace RetroBread{
 	// So that it can be used to retrieve an older state for state reconstruction
 	public class StatesBuffer{
 
-		// We store them serialized since it's the fastest way of deep-copying states
-		// We may implement it differently in the future
-		private Dictionary<uint, byte[]> bufferedStates;
-
-		// Serializer to encode/decode states into/from history buffer
-		private Serializer serializer = Serializer.defaultSerializer;
-		public Serializer Serializer {
-			private get{ return serializer; }
-			set{ serializer = value; }
-		}
+		// history of states, by keyframe
+		private Dictionary<uint, State> bufferedStates;
 
 		public StatesBuffer(){
 			Clear();
@@ -35,9 +27,9 @@ namespace RetroBread{
 
 			if (bufferedStates.Count == 0) return null;
 
-			byte[] data;
+			State state = null;
 
-			if (!bufferedStates.TryGetValue(keyframe, out data)){
+			if (!bufferedStates.TryGetValue(keyframe, out state)){
 				List<uint> keys = new List<uint>(bufferedStates.Keys);
 				keys.Sort();
 				if (keyframe < keys[0]){
@@ -48,43 +40,39 @@ namespace RetroBread{
 				if (closestIndex < 0){
 					closestIndex = ~closestIndex-1; // this is the closest we found in the keys list
 				}
-				data = bufferedStates[keys[closestIndex]];
+				state = bufferedStates[keys[closestIndex]];
 			}
 
-			return serializer.Deserialize<InternalState>(data);
+			return state;
 				
 		}
 
 		// Return the oldest state in the buffer
 		public State GetOldestState(){
 			if (bufferedStates.Count == 0) return null;
-			byte[] data;
 			List<uint> keys = new List<uint>(bufferedStates.Keys);
 			keys.Sort();
-			data = bufferedStates[keys[0]];
-			return serializer.Deserialize<InternalState>(data);
+			return bufferedStates[keys[0]];
 		}
 
 
 		// Deserializes a buffered state
 		public State GetState(uint keyframe){
-			byte[] data;
-			if (!bufferedStates.TryGetValue(keyframe, out data)){
-				return null;
-			}
-			return serializer.Deserialize<InternalState>(data);
+			State state = null;
+			bufferedStates.TryGetValue(keyframe, out state);
+			return state;
 		}
 		
 		
 		// Buffers a serialization of the state
 		public void SetState(State state) {
-			bufferedStates[state.Keyframe] = serializer.Serialize(state);
+			bufferedStates[state.Keyframe] = state.Clone();
 		}
 
 		// Get rid of all states that happened in older keyframes
 		public void DiscardOlderStates(uint oldestKeyframeToKeep) {
-			Dictionary<uint, byte[]> finalStates = new Dictionary<uint, byte[]>(bufferedStates.Count);
-			foreach (KeyValuePair<uint, byte[]> entry in bufferedStates) {
+			Dictionary<uint, State> finalStates = new Dictionary<uint, State>(bufferedStates.Count);
+			foreach (KeyValuePair<uint, State> entry in bufferedStates) {
 				if (entry.Key >= oldestKeyframeToKeep) {
 					finalStates.Add(entry.Key, entry.Value);
 				}
@@ -95,8 +83,8 @@ namespace RetroBread{
 		// Get rid of all states that happened in newer keyframes
 		// Useful when restoring an older state
 		public void DiscardNewerStates(uint newestKeyframeToKeep) {
-			Dictionary<uint, byte[]> finalStates = new Dictionary<uint, byte[]>(bufferedStates.Count);
-			foreach (KeyValuePair<uint, byte[]> entry in bufferedStates) {
+			Dictionary<uint, State> finalStates = new Dictionary<uint, State>(bufferedStates.Count);
+			foreach (KeyValuePair<uint, State> entry in bufferedStates) {
 				if (entry.Key <= newestKeyframeToKeep) {
 					finalStates.Add(entry.Key, entry.Value);
 				}
@@ -107,7 +95,7 @@ namespace RetroBread{
 
 		// Clear the buffer
 		public void Clear() {
-			bufferedStates = new Dictionary<uint, byte[]>();
+			bufferedStates = new Dictionary<uint, State>();
 		}
 
 

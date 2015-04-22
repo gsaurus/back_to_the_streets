@@ -87,6 +87,20 @@ namespace RetroBread{
 		// TODO: other constructors receiving pre-made sub-models, etc?
 		// TODO: simplify arguments with a builder object?
 
+
+		// Copy fields from other model
+		protected override void AssignCopy(GameEntityModel other){
+			base.AssignCopy(other);
+
+			physicsModelId = new ModelReference(other.physicsModelId);
+			animationModelId = new ModelReference(other.animationModelId);
+			inputModelId = new ModelReference(other.inputModelId);
+			isFacingRight = other.isFacingRight;
+			automaticFlip = other.automaticFlip;
+			maxInputVelocity = other.maxInputVelocity;
+
+		}
+
 		#endregion
 
 

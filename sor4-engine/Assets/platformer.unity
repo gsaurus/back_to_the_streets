@@ -578,7 +578,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &326360823
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3011,9 +3011,9 @@ MonoBehaviour:
   - {x: .200000003, y: .300000012}
   - {x: .800000012, y: .660000026}
   - {x: .699999988, y: .300000012}
-  buttonsMaxRadius: 1
-  axisMaxRadius: .0109999999
-  minAxisDelta: .00999999978
+  buttonsMaxRadius: .5
+  axisMaxRadius: .0299999993
+  minAxisDelta: .0149999997
 --- !u!114 &1875803921
 MonoBehaviour:
   m_ObjectHideFlags: 0

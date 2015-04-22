@@ -48,6 +48,7 @@ namespace RetroBread{
 			theFloat.RawValue = (long)Math.Round(DoubleValue );
 			return theFloat;
 		}
+
 		#endregion
 		
 		public int IntValue

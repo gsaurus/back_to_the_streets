@@ -97,6 +97,17 @@ namespace RetroBread{
 			ComputeNormal();
 		}
 
+
+		// Copy fields from other model
+		protected override void AssignCopy(PhysicPlaneModel other){
+			base.AssignCopy(other);
+			origin = other.origin;
+			lastOriginPosition = other.lastOriginPosition;
+			offsets = new List<FixedVector3>(other.offsets);
+			ComputeNormal();
+		}
+
+
 		[ProtoAfterDeserialization]
 		public void OnDeserialization(){
 			// Once deserialized, compute normal

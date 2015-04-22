@@ -48,6 +48,14 @@ namespace RetroBread{
 			m_w = 18000 * (m_w & 65535) + (m_w >> 16);
 			return (m_z << 16) + m_w;
 		}
+
+
+		public override RandomGenerator Clone(){
+			SimpleRandomGenerator clone = new SimpleRandomGenerator();
+			clone.m_w = this.m_w;
+			clone.m_z = this.m_z;
+			return clone;
+		}
 	}
 
 }

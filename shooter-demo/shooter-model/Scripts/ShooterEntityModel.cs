@@ -67,6 +67,19 @@ public class ShooterEntityModel: GameEntityModel {
 		gunPower = initialGunPower;
 		gotHit = false;
 	}
+
+
+	protected override void AssignCopy(GameEntityModel other){
+		base.AssignCopy(other);
+		
+		ShooterEntityModel otherShooter = other as ShooterEntityModel;
+		energy = otherShooter.energy;
+		gotHit = otherShooter.gotHit;
+		invincibilityFrames = otherShooter.invincibilityFrames;
+		gunPower = otherShooter.gunPower;
+		totalDeaths = otherShooter.totalDeaths;
+		totalKills = otherShooter.totalKills;
+	}
 	
 
 

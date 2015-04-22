@@ -100,6 +100,21 @@ namespace RetroBread{
 			velocityAffectors = new Dictionary<string,FixedVector3>();
 		}
 
+
+		// Copy fields from other model
+		protected override void AssignCopy(PhysicPointModel other){
+			base.AssignCopy(other);
+			ownerId = new ModelReference(other.ownerId);
+			position = other.position;
+			lastPosition = other.lastPosition;
+			stepTolerance = other.stepTolerance;
+			collisionInpact = other.collisionInpact;
+			framesSinceLastTimeGrounded = other.framesSinceLastTimeGrounded;
+
+			velocityAffectors = new Dictionary<string,FixedVector3>(other.velocityAffectors);
+		}
+
+
 		#endregion
 
 
