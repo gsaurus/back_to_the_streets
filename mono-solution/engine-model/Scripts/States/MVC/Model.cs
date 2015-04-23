@@ -132,7 +132,7 @@ namespace RetroBread{
 			viewFactoryId = other.viewFactoryId != null ? string.Copy(other.viewFactoryId) : null;
 		}
 
-		public override sealed Model Clone(){
+		public override Model Clone(){
 			T newModel = new T();
 			newModel.AssignCopy(this as T);
 			return newModel;

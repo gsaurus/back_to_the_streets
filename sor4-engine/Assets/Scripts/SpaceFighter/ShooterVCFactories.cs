@@ -18,9 +18,9 @@ public static class ShooterVCFactories{
 		VCFactoriesManager.Instance.RegisterControllerFactory<PhysicPlaneModel>(
 			MovingPlaneModel.MovingPlaneControllerFactoryId,
 			delegate(PhysicPlaneModel model){
-			MovingPlaneModel movingModel = model as MovingPlaneModel;
+				MovingPlaneModel movingModel = model as MovingPlaneModel;
 				if (movingModel == null) return null;
-				return new MovingPlaneController(movingModel.path);
+				return new MovingPlaneController(movingModel.planePath);
 			}
 		);
 		

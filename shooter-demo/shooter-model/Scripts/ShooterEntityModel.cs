@@ -68,7 +68,8 @@ public class ShooterEntityModel: GameEntityModel {
 		gotHit = false;
 	}
 
-
+	// Assign copy.
+	// Need to override Clone too because the generic method won't build this class
 	protected override void AssignCopy(GameEntityModel other){
 		base.AssignCopy(other);
 		
@@ -79,6 +80,11 @@ public class ShooterEntityModel: GameEntityModel {
 		gunPower = otherShooter.gunPower;
 		totalDeaths = otherShooter.totalDeaths;
 		totalKills = otherShooter.totalKills;
+	}
+	public override Model Clone(){
+		ShooterEntityModel newModel = new ShooterEntityModel();
+		newModel.AssignCopy(this);
+		return newModel;
 	}
 	
 

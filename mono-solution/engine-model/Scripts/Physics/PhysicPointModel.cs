@@ -104,7 +104,7 @@ namespace RetroBread{
 		// Copy fields from other model
 		protected override void AssignCopy(PhysicPointModel other){
 			base.AssignCopy(other);
-			ownerId = new ModelReference(other.ownerId);
+			ownerId = other.ownerId != null ? new ModelReference(other.ownerId) : null;
 			position = other.position;
 			lastPosition = other.lastPosition;
 			stepTolerance = other.stepTolerance;

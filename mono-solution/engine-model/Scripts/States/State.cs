@@ -148,6 +148,7 @@ namespace RetroBread{
 			// Setup initial model
 			if (nextModelIndex == ModelReference.InvalidModelIndex) ++nextModelIndex;
 			mainModelIndex = nextModelIndex;
+			mainModel.Index.UpdateIndex(mainModelIndex);
 			models.Add(mainModelIndex, mainModel);
 			sortedModels.Add(mainModel, null);
 			++nextModelIndex;

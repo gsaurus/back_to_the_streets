@@ -31,13 +31,19 @@ public class BulletPointModel : PhysicPointModel{
 		lifetimeFrames = 0;
 	}
 
+	// Assign copy.
+	// Need to override Clone too because the generic method won't build this class
 	protected override void AssignCopy(PhysicPointModel other){
 		base.AssignCopy(other);
 		BulletPointModel otherBullet = other as BulletPointModel;
 		if (otherBullet == null) return;
 		shooterId = new ModelReference(otherBullet.shooterId);
 		lifetimeFrames = otherBullet.lifetimeFrames;
-
+	}
+	public override Model Clone(){
+		BulletPointModel newModel = new BulletPointModel();
+		newModel.AssignCopy(this);
+		return newModel;
 	}
 
 }

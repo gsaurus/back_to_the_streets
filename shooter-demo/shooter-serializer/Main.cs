@@ -38,6 +38,13 @@ namespace ShooterSerializer
 				Console.WriteLine("deep cloned PhysicPlaneModel");
 			}
 
+			if (model.CanSerialize(typeof(MovingPlaneModel))){
+				MovingPlaneModel data = new MovingPlaneModel();
+				data.planePath = new FixedVector3[]{new FixedVector3(1, 2, 3), new FixedVector3(4, 5, 6)};
+				model.DeepClone(data);
+				Console.WriteLine("deep cloned MovingPlaneModel");
+			}
+
 			if (model.CanSerialize(typeof(Dictionary<string, NetworkPlayerData>))){
 				Dictionary<string, NetworkPlayerData> data = new Dictionary<string, NetworkPlayerData>();
 				data.Add("stuff", new NetworkPlayerData());

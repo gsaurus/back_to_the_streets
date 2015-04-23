@@ -11,9 +11,14 @@ public class WorldController:Controller<WorldModel>{
 
 	public const uint totalGameFrames = 10800; // 2 minutes
 
-	public WorldController(){
+	static WorldController(){
 		// Setup character animations
 		SetupGameCharacters();
+	}
+
+
+	public WorldController(){
+		// Nothing to do
 	}
 
 
@@ -225,13 +230,13 @@ public class WorldController:Controller<WorldModel>{
 	
 	
 	
-	private void SetupGameCharacters(){
+	private static void SetupGameCharacters(){
 		// TODO: read from somewhere.. right now, this is hardcoded..
 		SetupCharacter("soldier");
 	}
 
 
-	private void SetupCharacter(string charName){
+	private static void SetupCharacter(string charName){
 		
 		AnimationController idle1Ctr = new AnimationController();
 		AnimationController walkCtr = new AnimationController();

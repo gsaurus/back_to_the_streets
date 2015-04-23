@@ -60,9 +60,9 @@ namespace RetroBread{
 			base.AssignCopy(other);
 
 			ownerId = new ModelReference(other.ownerId);
-			uint currentFrame = other.currentFrame;
-			string characterName = string.Copy(other.characterName);
-			string animationName = string.Copy(other.animationName);
+			currentFrame = other.currentFrame;
+			characterName = string.Copy(other.characterName);
+			animationName = string.Copy(other.animationName);
 
 		}
 

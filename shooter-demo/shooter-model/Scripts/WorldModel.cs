@@ -35,7 +35,7 @@ public class WorldModel:Model<WorldModel>{
 		physicsModelId = new ModelReference(other.physicsModelId);
 		players = new Dictionary<uint, ModelReference>(other.players.Count);
 		foreach(KeyValuePair<uint, ModelReference> pair in other.players){
-			players.Add(pair.Key, pair.Value);
+			players.Add(pair.Key, new ModelReference(pair.Value));
 		}
 
 	}

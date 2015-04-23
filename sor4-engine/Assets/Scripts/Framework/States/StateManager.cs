@@ -16,7 +16,7 @@ namespace RetroBread{
 		public StateManagerSetup(Model initialModel){
 			this.initialModel = initialModel;
 			updateRate = 0.0166666667f;	// default: 60fps
-			saveStateFrequency = 60;	// default: save every second
+			saveStateFrequency = 5;	// default: clone every 5 frames
 		}
 	}
 
