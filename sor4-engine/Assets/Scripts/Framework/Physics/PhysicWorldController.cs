@@ -83,7 +83,7 @@ namespace RetroBread{
 
 			// Do a few iterations until collisions get stable, or we reach a limit on iterations
 			bool collisionsAreStable = false;
-			for (int i = 0 ; i < 3 && !collisionsAreStable ; ++i){
+			for (int i = 0 ; i < 2 && !collisionsAreStable ; ++i){
 				collisionsAreStable = true;
 				foreach(PhysicPlaneModel planeModel in planes){
 					if (planeModel.CheckIntersection(pointModel, out intersection)){
@@ -110,7 +110,10 @@ namespace RetroBread{
 			PhysicPointController pointController;
 
 			// Get all planes to check collisions
-			List<PhysicPlaneModel> allPlanes = new List<PhysicPlaneModel>(staticPlanes);
+			List<PhysicPlaneModel> allPlanes;
+			if (staticPlanes != null) allPlanes = new List<PhysicPlaneModel>(staticPlanes);
+			else allPlanes = new List<PhysicPlaneModel>();
+
 			// dynamic planes
 			if (world.planeModels.Count > 0) {
 				PhysicPlaneModel planeModel;

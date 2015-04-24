@@ -26,10 +26,14 @@ namespace RetroBread{
 
 		// GameObjects per owner id
 		private Dictionary<uint, GameObject> gameObjects;
+
+		// Cache of loaded prefabs
+		private Dictionary<string, UnityEngine.Object> prefabs;
 		
 		// Constructor
 		public UnityObjectsPool(){
 			gameObjects = new Dictionary<uint, GameObject>();
+			prefabs = new Dictionary<string, UnityEngine.Object>();
 		}
 
 
@@ -56,7 +60,12 @@ namespace RetroBread{
 				return null;
 			}
 			// Instantiate it far, far away
-			obj = GameObject.Instantiate(Resources.Load(prefabName)) as GameObject;
+			UnityEngine.Object prefab;
+			if (!prefabs.TryGetValue(prefabName, out prefab)){
+				prefab = Resources.Load(prefabName);
+				prefabs.Add(prefabName, prefab);
+			}
+			obj = GameObject.Instantiate(prefab) as GameObject;
 			obj.transform.position = new Vector3(float.MinValue,float.MaxValue, float.MinValue);
 			gameObjects[modelId] = obj;
 			if (parent != null){

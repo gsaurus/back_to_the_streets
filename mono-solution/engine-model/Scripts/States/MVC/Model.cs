@@ -75,6 +75,7 @@ namespace RetroBread{
 			Index = new ModelReference();
 		}
 
+		[Obsolete("SHouldn't use clone methods, too messy")]
 		public abstract Model Clone();
 
 	}

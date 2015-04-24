@@ -7,6 +7,9 @@ public class ShooterEntityView: GameEntityView {
 
 	private const uint invincibilityFramesCycle = 20;
 
+	static UnityEngine.Object helmetPrefab = Resources.Load("helmet");
+	static UnityEngine.Object bloodPrefab = Resources.Load("blood");
+
 
 	// Visual update
 	protected override void Update(GameEntityModel model, float deltaTime){
@@ -23,7 +26,7 @@ public class ShooterEntityView: GameEntityView {
 		if (helmet != null){
 			bool shouldBeActive = shooterModel.energy >= ShooterEntityController.maxEnergy*0.5f;
 			if (helmet.gameObject.activeSelf && !shouldBeActive){
-				GameObject lostHelmet = GameObject.Instantiate(Resources.Load("helmet"), helmet.position, helmet.rotation) as GameObject;
+				GameObject lostHelmet = GameObject.Instantiate(helmetPrefab, helmet.position, helmet.rotation) as GameObject;
 			}
 			helmet.gameObject.SetActive(shouldBeActive);
 		}
@@ -61,7 +64,7 @@ public class ShooterEntityView: GameEntityView {
 		if (pointModel == null || model.energy > 0) return;
 		Vector3 bloodPosition = pointModel.position.AsVector3();
 		bloodPosition.y += 2.3f;
-		GameObject bloodObj = GameObject.Instantiate(Resources.Load("blood"), bloodPosition, Quaternion.identity) as GameObject;
+		GameObject bloodObj = GameObject.Instantiate(bloodPrefab, bloodPosition, Quaternion.identity) as GameObject;
 		GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.Index);
 		if (obj == null) return;
 		Transform headTransform = obj.transform.transform.Find("Bip01/Bip01 Pelvis/Bip01 Spine/Bip01 Spine1/Bip01 Spine2/Bip01 Neck/Bip01 Head");

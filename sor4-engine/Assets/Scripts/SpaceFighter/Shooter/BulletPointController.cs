@@ -52,7 +52,7 @@ public class BulletPointController: PhysicPointController{
 			choosenPlayerController.damageTaken += ShooterEntityController.bulletDamage;
 			choosenPlayerController.lastHitter = bulletModel.shooterId;
 			bulletModel.position.X = choosenPlayerPointModel.position.X + UnityEngine.Random.Range(0.1f, 0.6f) * (bulletModel.lastPosition.X < choosenPlayerPointModel.position.X ? -1 : 1);
-			StateManager.state.RemoveModel(bulletModel);
+			RemoveFromWorld(bulletModel);
 		}
 //		if (choosenPlayerModel != null){
 //			choosenPlayerModel.damageTaken += ShooterEntityController.bulletDamage;

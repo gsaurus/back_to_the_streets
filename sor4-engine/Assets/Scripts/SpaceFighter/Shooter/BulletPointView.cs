@@ -8,6 +8,8 @@ using RetroBread;
 // 
 public class BulletPointView:PhysicPointView{
 
+	static UnityEngine.Object sparksPrefab = Resources.Load("sparks");
+
 	// Visual update
 	protected override void Update(PhysicPointModel model, float deltaTime){
 
@@ -39,7 +41,7 @@ public class BulletPointView:PhysicPointView{
 		if (bulletModel.lifetimeFrames < BulletPointController.totalBulletLifetimeFrames){
 			Vector3 sparksPosition = model.position.AsVector3();
 			sparksPosition += new Vector3(0f, UnityEngine.Random.Range(-0.1f, 0.1f), UnityEngine.Random.Range(-0.1f, 0.1f));
-			GameObject.Instantiate(Resources.Load("sparks"), sparksPosition, Quaternion.identity);
+			GameObject.Instantiate(sparksPrefab, sparksPosition, Quaternion.identity);
 		}
 
 		UnityObjectsPool.Instance.ReleaseGameObject(model.Index);
