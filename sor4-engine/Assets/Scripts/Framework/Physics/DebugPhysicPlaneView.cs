@@ -128,10 +128,10 @@ namespace RetroBread{
 
 			List<FixedVector3> points = model.GetPointsList();
 			for (int i = 1 ; i < points.Count ; ++i){
-				Debug.DrawLine(points[i-1].AsVector3(), points[i].AsVector3(), UnityEngine.Color.grey);
+				UnityEngine.Debug.DrawLine(points[i-1].AsVector3(), points[i].AsVector3(), UnityEngine.Color.grey);
 			}
-			Debug.DrawLine(points[points.Count-1].AsVector3(), points[0].AsVector3(), UnityEngine.Color.grey);
-			Debug.DrawLine(points[0].AsVector3(), (points[0] + model.Normal).AsVector3(), UnityEngine.Color.red);
+			UnityEngine.Debug.DrawLine(points[points.Count-1].AsVector3(), points[0].AsVector3(), UnityEngine.Color.grey);
+			UnityEngine.Debug.DrawLine(points[0].AsVector3(), (points[0] + model.Normal).AsVector3(), UnityEngine.Color.red);
 		}
 
 	//	private UnityEngine.Color debugPlaneColor = new UnityEngine.Color(200,200,50);

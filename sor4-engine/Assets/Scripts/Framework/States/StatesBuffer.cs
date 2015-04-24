@@ -11,96 +11,31 @@ namespace RetroBread{
 
 	// This buffer should keep states history every few frames
 	// So that it can be used to retrieve an older state for state reconstruction
-	public class StatesBuffer{
-
-		// history of states, by keyframe
-		private Dictionary<uint, State> bufferedStates;
-
-		public StatesBuffer(){
-			Clear();
-		}
-
-
-
+	public interface StatesBuffer{
 		// Find the latest state closer to keyframe and return it
-		public State GetLatestState(uint keyframe){
-
-			if (bufferedStates.Count == 0) return null;
-
-			State state = null;
-
-			if (!bufferedStates.TryGetValue(keyframe, out state)){
-				List<uint> keys = new List<uint>(bufferedStates.Keys);
-				keys.Sort();
-				if (keyframe < keys[0]){
-					// keyframe is older than anything in the buffer!
-					return null;
-				}
-				int closestIndex = keys.BinarySearch(keyframe);
-				if (closestIndex < 0){
-					closestIndex = ~closestIndex-1; // this is the closest we found in the keys list
-				}
-				state = bufferedStates[keys[closestIndex]];
-			}
-
-			return state;
-				
-		}
-
+		State GetLatestState(uint keyframe);
+		
 		// Return the oldest state in the buffer
-		public State GetOldestState(){
-			if (bufferedStates.Count == 0) return null;
-			List<uint> keys = new List<uint>(bufferedStates.Keys);
-			keys.Sort();
-			return bufferedStates[keys[0]];
-		}
-
-
+		State GetOldestState();
+		
 		// Deserializes a buffered state
-		public State GetState(uint keyframe){
-			State state = null;
-			bufferedStates.TryGetValue(keyframe, out state);
-			return state;
-		}
+		State GetState(uint keyframe);
 		
 		
 		// Buffers a serialization of the state
-		public void SetState(State state) {
-			bufferedStates[state.Keyframe] = state.Clone();
-		}
-
+		void SetState(State state);
+		
 		// Get rid of all states that happened in older keyframes
-		public void DiscardOlderStates(uint oldestKeyframeToKeep) {
-			Dictionary<uint, State> finalStates = new Dictionary<uint, State>(bufferedStates.Count);
-			foreach (KeyValuePair<uint, State> entry in bufferedStates) {
-				if (entry.Key >= oldestKeyframeToKeep) {
-					finalStates.Add(entry.Key, entry.Value);
-				}
-			}
-			bufferedStates = finalStates;
-		}
-
+		void DiscardOlderStates(uint oldestKeyframeToKeep);
+		
 		// Get rid of all states that happened in newer keyframes
 		// Useful when restoring an older state
-		public void DiscardNewerStates(uint newestKeyframeToKeep) {
-			Dictionary<uint, State> finalStates = new Dictionary<uint, State>(bufferedStates.Count);
-			foreach (KeyValuePair<uint, State> entry in bufferedStates) {
-				if (entry.Key <= newestKeyframeToKeep) {
-					finalStates.Add(entry.Key, entry.Value);
-				}
-			}
-			bufferedStates = finalStates;
-		}
-
-
+		void DiscardNewerStates(uint newestKeyframeToKeep);
+		
+		
 		// Clear the buffer
-		public void Clear() {
-			bufferedStates = new Dictionary<uint, State>();
-		}
-
-
+		void Clear();
 	}
-
 
 }
 

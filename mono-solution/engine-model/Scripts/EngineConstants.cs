@@ -29,7 +29,6 @@ namespace RetroBread{
 		public const string PhysicPointControllerFactoryId		= "_rb_ppc";
 		public const string PhysicPointViewFactoryId			= "_rb_ppv";
 		public const string PhysicWorldControllerFactoryId		= "_rb_pwc";
-		public const string PhysicPlaneControllerFactoryId		= "_rb_pplc";
 		public const string PlayerInputControllerFactoryId		= "_rb_pic";
 		public const string AnimationControllerFactoryId		= "_rb_ac";
 		public const string AnimationViewFactoryId				= "_rb_av";

@@ -87,7 +87,7 @@ namespace RetroBread{
 			this.latestUpdateDeltatimeRemainder = 0;
 			
 			// TODO: only create this if necessary, else set it to null
-			this.statesBuffer = new StatesBuffer();
+			this.statesBuffer = new StatesBufferByCloning();
 			this.eventsBuffer = new EventsBuffer();
 			saveStateFrequency = setup.saveStateFrequency;
 			latestKeyframeBuffered = 0;

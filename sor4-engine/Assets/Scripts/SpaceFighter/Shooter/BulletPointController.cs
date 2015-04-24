@@ -62,18 +62,25 @@ public class BulletPointController: PhysicPointController{
 
 		if (++bulletModel.lifetimeFrames > totalBulletLifetimeFrames){
 			// This bullet went too far
-			StateManager.state.RemoveModel(bulletModel);
+			RemoveFromWorld(bulletModel);
 		}
 
 	}
 	
+
+	protected void RemoveFromWorld(PhysicPointModel pointModel){
+		WorldModel worldModel = StateManager.state.MainModel as WorldModel;
+		PhysicWorldModel physicWorldModel =  StateManager.state.GetModel(worldModel.physicsModelId) as PhysicWorldModel;
+		PhysicWorldController worldController = physicWorldModel.Controller() as PhysicWorldController;
+		worldController.RemovePoint(physicWorldModel, pointModel);
+	}
 
 
 	// Collision reaction.
 	public override bool OnCollision(PhysicWorldModel world, PhysicPointModel pointModel, PhysicPlaneModel planeModel, FixedVector3 intersection){
 		// On Collision, kill bullet
 		pointModel.position = intersection;
-		StateManager.state.RemoveModel(pointModel);
+		RemoveFromWorld(pointModel);
 		return true;
 	}
 

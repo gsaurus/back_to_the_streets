@@ -44,7 +44,7 @@ public class GuiServersList : MonoBehaviour
 		NetworkPlayerData myPlayerData = NetworkCenter.Instance.GetPlayerData();
 
 		if (myPlayerData == null) {
-			Debug.Log("My player is null!!");
+			RetroBread.Debug.Log("My player is null!!");
 			return;
 		}
 

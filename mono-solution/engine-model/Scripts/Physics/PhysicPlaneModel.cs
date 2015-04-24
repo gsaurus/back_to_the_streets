@@ -27,12 +27,29 @@ namespace RetroBread{
 		private FixedVector3 normal;
 		public FixedVector3 Normal { get{ return normal; }}
 
+		private FixedVector3 minPos;
+		private FixedVector3 maxPos;
+
 
 
 		// Velocity = difference between current and previous positions
 		// We use first point as reference
 		public FixedVector3 GetVelocity(){
 			return origin - lastOriginPosition;
+		}
+
+		public void ComputeBoundingBox(){
+			minPos = FixedVector3.Zero;
+			maxPos = FixedVector3.Zero;
+			FixedVector3 point;
+			for (int i = 0 ; i < offsets.Count ; ++i){
+				point = offsets[i];
+				minPos = FixedVector3.Min(minPos, point);
+				maxPos = FixedVector3.Max(maxPos, point);
+			}
+			FixedVector3 tolerance = new FixedVector3(0.01f, 0.01f, 0.01f);
+			minPos -= tolerance;
+			maxPos += tolerance;
 		}
 
 		// Normal computed from the first 2 consecutive offsets
@@ -68,7 +85,7 @@ namespace RetroBread{
 
 		// Constructor giving world points
 		public PhysicPlaneModel(params FixedVector3[] paramPoints):
-		this(DefaultVCFactoryIds.PhysicPlaneControllerFactoryId, null, DefaultUpdateOrder.PhysicsUpdateOrder, paramPoints){}
+		this(null, null, DefaultUpdateOrder.PhysicsUpdateOrder, paramPoints){}
 
 		// Constructor giving world points and controller factory id
 		public PhysicPlaneModel(string controllerFactoryId, params FixedVector3[] paramPoints):
@@ -95,6 +112,7 @@ namespace RetroBread{
 				offsets.Add(paramPoints[i] - origin);
 			}
 			ComputeNormal();
+			ComputeBoundingBox();
 		}
 
 
@@ -104,24 +122,47 @@ namespace RetroBread{
 			origin = other.origin;
 			lastOriginPosition = other.lastOriginPosition;
 			offsets = new List<FixedVector3>(other.offsets);
-			ComputeNormal();
+			normal = other.normal;
+			minPos = other.minPos;
+			maxPos = other.maxPos;
 		}
 
 
 		[ProtoAfterDeserialization]
 		public void OnDeserialization(){
-			// Once deserialized, compute normal
+			// Once deserialized, compute normal and bounding box
 			ComputeNormal();
+			ComputeBoundingBox();
 		}
 
 
-		// TODO: this should move to PhysicPlaneController!
+		protected bool BoxIntersection(FixedVector3 point1, FixedVector3 point2){
+			FixedVector3 minPoint = FixedVector3.Min(point1, point2);
+			FixedVector3 maxPoint = FixedVector3.Max(point1, point2);
+			minPoint-= origin;
+			maxPoint-= origin;
+			return !(   minPoint.X > maxPos.X
+			         || maxPoint.X < minPos.X
+			         || minPoint.Y > maxPos.Y
+			         || maxPoint.Y < minPos.Y
+			         || minPoint.Z > maxPos.Z
+			         || maxPoint.Z < minPos.Z
+			        );
+		}
+
+
 		// Compute the intersection point against a line segment
 		public bool CheckIntersection(PhysicPointModel pointModel, out FixedVector3 intersection){
 			// plane may be moving, sum velocity to initial point position
 			FixedVector3 pos1 = pointModel.lastPosition;
 			FixedVector3 pos2 = pointModel.position;
 			pos1 += GetVelocity();
+
+			// Check bounding box intersection
+			if (!BoxIntersection(pos1, pos2)){
+				intersection = FixedVector3.Zero;
+				return false;
+			}
 		
 			// check collision with the hiperplane
 			FixedVector3 pointDeltaPos = pos2 - pos1;
@@ -130,7 +171,7 @@ namespace RetroBread{
 				intersection = FixedVector3.Zero; return false;
 			}
 			FixedVector3 pos1ToOrigin = origin - pos1;
-			FixedFloat dotDeltaPosNormal = FixedVector3.Dot(pointDeltaPos,normal);
+			FixedFloat dotDeltaPosNormal = FixedVector3.Dot(pointDeltaPos, normal);
 			if (dotDeltaPosNormal >= 0){
 				// Point moving away from the plane
 				intersection = FixedVector3.Zero;

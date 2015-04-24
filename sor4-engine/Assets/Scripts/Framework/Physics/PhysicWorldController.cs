@@ -77,8 +77,6 @@ namespace RetroBread{
 		// Find collisions between a point model and a set of world planes
 		// For each collision found, notify point and plane controllers so that they can react to the collision
 		private void CheckCollisionsAgainstPlanes(PhysicWorldModel world, PhysicPointModel pointModel, PhysicPointController pointController, List<PhysicPlaneModel> planes){
-			pointController = pointModel.Controller() as PhysicPointController;
-			if (pointController == null) return;
 
 			PhysicPlaneController planeController;
 			FixedVector3 intersection;
@@ -86,27 +84,15 @@ namespace RetroBread{
 			// Do a few iterations until collisions get stable, or we reach a limit on iterations
 			bool collisionsAreStable = false;
 			for (int i = 0 ; i < 3 && !collisionsAreStable ; ++i){
-	//			if (i > 0) {
-	//				UnityEngine.Debug.Log("Collision iteration " + i);
-	//			}
 				collisionsAreStable = true;
 				foreach(PhysicPlaneModel planeModel in planes){
 					if (planeModel.CheckIntersection(pointModel, out intersection)){
 						collisionsAreStable &= pointController.OnCollision(world, pointModel, planeModel, intersection);
 						planeController = planeModel.Controller() as PhysicPlaneController;
-						if (planeController != null){
-							collisionsAreStable &= planeController.OnCollision(world, pointModel, planeModel, intersection);
-						}
-	//					if (!collisionsAreStable){
-	//						// already unstable, break iteration
-	//						break;
-	//					}
+						collisionsAreStable &= planeController == null || planeController.OnCollision(world, pointModel, planeModel, intersection);
 					}
 				}
 			}
-	//		if (!collisionsAreStable){
-	//			UnityEngine.Debug.LogWarning("Unstable colisions!");
-	//		}
 		}
 
 
@@ -122,10 +108,28 @@ namespace RetroBread{
 		
 			PhysicPointModel pointModel;
 			PhysicPointController pointController;
+
+			// Get all planes to check collisions
+			List<PhysicPlaneModel> allPlanes = new List<PhysicPlaneModel>(staticPlanes);
+			// dynamic planes
+			if (world.planeModels.Count > 0) {
+				PhysicPlaneModel planeModel;
+				foreach (uint planeId in world.planeModels) {
+					planeModel = StateManager.state.GetModel(planeId) as PhysicPlaneModel;
+					if (planeModel == null){
+						// someone removed it in some other way!!
+						RetroBread.Debug.LogWarning("Plane model removed outside world");
+						continue;
+					}
+					allPlanes.Add(planeModel);
+				}
+			}
+			
 			foreach(uint pointModelId in world.pointModels) {
 				pointModel = StateManager.state.GetModel(pointModelId) as PhysicPointModel;
 				if (pointModel == null) {
 					// someone removed it in some other way!!
+					RetroBread.Debug.LogWarning("Point model removed outside world");
 					continue;
 				}
 				pointController = pointModel.Controller() as PhysicPointController;
@@ -134,28 +138,8 @@ namespace RetroBread{
 					continue;
 				}
 
-				// point VS plane collisions
-				List<PhysicPlaneModel> allPlanes = new List<PhysicPlaneModel>();
-				// static world planes
-				if (staticPlanes != null) {
-					allPlanes.AddRange(staticPlanes);
-				}
-				// dynamic planes
-				if (world.planeModels.Count > 0) {
-					PhysicPlaneModel planeModel;
-					foreach (uint planeId in world.planeModels) {
-						planeModel = StateManager.state.GetModel(planeId) as PhysicPlaneModel;
-						if (planeModel == null){
-							// someone removed it in some other way!!
-							continue;
-						}
-						allPlanes.Add(planeModel);
-					}
-				}
-
 				// apply gravity
 				ApplyGravityToPoint(world, pointModel, pointController);
-
 				CheckCollisionsAgainstPlanes(world, pointModel, pointController, allPlanes);
 
 			}

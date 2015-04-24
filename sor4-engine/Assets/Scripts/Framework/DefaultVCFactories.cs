@@ -9,7 +9,6 @@ namespace RetroBread{
 		// Register all default View & Controllers for engine models
 		public static void RegisterFactories(){
 			RegisterPhysicPointVCFactories();
-			RegisterPhysicPlaneVCFactories();
 			RegisterPhysicWorldVCFactories();
 			RegisterPlayerInputVCFactories();
 			RegisterGameEntityVCFactories();
@@ -30,17 +29,6 @@ namespace RetroBread{
 				DefaultVCFactoryIds.PhysicPointViewFactoryId,
 				delegate(PhysicPointModel model){
 					return new PhysicPointView();
-				}
-			);
-		}
-
-
-		// Plane
-		private static void RegisterPhysicPlaneVCFactories(){
-			VCFactoriesManager.Instance.RegisterControllerFactory<PhysicPlaneModel>(
-				DefaultVCFactoryIds.PhysicPlaneControllerFactoryId,
-				delegate(PhysicPlaneModel model){
-					return new PhysicPlaneController();
 				}
 			);
 		}

@@ -157,6 +157,7 @@ namespace RetroBread{
 
 		// Clone state and it's models
 		public State Clone(){
+			Debug.StartProfiling("Clone State");
 			InternalState clone = new InternalState();
 			clone.nextModelIndex = nextModelIndex;
 			clone.mainModelIndex = mainModelIndex;
@@ -171,6 +172,7 @@ namespace RetroBread{
 					clone.sortedModels.Add(newModel, null);
 				}
 			}
+			Debug.StopProfiling();
 			return clone;
 		}
 
@@ -180,7 +182,12 @@ namespace RetroBread{
 			foreach(Model model in models.Values) {
 				View view = model.View();
 				if (view != null){
+
+					Debug.StartProfiling("view update " + model.Index + " " + model.GetType().ToString());
+
 					view.Update(model, deltaTime);
+
+					Debug.StopProfiling();
 				}
 			}
 
@@ -198,14 +205,24 @@ namespace RetroBread{
 			foreach(Model model in sortedModels.Keys) {
 				Controller controller = model.Controller();
 				if (controller != null){
+
+					Debug.StartProfiling("update " + model.Index + " " + model.GetType().ToString());
+
 					controller.Update(model);
+
+					Debug.StopProfiling();
 				}
 			}
 			// Then post update all
 			foreach(Model model in sortedModels.Keys) {
 				Controller controller = model.Controller();
 				if (controller != null){
+
+					Debug.StartProfiling("post update " + model.Index + " " + model.GetType().ToString());
+
 					controller.PostUpdate(model);
+
+					Debug.StopProfiling();
 				}
 			}
 
