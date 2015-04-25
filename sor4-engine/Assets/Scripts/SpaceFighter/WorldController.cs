@@ -453,6 +453,12 @@ public class WorldController:Controller<WorldModel>{
 		conditions.Add(new EntityBoolCondition(ShooterEntityController.IsDead));
 		transition = new AnimationTransition("soldierDieBack", conditions, 0.01f);
 		hitCtr.AddTransition(transition);
+		// Forcing that headless bug to stop!...
+		idle1Ctr.AddTransition(transition);
+		walkCtr.AddTransition(transition);
+		jumpCtr.AddTransition(transition);
+		fireCtr.AddTransition(transition);
+		walkFireCtr.AddTransition(transition);
 		// once die animation finishes, respawn
 		dieCtr.AddEvent(60, new SimpleEntityAnimationEvent(ShooterEntityController.KillAndRespawn));
 		conditions = new List<AnimationTriggerCondition>();
