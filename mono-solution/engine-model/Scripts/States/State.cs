@@ -40,6 +40,8 @@ namespace RetroBread{
 		// Is it on the middle of an update cycle?
 		bool IsUpdating { get; }
 
+		bool IsPostUpdating { get; }
+
 		// The keyframe in which this state happened
 		uint Keyframe { get; }
 
@@ -102,7 +104,11 @@ namespace RetroBread{
 		private SortedList<Model, Model> sortedModels; // SortedSet isn't supported by Unity
 
 		// Store update changes that must happen after update cycle
-		TemporaryUpdateChanges updateChanges;
+		private TemporaryUpdateChanges updateChanges;
+
+		// This flag is handy for controllers to apply changes directly or postpone them
+		public bool IsPostUpdating { get; private set; }
+
 
 		// Give access to the main model
 		public Model MainModel{
@@ -214,6 +220,7 @@ namespace RetroBread{
 				}
 			}
 			// Then post update all
+			IsPostUpdating = true;
 			foreach(Model model in sortedModels.Keys) {
 				Controller controller = model.Controller();
 				if (controller != null){
@@ -230,6 +237,7 @@ namespace RetroBread{
 			UpdateConsolidation();
 			// Disable update changes
 			updateChanges.IsUpdating = false;
+			IsPostUpdating = false;
 
 			// In the end increment keyframe
 			++Keyframe;

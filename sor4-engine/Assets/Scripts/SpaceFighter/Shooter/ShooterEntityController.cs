@@ -14,17 +14,33 @@ public class ShooterEntityController: GameEntityController {
 	public const float worldLowerBound = -20f;
 
 	// How much damage taken during a frame
-	public FixedFloat damageTaken;
-	public ModelReference lastHitter;
+	private FixedFloat damageTaken;
+	private ModelReference lastHitter;
 
-//	protected override void Update(GameEntityModel model){
-//
-//		base.Update(model);
-//
-//		ShooterEntityModel shooterModel = model as ShooterEntityModel;
-//		if (shooterModel == null) return;
-//		
-//	}
+	public FixedFloat DamageTaken{
+		get{
+			if (StateManager.state.IsPostUpdating) return 0;
+			return damageTaken;
+		}
+		set{
+			if (!StateManager.state.IsPostUpdating){
+				damageTaken = value;
+			}
+		}
+	}
+
+	public ModelReference LastHitter{
+		get{
+			if (StateManager.state.IsPostUpdating) return new ModelReference();
+			return lastHitter;
+		}
+		set{
+			if (!StateManager.state.IsPostUpdating){
+				lastHitter = value;
+			}
+		}
+	}
+
 
 	protected override void PostUpdate(GameEntityModel model){
 		
@@ -43,7 +59,7 @@ public class ShooterEntityController: GameEntityController {
 			}
 		}
 
-		if (damageTaken > 0){
+		if (damageTaken != 0){
 			shooterModel.energy -= damageTaken;
 			shooterModel.gotHit = true;
 			if (shooterModel.energy < 0){
@@ -87,7 +103,7 @@ public class ShooterEntityController: GameEntityController {
 			PhysicPointController pointController = pointModel.Controller() as PhysicPointController;
 			WorldController worldController = world.Controller() as WorldController;
 			FixedVector3 respawnPosition = worldController.GetRandomSpawnPosition(world);
-			pointController.SetPosition(respawnPosition);
+			pointController.SetPosition(pointModel, respawnPosition);
 			shooterModel.isFacingRight = respawnPosition.X < 0;
 		}
 

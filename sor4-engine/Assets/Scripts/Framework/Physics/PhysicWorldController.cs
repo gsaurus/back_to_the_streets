@@ -70,7 +70,7 @@ namespace RetroBread{
 
 		// This will take effect on next frame only
 		private void ApplyGravityToPoint(PhysicWorldModel world, PhysicPointModel pointModel, PhysicPointController pointController) {
-			pointController.AddVelocityAffector(PhysicPointModel.defaultVelocityAffectorName, world.gravity);
+			pointController.AddVelocityAffector(pointModel, PhysicPointModel.defaultVelocityAffectorName, world.gravity);
 		}
 
 
@@ -97,7 +97,11 @@ namespace RetroBread{
 
 
 		public void SetWorld(PhysicWorldModel world, string worldName){
-			if (world != null){
+			if (StateManager.state.IsPostUpdating){
+				world.worldName = worldName;
+				nextWorld = null;
+				UpdateWorld(world);
+			}else{
 				nextWorld = worldName;
 			}
 		}

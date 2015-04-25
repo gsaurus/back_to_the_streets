@@ -127,7 +127,7 @@ namespace RetroBread{
 
 
 		// On update we execute animation events 
-			protected override void Update(AnimationModel model){
+		protected override void Update(AnimationModel model){
 
 			// reset changed flag
 			model.animationChanged = false;

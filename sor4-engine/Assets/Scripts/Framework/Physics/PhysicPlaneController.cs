@@ -27,9 +27,14 @@ namespace RetroBread{
 		}
 
 		// Teleport to a new position
-		public void SetPosition(FixedVector3 newPos){
-			newPosition = newPos;
-			hasNewPosition = true;
+		public void SetPosition(PhysicPlaneModel model, FixedVector3 newPos){
+			if (StateManager.state.IsPostUpdating){
+				model.lastOriginPosition = model.origin = newPos;
+				hasNewPosition = false;
+			}else{
+				newPosition = newPos;
+				hasNewPosition = true;
+			}
 		}
 
 		// Collision reaction, return true if collision is considered stable (no position modifications occured)

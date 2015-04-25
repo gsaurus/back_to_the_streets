@@ -158,8 +158,8 @@ namespace RetroBread{
 			FixedVector3 pos2 = pointModel.position;
 			pos1 += GetVelocity();
 
-			// Check bounding box intersection
-			if (!BoxIntersection(pos1, pos2)){
+			// Check bounding box intersection, including step tolerance
+			if (!BoxIntersection(pos1 + pointModel.stepTolerance, pos2)){
 				intersection = FixedVector3.Zero;
 				return false;
 			}
@@ -194,7 +194,7 @@ namespace RetroBread{
 				t = FixedVector3.Dot(pos1ToOrigin, normal) / dotDeltaPosNormal;
 				error = 0.01 / pointDeltaPos.Magnitude;
 			}
-			// give some step tolerance
+			// give some tolerance
 			if (t < -error || t > 1 + error) {
 				// not colliding
 				intersection = FixedVector3.Zero;

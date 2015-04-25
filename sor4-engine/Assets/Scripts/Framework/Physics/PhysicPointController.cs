@@ -85,44 +85,68 @@ namespace RetroBread{
 		}
 
 		// Teleport to a new position
-		public void SetPosition(FixedVector3 newPos){
-			newPosition = newPos;
-			hasNewPosition = true;
+		public void SetPosition(PhysicPointModel model, FixedVector3 newPos){
+			if (StateManager.state.IsPostUpdating){
+				model.position = newPos;
+				model.lastPosition = newPos;
+				model.collisionInpact = FixedVector3.Zero;
+				hasNewPosition = false;
+			}else{
+				newPosition = newPos;
+				hasNewPosition = true;
+			}
 		}
 
 		// Set a velocity affector (force)
-		public void SetVelocityAffector(string key, FixedVector3 affectorValue){
-			affectorsChanged[key] = affectorValue;
+		public void SetVelocityAffector(PhysicPointModel model, string key, FixedVector3 affectorValue){
+			if (StateManager.state.IsPostUpdating){
+				model.velocityAffectors[key] = affectorValue;
+				affectorsChanged.Remove(key);
+			}else{
+				affectorsChanged[key] = affectorValue;
+			}
 		}
 
 		// Add force to an existing velocity affector
-		public void AddVelocityAffector(string key, FixedVector3 affectorValue){
-			if (affectorsIncremented.ContainsKey(key)){
-				affectorsIncremented[key] += affectorValue;
-			}else {
-				affectorsIncremented[key] = affectorValue;
+		public void AddVelocityAffector(PhysicPointModel model, string key, FixedVector3 affectorValue){
+			if (StateManager.state.IsPostUpdating){
+				if (model.velocityAffectors.ContainsKey(key)){
+					model.velocityAffectors[key] += affectorValue;
+				}else{
+					model.velocityAffectors[key] = affectorValue;
+				}
+			}else{
+				if (affectorsIncremented.ContainsKey(key)){
+					affectorsIncremented[key] += affectorValue;
+				}else {
+					affectorsIncremented[key] = affectorValue;
+				}
 			}
 		}
 
 
 		// Add or set a velocity affector (force)
-		public void SetDefaultVelocityAffector(FixedVector3 affectorValue){
-			SetVelocityAffector(PhysicPointModel.defaultVelocityAffectorName, affectorValue);
+		public void SetDefaultVelocityAffector(PhysicPointModel model, FixedVector3 affectorValue){
+			SetVelocityAffector(model, PhysicPointModel.defaultVelocityAffectorName, affectorValue);
 		}
 
 		// Increment a velocity affector (force)
-		public void AddDefaultVelocityAffector(FixedVector3 affectorValue){
-			AddVelocityAffector(PhysicPointModel.defaultVelocityAffectorName, affectorValue);
+		public void AddDefaultVelocityAffector(PhysicPointModel model, FixedVector3 affectorValue){
+			AddVelocityAffector(model, PhysicPointModel.defaultVelocityAffectorName, affectorValue);
 		}
 
 
 		// Remove a velocity affector
-		public void RemoveVelocityAffector(string key){
-			affectorsRemoved.Add(key);
+		public void RemoveVelocityAffector(PhysicPointModel model, string key){
+			if (StateManager.state.IsPostUpdating){
+				model.velocityAffectors.Remove(key);
+			}else{
+				affectorsRemoved.Add(key);
+			}
 		}
 
 
-		protected void GainPlaneVelocity(PhysicWorldModel world, PhysicPlaneModel planeModel){
+		protected void GainPlaneVelocity(PhysicWorldModel world, PhysicPointModel pointModel, PhysicPlaneModel planeModel){
 			FixedVector3 velocityToAdd = planeModel.GetVelocity();
 			// Only add velocity that doesn't conflict with gravity, otherwise it starts flickering
 			if (velocityToAdd.X > 0 && world.gravity.X < 0 || velocityToAdd.X < 0 && world.gravity.X > 0){
@@ -135,7 +159,7 @@ namespace RetroBread{
 				velocityToAdd.Z = 0;
 			}
 
-			AddVelocityAffector(collisionVelocityAffectorName, velocityToAdd);
+			AddVelocityAffector(pointModel, collisionVelocityAffectorName, velocityToAdd);
 		}
 
 		// Note: objects over elevators may behave in a weird way if gravity isn't enough to keep them grounded
@@ -192,7 +216,7 @@ namespace RetroBread{
 			}
 			
 			// in the end, also sum the plane velocity, essential for platforms
-			GainPlaneVelocity(world, planeModel);
+			GainPlaneVelocity(world, pointModel, planeModel);
 			
 			// Also kill gravity effect
 			KillGravityEffectAgainstPlane(world, pointModel, planeModel);
@@ -228,7 +252,7 @@ namespace RetroBread{
 			}
 
 			// in the end, also sum the plane velocity, essential for platforms
-			GainPlaneVelocity(world, planeModel);
+			GainPlaneVelocity(world, pointModel, planeModel);
 			
 			return !intersectionChanged; // if intersection didn't change, it's considered stable
 		}

@@ -16,7 +16,7 @@ public class BulletPointController: PhysicPointController{
 
 		// Antigravity
 		FixedVector3 defaultVelocityAffector = bulletModel.GetDefaultVelocityAffector();
-		SetDefaultVelocityAffector(new FixedVector3(defaultVelocityAffector.X,0, 0));
+		SetDefaultVelocityAffector(model, new FixedVector3(defaultVelocityAffector.X,0, 0));
 
 
 		// Check collisions against players
@@ -49,15 +49,11 @@ public class BulletPointController: PhysicPointController{
 			}
 		}
 		if (choosenPlayerController != null){
-			choosenPlayerController.damageTaken += ShooterEntityController.bulletDamage;
-			choosenPlayerController.lastHitter = bulletModel.shooterId;
+			choosenPlayerController.DamageTaken += ShooterEntityController.bulletDamage;
+			choosenPlayerController.LastHitter = bulletModel.shooterId;
 			bulletModel.position.X = choosenPlayerPointModel.position.X + UnityEngine.Random.Range(0.1f, 0.6f) * (bulletModel.lastPosition.X < choosenPlayerPointModel.position.X ? -1 : 1);
 			RemoveFromWorld(bulletModel);
 		}
-//		if (choosenPlayerModel != null){
-//			choosenPlayerModel.damageTaken += ShooterEntityController.bulletDamage;
-//			StateManager.state.RemoveModel(bulletModel);
-//		}
 
 
 		if (++bulletModel.lifetimeFrames > totalBulletLifetimeFrames){

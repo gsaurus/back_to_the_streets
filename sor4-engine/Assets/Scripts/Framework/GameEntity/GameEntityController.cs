@@ -106,8 +106,8 @@ namespace RetroBread{
 		}
 
 		// Set the maximum velocity applied by input axis
-		public static void SetMaxInputVelocity(GameEntityModel Model, FixedVector3 maxVel){
-			Model.maxInputVelocity = maxVel;
+		public static void SetMaxInputVelocity(GameEntityModel model, FixedVector3 maxVel){
+			model.maxInputVelocity = maxVel;
 		}
 
 
