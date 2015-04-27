@@ -27,38 +27,47 @@ namespace RetroBread{
 		// GameObjects per owner id
 		private Dictionary<uint, GameObject> gameObjects;
 
+		private Dictionary<uint, string> prefabNamesByOwner;
+
 		// Cache of loaded prefabs
 		private Dictionary<string, UnityEngine.Object> prefabs;
 		
 		// Constructor
 		public UnityObjectsPool(){
 			gameObjects = new Dictionary<uint, GameObject>();
+			prefabNamesByOwner = new Dictionary<uint, string>();
 			prefabs = new Dictionary<string, UnityEngine.Object>();
 		}
 
 
 		public GameObject GetGameObject(uint modelId, string prefabName = null, Transform parent = null){
-			// Try get from the pool
-			GameObject obj;
-			if (gameObjects.TryGetValue(modelId, out obj)){
-				return obj;
-			}
-			// Doesn't exist
-
-			GameEntityModel ownerModel = StateManager.state.GetModel(modelId) as GameEntityModel;
 
 			// "guess" character name if necessary
+			GameEntityModel ownerModel = StateManager.state.GetModel(modelId) as GameEntityModel;
 			if (prefabName == null){
 				if (ownerModel == null) return null;
 				AnimationModel animModel = StateManager.state.GetModel(ownerModel.animationModelId) as AnimationModel;
 				if (animModel == null) return null;
 				prefabName = animModel.characterName;
 			}
-
+			
 			if (prefabName == null || modelId == ModelReference.InvalidModelIndex){
 				// Can't create it at the momment
 				return null;
 			}
+
+			// Try get from the pool
+			GameObject obj;
+			string originalPrefabName;
+			if (gameObjects.TryGetValue(modelId, out obj)
+			    && prefabNamesByOwner.TryGetValue(modelId, out originalPrefabName)
+			    && originalPrefabName == prefabName
+			){
+				return obj;
+			}
+
+			// Doesn't exist yet
+
 			// Instantiate it far, far away
 			UnityEngine.Object prefab;
 			if (!prefabs.TryGetValue(prefabName, out prefab)){
@@ -68,6 +77,7 @@ namespace RetroBread{
 			obj = GameObject.Instantiate(prefab) as GameObject;
 			obj.transform.position = new Vector3(float.MinValue,float.MaxValue, float.MinValue);
 			gameObjects[modelId] = obj;
+			prefabNamesByOwner[modelId] = prefabName;
 			if (parent != null){
 				obj.transform.SetParent(parent);
 			}
@@ -88,8 +98,32 @@ namespace RetroBread{
 			GameObject obj;
 			if (gameObjects.TryGetValue(modelId, out obj)){
 				gameObjects.Remove(modelId);
+				prefabNamesByOwner.Remove(modelId);
 				GameObject.Destroy(obj);
 			}
+		}
+	
+
+		public void ReleaseUnusedResources(){
+			Dictionary<string, UnityEngine.Object> newPrefabsDict = new Dictionary<string, UnityEngine.Object>();
+			UnityEngine.Object obj;
+			foreach(string prefabName in prefabNamesByOwner.Values){
+				if (prefabs.TryGetValue(prefabName, out obj)){
+					newPrefabsDict.Add(prefabName, obj);
+				}
+			}
+			prefabs = newPrefabsDict;
+			Resources.UnloadUnusedAssets();
+		}
+
+		public void ReleaseAll(){
+			foreach(GameObject obj in gameObjects.Values){
+				GameObject.Destroy(obj);
+			}
+			gameObjects.Clear();
+			prefabNamesByOwner.Clear();
+			prefabs.Clear();
+			Resources.UnloadUnusedAssets();
 		}
 
 	}
