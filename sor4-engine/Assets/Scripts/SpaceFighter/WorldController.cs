@@ -361,8 +361,10 @@ public class WorldController:Controller<WorldModel>{
 		// fall to idle
 		conditions = new List<AnimationTriggerCondition>();
 		conditions.Add(new EntityBoolCondition(GameEntityController.IsGrounded));
+		conditions.Add (new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 4));
 		transition = new AnimationTransition("soldierIdleRelaxed", conditions, 0.1f);
 		fallCtr.AddTransition(transition);
+		jumpCtr.AddTransition(transition);
 
 		// jump to fall (rough version on this demo, cose no really jump anim exists)
 		conditions = new List<AnimationTriggerCondition>();

@@ -76,7 +76,7 @@ namespace RetroBread{
 			}
 			newCollisionInpact = FixedVector3.Zero;
 
-			if (model.collisionInpact == FixedVector3.Zero){
+			if (model.collisionInpact.Y == 0){
 				++model.framesSinceLastTimeGrounded;
 			}else{
 				model.framesSinceLastTimeGrounded = 0;
