@@ -2,9 +2,9 @@ sor4-engine/Library/
 sor4-engine/webplayer/
 */bin/
 sor4-engine/Temp/
-*.csproj
+sor4-engine/*.csproj
 *.unityproj
-*.sln
+sor4-engine/*.sln
 *.user
 *.userprefs
 *.DS_store
