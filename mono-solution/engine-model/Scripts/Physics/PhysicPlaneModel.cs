@@ -39,6 +39,7 @@ namespace RetroBread{
 		}
 
 		public void ComputeBoundingBox(){
+			if (offsets == null || offsets.Count < 2) return;
 			minPos = FixedVector3.Zero;
 			maxPos = FixedVector3.Zero;
 			FixedVector3 point;

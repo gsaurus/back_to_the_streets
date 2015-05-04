@@ -1,6 +1,6 @@
 sor4-engine/Library/
 sor4-engine/webplayer/
-*/bin/
+**/bin/**
 sor4-engine/Temp/
 sor4-engine/*.csproj
 *.unityproj

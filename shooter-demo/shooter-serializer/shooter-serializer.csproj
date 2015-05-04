@@ -38,7 +38,7 @@
       <HintPath>..\..\libs\shooter-model.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>..\..\libs\full_protobuf\protobuf-net.dll</HintPath>
+      <HintPath>..\..\libs\protobuf-net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
