@@ -9,7 +9,7 @@ public class WorldController:Controller<WorldModel>{
 
 	public const float gravityY = -0.009f;
 
-	public const uint totalGameFrames = 10800; // 2 minutes
+	public const uint totalGameFrames = 7200; // 2 minutes
 
 	static WorldController(){
 		// Setup character animations
