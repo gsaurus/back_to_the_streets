@@ -1,11 +1,13 @@
 sor4-engine/Library/
 sor4-engine/webplayer/
 **/bin/**
-sor4-engine/Temp/
-sor4-engine/*.csproj
+*/Temp/
+*.csproj
 *.unityproj
 sor4-engine/*.sln
 *.user
 *.userprefs
 *.DS_store
 sor4-engine/playback.txt
+assets-packer/Library/
+character-editor/Library/
