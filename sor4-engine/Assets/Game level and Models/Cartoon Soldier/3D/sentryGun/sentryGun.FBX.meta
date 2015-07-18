@@ -3,10 +3,27 @@ guid: f182fe226f95ce743b071340be580597
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
+    100000: //RootNode
+    100002: sentryGunBarrel
+    100004: sentryGunPitch
+    100006: sentryGunRotator
+    400000: //RootNode
+    400002: sentryGunBarrel
+    400004: sentryGunPitch
+    400006: sentryGunRotator
+    2300000: //RootNode
+    2300002: sentryGunBarrel
+    2300004: sentryGunPitch
+    2300006: sentryGunRotator
+    3300000: //RootNode
+    3300002: sentryGunBarrel
+    3300004: sentryGunPitch
+    3300006: sentryGunRotator
     4300000: sentryGunBase
     4300002: sentryGunRotator
     4300004: sentryGunPitch
     4300006: sentryGunBarrel
+    11100000: //RootNode
   materials:
     importMaterials: 0
     materialName: 0
@@ -16,6 +33,10 @@ ModelImporter:
     bakeSimulation: 0
     optimizeGameObjects: 0
     motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5

@@ -3,10 +3,15 @@ guid: 93b54a7c35602b24194f1e47ebd36fff
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
     4300000: armorBodyLOD2
     4300002: armorArmsLOD3
     4300004: headLOD2
     4300006: helmet
+    11100000: //RootNode
   materials:
     importMaterials: 0
     materialName: 0
@@ -16,6 +21,10 @@ ModelImporter:
     bakeSimulation: 0
     optimizeGameObjects: 0
     motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5

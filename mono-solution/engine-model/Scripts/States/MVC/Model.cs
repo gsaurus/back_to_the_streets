@@ -10,11 +10,6 @@ namespace RetroBread{
 	// This was turned into an abstract class to avoid issues with protobuf-net
 	[ProtoContract]
 	[ProtoInclude(10, typeof(PlayerInputModel))]
-	[ProtoInclude(11, typeof(GameEntityModel))]
-	[ProtoInclude(12, typeof(AnimationModel))]
-	[ProtoInclude(13, typeof(PhysicPointModel))]
-	[ProtoInclude(14, typeof(PhysicPlaneModel))]
-	[ProtoInclude(15, typeof(PhysicWorldModel))]
 	public abstract class Model{
 
 		// Unique model index in the StateManager

@@ -38,9 +38,6 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Scripts\EngineConstants.cs" />
-    <Compile Include="Scripts\Physics\PhysicPlaneModel.cs" />
-    <Compile Include="Scripts\Physics\PhysicPointModel.cs" />
-    <Compile Include="Scripts\Physics\PhysicWorldModel.cs" />
     <Compile Include="Scripts\States\State.cs" />
     <Compile Include="Scripts\States\MVC\Controller.cs" />
     <Compile Include="Scripts\States\MVC\Model.cs" />
@@ -52,8 +49,6 @@
     <Compile Include="Scripts\Utils\Math\FixedVector3.cs" />
     <Compile Include="Scripts\Utils\Math\RandomGenerator.cs" />
     <Compile Include="Scripts\Utils\Math\SimpleRandomGenerator.cs" />
-    <Compile Include="Scripts\AnimationModel.cs" />
-    <Compile Include="Scripts\GameEntityModel.cs" />
     <Compile Include="Scripts\PlayerInputModel.cs" />
     <Compile Include="Scripts\States\Event.cs" />
     <Compile Include="Scripts\StandardInputEvents.cs" />

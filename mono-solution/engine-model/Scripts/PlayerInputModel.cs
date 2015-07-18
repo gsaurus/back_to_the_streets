@@ -10,16 +10,12 @@ namespace RetroBread{
 	[ProtoContract]
 	public class PlayerInputModel:Model<PlayerInputModel>{
 
-		public static readonly uint ActionPressedCoolerFrames = 12;
-		public static readonly uint ActionReleasedCoolerFrames = 12;
-		public static readonly uint NumButtonsSupported = 6;
-
 		// The player controlling this input
 		[ProtoMember(1)]
 		public uint playerId;
 		// axis control (normalized)
 		[ProtoMember(2)]
-		public FixedVector3 axis;
+		public FixedVector3[] axis;
 
 		// Need to store action coolers to recognize
 		// button presses and releasees during a few frames
@@ -39,25 +35,28 @@ namespace RetroBread{
 		}
 
 		// Constructor
-		public PlayerInputModel(uint playerId)
-		:this(playerId, DefaultVCFactoryIds.PlayerInputControllerFactoryId, null, DefaultUpdateOrder.InputUpdateOrder)
+		public PlayerInputModel(uint playerId, int numAxis, int numButtons)
+		:this(playerId, DefaultVCFactoryIds.PlayerInputControllerFactoryId, null, DefaultUpdateOrder.InputUpdateOrder, numAxis, numButtons)
 		{}
 
 		// Constructor
-		public PlayerInputModel(uint playerId, int updatingOrder)
-			:this(playerId, DefaultVCFactoryIds.PlayerInputControllerFactoryId, null, updatingOrder)
+		public PlayerInputModel(uint playerId, int updatingOrder, int numAxis, int numButtons)
+			:this(playerId, DefaultVCFactoryIds.PlayerInputControllerFactoryId, null, updatingOrder, numAxis, numButtons)
 		{}
 
 		// Constructor
 		public PlayerInputModel(uint playerId,
 		                        string controllerFactoryId,
 		                        string viewFactoryId,
-		                        int updatingOrder
+		                        int updatingOrder,
+		                        int numAxis,
+		                        int numButtons
 		):base(controllerFactoryId, viewFactoryId, updatingOrder){
 			this.playerId = playerId;
-			actionPressedCoolers = new uint[NumButtonsSupported];
-			actionReleasedCoolers = new uint[NumButtonsSupported];
-			actionsHold = new bool[NumButtonsSupported];
+			axis = new FixedVector3[numAxis];
+			actionPressedCoolers = new uint[numButtons];
+			actionReleasedCoolers = new uint[numButtons];
+			actionsHold = new bool[numButtons];
 		}
 
 

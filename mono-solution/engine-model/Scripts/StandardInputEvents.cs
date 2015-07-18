@@ -14,7 +14,7 @@ namespace RetroBread{
 	public class ButtonInputEvent: Event{
 		// id of the button
 		[ProtoMember(1)]
-		public uint button; 
+		public uint buttonId; 
 		// pressed state
 		[ProtoMember(2)]
 		public bool isPressed;
@@ -27,7 +27,7 @@ namespace RetroBread{
 
 		// Constructor
 		public ButtonInputEvent(uint button, bool isPressed){
-			this.button = button;
+			this.buttonId = button;
 			this.isPressed = isPressed;
 		}
 
@@ -38,8 +38,12 @@ namespace RetroBread{
 	[ProtoContract]
 	public class AxisInputEvent: Event{
 
+		// id of the axis
 		[ProtoMember(1)]
-		public FixedVector3 axis;
+		public uint axisId;
+
+		[ProtoMember(2)]
+		public FixedVector3 value;
 
 		// Default Constructor
 		public AxisInputEvent(){
@@ -47,8 +51,9 @@ namespace RetroBread{
 		}
 
 		// Constructor
-		public AxisInputEvent(FixedVector3 axis){
-			this.axis = axis;
+		public AxisInputEvent(uint axisId, FixedVector3 value){
+			this.axisId = axisId;
+			this.value = value;
 		}
 
 	}
