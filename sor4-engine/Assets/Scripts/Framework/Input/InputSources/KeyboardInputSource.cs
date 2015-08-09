@@ -190,7 +190,7 @@ namespace RetroBread{
 				|| (newAxis != Vector2.zero && lastAxis == Vector2.zero)
 				|| (newAxis != Vector2.zero && lastAxis == Vector2.zero && newAxis.x > 0 != lastAxis.x > 0)
 			){
-				StateManager.Instance.AddEvent(new AxisInputEvent(new FixedVector3(newAxis.x, 0, newAxis.y)));
+				StateManager.Instance.AddEvent(new AxisInputEvent(0, new FixedVector3(newAxis.x, 0, newAxis.y)));
 				lastAxis = newAxis;
 			}
 

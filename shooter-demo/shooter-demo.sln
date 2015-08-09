@@ -21,6 +21,6 @@ Global
 		{BD72D4C5-3A38-4136-95DA-1BE944BBFE2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = shooter-model\shooter-model.csproj
+		StartupItem = shooter-serializer\shooter-serializer.csproj
 	EndGlobalSection
 EndGlobal

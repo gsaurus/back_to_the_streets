@@ -10,6 +10,9 @@ namespace RetroBread{
 	// Check input events and traduce them into input state
 	public class PlayerInputController:Controller<PlayerInputModel>, GameEntityInputProvider{
 
+		private const int ActionPressedCoolerFrames = 12;
+		private const int ActionReleasedCoolerFrames = 12;
+
 		public PlayerInputController(){
 
 		}
@@ -18,7 +21,7 @@ namespace RetroBread{
 		public FixedVector3 GetInputAxis(Model model){
 			PlayerInputModel playerModel = model as PlayerInputModel;
 			if (playerModel == null) return FixedVector3.Zero;
-			return playerModel.axis;
+			return playerModel.axis[0];
 		}
 
 		// Button pressed
@@ -48,7 +51,7 @@ namespace RetroBread{
 		protected override void Update(PlayerInputModel model){
 
 			// Update action coolers
-			for (int i = 0 ; i < PlayerInputModel.NumButtonsSupported ; ++i) {
+			for (int i = 0 ; i < model.actionPressedCoolers.Length ; ++i){
 				if (model.actionPressedCoolers[i] > 0){
 					--model.actionPressedCoolers[i];
 				}
@@ -66,16 +69,16 @@ namespace RetroBread{
 				foreach (Event e in playerEvents){
 					axisEvent = e as AxisInputEvent;
 					if (axisEvent != null){
-						model.axis = axisEvent.axis;
+						model.axis[axisEvent.axisId] = axisEvent.value;
 					}else {
 						buttonEvent = e as ButtonInputEvent;
-						if (buttonEvent != null && buttonEvent.button < PlayerInputModel.NumButtonsSupported){
-							if (buttonEvent.isPressed && !model.actionsHold[buttonEvent.button]){
-								model.actionsHold[buttonEvent.button] = true;
-								model.actionPressedCoolers[buttonEvent.button] = PlayerInputModel.ActionPressedCoolerFrames;
-							}else if (!buttonEvent.isPressed && model.actionsHold[buttonEvent.button]){
-								model.actionsHold[buttonEvent.button] = false;
-								model.actionReleasedCoolers[buttonEvent.button] = PlayerInputModel.ActionReleasedCoolerFrames;
+						if (buttonEvent != null && buttonEvent.buttonId < model.actionPressedCoolers.Length){
+							if (buttonEvent.isPressed && !model.actionsHold[buttonEvent.buttonId]){
+								model.actionsHold[buttonEvent.buttonId] = true;
+								model.actionPressedCoolers[buttonEvent.buttonId] = ActionPressedCoolerFrames;
+							}else if (!buttonEvent.isPressed && model.actionsHold[buttonEvent.buttonId]){
+								model.actionsHold[buttonEvent.buttonId] = false;
+								model.actionReleasedCoolers[buttonEvent.buttonId] = ActionReleasedCoolerFrames;
 							} // buttonEvent.isPressed
 						} // buttonEvent != null
 					} // axisEvent != null

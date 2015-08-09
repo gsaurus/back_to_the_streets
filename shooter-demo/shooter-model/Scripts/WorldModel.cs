@@ -9,42 +9,39 @@ public class WorldModel:Model<WorldModel>{
 	public const string WorldControllerFactoryId = "tank_worldc";
 	public const string WorldViewFactoryId = "tank_worldv";
 
-	// Reference to player models
-	// Key: player number; value: player model (tank)
-	[ProtoMember(1)]
-	public Dictionary<uint, ModelReference> players = new Dictionary<uint, ModelReference>();
+	public const int MaxWidth = 13;
+	public const int MaxHeight = 13;
+	public const int MaxPlayers = 10;
+	public const int MaxBulletsPerPlayer = 2;
 
-	[ProtoMember(2)]
+	// TODO: other public options to setup the world, and proper constructor
+	// Such constructor will be called from the server only
+
+	[ProtoMember(1)]
 	public int[] map;
 
-	[ProtoMember(3)]
-	public int width;
+	[ProtoMember(2)]
+	public TankModel[] tanks;
 
+	[ProtoMember(3)]
+	public BulletModel[] bullets;
+
+	// Reference to player input models
+	// Key: player number; value: player model (tank)
 	[ProtoMember(4)]
-	public int height;
+	public ModelReference[] playersInputModelIds;
+
+
 
 
 
 	// Constructor
-	public WorldModel(int width, int height):base(WorldControllerFactoryId){
+	public WorldModel():base(WorldControllerFactoryId){
 		// Nothing to do
-		this.width = width;
-		this.height = height;
-		map = new int[width * height];
-	}
-
-
-	protected override void AssignCopy(WorldModel other){
-		base.AssignCopy(other);
-		players = new Dictionary<uint, ModelReference>(other.players.Count);
-		foreach(KeyValuePair<uint, ModelReference> pair in other.players){
-			players.Add(pair.Key, new ModelReference(pair.Value));
-		}
-
-		this.map = other.map;
-		this.width = other.width;
-		this.height = other.height;
-
+		map = new int[MaxWidth * MaxHeight];
+		tanks = new TankModel[MaxPlayers];
+		playersInputModelIds = new ModelReference[MaxPlayers];
+		bullets = new BulletModel[MaxPlayers*MaxBulletsPerPlayer];
 	}
 
 }

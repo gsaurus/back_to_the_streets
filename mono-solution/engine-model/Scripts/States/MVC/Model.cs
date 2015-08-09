@@ -70,9 +70,6 @@ namespace RetroBread{
 			Index = new ModelReference();
 		}
 
-		[Obsolete("SHouldn't use clone methods, too messy")]
-		public abstract Model Clone();
-
 	}
 
 	#endregion
@@ -119,20 +116,7 @@ namespace RetroBread{
 			this.viewFactoryId = viewFactoryId;
 			this.UpdatingOrder = updatingOrder;
 		}
-
-		// Copy fields from other model
-		protected virtual void AssignCopy(T other){
-			Index = new ModelReference(other.Index);
-			UpdatingOrder = other.UpdatingOrder;
-			controllerFactoryId = other.controllerFactoryId != null ? string.Copy(other.controllerFactoryId) : null;
-			viewFactoryId = other.viewFactoryId != null ? string.Copy(other.viewFactoryId) : null;
-		}
-
-		public override Model Clone(){
-			T newModel = new T();
-			newModel.AssignCopy(this as T);
-			return newModel;
-		}
+	
 
 		#endregion
 

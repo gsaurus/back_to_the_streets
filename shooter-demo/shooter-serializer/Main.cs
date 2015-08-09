@@ -14,9 +14,6 @@ namespace ShooterSerializer
 
 			// Add new derived models
 			model[typeof(Model)].AddSubType(100, typeof(WorldModel));
-			model[typeof(GameEntityModel)].AddSubType(100, typeof(ShooterEntityModel));
-			model[typeof(PhysicPlaneModel)].AddSubType(100, typeof(MovingPlaneModel));
-			model[typeof(PhysicPointModel)].AddSubType(100, typeof(BulletPointModel));
 
 			// There seems to be a bug in protobuf-net,
 			// if I don't do those deepclones they doesn't get registered...
@@ -30,19 +27,6 @@ namespace ShooterSerializer
 				NetworkPlayerData playerData = new NetworkPlayerData();
 				model.DeepClone(playerData);
 				Console.WriteLine("deep cloned NetworkPlayerData");
-			}
-
-			if (model.CanSerialize(typeof(PhysicPlaneModel))){
-				PhysicPlaneModel data = new PhysicPlaneModel();
-				model.DeepClone(data);
-				Console.WriteLine("deep cloned PhysicPlaneModel");
-			}
-
-			if (model.CanSerialize(typeof(MovingPlaneModel))){
-				MovingPlaneModel data = new MovingPlaneModel();
-				data.planePath = new FixedVector3[]{new FixedVector3(1, 2, 3), new FixedVector3(4, 5, 6)};
-				model.DeepClone(data);
-				Console.WriteLine("deep cloned MovingPlaneModel");
 			}
 
 			if (model.CanSerialize(typeof(Dictionary<string, NetworkPlayerData>))){

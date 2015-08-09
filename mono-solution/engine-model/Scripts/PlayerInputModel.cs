@@ -58,17 +58,7 @@ namespace RetroBread{
 			actionReleasedCoolers = new uint[numButtons];
 			actionsHold = new bool[numButtons];
 		}
-
-
-		// Copy fields from other model
-		protected override void AssignCopy(PlayerInputModel other){
-			base.AssignCopy(other);
-			playerId = other.playerId;
-			axis = other.axis;
-			actionPressedCoolers = (uint[]) other.actionPressedCoolers.Clone();
-			actionReleasedCoolers = (uint[]) other.actionReleasedCoolers.Clone();
-			actionsHold = (bool[]) other.actionsHold.Clone();
-		}
+	
 
 		#endregion
 
