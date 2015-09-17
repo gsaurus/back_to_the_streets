@@ -17,6 +17,14 @@ public static class TanksVCFactories{
 				return new WorldController();
 			}
 		);
+
+		VCFactoriesManager.Instance.RegisterViewFactory<WorldModel>(
+			WorldModel.WorldViewFactoryId,
+			delegate(WorldModel model){
+				// For now use debug view
+				return new DebugWorldView();
+			}
+		);
 	}
 
 
