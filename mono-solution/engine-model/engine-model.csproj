@@ -23,7 +23,7 @@
     <ConsolePause>False</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="copyDebugOutput.bat" workingdir="${TargetDir}" />
+        <Command type="AfterBuild" command="${ProjectDir}\copyDebugOutput.bat" workingdir="${TargetDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -36,7 +36,7 @@
     <ConsolePause>False</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="copyReleaseOutput.bat" workingdir="${TargetDir}" />
+        <Command type="AfterBuild" command="${ProjectDir}\copyReleaseOutput.bat" workingdir="${TargetDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>

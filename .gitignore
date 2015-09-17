@@ -11,3 +11,5 @@ sor4-engine/*.sln
 sor4-engine/playback.txt
 assets-packer/Library/
 character-editor/Library/
+*.meta
+**/obj/Debug/*
