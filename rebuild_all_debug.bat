@@ -1,0 +1,1 @@
+C:\Windows\Microsoft.NET\Framework\v3.5\MSBuild.exe mono-solution/engine-model/engine-model.csproj /target Clean

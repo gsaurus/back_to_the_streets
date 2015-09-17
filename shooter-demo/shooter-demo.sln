@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "shooter-model", "shooter-model\shooter-model.csproj", "{77652C05-5978-49F0-85DF-E3A1CFB5A9C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "shooter-serializer", "shooter-serializer\shooter-serializer.csproj", "{BD72D4C5-3A38-4136-95DA-1BE944BBFE2F}"
