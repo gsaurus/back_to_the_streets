@@ -36,12 +36,30 @@ public class WorldModel:Model<WorldModel>{
 
 
 	// Constructor
-	public WorldModel():base(WorldControllerFactoryId){
+	public WorldModel():base(WorldControllerFactoryId, WorldViewFactoryId){
 		// Nothing to do
 		map = new int[MaxWidth * MaxHeight];
 		tanks = new TankModel[MaxPlayers];
 		playersInputModelIds = new ModelReference[MaxPlayers];
 		bullets = new BulletModel[MaxPlayers*MaxBulletsPerPlayer];
+
+		// TODO: receive map from ctr or read from somewhere
+		// For now use an hardcoded one
+		map = new int[]{
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 1, 0, 0, 0, 3, 3, 3, 0, 2, 0, 0, 0,
+			0, 1, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0,
+			0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 1, 1, 1, 1, 2, 0, 2, 0, 1, 0, 3, 3,
+			0, 0, 0, 1, 1, 2, 0, 2, 0, 0, 0, 3, 3,
+			0, 0, 0, 1, 1, 2, 2, 2, 0, 0, 0, 3, 3,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+			0, 2, 2, 2, 0, 0, 0, 1, 1, 0, 0, 0, 1,
+			0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 2, 2,
+			0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+		};
 	}
 
 }

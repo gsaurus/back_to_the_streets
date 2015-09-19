@@ -21,7 +21,7 @@ public class DebugWorldView:View<WorldModel>{
 
 	static DebugWorldView(){
 		// setup imutable stuff
-		meshesMaterial = new Material(Shader.Find("Diffuse"));
+		meshesMaterial = new Material(Shader.Find("Sprites/Default"));
 	}
 
 
@@ -79,7 +79,7 @@ public class DebugWorldView:View<WorldModel>{
 
 
 	private GameObject CreateBackground(){
-		return CreateView(WorldModel.MaxWidth, WorldModel.MaxHeight, new Color(0.2f, 0.2f, 0.6f, 0.7f));
+		return CreateView(WorldModel.MaxWidth, WorldModel.MaxHeight, new Color(0.75f, 0.75f, 0.8f, 1.0f));
 	}
 
 	private GameObject CreateTank(bool own){
@@ -99,9 +99,9 @@ public class DebugWorldView:View<WorldModel>{
 	private GameObject CreateBullet(bool own){
 		Color color;
 		if (own){
-			color = new Color(0.3f, 0.3f, 1.0f, 0.9f);
+			color = new Color(0.5f, 0.5f, 1.0f, 1.0f);
 		}else {
-			color = new Color(1.0f, 0.3f, 0.3f, 0.9f);
+			color = new Color(1.0f, 0.5f, 0.5f, 1.0f);
 		}
 		return CreateView(0.1f, 0.1f, color);
 	}
@@ -111,16 +111,16 @@ public class DebugWorldView:View<WorldModel>{
 		Color color;
 		float z;
 		switch (type){
-			case 1:
-				color = new Color(0.95f, 0.95f, 0.95f, 0.9f);
+			case 1: // concrete
+				color = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 				z = -0.1f;
 			break;
-			case 2:
-				color = new Color(0.0f, 0.3f, 0.95f, 0.9f);
+			case 2: // water
+				color = new Color(0.0f, 0.2f, 0.4f, 1.0f);
 				z = -0.1f;
 			break;
-			case 3:
-				color = new Color(0.2f, 0.8f, 0.0f, 0.6f);
+			case 3: // florest
+				color = new Color(0.3f, 0.6f, 0.0f, 1.0f);
 				z = -0.3f;
 			break;
 			default:
@@ -148,12 +148,10 @@ public class DebugWorldView:View<WorldModel>{
 		
 		//Create a square mesh
 		Vector3[] vertexes = new Vector3[4];
-		float halfWidth = width * 0.5f;
-		float halfHeight = height * 0.5f;
-		vertexes[0] = new Vector3(-halfWidth, -halfHeight);
-		vertexes[1] = new Vector3(-halfWidth,  halfHeight);
-		vertexes[2] = new Vector3( halfWidth,  halfHeight);
-		vertexes[3] = new Vector3( halfWidth, -halfHeight);
+		vertexes[0] = new Vector3(0, 0);
+		vertexes[1] = new Vector3(0,  height);
+		vertexes[2] = new Vector3(width,  height);
+		vertexes[3] = new Vector3(width, 0);
 		mesh = CreateMesh(vertexes, color);
 		
 		//Assign materials

@@ -107,8 +107,9 @@ namespace RetroBread{
 			// Nothing to do
 		}
 
-		// Simpler Constructor
+		// Constructors Overloading
 		public Model(string controllerFactoryId):this(controllerFactoryId, null, 0){}
+		public Model(string controllerFactoryId, string viewFactoryId):this(controllerFactoryId, viewFactoryId, 0){}
 
 		// Constructor given factory ids and updatingOrder
 		public Model(string controllerFactoryId, string viewFactoryId, int updatingOrder){
