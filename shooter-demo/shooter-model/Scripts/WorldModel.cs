@@ -17,49 +17,35 @@ public class WorldModel:Model<WorldModel>{
 	// TODO: other public options to setup the world, and proper constructor
 	// Such constructor will be called from the server only
 
-	[ProtoMember(1)]
+	[ProtoMember(1, OverwriteList=true)]
 	public int[] map;
 
-	[ProtoMember(2)]
+	[ProtoMember(2, OverwriteList=true)]
 	public TankModel[] tanks;
 
-	[ProtoMember(3)]
+	[ProtoMember(3, OverwriteList=true)]
 	public BulletModel[] bullets;
 
 	// Reference to player input models
 	// Key: player number; value: player model (tank)
-	[ProtoMember(4)]
+	[ProtoMember(4, OverwriteList=true)]
 	public ModelReference[] playersInputModelIds;
 
 
 
 
 
-	// Constructor
+	// Constructors
 	public WorldModel():base(WorldControllerFactoryId, WorldViewFactoryId){
 		// Nothing to do
 		map = new int[MaxWidth * MaxHeight];
 		tanks = new TankModel[MaxPlayers];
 		playersInputModelIds = new ModelReference[MaxPlayers];
 		bullets = new BulletModel[MaxPlayers*MaxBulletsPerPlayer];
+	}
 
-		// TODO: receive map from ctr or read from somewhere
-		// For now use an hardcoded one
-		map = new int[]{
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 1, 0, 0, 0, 3, 3, 3, 0, 2, 0, 0, 0,
-			0, 1, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0,
-			0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 1, 1, 1, 1, 2, 0, 2, 0, 1, 0, 3, 3,
-			0, 0, 0, 1, 1, 2, 0, 2, 0, 0, 0, 3, 3,
-			0, 0, 0, 1, 1, 2, 2, 2, 0, 0, 0, 3, 3,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-			0, 2, 2, 2, 0, 0, 0, 1, 1, 0, 0, 0, 1,
-			0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 2, 2,
-			0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-		};
+	public WorldModel(int[] map):this(){
+		this.map = map;
 	}
 
 }

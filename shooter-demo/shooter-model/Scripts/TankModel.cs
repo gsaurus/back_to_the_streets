@@ -25,6 +25,8 @@ public class TankModel{
 	[ProtoMember(6)]
 	public int timeToRespawn;
 
+	[ProtoMember(7)]
+	public ModelReference inputModelRef;
 
 	// Default Constructor
 	public TankModel(){
@@ -33,14 +35,15 @@ public class TankModel{
 	}
 
 	// Constructor
-	public TankModel(FixedVector3 position, int energy, FixedFloat initialDirection){
+	public TankModel(FixedVector3 position, int energy, FixedFloat initialDirection, ModelReference inputModelRef){
 		// setup initial velocity
 		this.position = position;
 		this.energy = energy;
 		this.movingAngle = initialDirection;
 		this.shootingAngle = 0;
 		this.velocityModule = 0;
-		timeToRespawn = 0;
+		this.timeToRespawn = 0;
+		this.inputModelRef = inputModelRef;
 	}
 
 }

@@ -16,6 +16,8 @@ public class DebugWorldView:View<WorldModel>{
 	// Common material used by all views
 	static Material meshesMaterial;
 
+	const float lerpTimeFactor = 5.0f; 
+
 	// local copy of last state's map, to identify map changes
 	int[] lastKnownMap;
 
@@ -63,19 +65,58 @@ public class DebugWorldView:View<WorldModel>{
 	}
 
 	private void UpdateTanks(WorldModel model, float deltaTime){
+		for (int i = 0 ; i < model.tanks.Length ; ++i){
+			// update creation or destruction
+			TankModel tankModel = model.tanks[i];
+			if (tankModel != null && tankViews[i] == null) {
+				tankViews[i] = CreateTank(NetworkCenter.Instance.GetPlayerNumber() == i);
+			}else if (tankModel == null && tankViews[i] != null){
+				GameObject.Destroy(tankViews[i]);
+				tankViews[i] = null;
+			}
 
+			// update position
+			if (tankViews[i] != null){
+				Vector3 targetPos = new Vector3((float)tankModel.position.X, (float)tankModel.position.Y, -0.2f);
+				UpdatePosition(tankViews[i], targetPos);
+			}
+		}
 	}
 
 
 	private void UpdateBullets(WorldModel model, float deltaTime){
-		
+		for (int i = 0 ; i < model.bullets.Length ; ++i){
+			// update creation or destruction
+			BulletModel bulletModel = model.bullets[i];
+			if (bulletModel != null && bulletViews[i] == null) {
+				bulletViews[i] = CreateBullet(NetworkCenter.Instance.GetPlayerNumber() == i / WorldModel.MaxBulletsPerPlayer);
+			}else if (model.bullets[i] == null && bulletViews[i] != null){
+				GameObject.Destroy(bulletViews[i]);
+				bulletViews[i] = null;
+			}
+			
+			// update position
+			if (bulletViews[i] != null){
+				Vector3 targetPos = new Vector3((float)bulletModel.position.X, (float)bulletModel.position.Y, -0.2f);
+				UpdatePosition(bulletViews[i], targetPos);
+			}
+		}
 	}
 
-
-
-
-
-#region Views Creation
+	private void UpdatePosition(GameObject obj, Vector3 targetPos){
+		float dist = Vector3.Distance(obj.transform.position, targetPos);
+		if (dist < 0.25f || dist > 2) {
+			obj.transform.position = targetPos;
+		}else{
+			obj.transform.position = Vector3.Lerp(obj.transform.position, targetPos, lerpTimeFactor);
+		}
+	}
+	
+	
+	
+	
+	
+	#region Views Creation
 
 
 	private GameObject CreateBackground(){
@@ -107,7 +148,11 @@ public class DebugWorldView:View<WorldModel>{
 	}
 
 	private GameObject CreateBlock(int type, int x, int y){
-		if (type == 0) return null;
+
+		// empty block, nothing to create
+		if (type == 0)
+			return null;
+
 		Color color;
 		float z;
 		switch (type){
