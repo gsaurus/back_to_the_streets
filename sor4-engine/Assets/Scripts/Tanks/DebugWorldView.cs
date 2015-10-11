@@ -79,6 +79,8 @@ public class DebugWorldView:View<WorldModel>{
 			if (tankViews[i] != null){
 				Vector3 targetPos = new Vector3((float)tankModel.position.X, (float)tankModel.position.Y, -0.2f);
 				UpdatePosition(tankViews[i], targetPos);
+
+				//tankViews[i].transform.RotateAround(new Vector3(0.5f, 0.5f, 0.0f), Vector3.forward, 0.4f);
 			}
 		}
 	}
@@ -130,9 +132,9 @@ public class DebugWorldView:View<WorldModel>{
 		}else {
 			color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
 		}
-		GameObject mainObj = CreateView(0.98f, 0.95f, color);
-		GameObject aimObj = CreateView(0.1f, 0.7f, new Color(color.r * 0.5f, color.g * 0.5f, color.b * 0.5f));
-		aimObj.transform.position = new Vector3(0.5f, 0.2f, -0.1f);
+		GameObject mainObj = CreateView(1.0f, 1.0f, color);
+		GameObject aimObj = CreateView(0.2f, 0.8f, new Color(color.r * 0.5f, color.g * 0.5f, color.b * 0.5f));
+		aimObj.transform.position = new Vector3(0.4f, 0.3f, -0.005f);
 		aimObj.transform.parent = mainObj.transform;
 		return mainObj;
 	}

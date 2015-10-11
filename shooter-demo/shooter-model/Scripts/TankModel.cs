@@ -14,13 +14,13 @@ public class TankModel{
 	public int energy;
 
 	[ProtoMember(3)]
-	public FixedFloat movingAngle;
+	public FixedFloat movingAngle; // err..
 
 	[ProtoMember(4)]
 	public FixedFloat shootingAngle;
 
 	[ProtoMember(5)]
-	public FixedFloat velocityModule;
+	public FixedFloat velocityModule; // err..
 
 	[ProtoMember(6)]
 	public int timeToRespawn;

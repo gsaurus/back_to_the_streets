@@ -7,7 +7,7 @@ using RetroBread.Network;
 
 public class WorldController:Controller<WorldModel>{
 
-	public const uint totalGameFrames = 7200; // 2 minutes
+	public const uint totalGameFrames = 9997200; // 2 minutes
 
 	public FixedFloat maxTankVelocity = 0.05f;
 
@@ -62,10 +62,13 @@ public class WorldController:Controller<WorldModel>{
 
 
 
-	private void UpdateTankPositions(WorldModel world){
+	private void UpdateTanks(WorldModel world){
+		FixedVector3 previousTankPosition;
 		foreach (TankModel tank in world.tanks){
 			if (tank != null){
+				previousTankPosition = tank.position;
 				UpdateTankPosition(world, tank);
+				UpdateTankDirection(tank, tank.position - previousTankPosition);
 			}
 		}
 	}
@@ -105,20 +108,37 @@ public class WorldController:Controller<WorldModel>{
 		int originalBlockX = (int)origin.X;
 		int originalBlockY = (int)origin.Y;
 
+		bool collisionA, collisionB;
+		FixedFloat tempRef;
+
 		if (target.X != targetBlockX){
 			int nextOriginBlockY = (int)(origin.Y + size);
 			if (vx > 0){
 				int nextBlockX = (int) (target.X + size);
-				if (world.MapValue(nextBlockX, originalBlockY) != 0
-				    || (nextOriginBlockY != originalBlockY && world.MapValue(nextBlockX, nextOriginBlockY) != 0)
-				){
-					target.X = FixedFloat.Min(target.X, nextBlockX - size - 0.0001);
+				collisionA = world.MapValue(nextBlockX, originalBlockY) != 0;
+				collisionB = (nextOriginBlockY != originalBlockY && world.MapValue(nextBlockX, nextOriginBlockY) != 0);
+
+				if (collisionA || collisionB){
+					tempRef = target.Y;
+					if (TryToFit(collisionA, collisionB, ref tempRef, originalBlockY, size)){
+						tempRef -= (tempRef - origin.Y) * 0.25f;
+					}else{
+						target.X = FixedFloat.Min(target.X, nextBlockX - size - 0.0001);
+					}
+					target.Y = tempRef;
 				}
 			}else if (vx < 0){
-				if (world.MapValue(targetBlockX, originalBlockY) != 0
-				    || (nextOriginBlockY != originalBlockY && world.MapValue(targetBlockX, nextOriginBlockY) != 0)
-				   ){
-					target.X = targetBlockX + 1;
+				collisionA = world.MapValue(targetBlockX, originalBlockY) != 0;
+				collisionB = (nextOriginBlockY != originalBlockY && world.MapValue(targetBlockX, nextOriginBlockY) != 0);
+
+				if (collisionA || collisionB){
+					tempRef = target.Y;
+					if (TryToFit(collisionA, collisionB, ref tempRef, originalBlockY, size)){
+						tempRef -= (tempRef - origin.Y) * 0.25f;
+					}else{
+						target.X = targetBlockX + 1;
+					}
+					target.Y = tempRef;
 				}
 			}
 		}
@@ -127,16 +147,30 @@ public class WorldController:Controller<WorldModel>{
 			int nextOriginBlockX = (int)(origin.X + size);
 			if (vy > 0){
 				int nextBlockY = (int) (target.Y + size);
-				if (world.MapValue(originalBlockX, nextBlockY) != 0
-				    || (nextOriginBlockX != originalBlockX && world.MapValue(nextOriginBlockX, nextBlockY) != 0)
-				){
-					target.Y = FixedFloat.Min(target.Y, nextBlockY - size - 0.0001);
+				collisionA = world.MapValue(originalBlockX, nextBlockY) != 0;
+				collisionB = nextOriginBlockX != originalBlockX && world.MapValue(nextOriginBlockX, nextBlockY) != 0;
+
+				if (collisionA || collisionB){
+					tempRef = target.X;
+					if (TryToFit(collisionA, collisionB, ref tempRef, originalBlockX, size)){
+						tempRef -= (tempRef - origin.X) * 0.25f;
+					}else{
+						target.Y = FixedFloat.Min(target.Y, nextBlockY - size - 0.0001);
+					}
+					target.X = tempRef;
 				}
 			}else if (vy < 0){
-				if (world.MapValue(originalBlockX, targetBlockY) != 0
-				    || (nextOriginBlockX != originalBlockX && world.MapValue(nextOriginBlockX, targetBlockY) != 0)
-				    ){
-					target.Y = targetBlockY + 1;
+				collisionA = world.MapValue(originalBlockX, targetBlockY) != 0;
+				collisionB = (nextOriginBlockX != originalBlockX && world.MapValue(nextOriginBlockX, targetBlockY) != 0);
+
+				if (collisionA || collisionB){
+					tempRef = target.X;
+					if (TryToFit(collisionA, collisionB, ref tempRef, originalBlockX, size)){
+						tempRef -= (tempRef - origin.X) * 0.25f;
+					}else{
+						target.Y = targetBlockY + 1;
+					}
+					target.X = tempRef;
 				}
 			}
 		}
@@ -144,9 +178,34 @@ public class WorldController:Controller<WorldModel>{
 		return target;
 	}
 
+	private bool TryToFit(bool collisionA, bool collisionB, ref FixedFloat target, FixedFloat targetBlock, FixedFloat size){
+		if (collisionA != collisionB){
+			FixedFloat mantissa = (target - targetBlock);
+			FixedFloat factor;
+			if (collisionA && mantissa > 0.65f){
+				factor = (mantissa - 0.65) / 0.35;
+				//factor = factor * factor;
+				target = FixedFloat.Min(target + factor * 0.06f, targetBlock + 1);
+				return factor > 0.25f;
+			}else if (collisionB && mantissa < 0.35f){
+				factor = mantissa / 0.35;
+				//factor = factor * factor;
+				factor = 1 - factor;
+				target = FixedFloat.Max(target - factor * 0.06f, targetBlock);
+				return factor > 0.25f;
+			}
+		}
+		return false;
+	}
 
 
-//	// Collision of a circle in the world
+	private void UpdateTankDirection(TankModel tank, FixedVector3 movementVector){
+		//tank.movingAngle = FixedVector3.Lerp(tank.movingAngle, movementVector
+	}
+		
+		
+		
+		//	// Collision of a circle in the world
 //	private FixedVector3 CollisionResponse(WorldModel world, FixedVector3 origin, FixedVector3 target, FixedFloat size){
 //		
 //		// check boundaries
@@ -191,7 +250,7 @@ public class WorldController:Controller<WorldModel>{
 		
 		HandlePlayerConnections(model);
 
-		UpdateTankPositions(model);
+		UpdateTanks(model);
 
 	}
 	
