@@ -48,13 +48,13 @@ public class WorldController:Controller<WorldModel>{
 	private FixedVector3 InitialPositionForTankId(uint tankId){
 		// ...
 		switch (tankId) {
-			case 0: return new FixedVector3(1,1,0);
-			case 1: return new FixedVector3(WorldModel.MaxWidth - 1, 1, 0);
+			case 0: return new FixedVector3(0,0,0);
+			case 1: return new FixedVector3(WorldModel.MaxWidth - 1, 0, 0);
 			case 2: return new FixedVector3(WorldModel.MaxWidth - 1, WorldModel.MaxHeight - 1, 0);
-			case 3: return new FixedVector3(1,WorldModel.MaxHeight - 1, 0);
-			case 4: return new FixedVector3(WorldModel.MaxWidth * 0.5f, 1, 0);
+			case 3: return new FixedVector3(0, WorldModel.MaxHeight - 1, 0);
+			case 4: return new FixedVector3(WorldModel.MaxWidth * 0.5f, 0, 0);
 			case 5: return new FixedVector3(WorldModel.MaxWidth * 0.5f,WorldModel.MaxHeight - 1, 0);
-			case 6: return new FixedVector3(1, WorldModel.MaxHeight * 0.5f,0);
+			case 6: return new FixedVector3(0, WorldModel.MaxHeight * 0.5f,0);
 			case 7: return new FixedVector3(WorldModel.MaxWidth - 1, WorldModel.MaxHeight * 0.5f,0);
 		}
 		return new FixedVector3(1,1,0);
@@ -79,14 +79,112 @@ public class WorldController:Controller<WorldModel>{
 		}
 		inputModel.axis[0].Normalize();
 		FixedVector3 targetPosition = tank.position + new FixedVector3(inputModel.axis[0].X * maxTankVelocity, inputModel.axis[0].Z * maxTankVelocity, 0);
-		tank.position = CollisionResponse(tank.position, targetPosition, 0.48f);
+		tank.position = CollisionResponse(world, tank.position, targetPosition, 0.999f);
 	}
 
 
-	private FixedVector3 CollisionResponse(FixedVector3 origin, FixedVector3 target, FixedFloat radius){
-		// If no collision, all good
+	// Collision of a point in the world
+	private FixedVector3 CollisionResponse(WorldModel world, FixedVector3 origin, FixedVector3 target){
 		return target;
 	}
+
+	// Collision of something smaller than a square, in the world
+	private FixedVector3 CollisionResponse(WorldModel world, FixedVector3 origin, FixedVector3 target, FixedFloat size){
+	
+		// check boundaries
+		target = FixedVector3.Clamp(target, FixedVector3.Zero, new FixedVector3(WorldModel.MaxWidth-1, WorldModel.MaxHeight-1, 0));
+
+		// check collisions with neighbours
+		FixedFloat vx, vy;
+		vx = target.X - origin.X;
+		vy = target.Y - origin.Y;
+
+		int targetBlockX = (int)target.X;
+		int targetBlockY = (int)target.Y;
+
+		int originalBlockX = (int)origin.X;
+		int originalBlockY = (int)origin.Y;
+
+		if (target.X != targetBlockX){
+			int nextOriginBlockY = (int)(origin.Y + size);
+			if (vx > 0){
+				int nextBlockX = (int) (target.X + size);
+				if (world.MapValue(nextBlockX, originalBlockY) != 0
+				    || (nextOriginBlockY != originalBlockY && world.MapValue(nextBlockX, nextOriginBlockY) != 0)
+				){
+					target.X = FixedFloat.Min(target.X, nextBlockX - size - 0.0001);
+				}
+			}else if (vx < 0){
+				if (world.MapValue(targetBlockX, originalBlockY) != 0
+				    || (nextOriginBlockY != originalBlockY && world.MapValue(targetBlockX, nextOriginBlockY) != 0)
+				   ){
+					target.X = targetBlockX + 1;
+				}
+			}
+		}
+
+		if (target.Y != targetBlockY){
+			int nextOriginBlockX = (int)(origin.X + size);
+			if (vy > 0){
+				int nextBlockY = (int) (target.Y + size);
+				if (world.MapValue(originalBlockX, nextBlockY) != 0
+				    || (nextOriginBlockX != originalBlockX && world.MapValue(nextOriginBlockX, nextBlockY) != 0)
+				){
+					target.Y = FixedFloat.Min(target.Y, nextBlockY - size - 0.0001);
+				}
+			}else if (vy < 0){
+				if (world.MapValue(originalBlockX, targetBlockY) != 0
+				    || (nextOriginBlockX != originalBlockX && world.MapValue(nextOriginBlockX, targetBlockY) != 0)
+				    ){
+					target.Y = targetBlockY + 1;
+				}
+			}
+		}
+
+		return target;
+	}
+
+
+
+//	// Collision of a circle in the world
+//	private FixedVector3 CollisionResponse(WorldModel world, FixedVector3 origin, FixedVector3 target, FixedFloat size){
+//		
+//		// check boundaries
+//		target = FixedVector3.Clamp(target, FixedVector3.Zero, new FixedVector3(WorldModel.MaxWidth-1, WorldModel.MaxHeight-1, 0));
+//		
+//		int moveBackX, moveBackY;
+//		moveBackX = target.X - origin.X < 0 ? 1 : 0;
+//		moveBackY = target.Y - origin.Y < 0 ? 1 : 0;
+//		
+//		int xi, yi, xf, yf;
+//		xi = (int)(target.X);
+//		yi = (int)(target.Y);
+//		xf = (int)(target.X + size);
+//		yf = (int)(target.Y + size);
+//		
+//		FixedFloat newX, newY;
+//		
+//		int mapValue;
+//		for (int x = xi ; x <= xf ; ++x) {
+//			for (int y = yi ; y <= yf ; ++y) {
+//				mapValue = world.MapValue(x, y);
+//				if (mapValue != 0){
+//					// collision! Try an adjustment
+//					newX = xi + moveBackX;
+//					newY = yi + moveBackY;
+//					if (FixedFloat.Abs(newX - target.X) < FixedFloat.Abs(newY - target.Y)) {
+//						target.X = newX;
+//					}else {
+//						target.Y = newY;
+//					}
+//					// one more time, recursively
+//					return CollisionResponse(world, origin, target);
+//				}
+//			}
+//		}
+//		
+//		return target;
+//	}
 
 
 	protected override void Update(WorldModel model){

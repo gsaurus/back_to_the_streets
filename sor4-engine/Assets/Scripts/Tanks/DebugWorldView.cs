@@ -131,8 +131,8 @@ public class DebugWorldView:View<WorldModel>{
 			color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
 		}
 		GameObject mainObj = CreateView(0.98f, 0.95f, color);
-		GameObject aimObj = CreateView(0.1f, 0.5f, new Color(color.r * 0.5f, color.g * 0.5f, color.b * 0.5f));
-		aimObj.transform.position = new Vector3(0.0f, 0.2f, -0.1f);
+		GameObject aimObj = CreateView(0.1f, 0.7f, new Color(color.r * 0.5f, color.g * 0.5f, color.b * 0.5f));
+		aimObj.transform.position = new Vector3(0.5f, 0.2f, -0.1f);
 		aimObj.transform.parent = mainObj.transform;
 		return mainObj;
 	}

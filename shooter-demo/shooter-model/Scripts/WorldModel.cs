@@ -48,5 +48,9 @@ public class WorldModel:Model<WorldModel>{
 		this.map = map;
 	}
 
+	public int MapValue(int x, int y){
+		return map[y * MaxWidth + x];
+	}
+
 }
 
