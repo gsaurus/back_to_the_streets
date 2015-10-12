@@ -64,22 +64,28 @@ public class WorldController:Controller<WorldModel>{
 
 	private void UpdateTanks(WorldModel world){
 		FixedVector3 previousTankPosition;
+		PlayerInputModel inputModel;
+		FixedFloat movingAngle;
+		FixedFloat targetAngle;
 		foreach (TankModel tank in world.tanks){
 			if (tank != null){
 				previousTankPosition = tank.position;
-				UpdateTankPosition(world, tank);
-				UpdateTankDirection(tank, tank.position - previousTankPosition);
+				inputModel = StateManager.state.GetModel(tank.inputModelRef) as PlayerInputModel;
+				if (inputModel != null && inputModel.axis[0] != FixedVector3.Zero) {
+					UpdateTankPosition(world, tank, inputModel);
+					movingAngle = FixedVector3.Angle(previousTankPosition, tank.position);
+					targetAngle = FixedVector3.Angle(FixedVector3.Zero, inputModel.axis[0]);
+				}else {
+					movingAngle = tank.movingAngle;
+					targetAngle = tank.shootingTargetAngle;
+				}
+				UpdateTankDirection(tank, movingAngle, targetAngle);
 			}
 		}
 	}
 
 
-	private void UpdateTankPosition(WorldModel world, TankModel tank){
-		PlayerInputModel inputModel = StateManager.state.GetModel(tank.inputModelRef) as PlayerInputModel;
-		if (inputModel == null || inputModel.axis[0] == FixedVector3.Zero) {
-			// Not moving, get out
-			return;
-		}
+	private void UpdateTankPosition(WorldModel world, TankModel tank, PlayerInputModel inputModel){
 		inputModel.axis[0].Normalize();
 		FixedVector3 targetPosition = tank.position + new FixedVector3(inputModel.axis[0].X * maxTankVelocity, inputModel.axis[0].Z * maxTankVelocity, 0);
 		tank.position = CollisionResponse(world, tank.position, targetPosition, 0.999f);
@@ -184,12 +190,10 @@ public class WorldController:Controller<WorldModel>{
 			FixedFloat factor;
 			if (collisionA && mantissa > 0.65f){
 				factor = (mantissa - 0.65) / 0.35;
-				//factor = factor * factor;
 				target = FixedFloat.Min(target + factor * 0.06f, targetBlock + 1);
 				return factor > 0.25f;
 			}else if (collisionB && mantissa < 0.35f){
 				factor = mantissa / 0.35;
-				//factor = factor * factor;
 				factor = 1 - factor;
 				target = FixedFloat.Max(target - factor * 0.06f, targetBlock);
 				return factor > 0.25f;
@@ -199,13 +203,52 @@ public class WorldController:Controller<WorldModel>{
 	}
 
 
-	private void UpdateTankDirection(TankModel tank, FixedVector3 movementVector){
-		//tank.movingAngle = FixedVector3.Lerp(tank.movingAngle, movementVector
+	private void UpdateTankDirection(TankModel tank, FixedFloat movingAngle, FixedFloat targetAngle){
+
+		// Moving direction
+		tank.movingAngle = UpdateDirection(tank.movingAngle, movingAngle, 0.01f);
+
+		// Turret
+		tank.shootingTargetAngle = targetAngle;
+		FixedFloat worldTurretAngle = tank.shootingAngle + tank.movingAngle;
+		if (worldTurretAngle > FixedFloat.TwoPI) worldTurretAngle -= FixedFloat.TwoPI;
+		worldTurretAngle = UpdateDirection(worldTurretAngle, targetAngle, 0.02f);
+		tank.shootingAngle = worldTurretAngle - tank.movingAngle;
+		if (tank.shootingAngle < 0) tank.shootingAngle += FixedFloat.TwoPI;
 	}
-		
-		
-		
-		//	// Collision of a circle in the world
+
+
+	private FixedFloat UpdateDirection(FixedFloat original, FixedFloat target, FixedFloat delta){
+		FixedFloat difference = FixedFloat.Abs(target - original);
+		if (difference > FixedFloat.PI){
+			difference = FixedFloat.TwoPI - difference;
+			if (target > original){
+				target -= FixedFloat.TwoPI;
+			}else {
+				target += FixedFloat.TwoPI;
+			}
+		}
+		if (difference != 0){
+			if (difference < delta + 0.001f) {
+				original = target;
+			}else {
+				if (difference > FixedFloat.HalfPI) {
+					target = target + FixedFloat.PI;
+					if (target > FixedFloat.TwoPI) target -= FixedFloat.TwoPI;
+				}
+				if (original < target) {
+					original += delta;
+				}else{
+					original -= delta;
+				}
+			}
+		}
+
+		return original;
+	}
+
+	
+//	// old method
 //	private FixedVector3 CollisionResponse(WorldModel world, FixedVector3 origin, FixedVector3 target, FixedFloat size){
 //		
 //		// check boundaries

@@ -14,13 +14,13 @@ public class TankModel{
 	public int energy;
 
 	[ProtoMember(3)]
-	public FixedFloat movingAngle; // err..
+	public FixedFloat movingAngle;
 
 	[ProtoMember(4)]
 	public FixedFloat shootingAngle;
 
 	[ProtoMember(5)]
-	public FixedFloat velocityModule; // err..
+	public FixedFloat shootingTargetAngle;
 
 	[ProtoMember(6)]
 	public int timeToRespawn;
@@ -41,7 +41,7 @@ public class TankModel{
 		this.energy = energy;
 		this.movingAngle = initialDirection;
 		this.shootingAngle = 0;
-		this.velocityModule = 0;
+		this.shootingTargetAngle = 0;
 		this.timeToRespawn = 0;
 		this.inputModelRef = inputModelRef;
 	}
