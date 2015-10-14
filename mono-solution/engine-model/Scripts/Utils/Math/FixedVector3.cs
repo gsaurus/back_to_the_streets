@@ -284,6 +284,7 @@ namespace RetroBread{
 		}
 
 		public static FixedFloat Angle(FixedVector3 from, FixedVector3 to){
+			if (from.Magnitude == FixedFloat.Zero || to.Magnitude == FixedFloat.Zero) return FixedFloat.Zero;
 			return FixedFloat.Acos((FixedVector3.Dot(from, to)) / (from.Magnitude * to.Magnitude));
 		}
 

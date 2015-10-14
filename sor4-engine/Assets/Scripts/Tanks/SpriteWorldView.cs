@@ -15,6 +15,8 @@ public class SpriteWorldView:View<WorldModel>{
 
 	// Common material used by old views
 	static Material meshesMaterial;
+	static GameObject tankPrefab;
+
 
 	const float lerpTimeFactor = 5.0f; 
 
@@ -24,6 +26,7 @@ public class SpriteWorldView:View<WorldModel>{
 	static SpriteWorldView(){
 		// setup imutable stuff
 		meshesMaterial = new Material(Shader.Find("Sprites/Default"));
+		tankPrefab = Resources.Load("Tank") as GameObject;
 	}
 
 
@@ -77,12 +80,22 @@ public class SpriteWorldView:View<WorldModel>{
 
 			if (tankViews[i] != null){
 
-				// update position
 				Vector3 targetPos = new Vector3((float)tankModel.position.X, (float)tankModel.position.Y, -0.2f);
-				UpdatePosition(tankViews[i], targetPos);
 
 				// update rotation
+				GameObject tank = tankViews[i].transform.GetChild(0).gameObject;
+				GameObject turret = tank.transform.GetChild(0).gameObject;
+				tank.transform.localEulerAngles = new Vector3(0, 0, (float)tankModel.movingAngle * Mathf.Rad2Deg - 90);
+				turret.transform.localEulerAngles = new Vector3(0, 0, (float)tankModel.shootingAngle * Mathf.Rad2Deg);
 
+				// update moving animation
+				Animator animator = tank.GetComponent<Animator>();
+				float vel = Vector3.Distance(tankViews[i].transform.position, targetPos); 
+				animator.speed = vel / (float)WorldController.maxTankVelocity;
+
+				// update position
+				UpdatePosition(tankViews[i], targetPos);
+				
 				//tankViews[i].transform.RotateAround(new Vector3(0.5f, 0.5f, 0.0f), Vector3.forward, 0.4f);
 			}
 		}
@@ -131,14 +144,23 @@ public class SpriteWorldView:View<WorldModel>{
 	private GameObject CreateTank(bool own){
 		Color color;
 		if (own){
-			color = new Color(0.0f, 0.0f, 1.0f, 1.0f);
+			color = new Color(0.5f, 0.5f, 1.0f, 1.0f);
 		}else {
-			color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
+			color = new Color(1.0f, 0.5f, 0.5f, 1.0f);
 		}
-		GameObject mainObj = CreateView(1.0f, 1.0f, color);
-		GameObject aimObj = CreateView(0.2f, 0.8f, new Color(color.r * 0.5f, color.g * 0.5f, color.b * 0.5f));
-		aimObj.transform.position = new Vector3(0.4f, 0.3f, -0.005f);
-		aimObj.transform.parent = mainObj.transform;
+
+		GameObject mainObj = new GameObject("tank_instance");
+		GameObject tankObj = GameObject.Instantiate(tankPrefab);
+
+		SpriteRenderer renderer = tankObj.GetComponent<SpriteRenderer>();
+		renderer.color = color;
+		GameObject turret = tankObj.transform.GetChild(0).gameObject;
+		renderer = turret.GetComponent<SpriteRenderer>();
+		renderer.color = color;
+
+		tankObj.transform.parent = mainObj.transform;
+		tankObj.transform.position = new Vector3(0.5f, 0.5f, 0.0f);
+
 		return mainObj;
 	}
 

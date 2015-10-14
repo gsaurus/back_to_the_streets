@@ -9,7 +9,7 @@ public class WorldController:Controller<WorldModel>{
 
 	public const uint totalGameFrames = 9997200; // 2 minutes
 
-	public FixedFloat maxTankVelocity = 0.05f;
+	public static FixedFloat maxTankVelocity = 0.04f;
 
 	static WorldController(){
 		// setup imutable stuff
@@ -64,6 +64,7 @@ public class WorldController:Controller<WorldModel>{
 
 	private void UpdateTanks(WorldModel world){
 		FixedVector3 previousTankPosition;
+		FixedVector3 velocity = FixedVector3.Zero;
 		PlayerInputModel inputModel;
 		FixedFloat movingAngle;
 		FixedFloat targetAngle;
@@ -73,13 +74,16 @@ public class WorldController:Controller<WorldModel>{
 				inputModel = StateManager.state.GetModel(tank.inputModelRef) as PlayerInputModel;
 				if (inputModel != null && inputModel.axis[0] != FixedVector3.Zero) {
 					UpdateTankPosition(world, tank, inputModel);
-					movingAngle = FixedVector3.Angle(previousTankPosition, tank.position);
-					targetAngle = FixedVector3.Angle(FixedVector3.Zero, inputModel.axis[0]);
+					velocity = tank.position - previousTankPosition;
+					targetAngle = FixedFloat.Atan2(inputModel.axis[0].Z, inputModel.axis[0].X);
+					if (targetAngle < 0){
+						targetAngle += FixedFloat.TwoPI;
+					}
 				}else {
 					movingAngle = tank.movingAngle;
 					targetAngle = tank.shootingTargetAngle;
 				}
-				UpdateTankDirection(tank, movingAngle, targetAngle);
+				UpdateTankDirection(tank, velocity, targetAngle);
 			}
 		}
 	}
@@ -191,34 +195,52 @@ public class WorldController:Controller<WorldModel>{
 			if (collisionA && mantissa > 0.65f){
 				factor = (mantissa - 0.65) / 0.35;
 				target = FixedFloat.Min(target + factor * 0.06f, targetBlock + 1);
-				return factor > 0.25f;
+				return factor > 0.2f;
 			}else if (collisionB && mantissa < 0.35f){
 				factor = mantissa / 0.35;
 				factor = 1 - factor;
 				target = FixedFloat.Max(target - factor * 0.06f, targetBlock);
-				return factor > 0.25f;
+				return factor > 0.2f;
 			}
 		}
 		return false;
 	}
 
 
-	private void UpdateTankDirection(TankModel tank, FixedFloat movingAngle, FixedFloat targetAngle){
+	private void UpdateTankDirection(TankModel tank, FixedVector3 velocity, FixedFloat targetAngle){
 
-		// Moving direction
-		tank.movingAngle = UpdateDirection(tank.movingAngle, movingAngle, 0.01f);
+		if (velocity.Magnitude > 0.001f){
+			FixedFloat movingAngle = FixedFloat.Atan2(velocity.Y, velocity.X);
+			if (movingAngle < 0) movingAngle += FixedFloat.TwoPI;
+			// Moving direction
+			tank.movingAngle = UpdateDirection(tank.movingAngle, movingAngle, 0.095f, true);
+		}
 
 		// Turret
 		tank.shootingTargetAngle = targetAngle;
+		FixedFloat localTarget = targetAngle - tank.movingAngle;
+		if (localTarget < 0) localTarget += FixedFloat.TwoPI;
+		tank.shootingAngle = UpdateDirection(tank.shootingAngle, localTarget, 0.05f, false);
+		/*
+		tank.shootingTargetAngle = targetAngle;
 		FixedFloat worldTurretAngle = tank.shootingAngle + tank.movingAngle;
 		if (worldTurretAngle > FixedFloat.TwoPI) worldTurretAngle -= FixedFloat.TwoPI;
-		worldTurretAngle = UpdateDirection(worldTurretAngle, targetAngle, 0.02f);
+
+//		bool logStuff = worldTurretAngle != targetAngle;
+//		if (logStuff)
+//			UnityEngine.Debug.Log("turret local: " + tank.shootingAngle + ", global: " + worldTurretAngle);
+		worldTurretAngle = UpdateDirection(worldTurretAngle, targetAngle, 0.05f);
 		tank.shootingAngle = worldTurretAngle - tank.movingAngle;
 		if (tank.shootingAngle < 0) tank.shootingAngle += FixedFloat.TwoPI;
+//		if (logStuff)
+//			UnityEngine.Debug.Log("turret new local: " + tank.shootingAngle + ", global: " + worldTurretAngle);
+*/
+
 	}
 
 
-	private FixedFloat UpdateDirection(FixedFloat original, FixedFloat target, FixedFloat delta){
+	private FixedFloat UpdateDirection(FixedFloat original, FixedFloat target, FixedFloat delta, bool goAround){
+
 		FixedFloat difference = FixedFloat.Abs(target - original);
 		if (difference > FixedFloat.PI){
 			difference = FixedFloat.TwoPI - difference;
@@ -232,18 +254,23 @@ public class WorldController:Controller<WorldModel>{
 			if (difference < delta + 0.001f) {
 				original = target;
 			}else {
-				if (difference > FixedFloat.HalfPI) {
+				if (goAround && difference > FixedFloat.HalfPI) {
 					target = target + FixedFloat.PI;
 					if (target > FixedFloat.TwoPI) target -= FixedFloat.TwoPI;
 				}
 				if (original < target) {
 					original += delta;
+					if (original > FixedFloat.TwoPI){
+						original -= FixedFloat.TwoPI;
+					}
 				}else{
 					original -= delta;
+					if (original < 0){
+						original += FixedFloat.TwoPI;
+					}
 				}
 			}
 		}
-
 		return original;
 	}
 

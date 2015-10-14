@@ -546,6 +546,7 @@ namespace RetroBread{
 		}
 		
 		public static FixedFloat Atan2( FixedFloat f1, FixedFloat f2 ){
+			/*
 			if ( f2.RawValue == 0 && f1.RawValue == 0 )
 				return FixedFloat.Zero;
 
@@ -559,6 +560,22 @@ namespace RetroBread{
 			}
 
 			return f1 >= 0 ? result : result.Inverse;
+			*/
+			if (f1.RawValue == 0) {
+				if (f2.RawValue >= 0) {
+					return FixedFloat.Zero;
+				} else if (f2.RawValue < 0) {
+					return PI;
+				}
+			} else if (f2.RawValue >= -65 && f2.RawValue <= 65) {
+				return (f1.RawValue > 0) ? HalfPI : -HalfPI;
+			}
+			FixedFloat z = Atan(Abs(f1/f2));
+			if (f2.RawValue > 0) {
+				return (f1.RawValue > 0) ? z : -z;
+			} else {
+				return (f1.RawValue > 0) ? PI - z : z - PI;
+			}
 
 		}
 		#endregion
