@@ -73,8 +73,11 @@ public class WorldController:Controller<WorldModel>{
 				previousTankPosition = tank.position;
 				inputModel = StateManager.state.GetModel(tank.inputModelRef) as PlayerInputModel;
 				if (inputModel != null && inputModel.axis[0] != FixedVector3.Zero) {
-					UpdateTankPosition(world, tank, inputModel);
-					velocity = tank.position - previousTankPosition;
+					velocity = new FixedVector3(inputModel.axis[0].X * maxTankVelocity, inputModel.axis[0].Z * maxTankVelocity, 0);
+					if (UpdateTankPosition(world, tank, inputModel, velocity)){
+						//velocity = tank.position - previousTankPosition;
+						velocity = FixedVector3.Lerp(tank.position - previousTankPosition, velocity, 0.02f);
+					}
 					targetAngle = FixedFloat.Atan2(inputModel.axis[0].Z, inputModel.axis[0].X);
 					if (targetAngle < 0){
 						targetAngle += FixedFloat.TwoPI;
@@ -89,23 +92,33 @@ public class WorldController:Controller<WorldModel>{
 	}
 
 
-	private void UpdateTankPosition(WorldModel world, TankModel tank, PlayerInputModel inputModel){
+	private bool UpdateTankPosition(WorldModel world, TankModel tank, PlayerInputModel inputModel, FixedVector3 velocity){
 		inputModel.axis[0].Normalize();
-		FixedVector3 targetPosition = tank.position + new FixedVector3(inputModel.axis[0].X * maxTankVelocity, inputModel.axis[0].Z * maxTankVelocity, 0);
-		tank.position = CollisionResponse(world, tank.position, targetPosition, 0.999f);
+	
+		FixedVector3 tankOrientation = new FixedVector3(FixedFloat.Cos(tank.movingAngle), FixedFloat.Sin(tank.movingAngle), 0);
+		FixedFloat dotProduct = FixedVector3.Dot(velocity, tankOrientation);
+		velocity = FixedVector3.Lerp(tankOrientation * dotProduct, velocity, 0.1);
+
+		FixedVector3 targetPosition = tank.position + velocity;
+
+		bool hardCollison;
+		tank.position = CollisionResponse(world, tank.position, targetPosition, 0.999f, out hardCollison);
+		return hardCollison;
 	}
 
-
+	
 	// Collision of a point in the world
 	private FixedVector3 CollisionResponse(WorldModel world, FixedVector3 origin, FixedVector3 target){
 		return target;
 	}
 
 	// Collision of something smaller than a square, in the world
-	private FixedVector3 CollisionResponse(WorldModel world, FixedVector3 origin, FixedVector3 target, FixedFloat size){
+	private FixedVector3 CollisionResponse(WorldModel world, FixedVector3 origin, FixedVector3 target, FixedFloat size, out bool hardCollision){
 	
 		// check boundaries
-		target = FixedVector3.Clamp(target, FixedVector3.Zero, new FixedVector3(WorldModel.MaxWidth-1, WorldModel.MaxHeight-1, 0));
+		FixedVector3 clampedTarget = FixedVector3.Clamp(target, FixedVector3.Zero, new FixedVector3(WorldModel.MaxWidth-1, WorldModel.MaxHeight-1, 0));
+		hardCollision = clampedTarget != target;
+		target = clampedTarget;
 
 		// check collisions with neighbours
 		FixedFloat vx, vy;
@@ -134,6 +147,7 @@ public class WorldController:Controller<WorldModel>{
 						tempRef -= (tempRef - origin.Y) * 0.25f;
 					}else{
 						target.X = FixedFloat.Min(target.X, nextBlockX - size - 0.0001);
+						hardCollision = true;
 					}
 					target.Y = tempRef;
 				}
@@ -147,6 +161,7 @@ public class WorldController:Controller<WorldModel>{
 						tempRef -= (tempRef - origin.Y) * 0.25f;
 					}else{
 						target.X = targetBlockX + 1;
+						hardCollision = true;
 					}
 					target.Y = tempRef;
 				}
@@ -166,6 +181,7 @@ public class WorldController:Controller<WorldModel>{
 						tempRef -= (tempRef - origin.X) * 0.25f;
 					}else{
 						target.Y = FixedFloat.Min(target.Y, nextBlockY - size - 0.0001);
+						hardCollision = true;
 					}
 					target.X = tempRef;
 				}
@@ -179,6 +195,7 @@ public class WorldController:Controller<WorldModel>{
 						tempRef -= (tempRef - origin.X) * 0.25f;
 					}else{
 						target.Y = targetBlockY + 1;
+						hardCollision = true;
 					}
 					target.X = tempRef;
 				}
@@ -192,15 +209,15 @@ public class WorldController:Controller<WorldModel>{
 		if (collisionA != collisionB){
 			FixedFloat mantissa = (target - targetBlock);
 			FixedFloat factor;
-			if (collisionA && mantissa > 0.65f){
-				factor = (mantissa - 0.65) / 0.35;
-				target = FixedFloat.Min(target + factor * 0.06f, targetBlock + 1);
-				return factor > 0.2f;
-			}else if (collisionB && mantissa < 0.35f){
-				factor = mantissa / 0.35;
+			if (collisionA && mantissa > 0.6f){
+				factor = (mantissa - 0.6) / 0.4;
+				target = FixedFloat.Min(target + factor * 0.1f, targetBlock + 1);
+				return factor > 0.1f;
+			}else if (collisionB && mantissa < 0.4f){
+				factor = mantissa / 0.4;
 				factor = 1 - factor;
-				target = FixedFloat.Max(target - factor * 0.06f, targetBlock);
-				return factor > 0.2f;
+				target = FixedFloat.Max(target - factor * 0.1f, targetBlock);
+				return factor > 0.1f;
 			}
 		}
 		return false;

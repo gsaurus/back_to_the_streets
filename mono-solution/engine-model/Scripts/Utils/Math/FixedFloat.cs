@@ -450,14 +450,14 @@ namespace RetroBread{
 			FixedFloat t = angle - index; // t is the fractionary part of the angle
 
 			// treat each of the quadrants
-			if ( index <= 90 )
+			if ( index < 90 )
 				return sin_lookup(index, t );
-			if ( index <= 180 )
-				return sin_lookup(180 - index, t );
-			if ( index <= 270 )
+			else if ( index < 180 )
+				return sin_lookup(179 - index, t );
+			else if ( index < 270 )
 				return sin_lookup(index - 180, t ).Inverse;
 			else
-				return sin_lookup(360 - index, t ).Inverse;
+				return sin_lookup(359 - index, t ).Inverse;
 		}
 		
 		private static FixedFloat sin_lookup(int i, FixedFloat t)
@@ -546,21 +546,6 @@ namespace RetroBread{
 		}
 		
 		public static FixedFloat Atan2( FixedFloat f1, FixedFloat f2 ){
-			/*
-			if ( f2.RawValue == 0 && f1.RawValue == 0 )
-				return FixedFloat.Zero;
-
-			FixedFloat result;
-			if ( f2 > 0 ){
-				return Atan(f1/f2);
-			}else if ( f2 < 0 ){
-				result = Atan(Abs(f1/f2));
-			}else{
-				result = HalfPI;
-			}
-
-			return f1 >= 0 ? result : result.Inverse;
-			*/
 			if (f1.RawValue == 0) {
 				if (f2.RawValue >= 0) {
 					return FixedFloat.Zero;
@@ -576,7 +561,6 @@ namespace RetroBread{
 			} else {
 				return (f1.RawValue > 0) ? PI - z : z - PI;
 			}
-
 		}
 		#endregion
 
