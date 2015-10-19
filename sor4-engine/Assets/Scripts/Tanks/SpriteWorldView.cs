@@ -85,8 +85,8 @@ public class SpriteWorldView:View<WorldModel>{
 				// update rotation
 				GameObject tank = tankViews[i].transform.GetChild(0).gameObject;
 				GameObject turret = tank.transform.GetChild(0).gameObject;
-				tank.transform.localEulerAngles = new Vector3(0, 0, (float)tankModel.movingAngle * Mathf.Rad2Deg - 90);
-				turret.transform.localEulerAngles = new Vector3(0, 0, (float)tankModel.shootingAngle * Mathf.Rad2Deg);
+				tank.transform.localEulerAngles = new Vector3(0, 0, (float)tankModel.orientationAngle * Mathf.Rad2Deg - 90);
+				turret.transform.localEulerAngles = new Vector3(0, 0, (float)tankModel.turretAngle * Mathf.Rad2Deg);
 
 				// update moving animation
 				Animator animator = tank.GetComponent<Animator>();
