@@ -562,7 +562,7 @@ namespace RetroBread{
 		#endregion
 
 
-		#region Abs, Min, Max
+		#region Abs, Min, Max, Clamp
 
 		public static FixedFloat Abs(FixedFloat f){
 			return f < 0 ? f.Inverse : f;
@@ -575,6 +575,11 @@ namespace RetroBread{
 		public static FixedFloat Min(FixedFloat f1, FixedFloat f2){
 			return f1 < f2 ? f1 : f2;
 		}
+
+		public static FixedFloat Clamp(FixedFloat f, FixedFloat min, FixedFloat max){
+			return f < min ? min : f > max ? max : f;
+		}
+
 		#endregion
 
 		public static FixedFloat NormalizedAngle(FixedFloat angle){

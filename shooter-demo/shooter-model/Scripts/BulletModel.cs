@@ -12,7 +12,7 @@ public class BulletModel{
 	public FixedVector3 velocity;
 
 	[ProtoMember(3)]
-	public int damage;
+	public int energy;
 
 	// Default Constructor
 	public BulletModel(){
@@ -21,10 +21,10 @@ public class BulletModel{
 
 
 	// Constructor
-	public BulletModel(FixedVector3 position, FixedVector3 velocity, int damage){
+	public BulletModel(FixedVector3 position, FixedVector3 velocity, int energy){
 		this.position = position;
 		this.velocity = velocity;
-		this.damage = damage;
+		this.energy = energy;
 	}
 
 }

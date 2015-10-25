@@ -260,10 +260,10 @@ namespace RetroBread{
 
 
 		public static FixedVector3 Clamp(FixedVector3 vec, FixedVector3 min, FixedVector3 max){
-			vec.Set (vec.x < min.x ? min.x : vec.x > max.x ? max.x : vec.x,
-			         vec.y < min.y ? min.y : vec.y > max.y ? max.y : vec.y,
-			         vec.z < min.z ? min.z : vec.z > max.z ? max.z : vec.z
-			         );
+			vec.Set (FixedFloat.Clamp(vec.x, min.x, max.x),
+			         FixedFloat.Clamp(vec.y, min.y, max.y),
+			         FixedFloat.Clamp(vec.z, min.z, max.z)
+			        );
 			return vec;
 		}
 

@@ -12,7 +12,7 @@ public class WorldModel:Model<WorldModel>{
 	public const int MaxWidth = 13;
 	public const int MaxHeight = 13;
 	public const int MaxPlayers = 10;
-	public const int MaxBulletsPerPlayer = 2;
+	public const int MaxBulletsPerPlayer = 3;
 
 	// TODO: other public options to setup the world, and proper constructor
 	// Such constructor will be called from the server only
@@ -50,6 +50,17 @@ public class WorldModel:Model<WorldModel>{
 
 	public int MapValue(int x, int y){
 		return map[y * MaxWidth + x];
+	}
+
+	public BulletModel CreateBulletForPlayer(int playerId){
+		int initialIndex = playerId * MaxBulletsPerPlayer;
+		for (int i = initialIndex ; i < initialIndex + MaxBulletsPerPlayer ; ++i){
+			if (bullets[i] == null){
+				bullets[i] = new BulletModel();
+				return bullets[i];
+			}
+		}
+		return null;
 	}
 
 }

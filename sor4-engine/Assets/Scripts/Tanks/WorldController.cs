@@ -10,9 +10,16 @@ public class WorldController:Controller<WorldModel>{
 	public const uint totalGameFrames = 9997200; // 2 minutes
 
 	public static FixedFloat maxTankVelocity = 0.04f;
+	public static FixedFloat maxBulletVelocity = 0.12f;
+
+	private static FixedVector3 worldLimit;
+
+
+#region Initializations
 
 	static WorldController(){
 		// setup imutable stuff
+		worldLimit = new FixedVector3(WorldModel.MaxWidth-1, WorldModel.MaxHeight-1, 0);
 	}
 
 
@@ -61,13 +68,37 @@ public class WorldController:Controller<WorldModel>{
 	}
 
 
+#endregion
+
+
+#region Auxiliar Functions
+
+	private bool IsObstacleForTank(WorldModel world, int x, int y){
+		int blockValue = world.MapValue(x, y);
+		return blockValue != 0 && blockValue != 3;
+	}
+
+	private bool IsObstacleForBullet(WorldModel world, int x, int y){
+		int blockValue = world.MapValue(x, y);
+		return blockValue == 1 || blockValue == 4;
+	}
+	
+#endregion
+
+
+#region Tanks
 
 	private void UpdateTanks(WorldModel world){
+
 		FixedVector3 previousTankPosition;
 		FixedVector3 velocity = FixedVector3.Zero;
 		PlayerInputModel inputModel;
+		PlayerInputController inputController;
 		FixedFloat targetAngle;
-		foreach (TankModel tank in world.tanks){
+		TankModel tank;
+		// For each tank update it's position and orientation
+		for (int tankId = 0 ; tankId < world.tanks.Length ; ++tankId){
+			tank = world.tanks[tankId];
 			if (tank != null){
 				previousTankPosition = tank.position;
 				inputModel = StateManager.state.GetModel(tank.inputModelRef) as PlayerInputModel;
@@ -84,42 +115,50 @@ public class WorldController:Controller<WorldModel>{
 					targetAngle = tank.turretTargetAngle;
 				}
 				UpdateTankDirection(tank, velocity, targetAngle);
+
+				// check fire!!
+				if (inputModel != null) {
+					inputController = inputModel.Controller() as PlayerInputController;
+					if (inputController != null && inputController.IsButtonPressed(inputModel, 0)){
+						BulletModel bullet = world.CreateBulletForPlayer(tankId);
+						if (bullet != null){
+							FixedFloat fireAngle = tank.orientationAngle + tank.turretAngle;
+							bullet.velocity = new FixedVector3(FixedFloat.Cos(fireAngle), FixedFloat.Sin(fireAngle), 0);
+							bullet.position = tank.position + new FixedVector3(0.5f, 0.5f, 0) + bullet.velocity * (0.51f - maxBulletVelocity);
+							bullet.velocity *= maxBulletVelocity;
+						}
+					}
+				}
 			}
 		}
 	}
 
 
 	private bool UpdateTankPosition(WorldModel world, TankModel tank, PlayerInputModel inputModel, FixedVector3 velocity){
+
+		// Update position based on input and tank orientation
+		// NOTE: remove dot product here if necessary to gain performance here
 		inputModel.axis[0].Normalize();
-	
 		FixedVector3 tankOrientation = new FixedVector3(FixedFloat.Cos(tank.orientationAngle), FixedFloat.Sin(tank.orientationAngle), 0);
 		FixedFloat dotProduct = FixedVector3.Dot(velocity, tankOrientation);
-		velocity = velocity.Normalized * FixedFloat.Abs(dotProduct); //FixedVector3.Lerp(tankOrientation * dotProduct, velocity, 0.1);
+		velocity = velocity.Normalized * FixedFloat.Abs(dotProduct);
 
 		FixedVector3 targetPosition = tank.position + velocity;
 
+		// TODO: check circular collisions with other tanks
+
+		// check square collisions with the world
 		bool hardCollison;
 		tank.position = CollisionResponse(world, tank.position, targetPosition, 0.999f, out hardCollison);
 		return hardCollison;
 	}
 
-	
-	// Collision of a point in the world
-	private FixedVector3 CollisionResponse(WorldModel world, FixedVector3 origin, FixedVector3 target){
-		return target;
-	}
-
-
-	private bool IsObstacle(WorldModel world, int x, int y){
-		int blockValue = world.MapValue(x, y);
-		return blockValue != 0 && blockValue != 3;
-	}
 
 	// Collision of something smaller than a square, in the world
 	private FixedVector3 CollisionResponse(WorldModel world, FixedVector3 origin, FixedVector3 target, FixedFloat size, out bool hardCollision){
 	
 		// check boundaries
-		FixedVector3 clampedTarget = FixedVector3.Clamp(target, FixedVector3.Zero, new FixedVector3(WorldModel.MaxWidth-1, WorldModel.MaxHeight-1, 0));
+		FixedVector3 clampedTarget = FixedVector3.Clamp(target, FixedVector3.Zero, worldLimit);
 		hardCollision = clampedTarget != target;
 		target = clampedTarget;
 
@@ -143,8 +182,8 @@ public class WorldController:Controller<WorldModel>{
 			int nextOriginBlockX = (int)(origin.X + size);
 			if (vy > 0){
 				int nextBlockY = (int) (target.Y + size);
-				collisionA = IsObstacle(world, originalBlockX, nextBlockY);
-				collisionB = nextOriginBlockX != originalBlockX && IsObstacle(world, nextOriginBlockX, nextBlockY);
+				collisionA = IsObstacleForTank(world, originalBlockX, nextBlockY);
+				collisionB = nextOriginBlockX != originalBlockX && IsObstacleForTank(world, nextOriginBlockX, nextBlockY);
 				
 				if (collisionA || collisionB){
 					tempRef = target.X;
@@ -158,8 +197,8 @@ public class WorldController:Controller<WorldModel>{
 					gotFirstCollision = collisionA != collisionB;
 				}
 			}else if (vy < 0){
-				collisionA = IsObstacle(world, originalBlockX, targetBlockY);
-				collisionB = nextOriginBlockX != originalBlockX && IsObstacle(world, nextOriginBlockX, targetBlockY);
+				collisionA = IsObstacleForTank(world, originalBlockX, targetBlockY);
+				collisionB = nextOriginBlockX != originalBlockX && IsObstacleForTank(world, nextOriginBlockX, targetBlockY);
 				
 				if (collisionA || collisionB){
 					tempRef = target.X;
@@ -180,8 +219,8 @@ public class WorldController:Controller<WorldModel>{
 			int nextOriginBlockY = (int)(origin.Y + size);
 			if (vx > 0){
 				int nextBlockX = (int) (target.X + size);
-				collisionA = IsObstacle(world, nextBlockX, originalBlockY);
-				collisionB = nextOriginBlockY != originalBlockY && IsObstacle(world, nextBlockX, nextOriginBlockY);
+				collisionA = IsObstacleForTank(world, nextBlockX, originalBlockY);
+				collisionB = nextOriginBlockY != originalBlockY && IsObstacleForTank(world, nextBlockX, nextOriginBlockY);
 
 				if (collisionA || collisionB){
 					tempRef = target.Y;
@@ -195,8 +234,8 @@ public class WorldController:Controller<WorldModel>{
 					target.Y = tempRef;
 				}
 			}else if (vx < 0){
-				collisionA = IsObstacle(world, targetBlockX, originalBlockY);
-				collisionB = nextOriginBlockY != originalBlockY && IsObstacle(world, targetBlockX, nextOriginBlockY);
+				collisionA = IsObstacleForTank(world, targetBlockX, originalBlockY);
+				collisionB = nextOriginBlockY != originalBlockY && IsObstacleForTank(world, targetBlockX, nextOriginBlockY);
 
 				if (collisionA || collisionB){
 					tempRef = target.Y;
@@ -295,12 +334,96 @@ public class WorldController:Controller<WorldModel>{
 	}
 
 
+#endregion
+
+
+#region Bullets
+	
+	private void UpdateBullets(WorldModel world){
+
+		// For each bullet update it's position and check for collisions
+		FixedVector3 lastPos;
+		int previousBlockX, previousBlockY;
+		int blockX, blockY;
+		bool collidedX, collidedY;
+		foreach (BulletModel bullet in world.bullets){
+			if (bullet != null){
+				// save previous location
+				lastPos = bullet.position;
+
+				// Move!
+				bullet.position += bullet.velocity;
+
+				// check collisions against world limit
+				collidedX = false;
+				collidedY = false;;
+				if (bullet.position.X < 0) {
+					bullet.position.X = 0;
+					collidedX = true;
+				}else if (bullet.position.X >= WorldModel.MaxWidth) {
+					bullet.position.X = WorldModel.MaxWidth - 0.001f;
+					collidedX = true;
+				}
+				if (bullet.position.Y < 0) {
+					bullet.position.Y = 0;
+					collidedY = true;
+				}else if (bullet.position.Y >= WorldModel.MaxHeight) {
+					bullet.position.Y = WorldModel.MaxHeight - 0.001f;
+					collidedY = true;
+				}
+
+
+				// check if changing matrix cell
+				previousBlockX = (int)lastPos.X;
+				previousBlockY = (int)lastPos.Y;
+				blockX = (int)bullet.position.X;
+				blockY = (int)bullet.position.Y;
+
+				// if so, check collision with the world
+				if ((blockX != previousBlockX || blockY != previousBlockY) && IsObstacleForBullet(world, blockX, blockY)) {
+					if (!collidedX && blockX != previousBlockX && IsObstacleForBullet(world, blockX, previousBlockY)) {
+						if (bullet.velocity.X > 0) bullet.position.X = blockX;
+						else bullet.position.X = blockX + 1;
+						collidedX = true;
+					}
+					if (!collidedY && blockY != previousBlockY && IsObstacleForBullet(world, previousBlockX, blockY)){
+						if (bullet.velocity.Y > 0) bullet.position.Y = blockY;
+						else bullet.position.Y = blockY + 1;
+						collidedY = true;
+					}
+					// second round
+					// warning TODO: disable this if not going to bounce on walls
+					if (!collidedX && !collidedY) {
+						bool newCollision = IsObstacleForBullet(world, blockX, blockY);
+						if (!collidedX && blockX != previousBlockX && newCollision){
+							if (bullet.velocity.X > 0) bullet.position.X = blockX;
+							else bullet.position.X = blockX + 1;
+							collidedX = true;
+						}
+						if (!collidedY && blockY != previousBlockY && newCollision){
+							if (bullet.velocity.Y > 0) bullet.position.Y = blockY;
+							else bullet.position.Y = blockY + 1;
+							collidedY = true;
+						}
+					}
+				}
+
+				// collision response
+				if (collidedX) bullet.velocity.X *= -1;
+				if (collidedY) bullet.velocity.Y *= -1;
+			}
+		}
+	}
+
+
+#endregion
+
+
 	protected override void Update(WorldModel model){
 		
 		HandlePlayerConnections(model);
-
+		UpdateBullets(model);
 		UpdateTanks(model);
-
 	}
 	
 }

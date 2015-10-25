@@ -139,6 +139,7 @@ public class SpriteWorldView:View<WorldModel>{
 			if (bulletViews[i] != null){
 				Vector3 targetPos = new Vector3((float)bulletModel.position.X, (float)bulletModel.position.Y, 0.0f);
 				UpdatePosition(bulletViews[i], targetPos);
+				bulletViews[i].transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2((float)bulletModel.velocity.Y, (float)bulletModel.velocity.X) * Mathf.Rad2Deg - 90);
 			}
 		}
 	}

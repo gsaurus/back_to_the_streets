@@ -28,7 +28,10 @@ namespace RetroBread{
 		public bool IsButtonPressed(Model model, uint buttonId){
 			PlayerInputModel playerModel = model as PlayerInputModel;
 			if (playerModel == null) return false;
-			return playerModel.actionPressedCoolers[buttonId] > 0;
+			bool actionPressed = playerModel.actionPressedCoolers[buttonId] > 0;
+			// consume action pressed..
+			playerModel.actionPressedCoolers[buttonId] = 0;
+			return actionPressed;
 		}
 
 		// Button hold
@@ -42,7 +45,10 @@ namespace RetroBread{
 		public bool IsButtonReleased(Model model, uint buttonId){
 			PlayerInputModel playerModel = model as PlayerInputModel;
 			if (playerModel == null) return false;
-			return playerModel.actionPressedCoolers[buttonId] > 0;
+			bool actionReleased = playerModel.actionReleasedCoolers[buttonId] > 0;
+			// consume action released..
+			playerModel.actionReleasedCoolers[buttonId] = 0;
+			return actionReleased;
 		}
 
 		
