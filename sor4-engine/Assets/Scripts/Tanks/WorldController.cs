@@ -80,9 +80,6 @@ public class WorldController:Controller<WorldModel>{
 						//velocity = FixedVector3.Lerp(tank.position - previousTankPosition, velocity, 0.002f);
 					}
 					targetAngle = FixedFloat.Atan2(inputModel.axis[0].Z, inputModel.axis[0].X);
-					if (targetAngle < 0){
-						targetAngle += FixedFloat.TwoPI;
-					}
 				}else {
 					targetAngle = tank.turretTargetAngle;
 				}
@@ -141,7 +138,7 @@ public class WorldController:Controller<WorldModel>{
 		bool gotFirstCollision = false;
 		FixedFloat tempRef;
 
-
+		// currently giving priority to vertical movement over horizontal
 		if (target.Y != targetBlockY){
 			int nextOriginBlockX = (int)(origin.X + size);
 			if (vy > 0){
@@ -224,12 +221,12 @@ public class WorldController:Controller<WorldModel>{
 			if (collisionA && mantissa > 0.6f){
 				factor = (mantissa - 0.6) / 0.4;
 				target = FixedFloat.Min(target + factor * 0.05f, targetBlock + 1);
-				return factor > 0.1f;
+				return factor > 0.5f;
 			}else if (collisionB && mantissa < 0.4f){
 				factor = mantissa / 0.4;
 				factor = 1 - factor;
 				target = FixedFloat.Max(target - factor * 0.05f, targetBlock);
-				return factor > 0.1f;
+				return factor > 0.5f;
 			}
 		}
 		return false;
@@ -238,66 +235,59 @@ public class WorldController:Controller<WorldModel>{
 
 	private void UpdateTankDirection(TankModel tank, FixedVector3 velocity, FixedFloat targetAngle){
 
+		if (tank.position.X > 5) {
+			int a = 0;
+			a = a + 1;
+		}
+
 		if (velocity.Magnitude > 0.001f){
 			FixedFloat movingAngle = FixedFloat.Atan2(velocity.Y, velocity.X);
-			if (movingAngle < 0) movingAngle += FixedFloat.TwoPI;
 			// Moving direction
-			tank.orientationAngle = UpdateDirection(tank.orientationAngle, movingAngle, 0.09f, true);
+			tank.orientationAngle = UpdateDirection(tank.orientationAngle, movingAngle, 0.09f, true, ref tank.movingBackwards);
 		}
 
 		// Turret
 		tank.turretTargetAngle = targetAngle;
 		FixedFloat localTarget = targetAngle - tank.orientationAngle;
-		if (localTarget < 0) localTarget += FixedFloat.TwoPI;
-		tank.turretAngle = UpdateDirection(tank.turretAngle, localTarget, 0.05f, false);
-
-		/*
-		tank.turretTargetAngle = targetAngle;
-		FixedFloat worldTurretAngle = tank.turretAngle + tank.orientationAngle;
-		if (worldTurretAngle > FixedFloat.TwoPI) worldTurretAngle -= FixedFloat.TwoPI;
-
-//		bool logStuff = worldTurretAngle != targetAngle;
-//		if (logStuff)
-//			UnityEngine.Debug.Log("turret local: " + tank.turretAngle + ", global: " + worldTurretAngle);
-		worldTurretAngle = UpdateDirection(worldTurretAngle, targetAngle, 0.05f);
-		tank.turretAngle = worldTurretAngle - tank.orientationAngle;
-		if (tank.turretAngle < 0) tank.turretAngle += FixedFloat.TwoPI;
-//		if (logStuff)
-//			UnityEngine.Debug.Log("turret new local: " + tank.turretAngle + ", global: " + worldTurretAngle);
-*/
+		bool falseBool = false;
+		tank.turretAngle = UpdateDirection(tank.turretAngle, localTarget, 0.05f, false, ref falseBool);
 
 	}
 
 
-	private FixedFloat UpdateDirection(FixedFloat original, FixedFloat target, FixedFloat delta, bool useBackwardsDirection){
+	private FixedFloat UpdateDirection(FixedFloat original, FixedFloat target, FixedFloat delta, bool useBackwardsDirection, ref bool isMovingBackwards){
+		// Normalize angles
+		original = FixedFloat.NormalizedAngle(original);
+		target = FixedFloat.NormalizedAngle(target);
 
 		FixedFloat difference = FixedFloat.Abs(target - original);
-		if (difference > FixedFloat.HalfPI){
-			difference = FixedFloat.TwoPI - difference;
-			if (target > original){
-				target -= FixedFloat.TwoPI;
-			}else {
-				target += FixedFloat.TwoPI;
-			}
+
+		isMovingBackwards = false;
+		if ((useBackwardsDirection && difference > FixedFloat.HalfPI) || difference > FixedFloat.PI){
+			difference = FixedFloat.Abs(FixedFloat.TwoPI - difference);
 		}
 		if (difference != 0){
 			if (difference < delta + 0.001f) {
 				original = target;
+			}
+			else if (useBackwardsDirection && FixedFloat.Abs(difference - FixedFloat.PI) < delta + 0.001f) {
+				isMovingBackwards = true;
+				original = target + FixedFloat.PI;
 			}else {
 				if (useBackwardsDirection && difference > FixedFloat.HalfPI) {
+					isMovingBackwards = true;
 					target = target + FixedFloat.PI;
 					if (target > FixedFloat.TwoPI) target -= FixedFloat.TwoPI;
 				}
+				// recheck if target is left or right, including around the 
+				if (FixedFloat.Abs(target - original) > FixedFloat.PI){
+					if (target > original) target -= FixedFloat.TwoPI;
+					else original -= FixedFloat.TwoPI;
+				}
 				if (original < target) {
 					original += delta;
-					if (original > FixedFloat.TwoPI){
-						original -= FixedFloat.TwoPI;
-					}
 				}else{
 					original -= delta;
-					if (original < 0){
-						original += FixedFloat.TwoPI;
-					}
 				}
 			}
 		}

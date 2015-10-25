@@ -28,6 +28,9 @@ public class TankModel{
 	[ProtoMember(7)]
 	public ModelReference inputModelRef;
 
+	[ProtoMember(8)]
+	public bool movingBackwards;
+
 	// Default Constructor
 	public TankModel(){
 		// set inactive
@@ -44,6 +47,7 @@ public class TankModel{
 		this.turretTargetAngle = 0;
 		this.timeToRespawn = 0;
 		this.inputModelRef = inputModelRef;
+		this.movingBackwards = false;
 	}
 
 }

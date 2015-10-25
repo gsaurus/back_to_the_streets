@@ -439,10 +439,7 @@ namespace RetroBread{
 		public static FixedFloat Sin(FixedFloat angle)
 		{
 			// normalize input angle
-			for ( ; angle < 0; angle += FixedFloat.TwoPI) ;
-			if (angle > FixedFloat.TwoPI){
-				angle %= FixedFloat.TwoPI;
-			}
+			angle = NormalizedAngle(angle);
 
 			// convert to degrees
 			angle *= RadiansToDegreesConversionRatio;
@@ -579,6 +576,14 @@ namespace RetroBread{
 			return f1 < f2 ? f1 : f2;
 		}
 		#endregion
+
+		public static FixedFloat NormalizedAngle(FixedFloat angle){
+			for ( ; angle < 0; angle += FixedFloat.TwoPI);
+			if (angle > FixedFloat.TwoPI){
+				angle %= FixedFloat.TwoPI;
+			}
+			return angle;
+		}
 
 	}
 
