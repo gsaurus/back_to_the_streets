@@ -52,9 +52,9 @@ public class WorldModel:Model<WorldModel>{
 		return map[y * MaxWidth + x];
 	}
 
-	public BulletModel CreateBulletForPlayer(int playerId){
-		int initialIndex = playerId * MaxBulletsPerPlayer;
-		for (int i = initialIndex ; i < initialIndex + MaxBulletsPerPlayer ; ++i){
+	public BulletModel CreateBulletForPlayer(uint playerId){
+		uint initialIndex = playerId * MaxBulletsPerPlayer;
+		for (uint i = initialIndex ; i < initialIndex + MaxBulletsPerPlayer ; ++i){
 			if (bullets[i] == null){
 				bullets[i] = new BulletModel();
 				return bullets[i];

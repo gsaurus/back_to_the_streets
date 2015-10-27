@@ -88,8 +88,9 @@ public class SpriteWorldView:View<WorldModel>{
 		for (int i = 0 ; i < model.tanks.Length ; ++i){
 			// update creation or destruction
 			TankModel tankModel = model.tanks[i];
+			bool own = NetworkCenter.Instance.GetPlayerNumber() == i;
 			if (tankModel != null && tankViews[i] == null) {
-				tankViews[i] = CreateTank(NetworkCenter.Instance.GetPlayerNumber() == i);
+				tankViews[i] = CreateTank(own);
 			}else if (tankModel == null && tankViews[i] != null){
 				GameObject.Destroy(tankViews[i]);
 				tankViews[i] = null;
@@ -97,10 +98,24 @@ public class SpriteWorldView:View<WorldModel>{
 
 			if (tankViews[i] != null){
 
+				GameObject tank = tankViews[i].transform.GetChild(0).gameObject;
+
+				if (tankModel.timeToRespawn > 0){
+					SetTankColor(tank, Color.black);
+				}else {
+					Color color;
+					if (own){
+						color = new Color(0.3f, 0.5f, 1.0f, 1.0f);
+					}else {
+						color = new Color(1.0f, 0.3f, 0.3f, 1.0f);
+					}
+					SetTankColor(tank, color);		
+				}
+
 				Vector3 targetPos = new Vector3((float)tankModel.position.X, (float)tankModel.position.Y, 0.0f);
 
 				// update rotation
-				GameObject tank = tankViews[i].transform.GetChild(0).gameObject;
+				
 				GameObject turret = tank.transform.GetChild(0).gameObject;
 				tank.transform.localEulerAngles = new Vector3(0, 0, (float)tankModel.orientationAngle * Mathf.Rad2Deg - 90);
 				turret.transform.localEulerAngles = new Vector3(0, 0, (float)tankModel.turretAngle * Mathf.Rad2Deg);
@@ -166,22 +181,18 @@ public class SpriteWorldView:View<WorldModel>{
 		return null;
 	}
 
-	private GameObject CreateTank(bool own){
-		Color color;
-		if (own){
-			color = new Color(0.3f, 0.5f, 1.0f, 1.0f);
-		}else {
-			color = new Color(1.0f, 0.3f, 0.3f, 1.0f);
-		}
 
-		GameObject mainObj = new GameObject("tank_instance");
-		GameObject tankObj = GameObject.Instantiate(tankPrefab);
-
+	private void SetTankColor(GameObject tankObj, Color color){
 		SpriteRenderer renderer = tankObj.GetComponent<SpriteRenderer>();
 		renderer.color = color;
 		GameObject turret = tankObj.transform.GetChild(0).gameObject;
 		renderer = turret.GetComponent<SpriteRenderer>();
 		renderer.color = color;
+	}
+
+	private GameObject CreateTank(bool own){
+		GameObject mainObj = new GameObject("tank_instance");
+		GameObject tankObj = GameObject.Instantiate(tankPrefab);
 
 		tankObj.transform.parent = mainObj.transform;
 		tankObj.transform.position = new Vector3(0.5f, 0.5f, 0.0f);

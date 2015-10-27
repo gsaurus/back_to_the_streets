@@ -11,6 +11,7 @@ public class BulletModel{
 	[ProtoMember(2)]
 	public FixedVector3 velocity;
 
+	// energy.. currently used to tell how many times it can bounce on walls
 	[ProtoMember(3)]
 	public int energy;
 

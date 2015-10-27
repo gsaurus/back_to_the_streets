@@ -45,7 +45,7 @@ public class WorldController:Controller<WorldModel>{
 			if (model.tanks[playerId] == null){
 				Model inputModel = new PlayerInputModel(playerId, 1, 1);
 				ModelReference inputModelRef = StateManager.state.AddModel(inputModel);
-				model.tanks[playerId] = new TankModel(InitialPositionForTankId(playerId), 3, 0, inputModelRef);
+				model.tanks[playerId] = new TankModel(InitialPositionForTankId(playerId), 1, 0, inputModelRef);
 			}
 			
 		}
@@ -97,38 +97,50 @@ public class WorldController:Controller<WorldModel>{
 		FixedFloat targetAngle;
 		TankModel tank;
 		// For each tank update it's position and orientation
-		for (int tankId = 0 ; tankId < world.tanks.Length ; ++tankId){
+		for (uint tankId = 0 ; tankId < world.tanks.Length ; ++tankId){
 			tank = world.tanks[tankId];
 			if (tank != null){
-				previousTankPosition = tank.position;
-				inputModel = StateManager.state.GetModel(tank.inputModelRef) as PlayerInputModel;
-				if (inputModel != null && inputModel.axis[0] != FixedVector3.Zero) {
-					velocity = new FixedVector3(inputModel.axis[0].X * maxTankVelocity, inputModel.axis[0].Z * maxTankVelocity, 0);
-					if (UpdateTankPosition(world, tank, inputModel, velocity)){
-						if (tank.position != previousTankPosition){
-							velocity = tank.position - previousTankPosition;
-						}
-						//velocity = FixedVector3.Lerp(tank.position - previousTankPosition, velocity, 0.002f);
-					}
-					targetAngle = FixedFloat.Atan2(inputModel.axis[0].Z, inputModel.axis[0].X);
-				}else {
-					targetAngle = tank.turretTargetAngle;
-				}
-				UpdateTankDirection(tank, velocity, targetAngle);
 
-				// check fire!!
-				if (inputModel != null) {
-					inputController = inputModel.Controller() as PlayerInputController;
-					if (inputController != null && inputController.IsButtonPressed(inputModel, 0)){
-						BulletModel bullet = world.CreateBulletForPlayer(tankId);
-						if (bullet != null){
-							FixedFloat fireAngle = tank.orientationAngle + tank.turretAngle;
-							bullet.velocity = new FixedVector3(FixedFloat.Cos(fireAngle), FixedFloat.Sin(fireAngle), 0);
-							bullet.position = tank.position + new FixedVector3(0.5f, 0.5f, 0) + bullet.velocity * (0.51f - maxBulletVelocity);
-							bullet.velocity *= maxBulletVelocity;
+				if (tank.timeToRespawn > 0){
+					if (--tank.timeToRespawn == 0){
+						// respawn
+						tank.position = InitialPositionForTankId(tankId);
+					}
+				}else {
+
+					previousTankPosition = tank.position;
+					inputModel = StateManager.state.GetModel(tank.inputModelRef) as PlayerInputModel;
+					if (inputModel != null && inputModel.axis[0] != FixedVector3.Zero) {
+						velocity = new FixedVector3(inputModel.axis[0].X * maxTankVelocity, inputModel.axis[0].Z * maxTankVelocity, 0);
+						if (UpdateTankPosition(world, tank, inputModel, velocity)){
+							if (tank.position != previousTankPosition){
+								velocity = tank.position - previousTankPosition;
+							}
+							//velocity = FixedVector3.Lerp(tank.position - previousTankPosition, velocity, 0.002f);
+						}
+						targetAngle = FixedFloat.Atan2(inputModel.axis[0].Z, inputModel.axis[0].X);
+					}else {
+						targetAngle = tank.turretTargetAngle;
+					}
+					UpdateTankDirection(tank, velocity, targetAngle);
+
+					// check fire!!
+					if (inputModel != null) {
+						inputController = inputModel.Controller() as PlayerInputController;
+						if (inputController != null && inputController.IsButtonPressed(inputModel, 0)){
+							BulletModel bullet = world.CreateBulletForPlayer(tankId);
+							if (bullet != null){
+								FixedFloat fireAngle = tank.orientationAngle + tank.turretAngle;
+								bullet.velocity = new FixedVector3(FixedFloat.Cos(fireAngle), FixedFloat.Sin(fireAngle), 0);
+								bullet.position = tank.position + new FixedVector3(0.5f, 0.5f, 0) + bullet.velocity * 0.6f;
+								bullet.velocity *= maxBulletVelocity;
+								bullet.energy = 1;
+							}
 						}
 					}
+
 				}
+
 			}
 		}
 	}
@@ -346,7 +358,9 @@ public class WorldController:Controller<WorldModel>{
 		int previousBlockX, previousBlockY;
 		int blockX, blockY;
 		bool collidedX, collidedY;
-		foreach (BulletModel bullet in world.bullets){
+		BulletModel bullet;
+		for (int i = 0 ; i < world.bullets.Length ; ++i){
+			bullet = world.bullets[i];
 			if (bullet != null){
 				// save previous location
 				lastPos = bullet.position;
@@ -379,38 +393,68 @@ public class WorldController:Controller<WorldModel>{
 				blockX = (int)bullet.position.X;
 				blockY = (int)bullet.position.Y;
 
-				// if so, check collision with the world
-				if ((blockX != previousBlockX || blockY != previousBlockY) && IsObstacleForBullet(world, blockX, blockY)) {
-					if (!collidedX && blockX != previousBlockX && IsObstacleForBullet(world, blockX, previousBlockY)) {
-						if (bullet.velocity.X > 0) bullet.position.X = blockX;
-						else bullet.position.X = blockX + 1;
-						collidedX = true;
-					}
-					if (!collidedY && blockY != previousBlockY && IsObstacleForBullet(world, previousBlockX, blockY)){
-						if (bullet.velocity.Y > 0) bullet.position.Y = blockY;
-						else bullet.position.Y = blockY + 1;
-						collidedY = true;
-					}
-					// second round
-					// warning TODO: disable this if not going to bounce on walls
-					if (!collidedX && !collidedY) {
-						bool newCollision = IsObstacleForBullet(world, blockX, blockY);
-						if (!collidedX && blockX != previousBlockX && newCollision){
+				if (bullet.energy <= 1 && (collidedX || collidedY || IsObstacleForBullet(world, blockX, blockY))){
+					// ask no more, kill bullet!
+					world.bullets[i] = null;
+					continue;
+				}else {
+					// bounce mode
+					// if so, check collision with the world
+					if ((blockX != previousBlockX || blockY != previousBlockY) && IsObstacleForBullet(world, blockX, blockY)) {
+						if (!collidedX && blockX != previousBlockX && IsObstacleForBullet(world, blockX, previousBlockY)) {
 							if (bullet.velocity.X > 0) bullet.position.X = blockX;
 							else bullet.position.X = blockX + 1;
 							collidedX = true;
 						}
-						if (!collidedY && blockY != previousBlockY && newCollision){
+						if (!collidedY && blockY != previousBlockY && IsObstacleForBullet(world, previousBlockX, blockY)){
 							if (bullet.velocity.Y > 0) bullet.position.Y = blockY;
 							else bullet.position.Y = blockY + 1;
 							collidedY = true;
 						}
+						// second round
+						// warning TODO: disable this if not going to bounce on walls
+						if (!collidedX && !collidedY) {
+							bool newCollision = IsObstacleForBullet(world, blockX, blockY);
+							if (!collidedX && blockX != previousBlockX && newCollision){
+								if (bullet.velocity.X > 0) bullet.position.X = blockX;
+								else bullet.position.X = blockX + 1;
+								collidedX = true;
+							}
+							if (!collidedY && blockY != previousBlockY && newCollision){
+								if (bullet.velocity.Y > 0) bullet.position.Y = blockY;
+								else bullet.position.Y = blockY + 1;
+								collidedY = true;
+							}
+						}
+					}
+
+					// collision response
+					if (collidedX || collidedY) {
+						--bullet.energy;
+						if (collidedX) bullet.velocity.X *= -1;
+						if (collidedY) bullet.velocity.Y *= -1;
+					}else {
+						// Check collisions against tanks!
+						foreach (TankModel tank in world.tanks){
+							if (tank != null && tank.timeToRespawn == 0){
+								if (   bullet.position.X > tank.position.X + 0.1
+								    && bullet.position.X < tank.position.X + 0.9
+								    && bullet.position.Y > tank.position.Y + 0.1
+								    && bullet.position.Y < tank.position.Y + 0.9
+								){
+									// kill bullet!
+									world.bullets[i] = null;
+									if (--tank.energy <= 0){
+										// respawn tank
+										tank.timeToRespawn = 150; // time in frames
+									}
+								}
+							}
+						}
 					}
 				}
 
-				// collision response
-				if (collidedX) bullet.velocity.X *= -1;
-				if (collidedY) bullet.velocity.Y *= -1;
+
 			}
 		}
 	}
