@@ -102,8 +102,9 @@ public class WorldController:Controller<WorldModel>{
 			if (tank != null){
 
 				if (tank.timeToRespawn > 0){
-					if (--tank.timeToRespawn == 0){
+					if (--tank.timeToRespawn <= 0){
 						// respawn
+						tank.energy = 1;
 						tank.position = InitialPositionForTankId(tankId);
 					}
 				}else {
@@ -436,18 +437,18 @@ public class WorldController:Controller<WorldModel>{
 					}else {
 						// Check collisions against tanks!
 						foreach (TankModel tank in world.tanks){
-							if (tank != null && tank.timeToRespawn == 0){
-								if (   bullet.position.X > tank.position.X + 0.1
-								    && bullet.position.X < tank.position.X + 0.9
-								    && bullet.position.Y > tank.position.Y + 0.1
-								    && bullet.position.Y < tank.position.Y + 0.9
-								){
-									// kill bullet!
-									world.bullets[i] = null;
-									if (--tank.energy <= 0){
-										// respawn tank
-										tank.timeToRespawn = 150; // time in frames
-									}
+							if (tank != null
+							    && tank.energy > 0
+							    && bullet.position.X > tank.position.X + 0.1
+							    && bullet.position.X < tank.position.X + 0.9
+							    && bullet.position.Y > tank.position.Y + 0.1
+							    && bullet.position.Y < tank.position.Y + 0.9
+							){
+								// kill bullet!
+								world.bullets[i] = null;
+								if (--tank.energy <= 0){
+									// respawn tank
+									tank.timeToRespawn = 150; // time in frames
 								}
 							}
 						}

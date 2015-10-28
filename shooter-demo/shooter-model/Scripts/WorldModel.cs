@@ -55,6 +55,7 @@ public class WorldModel:Model<WorldModel>{
 	public BulletModel CreateBulletForPlayer(uint playerId){
 		uint initialIndex = playerId * MaxBulletsPerPlayer;
 		for (uint i = initialIndex ; i < initialIndex + MaxBulletsPerPlayer ; ++i){
+			//Debug.Log("index " + i + ", initial index " + initialIndex + ", playerId: " + playerId + ", bullets size: " + bullets.Length);
 			if (bullets[i] == null){
 				bullets[i] = new BulletModel();
 				return bullets[i];
