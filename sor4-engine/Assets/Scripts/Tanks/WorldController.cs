@@ -80,7 +80,13 @@ public class WorldController:Controller<WorldModel>{
 
 	private bool IsObstacleForBullet(WorldModel world, int x, int y){
 		int blockValue = world.MapValue(x, y);
-		return blockValue == 1 || blockValue == 4;
+		bool collided = blockValue == 1 || blockValue >= 4;
+		if (blockValue > 4){
+			world.SetMapValue(x, y, blockValue - 1);
+		}else if (blockValue == 4) {
+			world.SetMapValue(x, y, 0);
+		}
+		return collided;
 	}
 	
 #endregion
@@ -121,6 +127,7 @@ public class WorldController:Controller<WorldModel>{
 						}
 						targetAngle = FixedFloat.Atan2(inputModel.axis[0].Z, inputModel.axis[0].X);
 					}else {
+						velocity = FixedVector3.Zero;
 						targetAngle = tank.turretTargetAngle;
 					}
 					UpdateTankDirection(tank, velocity, targetAngle);
@@ -227,8 +234,7 @@ public class WorldController:Controller<WorldModel>{
 			}
 		}
 
-
-		if (!gotFirstCollision && target.X != targetBlockX){
+		if (target.X != targetBlockX){
 			int nextOriginBlockY = (int)(origin.Y + size);
 			if (vx > 0){
 				int nextBlockX = (int) (target.X + size);
@@ -237,7 +243,7 @@ public class WorldController:Controller<WorldModel>{
 
 				if (collisionA || collisionB){
 					tempRef = target.Y;
-					if (TryToFit(collisionA, collisionB, ref tempRef, originalBlockY, size)){
+					if (!gotFirstCollision && TryToFit(collisionA, collisionB, ref tempRef, originalBlockY, size)){
 						tempRef -= (tempRef - origin.Y) * 0.25f;
 
 					}else{
@@ -252,7 +258,7 @@ public class WorldController:Controller<WorldModel>{
 
 				if (collisionA || collisionB){
 					tempRef = target.Y;
-					if (TryToFit(collisionA, collisionB, ref tempRef, originalBlockY, size)){
+					if (!gotFirstCollision && TryToFit(collisionA, collisionB, ref tempRef, originalBlockY, size)){
 						tempRef -= (tempRef - origin.Y) * 0.25f;
 					}else{
 						target.X = targetBlockX + 1;

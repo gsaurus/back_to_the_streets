@@ -21,8 +21,15 @@ public class SpriteWorldView:View<WorldModel>{
 	static GameObject concretePrefab;
 	static GameObject treesPrefab;
 
+	static GameObject brick0Prefab;
+	static GameObject brick1Prefab;
+	static GameObject brick2Prefab;
+	static GameObject brick3Prefab;
+
 	static int forwardAnimHash;
 	static int backwardAnimHash;
+
+	const float playgroundZ = -0.01f;
 
 
 	const float lerpTimeFactor = 5.0f; 
@@ -38,6 +45,12 @@ public class SpriteWorldView:View<WorldModel>{
 		groundPrefab 	= Resources.Load("ground")		as GameObject;
 		concretePrefab 	= Resources.Load("concrete")	as GameObject;
 		treesPrefab 	= Resources.Load("trees") 		as GameObject;
+
+		brick0Prefab 	= Resources.Load("brick0") 		as GameObject;
+		brick1Prefab 	= Resources.Load("brick1") 		as GameObject;
+		brick2Prefab 	= Resources.Load("brick2") 		as GameObject;
+		brick3Prefab 	= Resources.Load("brick3") 		as GameObject;
+
 		forwardAnimHash = Animator.StringToHash("tank_forward");
 		backwardAnimHash = Animator.StringToHash("tank_backward");
 	}
@@ -112,7 +125,7 @@ public class SpriteWorldView:View<WorldModel>{
 					SetTankColor(tank, color);		
 				}
 
-				Vector3 targetPos = new Vector3((float)tankModel.position.X, (float)tankModel.position.Y, 0.0f);
+				Vector3 targetPos = new Vector3((float)tankModel.position.X, (float)tankModel.position.Y, playgroundZ);
 
 				// update rotation
 				
@@ -152,7 +165,7 @@ public class SpriteWorldView:View<WorldModel>{
 			
 			// update position
 			if (bulletViews[i] != null){
-				Vector3 targetPos = new Vector3((float)bulletModel.position.X, (float)bulletModel.position.Y, 0.0f);
+				Vector3 targetPos = new Vector3((float)bulletModel.position.X, (float)bulletModel.position.Y, playgroundZ);
 				UpdatePosition(bulletViews[i], targetPos);
 				bulletViews[i].transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2((float)bulletModel.velocity.Y, (float)bulletModel.velocity.X) * Mathf.Rad2Deg - 90);
 			}
@@ -195,7 +208,7 @@ public class SpriteWorldView:View<WorldModel>{
 		GameObject tankObj = GameObject.Instantiate(tankPrefab);
 
 		tankObj.transform.parent = mainObj.transform;
-		tankObj.transform.position = new Vector3(0.5f, 0.5f, 0.0f);
+		tankObj.transform.position = new Vector3(0.5f, 0.5f, playgroundZ);
 
 		return mainObj;
 	}
@@ -221,6 +234,20 @@ public class SpriteWorldView:View<WorldModel>{
 			case 3: // florest
 				obj = GameObject.Instantiate(treesPrefab);
 			break;
+			case 4: // weakest brick
+				obj = GameObject.Instantiate(brick3Prefab);
+				break;
+			case 5:
+			case 6: // weak brick
+				obj = GameObject.Instantiate(brick2Prefab);
+				break;
+			case 7:
+			case 8: // slightly weak brick
+				obj = GameObject.Instantiate(brick1Prefab);
+				break;
+			case 9: // strong brick
+				obj = GameObject.Instantiate(brick0Prefab);
+				break;
 			default:
 				// ground block
 				obj = GameObject.Instantiate(groundPrefab);

@@ -52,6 +52,10 @@ public class WorldModel:Model<WorldModel>{
 		return map[y * MaxWidth + x];
 	}
 
+	public void SetMapValue(int x, int y, int value){
+		map[y * MaxWidth + x] = value;
+	}
+
 	public BulletModel CreateBulletForPlayer(uint playerId){
 		uint initialIndex = playerId * MaxBulletsPerPlayer;
 		for (uint i = initialIndex ; i < initialIndex + MaxBulletsPerPlayer ; ++i){
