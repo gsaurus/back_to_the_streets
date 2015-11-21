@@ -32,7 +32,7 @@ public class SpriteWorldView:View<WorldModel>{
 	const float playgroundZ = -0.01f;
 
 
-	const float lerpTimeFactor = 5.0f; 
+	const float lerpTimeFactor = 0.5f; 
 
 	// local copy of last state's map, to identify map changes
 	int[] lastKnownMap;
@@ -97,6 +97,16 @@ public class SpriteWorldView:View<WorldModel>{
 		}
 	}
 
+
+	private void normalizeAnglesDifference(ref float a1, float a2){
+		while (a1 - a2 > 180){
+			a1 -= 360;
+		}
+		while (a1 - a2 < -180){
+			a1 += 360;
+		}
+	}
+
 	private void UpdateTanks(WorldModel model, float deltaTime){
 		for (int i = 0 ; i < model.tanks.Length ; ++i){
 			// update creation or destruction
@@ -130,8 +140,18 @@ public class SpriteWorldView:View<WorldModel>{
 				// update rotation
 				
 				GameObject turret = tank.transform.GetChild(0).gameObject;
-				tank.transform.localEulerAngles = new Vector3(0, 0, (float)tankModel.orientationAngle * Mathf.Rad2Deg - 90);
-				turret.transform.localEulerAngles = new Vector3(0, 0, (float)tankModel.turretAngle * Mathf.Rad2Deg);
+
+				float targetAngle = (float)tankModel.orientationAngle * Mathf.Rad2Deg - 90;
+				float originalAngle = tank.transform.localEulerAngles.z;
+				normalizeAnglesDifference(ref targetAngle, originalAngle);
+				targetAngle = Mathf.Lerp(originalAngle, targetAngle, lerpTimeFactor);
+				tank.transform.localEulerAngles = new Vector3(0, 0, targetAngle);
+
+				targetAngle = (float)tankModel.turretAngle * Mathf.Rad2Deg;
+				originalAngle = turret.transform.localEulerAngles.z;
+				normalizeAnglesDifference(ref targetAngle, originalAngle);
+				targetAngle = Mathf.Lerp(originalAngle, targetAngle, lerpTimeFactor);
+				turret.transform.localEulerAngles = new Vector3(0, 0, targetAngle);
 
 				// update moving animation
 				Animator animator = tank.GetComponent<Animator>();

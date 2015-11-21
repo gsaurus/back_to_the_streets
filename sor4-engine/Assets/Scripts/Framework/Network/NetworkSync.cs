@@ -15,6 +15,8 @@ namespace RetroBread{
 			private int pingsCount;
 			public float TravelTime { get; private set; }
 			public bool isReady;
+			// travel times higher than this threshold are not considered
+			public float maxRTT = 2.0f;
 
 			public void Update(float tt){
 				float integrationRatio = 1f / (pingsCount + 1);
@@ -23,7 +25,9 @@ namespace RetroBread{
 				}else {
 					integrationRatio = NetworkSync.lagIntegrationRate;
 				}
-				TravelTime = (TravelTime * (1 - integrationRatio)) + (tt * integrationRatio);
+				if (tt < maxRTT) {
+					TravelTime = (TravelTime * (1 - integrationRatio)) + (tt * integrationRatio);
+				}
 				//Debug.Log("Ping response: " + tt + ", integrated: " + TravelTime + ", ratio: " + integrationRatio + ", count: " + pingsCount);
 			}
 

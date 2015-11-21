@@ -21,7 +21,7 @@ namespace RetroBread{
 		public void Awake(){
 
 			Input.simulateMouseWithTouches = true;
-			buttonsDown = new bool[PlayerInputModel.NumButtonsSupported];
+			buttonsDown = new bool[1];
 		}
 
 
@@ -43,7 +43,7 @@ namespace RetroBread{
 		public void Update(){
 
 			// Check what buttons the touches are hitting
-			bool[] newButtonsDown = new bool[PlayerInputModel.NumButtonsSupported];
+			bool[] newButtonsDown = new bool[2];
 			Vector2 axisPos = Vector2.zero;
 			Vector2 relativePosTouch;
 			if (Input.touchCount > 0){
@@ -67,6 +67,9 @@ namespace RetroBread{
 				newAxis /= axisMaxRadius;
 				newAxis.x = Mathf.Clamp(newAxis.x, -1, 1);
 				newAxis.y = Mathf.Clamp(newAxis.y, -1, 1);
+				if (newAxis.magnitude > 1){
+					newAxis.Normalize();
+				}
 			}
 
 			if (
@@ -75,7 +78,7 @@ namespace RetroBread{
 				|| (newAxis != Vector2.zero && lastAxis == Vector2.zero)
 				|| (newAxis != Vector2.zero && lastAxis == Vector2.zero && newAxis.x > 0 != lastAxis.x > 0)
 			){
-				StateManager.Instance.AddEvent(new AxisInputEvent(new FixedVector3(newAxis.x, 0, newAxis.y)));
+				StateManager.Instance.AddEvent(new AxisInputEvent(0, new FixedVector3(newAxis.x, 0, newAxis.y)));
 				lastAxis = newAxis;
 			}
 

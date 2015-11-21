@@ -184,6 +184,10 @@ namespace RetroBread{
 			}
 
 			Vector2 newAxis = new Vector2(Input.GetAxis("Horizontal") * walkFactorX, Input.GetAxis("Vertical")*walkFactorZ);
+			if (newAxis.magnitude > 1){
+				newAxis.Normalize();
+			}
+
 			if (
 				   (Vector2.Distance(lastAxis,newAxis) >= minAxisDelta)
 			 	|| (newAxis == Vector2.zero && lastAxis != Vector2.zero)

@@ -12,6 +12,11 @@ public class WorldController:Controller<WorldModel>{
 	public static FixedFloat maxTankVelocity = 0.04f;
 	public static FixedFloat maxBulletVelocity = 0.12f;
 
+	public static FixedFloat tankDirectionSpeed = 0.07f;
+	public static FixedFloat turretDirectionSpeed = 0.06f;
+
+	public static FixedFloat minMovingVelocityThreshold = 0.025f;
+
 	private static FixedVector3 worldLimit;
 
 
@@ -119,11 +124,16 @@ public class WorldController:Controller<WorldModel>{
 					inputModel = StateManager.state.GetModel(tank.inputModelRef) as PlayerInputModel;
 					if (inputModel != null && inputModel.axis[0] != FixedVector3.Zero) {
 						velocity = new FixedVector3(inputModel.axis[0].X * maxTankVelocity, inputModel.axis[0].Z * maxTankVelocity, 0);
-						if (UpdateTankPosition(world, tank, inputModel, velocity)){
-							if (tank.position != previousTankPosition){
-								velocity = tank.position - previousTankPosition;
+						if (velocity.Magnitude > minMovingVelocityThreshold) {
+							velocity = velocity.Normalized * (maxTankVelocity * (velocity.Magnitude - minMovingVelocityThreshold) / (maxTankVelocity - minMovingVelocityThreshold));
+							if (UpdateTankPosition(world, tank, inputModel, velocity)){
+								if (tank.position != previousTankPosition){
+									velocity = tank.position - previousTankPosition;
+								}
+								//velocity = FixedVector3.Lerp(tank.position - previousTankPosition, velocity, 0.002f);
 							}
-							//velocity = FixedVector3.Lerp(tank.position - previousTankPosition, velocity, 0.002f);
+						}else {
+							velocity = FixedVector3.Zero;
 						}
 						targetAngle = FixedFloat.Atan2(inputModel.axis[0].Z, inputModel.axis[0].X);
 					}else {
@@ -158,7 +168,7 @@ public class WorldController:Controller<WorldModel>{
 
 		// Update position based on input and tank orientation
 		// NOTE: remove dot product here if necessary to gain performance here
-		inputModel.axis[0].Normalize();
+
 		FixedVector3 tankOrientation = new FixedVector3(FixedFloat.Cos(tank.orientationAngle), FixedFloat.Sin(tank.orientationAngle), 0);
 		FixedFloat dotProduct = FixedVector3.Dot(velocity, tankOrientation);
 		velocity = velocity.Normalized * FixedFloat.Abs(dotProduct);
@@ -169,34 +179,83 @@ public class WorldController:Controller<WorldModel>{
 
 		// check square collisions with the world
 		bool hardCollison;
-		tank.position = CollisionResponse(world, tank.position, targetPosition, 0.999f, out hardCollison);
+		tank.position = CollisionResponse(world, tank, targetPosition, 0.999f, out hardCollison);
 		return hardCollison;
 	}
 
 
-	// Collision of something smaller than a square, in the world
-	private FixedVector3 CollisionResponse(WorldModel world, FixedVector3 origin, FixedVector3 target, FixedFloat size, out bool hardCollision){
-	
-		// check boundaries
-		FixedVector3 clampedTarget = FixedVector3.Clamp(target, FixedVector3.Zero, worldLimit);
-		hardCollision = clampedTarget != target;
-		target = clampedTarget;
 
-		// check collisions with neighbours
-		FixedFloat vx, vy;
-		vx = target.X - origin.X;
-		vy = target.Y - origin.Y;
-
-		int targetBlockX = (int)target.X;
-		int targetBlockY = (int)target.Y;
-
-		int originalBlockX = (int)origin.X;
-		int originalBlockY = (int)origin.Y;
-
+	private void CollisionHorizontalResponse(WorldModel world,
+	                                         FixedVector3 origin,
+	                                         ref FixedVector3 target,
+	                                         FixedFloat size,
+	                                         ref bool hardCollision,
+	                                         FixedFloat vx,
+	                                         FixedFloat vy,
+	                                         int targetBlockX,
+	                                         int targetBlockY,
+	                                         int originalBlockX,
+	                                         int originalBlockY
+	){
 		bool collisionA, collisionB;
 		bool gotFirstCollision = false;
 		FixedFloat tempRef;
 
+		if (target.X != targetBlockX){
+			int nextOriginBlockY = (int)(origin.Y + size);
+			if (vx > 0){
+				int nextBlockX = (int) (target.X + size);
+				collisionA = IsObstacleForTank(world, nextBlockX, originalBlockY);
+				collisionB = nextOriginBlockY != originalBlockY && IsObstacleForTank(world, nextBlockX, nextOriginBlockY);
+				
+				if (collisionA || collisionB){
+					tempRef = target.Y;
+					if (!gotFirstCollision && TryToFit(collisionA, collisionB, ref tempRef, originalBlockY, size)){
+						tempRef -= (tempRef - origin.Y) * 0.25f;
+						
+					}else{
+						target.X = FixedFloat.Min(target.X, nextBlockX - size - 0.0001);
+						hardCollision = true;
+					}
+					target.Y = tempRef;
+				}
+			}else if (vx < 0){
+				collisionA = IsObstacleForTank(world, targetBlockX, originalBlockY);
+				collisionB = nextOriginBlockY != originalBlockY && IsObstacleForTank(world, targetBlockX, nextOriginBlockY);
+				
+				if (collisionA || collisionB){
+					tempRef = target.Y;
+					if (!gotFirstCollision && TryToFit(collisionA, collisionB, ref tempRef, originalBlockY, size)){
+						tempRef -= (tempRef - origin.Y) * 0.25f;
+					}else{
+						target.X = targetBlockX + 1;
+						hardCollision = true;
+					}
+					target.Y = tempRef;
+				}
+			}
+		}
+	}
+
+
+	private void CollisionVerticalResponse(WorldModel world,
+	                                       FixedVector3 origin,
+	                                       ref FixedVector3 target,
+	                                       FixedFloat size,
+	                                       ref bool hardCollision,
+	                                       FixedFloat vx,
+	                                       FixedFloat vy,
+	                                       int targetBlockX,
+	                                       int targetBlockY,
+	                                       int originalBlockX,
+	                                       int originalBlockY
+	){
+
+		
+		bool collisionA, collisionB;
+		bool gotFirstCollision = false;
+		FixedFloat tempRef;
+		
 		// currently giving priority to vertical movement over horizontal
 		if (target.Y != targetBlockY){
 			int nextOriginBlockX = (int)(origin.X + size);
@@ -233,40 +292,37 @@ public class WorldController:Controller<WorldModel>{
 				}
 			}
 		}
+	}
 
-		if (target.X != targetBlockX){
-			int nextOriginBlockY = (int)(origin.Y + size);
-			if (vx > 0){
-				int nextBlockX = (int) (target.X + size);
-				collisionA = IsObstacleForTank(world, nextBlockX, originalBlockY);
-				collisionB = nextOriginBlockY != originalBlockY && IsObstacleForTank(world, nextBlockX, nextOriginBlockY);
+	// Collision of something smaller than a square, in the world
+	private FixedVector3 CollisionResponse(WorldModel world, TankModel tank, FixedVector3 target, FixedFloat size, out bool hardCollision){
+	
+		// check boundaries
+		FixedVector3 origin = tank.position;
+		FixedVector3 clampedTarget = FixedVector3.Clamp(target, FixedVector3.Zero, worldLimit);
+		hardCollision = clampedTarget != target;
+		target = clampedTarget;
 
-				if (collisionA || collisionB){
-					tempRef = target.Y;
-					if (!gotFirstCollision && TryToFit(collisionA, collisionB, ref tempRef, originalBlockY, size)){
-						tempRef -= (tempRef - origin.Y) * 0.25f;
+		// check collisions with neighbours
+		FixedFloat vx, vy;
+		vx = target.X - origin.X;
+		vy = target.Y - origin.Y;
 
-					}else{
-						target.X = FixedFloat.Min(target.X, nextBlockX - size - 0.0001);
-						hardCollision = true;
-					}
-					target.Y = tempRef;
-				}
-			}else if (vx < 0){
-				collisionA = IsObstacleForTank(world, targetBlockX, originalBlockY);
-				collisionB = nextOriginBlockY != originalBlockY && IsObstacleForTank(world, targetBlockX, nextOriginBlockY);
+		int targetBlockX = (int)target.X;
+		int targetBlockY = (int)target.Y;
 
-				if (collisionA || collisionB){
-					tempRef = target.Y;
-					if (!gotFirstCollision && TryToFit(collisionA, collisionB, ref tempRef, originalBlockY, size)){
-						tempRef -= (tempRef - origin.Y) * 0.25f;
-					}else{
-						target.X = targetBlockX + 1;
-						hardCollision = true;
-					}
-					target.Y = tempRef;
-				}
-			}
+		int originalBlockX = (int)origin.X;
+		int originalBlockY = (int)origin.Y;
+
+		PlayerInputModel inputModel = StateManager.state.GetModel(tank.inputModelRef) as PlayerInputModel;
+		if (inputModel == null) return target;
+			
+		if (FixedFloat.Abs(inputModel.axis[0].X) > FixedFloat.Abs(inputModel.axis[0].Z)){
+			CollisionHorizontalResponse(world, origin, ref target, size, ref hardCollision, vx, vy, targetBlockX, targetBlockY, originalBlockX, originalBlockY);
+			CollisionVerticalResponse(world, origin, ref target, size, ref hardCollision, vx, vy, targetBlockX, targetBlockY, originalBlockX, originalBlockY);
+		}else {
+			CollisionVerticalResponse(world, origin, ref target, size, ref hardCollision, vx, vy, targetBlockX, targetBlockY, originalBlockX, originalBlockY);
+			CollisionHorizontalResponse(world, origin, ref target, size, ref hardCollision, vx, vy, targetBlockX, targetBlockY, originalBlockX, originalBlockY);
 		}
 
 		return target;
@@ -278,12 +334,12 @@ public class WorldController:Controller<WorldModel>{
 			FixedFloat factor;
 			if (collisionA && mantissa > 0.6f){
 				factor = (mantissa - 0.6) / 0.4;
-				target = FixedFloat.Min(target + factor * 0.05f, targetBlock + 1);
+				target = FixedFloat.Min(target + factor * 0.01f, targetBlock + 1);
 				return factor > 0.5f;
 			}else if (collisionB && mantissa < 0.4f){
 				factor = mantissa / 0.4;
 				factor = 1 - factor;
-				target = FixedFloat.Max(target - factor * 0.05f, targetBlock);
+				target = FixedFloat.Max(target - factor * 0.01f, targetBlock);
 				return factor > 0.5f;
 			}
 		}
@@ -298,17 +354,17 @@ public class WorldController:Controller<WorldModel>{
 			a = a + 1;
 		}
 
-		if (velocity.Magnitude > 0.001f){
+		if (velocity != FixedVector3.Zero){
 			FixedFloat movingAngle = FixedFloat.Atan2(velocity.Y, velocity.X);
 			// Moving direction
-			tank.orientationAngle = UpdateDirection(tank.orientationAngle, movingAngle, 0.09f, true, ref tank.movingBackwards);
+			tank.orientationAngle = UpdateDirection(tank.orientationAngle, movingAngle, tankDirectionSpeed, true, ref tank.movingBackwards);
 		}
 
 		// Turret
 		tank.turretTargetAngle = targetAngle;
 		FixedFloat localTarget = targetAngle - tank.orientationAngle;
 		bool falseBool = false;
-		tank.turretAngle = UpdateDirection(tank.turretAngle, localTarget, 0.05f, false, ref falseBool);
+		tank.turretAngle = UpdateDirection(tank.turretAngle, localTarget, turretDirectionSpeed, false, ref falseBool);
 
 	}
 
