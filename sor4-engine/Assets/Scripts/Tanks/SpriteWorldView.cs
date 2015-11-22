@@ -89,7 +89,16 @@ public class SpriteWorldView:View<WorldModel>{
 			if (model.map[i] != lastKnownMap[i]) {
 				// map change, recreate block
 				if (mapViews[i] != null){
-					GameObject.Destroy(mapViews[i]);
+					ParticleSystem particles = mapViews[i].GetComponent<ParticleSystem>();
+					if (particles != null) {
+						mapViews[i].AddComponent<FireAndForgetBehaviour>();
+						mapViews[i].GetComponent<FireAndForgetBehaviour>().lifetime = 0.5f;
+						particles.Play();
+						mapViews[i].GetComponent<SpriteRenderer>().enabled = false;
+						mapViews[i] = null;
+					}else {
+						GameObject.Destroy(mapViews[i]);
+					}
 				}
 				mapViews[i] = CreateBlock(model.map[i], i % WorldModel.MaxWidth, i / WorldModel.MaxHeight);
 				lastKnownMap[i] = model.map[i];

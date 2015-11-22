@@ -43,7 +43,7 @@ namespace RetroBread{
 			public static float lagIntegrationRate = 0.2f;
 
 			// How much of the latency we use in our game input
-			public static float lagCompensationRate = 1.0f; 
+			public static float lagCompensationRate = 1.1f; 
 
 			// how often to ping peers
 			public static float pingRate = 2.0f;
