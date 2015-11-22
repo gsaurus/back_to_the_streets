@@ -82,6 +82,7 @@ namespace RetroBread{
 			public void CancelServer(){
 				MasterServer.UnregisterHost();
 				IsAnouncingServer = false;
+				enabled = true;
 			}
 
 

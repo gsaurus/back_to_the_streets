@@ -17,6 +17,24 @@ public class GuiChat : MonoBehaviour
 		chat = GetComponent<NetworkChat>();
 	}
 
+	private void Restart(){
+
+		if (NetworkMaster.Instance.IsAnouncingServer){
+			NetworkMaster.Instance.CancelServer();
+		}
+		NetworkCenter.Instance.Disconnect();
+
+		GameObject entryPointObject = GameObject.Find("EntryPoint");
+		if (entryPointObject != null){
+			EntryPoint entryPoint = entryPointObject.GetComponent<EntryPoint>();
+			if (entryPoint != null){
+				entryPoint.Restart();
+			}
+		}
+		StateManager.Instance.SetPaused(true);
+	}
+
+
 	void OnGUI(){
 
 		if ((!NetworkCenter.Instance.IsConnected() && !NetworkMaster.Instance.IsAnouncingServer)){
@@ -32,18 +50,16 @@ public class GuiChat : MonoBehaviour
 //		GUI.skin.toggle.active.textColor = Color.black;
 //		GUI.skin.label.normal.textColor = Color.black;
 
-		if (StateManager.state.Keyframe > WorldController.totalGameFrames + 16){
-			GameObject entryPointObject = GameObject.Find("EntryPoint");
-			if (entryPointObject != null){
-				EntryPoint entryPoint = entryPointObject.GetComponent<EntryPoint>();
-				if (entryPoint != null){
-					entryPoint.Restart();
-				}
-			}
-			StateManager.Instance.SetPaused(true);
+		// Create server button
+		if (GUI.Button(new Rect(Screen.width-100, Screen.height - 40, 80, 27),"Leave")){
+			Restart();
 		}
 
-		bool isReady = GUI.Toggle(new Rect(Screen.width-100, Screen.height - 40, 80, 27), NetworkSync.Instance.IsPlayerReady(), "READY");
+		if (StateManager.state.Keyframe > WorldController.totalGameFrames + 16){
+			Restart();
+		}
+
+		bool isReady = GUI.Toggle(new Rect(Screen.width-100, Screen.height - 80, 80, 27), NetworkSync.Instance.IsPlayerReady(), "READY");
 
 		if (isReady && StateManager.state != null && StateManager.state.Keyframe > WorldController.totalGameFrames){
 

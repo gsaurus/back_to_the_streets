@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -45,7 +45,7 @@ namespace RetroBread{
 
 			// Set our own player data
 			public void SetPlayerData(NetworkPlayerData data) {
-						players[UnityEngine.Network.player.guid] = data;
+				players[UnityEngine.Network.player.guid] = data;
 			}
 
 			// Get a player's data
@@ -317,12 +317,12 @@ namespace RetroBread{
 				if (playerDisconnectedEvent != null) {
 					playerDisconnectedEvent(player.guid);
 				}
-
+				
 				// Remove only after notification so others can still access it's data
 				UnityEngine.Network.RemoveRPCs(player);
-				UnityEngine.Network.DestroyPlayerObjects(player);
 				players.Remove(player.guid);
 			}
+
 
 
 		#endregion
@@ -403,9 +403,27 @@ namespace RetroBread{
 			}
 
 
+
+			public void Disconnect(){
+				string guid = UnityEngine.Network.player.guid;
+				// Send event notification
+				if (playerDisconnectedEvent != null) {
+					playerDisconnectedEvent(guid);
+				}
+
+				// disconnect
+				UnityEngine.Network.Disconnect();
+
+				// Reset internal state
+				NetworkPlayerData myData = players[UnityEngine.Network.player.guid];
+				players.Clear();
+				playerNumbers.Clear();
+				SetPlayerData(myData);
+			}
+
 			void OnApplicationQuit() {
 				// TODO: store info so we can restore the networked game
-				UnityEngine.Network.Disconnect();
+				Disconnect();
 			}
 
 

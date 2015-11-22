@@ -248,6 +248,9 @@ namespace RetroBread{
 				if (guid == UnityEngine.Network.player.guid) {
 					StopCoroutine(PingPeers());
 					isReady = false;
+					if (syncStates != null) {
+						syncStates.Clear();
+					}
 				}else if (syncStates != null){
 					syncStates.Remove(guid);
 				}

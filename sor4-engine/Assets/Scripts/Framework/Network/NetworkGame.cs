@@ -87,7 +87,7 @@ namespace RetroBread{
 			// 1) game allow players to leave on middle game: nothing happens
 			// 2) game doesn't allow leave on middle game: pause game to all until everyone is ready again
 			void OnPlayerNotReadyEvent(string guid){
-				if (pauseWhenPlayersNotReady){
+				if (NetworkCenter.Instance.IsConnected() && pauseWhenPlayersNotReady){
 					GetComponent<NetworkView>().RPC("PauseGame",RPCMode.All); 
 				}
 		//		else {
