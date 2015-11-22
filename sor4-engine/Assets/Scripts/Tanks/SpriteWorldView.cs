@@ -179,7 +179,11 @@ public class SpriteWorldView:View<WorldModel>{
 			if (bulletModel != null && bulletViews[i] == null) {
 				bulletViews[i] = CreateBullet(NetworkCenter.Instance.GetPlayerNumber() == i / WorldModel.MaxBulletsPerPlayer);
 			}else if (model.bullets[i] == null && bulletViews[i] != null){
-				GameObject.Destroy(bulletViews[i]);
+				// Explode bullet!
+				bulletViews[i].AddComponent<FireAndForgetBehaviour>();
+				bulletViews[i].GetComponent<FireAndForgetBehaviour>().lifetime = 0.5f;
+				bulletViews[i].GetComponent<ParticleSystem>().Play();
+				bulletViews[i].GetComponent<SpriteRenderer>().enabled = false;
 				bulletViews[i] = null;
 			}
 			

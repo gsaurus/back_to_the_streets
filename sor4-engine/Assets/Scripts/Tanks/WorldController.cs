@@ -148,9 +148,16 @@ public class WorldController:Controller<WorldModel>{
 						if (inputController != null && inputController.IsButtonPressed(inputModel, 0)){
 							BulletModel bullet = world.CreateBulletForPlayer(tankId);
 							if (bullet != null){
-								FixedFloat fireAngle = tank.orientationAngle + tank.turretAngle;
+								// Add some randomness to bullet angle
+								FixedFloat fireAngle = tank.orientationAngle + tank.turretAngle + StateManager.state.Random.NextFloat(-0.015f, 0.015f);
 								bullet.velocity = new FixedVector3(FixedFloat.Cos(fireAngle), FixedFloat.Sin(fireAngle), 0);
-								bullet.position = tank.position + new FixedVector3(0.5f, 0.5f, 0) + bullet.velocity * 0.6f;
+								bullet.position = tank.position + new FixedVector3(0.5f, 0.5f, 0) + bullet.velocity * 0.52f;
+								// Add some randomness to bullet position
+								FixedFloat rx = StateManager.state.Random.NextFloat(-0.05f, 0.05f);
+								FixedFloat ry = StateManager.state.Random.NextFloat(-0.05f, 0.05f);
+								if (ry == rx) ry = rx + 0.01f;
+								bullet.position.X += rx;
+								bullet.position.Y += ry;
 								bullet.velocity *= maxBulletVelocity;
 								bullet.energy = 1;
 							}
@@ -476,17 +483,19 @@ public class WorldController:Controller<WorldModel>{
 						}
 						// second round
 						// warning TODO: disable this if not going to bounce on walls
-						if (!collidedX && !collidedY) {
-							bool newCollision = IsObstacleForBullet(world, blockX, blockY);
-							if (!collidedX && blockX != previousBlockX && newCollision){
-								if (bullet.velocity.X > 0) bullet.position.X = blockX;
-								else bullet.position.X = blockX + 1;
-								collidedX = true;
-							}
-							if (!collidedY && blockY != previousBlockY && newCollision){
-								if (bullet.velocity.Y > 0) bullet.position.Y = blockY;
-								else bullet.position.Y = blockY + 1;
-								collidedY = true;
+						if (bullet.energy > 1) {
+							if (!collidedX && !collidedY) {
+								bool newCollision = IsObstacleForBullet(world, blockX, blockY);
+								if (!collidedX && blockX != previousBlockX && newCollision){
+									if (bullet.velocity.X > 0) bullet.position.X = blockX;
+									else bullet.position.X = blockX + 1;
+									collidedX = true;
+								}
+								if (!collidedY && blockY != previousBlockY && newCollision){
+									if (bullet.velocity.Y > 0) bullet.position.Y = blockY;
+									else bullet.position.Y = blockY + 1;
+									collidedY = true;
+								}
 							}
 						}
 					}
