@@ -11,8 +11,7 @@ public class WorldModel:Model<WorldModel>{
 
 	public const int MaxWidth = 13;
 	public const int MaxHeight = 13;
-	public const int MaxPlayers = 10;
-	public const int MaxBulletsPerPlayer = 3;
+	public const int MaxPlayers = 8;
 
 	// TODO: other public options to setup the world, and proper constructor
 	// Such constructor will be called from the server only
@@ -31,21 +30,49 @@ public class WorldModel:Model<WorldModel>{
 	[ProtoMember(4, OverwriteList=true)]
 	public ModelReference[] playersInputModelIds;
 
+	// World settings
+	[ProtoMember(5)] public uint tankEnergy = 1;
+	[ProtoMember(6)] public uint bulletEnery = 1;
+	[ProtoMember(7)] public uint numBullets = 2;
+	[ProtoMember(8)] public FixedFloat tankVel = 0.04f;
+	[ProtoMember(9)] public FixedFloat bulletVel = 0.12f;
+	[ProtoMember(10)] public FixedFloat tankRotation = 0.07f;
+	[ProtoMember(11)] public FixedFloat turretRotation = 0.06f;
 
 
 
 
 	// Constructors
 	public WorldModel():base(WorldControllerFactoryId, WorldViewFactoryId){
-		// Nothing to do
+		// Default stuff
 		map = new int[MaxWidth * MaxHeight];
 		tanks = new TankModel[MaxPlayers];
 		playersInputModelIds = new ModelReference[MaxPlayers];
-		bullets = new BulletModel[MaxPlayers*MaxBulletsPerPlayer];
+		bullets = new BulletModel[MaxPlayers*numBullets];
 	}
 
-	public WorldModel(int[] map):this(){
+	public WorldModel(int[] map,
+	                  uint tankEnergy,
+	                  uint bulletEnery,
+	                  uint numBullets,
+	                  float tankVel,
+	                  float bulletVel,
+	                  float tankRotation,
+	                  float turretRotation
+     ):base(WorldControllerFactoryId, WorldViewFactoryId){
 		this.map = map;
+		this.tankEnergy = tankEnergy;
+		this.bulletEnery = bulletEnery;
+		this.numBullets = numBullets;
+		this.tankVel = tankVel;
+		this.bulletVel = bulletVel;
+		this.tankRotation = tankRotation;
+		this.turretRotation = turretRotation;
+
+		map = new int[MaxWidth * MaxHeight];
+		tanks = new TankModel[MaxPlayers];
+		playersInputModelIds = new ModelReference[MaxPlayers];
+		bullets = new BulletModel[MaxPlayers*numBullets];
 	}
 
 	public int MapValue(int x, int y){
@@ -57,8 +84,8 @@ public class WorldModel:Model<WorldModel>{
 	}
 
 	public BulletModel CreateBulletForPlayer(uint playerId){
-		uint initialIndex = playerId * MaxBulletsPerPlayer;
-		for (uint i = initialIndex ; i < initialIndex + MaxBulletsPerPlayer ; ++i){
+		uint initialIndex = playerId * numBullets;
+		for (uint i = initialIndex ; i < initialIndex + numBullets ; ++i){
 			//Debug.Log("index " + i + ", initial index " + initialIndex + ", playerId: " + playerId + ", bullets size: " + bullets.Length);
 			if (bullets[i] == null){
 				bullets[i] = new BulletModel();

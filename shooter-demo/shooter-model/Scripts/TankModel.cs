@@ -11,7 +11,7 @@ public class TankModel{
 	public FixedVector3 position;
 
 	[ProtoMember(2)]
-	public int energy;
+	public uint energy;
 
 	[ProtoMember(3)]
 	public FixedFloat orientationAngle;
@@ -38,7 +38,7 @@ public class TankModel{
 	}
 
 	// Constructor
-	public TankModel(FixedVector3 position, int energy, FixedFloat initialDirection, ModelReference inputModelRef){
+	public TankModel(FixedVector3 position, uint energy, FixedFloat initialDirection, ModelReference inputModelRef){
 		// setup initial velocity
 		this.position = position;
 		this.energy = energy;

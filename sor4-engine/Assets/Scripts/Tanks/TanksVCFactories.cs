@@ -22,7 +22,7 @@ public static class TanksVCFactories{
 			WorldModel.WorldViewFactoryId,
 			delegate(WorldModel model){
 				// For now use debug view
-				return new SpriteWorldView();
+				return new SpriteWorldView(model);
 			}
 		);
 	}

@@ -56,11 +56,11 @@ public class SpriteWorldView:View<WorldModel>{
 	}
 
 
-	public SpriteWorldView(){
+	public SpriteWorldView(WorldModel world){
 		// Allocate memory for views arrays
 		mapViews = new GameObject[WorldModel.MaxWidth * WorldModel.MaxHeight];
 		tankViews = new GameObject[WorldModel.MaxPlayers];
-		bulletViews = new GameObject[WorldModel.MaxPlayers * WorldModel.MaxBulletsPerPlayer];
+		bulletViews = new GameObject[WorldModel.MaxPlayers * world.numBullets];
 		lastKnownMap = new int[mapViews.Length];
 		for (int i = 0 ; i < mapViews.Length ; ++i){
 			lastKnownMap[i] = -1;
@@ -170,7 +170,7 @@ public class SpriteWorldView:View<WorldModel>{
 					animator.Play(forwardAnimHash);
 				}
 				float vel = Vector3.Distance(tankViews[i].transform.position, targetPos); 
-				animator.speed = vel / (float)WorldController.maxTankVelocity;
+				animator.speed = vel / (float)model.tankVel;
 
 				// update position
 				UpdatePosition(tankViews[i], targetPos);
@@ -186,7 +186,7 @@ public class SpriteWorldView:View<WorldModel>{
 			// update creation or destruction
 			BulletModel bulletModel = model.bullets[i];
 			if (bulletModel != null && bulletViews[i] == null) {
-				bulletViews[i] = CreateBullet(NetworkCenter.Instance.GetPlayerNumber() == i / WorldModel.MaxBulletsPerPlayer);
+				bulletViews[i] = CreateBullet(NetworkCenter.Instance.GetPlayerNumber() == i / model.numBullets);
 			}else if (model.bullets[i] == null && bulletViews[i] != null){
 				// Explode bullet!
 				bulletViews[i].AddComponent<FireAndForgetBehaviour>();
@@ -292,6 +292,27 @@ public class SpriteWorldView:View<WorldModel>{
 	
 
 #endregion
+
+
+	public override bool IsCompatible (WorldModel originalModel, WorldModel newModel){
+		return originalModel.numBullets == newModel.numBullets;
+	}
+
+	public override void OnDestroy(WorldModel model){
+		// Destroy the views
+		foreach (GameObject obj in mapViews){
+			GameObject.Destroy(obj);
+		}
+
+		foreach (GameObject obj in tankViews){
+			GameObject.Destroy(obj);
+		}
+
+		foreach (GameObject obj in bulletViews){
+			GameObject.Destroy(obj);
+		}
+		GameObject.Destroy(backgroundView);
+	}
 
 	
 }

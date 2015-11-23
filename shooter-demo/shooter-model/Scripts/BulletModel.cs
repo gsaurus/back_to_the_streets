@@ -13,7 +13,7 @@ public class BulletModel{
 
 	// energy.. currently used to tell how many times it can bounce on walls
 	[ProtoMember(3)]
-	public int energy;
+	public uint energy;
 
 	// Default Constructor
 	public BulletModel(){
@@ -22,7 +22,7 @@ public class BulletModel{
 
 
 	// Constructor
-	public BulletModel(FixedVector3 position, FixedVector3 velocity, int energy){
+	public BulletModel(FixedVector3 position, FixedVector3 velocity, uint energy){
 		this.position = position;
 		this.velocity = velocity;
 		this.energy = energy;

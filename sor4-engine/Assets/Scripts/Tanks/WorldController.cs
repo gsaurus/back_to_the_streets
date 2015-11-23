@@ -9,12 +9,6 @@ public class WorldController:Controller<WorldModel>{
 
 	public const uint totalGameFrames = 9997200; // 2 minutes
 
-	public static FixedFloat maxTankVelocity = 0.04f;
-	public static FixedFloat maxBulletVelocity = 0.12f;
-
-	public static FixedFloat tankDirectionSpeed = 0.07f;
-	public static FixedFloat turretDirectionSpeed = 0.06f;
-
 	public static FixedFloat minMovingVelocityThreshold = 0.025f;
 
 	private static FixedVector3 worldLimit;
@@ -86,11 +80,6 @@ public class WorldController:Controller<WorldModel>{
 	private bool IsObstacleForBullet(WorldModel world, int x, int y){
 		int blockValue = world.MapValue(x, y);
 		bool collided = blockValue == 1 || blockValue >= 4;
-		if (blockValue > 4){
-			world.SetMapValue(x, y, blockValue - 1);
-		}else if (blockValue == 4) {
-			world.SetMapValue(x, y, 0);
-		}
 		return collided;
 	}
 	
@@ -115,7 +104,7 @@ public class WorldController:Controller<WorldModel>{
 				if (tank.timeToRespawn > 0){
 					if (--tank.timeToRespawn <= 0){
 						// respawn
-						tank.energy = 1;
+						tank.energy = world.tankEnergy;
 						tank.position = InitialPositionForTankId(tankId);
 					}
 				}else {
@@ -123,9 +112,9 @@ public class WorldController:Controller<WorldModel>{
 					previousTankPosition = tank.position;
 					inputModel = StateManager.state.GetModel(tank.inputModelRef) as PlayerInputModel;
 					if (inputModel != null && inputModel.axis[0] != FixedVector3.Zero) {
-						velocity = new FixedVector3(inputModel.axis[0].X * maxTankVelocity, inputModel.axis[0].Z * maxTankVelocity, 0);
+						velocity = new FixedVector3(inputModel.axis[0].X * world.tankVel, inputModel.axis[0].Z * world.tankVel, 0);
 						if (velocity.Magnitude > minMovingVelocityThreshold) {
-							velocity = velocity.Normalized * (maxTankVelocity * (velocity.Magnitude - minMovingVelocityThreshold) / (maxTankVelocity - minMovingVelocityThreshold));
+							velocity = velocity.Normalized * (world.tankVel * (velocity.Magnitude - minMovingVelocityThreshold) / (world.tankVel - minMovingVelocityThreshold));
 							if (UpdateTankPosition(world, tank, inputModel, velocity)){
 								if (tank.position != previousTankPosition){
 									velocity = tank.position - previousTankPosition;
@@ -140,7 +129,7 @@ public class WorldController:Controller<WorldModel>{
 						velocity = FixedVector3.Zero;
 						targetAngle = tank.turretTargetAngle;
 					}
-					UpdateTankDirection(tank, velocity, targetAngle);
+					UpdateTankDirection(world, tank, velocity, targetAngle);
 
 					// check fire!!
 					if (inputModel != null) {
@@ -158,8 +147,8 @@ public class WorldController:Controller<WorldModel>{
 								if (ry == rx) ry = rx + 0.01f;
 								bullet.position.X += rx;
 								bullet.position.Y += ry;
-								bullet.velocity *= maxBulletVelocity;
-								bullet.energy = 1;
+								bullet.velocity *= world.bulletVel;
+								bullet.energy = world.bulletEnery;
 							}
 						}
 					}
@@ -354,7 +343,7 @@ public class WorldController:Controller<WorldModel>{
 	}
 
 
-	private void UpdateTankDirection(TankModel tank, FixedVector3 velocity, FixedFloat targetAngle){
+	private void UpdateTankDirection(WorldModel world, TankModel tank, FixedVector3 velocity, FixedFloat targetAngle){
 
 		if (tank.position.X > 5) {
 			int a = 0;
@@ -364,14 +353,14 @@ public class WorldController:Controller<WorldModel>{
 		if (velocity != FixedVector3.Zero){
 			FixedFloat movingAngle = FixedFloat.Atan2(velocity.Y, velocity.X);
 			// Moving direction
-			tank.orientationAngle = UpdateDirection(tank.orientationAngle, movingAngle, tankDirectionSpeed, true, ref tank.movingBackwards);
+			tank.orientationAngle = UpdateDirection(tank.orientationAngle, movingAngle, world.tankRotation, true, ref tank.movingBackwards);
 		}
 
 		// Turret
 		tank.turretTargetAngle = targetAngle;
 		FixedFloat localTarget = targetAngle - tank.orientationAngle;
 		bool falseBool = false;
-		tank.turretAngle = UpdateDirection(tank.turretAngle, localTarget, turretDirectionSpeed, false, ref falseBool);
+		tank.turretAngle = UpdateDirection(tank.turretAngle, localTarget, world.turretRotation, false, ref falseBool);
 
 	}
 
@@ -463,7 +452,20 @@ public class WorldController:Controller<WorldModel>{
 				blockX = (int)bullet.position.X;
 				blockY = (int)bullet.position.Y;
 
-				if (bullet.energy <= 1 && (collidedX || collidedY || IsObstacleForBullet(world, blockX, blockY))){
+
+				// collision response to the world
+				int blockValue = world.MapValue(blockX, blockY);
+				bool isObstacle = blockValue == 1 || blockValue >= 4;
+				if (blockValue > 4){
+					world.SetMapValue(blockX, blockY, blockValue - 1);
+					bullet.energy = 0;
+				}else if (blockValue == 4) {
+					world.SetMapValue(blockX, blockY, 0);
+					bullet.energy = 0;
+				}
+				
+
+				if (bullet.energy <= 1 && (collidedX || collidedY || isObstacle)){
 					// ask no more, kill bullet!
 					world.bullets[i] = null;
 					continue;

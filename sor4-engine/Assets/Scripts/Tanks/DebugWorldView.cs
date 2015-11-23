@@ -27,11 +27,11 @@ public class DebugWorldView:View<WorldModel>{
 	}
 
 
-	public DebugWorldView(){
+	public DebugWorldView(WorldModel world){
 		// Allocate memory for views arrays
 		mapViews = new GameObject[WorldModel.MaxWidth * WorldModel.MaxHeight];
 		tankViews = new GameObject[WorldModel.MaxPlayers];
-		bulletViews = new GameObject[WorldModel.MaxPlayers * WorldModel.MaxBulletsPerPlayer];
+		bulletViews = new GameObject[WorldModel.MaxPlayers * world.numBullets];
 		lastKnownMap = new int[mapViews.Length];
 
 		// Setup background, immutable
@@ -91,7 +91,7 @@ public class DebugWorldView:View<WorldModel>{
 			// update creation or destruction
 			BulletModel bulletModel = model.bullets[i];
 			if (bulletModel != null && bulletViews[i] == null) {
-				bulletViews[i] = CreateBullet(NetworkCenter.Instance.GetPlayerNumber() == i / WorldModel.MaxBulletsPerPlayer);
+				bulletViews[i] = CreateBullet(NetworkCenter.Instance.GetPlayerNumber() == i / model.numBullets);
 			}else if (model.bullets[i] == null && bulletViews[i] != null){
 				GameObject.Destroy(bulletViews[i]);
 				bulletViews[i] = null;
