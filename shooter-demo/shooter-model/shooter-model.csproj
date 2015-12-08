@@ -47,8 +47,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Scripts\WorldModel.cs" />
-    <Compile Include="Scripts\TankModel.cs" />
-    <Compile Include="Scripts\BulletModel.cs" />
+    <Compile Include="Scripts\SkierModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

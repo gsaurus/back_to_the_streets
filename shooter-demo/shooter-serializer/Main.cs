@@ -15,9 +15,8 @@ namespace ShooterSerializer
 			// Add new derived models
 			model[typeof(Model)].AddSubType(100, typeof(WorldModel));
 
+			model.Add(typeof(WorldModel), true)[1].SupportNull = true;
 			model.Add(typeof(WorldModel), true)[2].SupportNull = true;
-			model.Add(typeof(WorldModel), true)[3].SupportNull = true;
-			model.Add(typeof(WorldModel), true)[4].SupportNull = true;
 
 			// There seems to be a bug in protobuf-net,
 			// if I don't do those deepclones they doesn't get registered...
