@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections;
 
 
 namespace RetroBread{
@@ -7,89 +8,78 @@ namespace RetroBread{
 
 	public class TouchScreenInputSource: MonoBehaviour{
 
-		public Vector2[] buttonsLocation;
-		public float buttonsMaxRadius = 1f;
 		public float axisMaxRadius = 0.2f;
-
-		public float minAxisDelta = 0.1f;
+		public float minDelayBetweenEvents = 0.1f; // in seconds
 
 	#if UNITY_IPHONE || UNITY_ANDROID
-		private Vector2 lastAxis = Vector2.zero;
-		private bool[] buttonsDown;
+	
+		private bool isTouchingDown = false;
+		private float axisCenter = 0.0f;
+
+		private double lastEventTimeStamp = 0.0;
+		private float latestAxis = 0.0f;
+		private bool isCoroutineRunning = false;
 
 
 		public void Awake(){
-
-			Input.simulateMouseWithTouches = true;
-			buttonsDown = new bool[1];
+			// Nothing atm
 		}
 
 
-		private int CheckButtonsRange(Vector2 pos){
-			float minDist = buttonsMaxRadius;
-			float distance;
-			int buttonId = -1;
-			for(int i = 0 ; i < buttonsLocation.Length ; ++i){
-				distance = Vector2.Distance(pos, buttonsLocation[i]);
-				if (distance < minDist){
-					buttonId = i;
-					minDist = distance;
+
+		void SendAxis(float axis){
+			if (axis == latestAxis) return;
+			latestAxis = axis;
+			double newTimeStamp = DateTime.Now.TimeOfDay.TotalSeconds;
+			if (!isCoroutineRunning) {
+				float timeToWait = (float)(newTimeStamp - lastEventTimeStamp) - minDelayBetweenEvents;
+				if (timeToWait <= 0.0f){
+					AddAxisEventToStateManager(latestAxis);
+				}else {
+					StartCoroutine(WaitAndSendNextAxis(timeToWait));
+					newTimeStamp += timeToWait;
 				}
 			}
-			return buttonId;
+			lastEventTimeStamp = newTimeStamp;
 		}
+		
+		IEnumerator WaitAndSendNextAxis(float timeToWait){
+			isCoroutineRunning = true;
+			yield return new WaitForSeconds(timeToWait);
+			AddAxisEventToStateManager(latestAxis);
+			isCoroutineRunning = false;
+		}
+		
+		void AddAxisEventToStateManager(float newAxis){
+			StateManager.Instance.AddEvent(new AxisInputEvent(newAxis));
+		}
+
+
 
 
 		public void Update(){
 
-			// Check what buttons the touches are hitting
-			bool[] newButtonsDown = new bool[2];
-			Vector2 axisPos = Vector2.zero;
-			Vector2 relativePosTouch;
 			if (Input.touchCount > 0){
-				int buttonId;
-				foreach (Touch touch in Input.touches){
-					relativePosTouch = new Vector2(touch.position.x / Screen.width, touch.position.y / Screen.height);
-					buttonId = CheckButtonsRange(relativePosTouch);
-					if (buttonId >= 0){
-						// got a button pressed
-						newButtonsDown[buttonId] = true;
-						if (buttonId == 0){
-							axisPos = relativePosTouch;
-						}
+				Touch touch = Input.touches[0];
+
+				if (isTouchingDown){
+					float deltaX = touch.position.x - axisCenter;
+					// Clamp to limits
+					if (deltaX > axisMaxRadius){
+						axisCenter = touch.position.x - axisMaxRadius;
+						deltaX = axisMaxRadius;
+					}else if (deltaX < axisMaxRadius) {
+						axisCenter = touch.position.x + axisMaxRadius;
+						deltaX = axisMaxRadius;
 					}
+					SendAxis(deltaX);
+				}else {
+					// first touch down, selects the axis center (no event sent)
+					// TODO: well we can send a sync start here :D
+					axisCenter = touch.position.x;
+					isTouchingDown = true;
 				}
 			}
-
-			Vector2 newAxis = Vector2.zero;
-			if (newButtonsDown[0]){
-				newAxis = axisPos - buttonsLocation[0];
-				newAxis /= axisMaxRadius;
-				newAxis.x = Mathf.Clamp(newAxis.x, -1, 1);
-				newAxis.y = Mathf.Clamp(newAxis.y, -1, 1);
-				if (newAxis.magnitude > 1){
-					newAxis.Normalize();
-				}
-			}
-
-			if (
-				(Vector2.Distance(lastAxis,newAxis) >= minAxisDelta)
-				|| (newAxis == Vector2.zero && lastAxis != Vector2.zero)
-				|| (newAxis != Vector2.zero && lastAxis == Vector2.zero)
-				|| (newAxis != Vector2.zero && lastAxis == Vector2.zero && newAxis.x > 0 != lastAxis.x > 0)
-			){
-				StateManager.Instance.AddEvent(new AxisInputEvent(0, new FixedVector3(newAxis.x, 0, newAxis.y)));
-				lastAxis = newAxis;
-			}
-
-			// In the end check the differences between old and new touched buttons
-			for (uint i = 1 ; i < buttonsDown.Length ; ++i){
-				if (buttonsDown[i] != newButtonsDown[i]){
-					// generate a button event
-					StateManager.Instance.AddEvent(new ButtonInputEvent(i-1,newButtonsDown[i]));
-				}
-			}
-			buttonsDown = newButtonsDown;
 
 		}
 	#endif

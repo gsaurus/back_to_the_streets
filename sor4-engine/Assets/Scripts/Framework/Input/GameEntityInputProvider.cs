@@ -9,13 +9,7 @@ namespace RetroBread{
 	// Example 2: controller based on artificial inteligence
 	public interface GameEntityInputProvider{
 
-		FixedVector3 GetInputAxis(Model model);
-
-		bool IsButtonPressed(Model model, uint buttonId);
-
-		bool IsButtonHold(Model model, uint buttonId);
-
-		bool IsButtonReleased(Model model, uint buttonId);
+		FixedFloat GetInputAxis(Model model);
 
 	}
 

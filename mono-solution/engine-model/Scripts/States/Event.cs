@@ -21,8 +21,7 @@ namespace RetroBread{
 
 	// Represents a player action at a specific momment in the game
 	[ProtoContract]
-	[ProtoInclude(10, typeof(ButtonInputEvent))]
-	[ProtoInclude(11, typeof(AxisInputEvent))]
+	[ProtoInclude(10, typeof(AxisInputEvent))]
 	public abstract class Event{
 
 		// An event happens in a specific key frame

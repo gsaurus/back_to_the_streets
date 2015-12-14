@@ -37,9 +37,9 @@ public class WorldController:Controller<WorldModel>{
 		// Create characters for new players
 		foreach(uint playerId in allPlayers){
 			if (model.skiers[playerId] == null){
-				Model inputModel = new PlayerInputModel(playerId, 1, 1);
+				Model inputModel = new PlayerInputModel(playerId);
 				ModelReference inputModelRef = StateManager.state.AddModel(inputModel);
-				model.skiers[playerId] = new SkierModel(playerId * 1.0f, 0, -FixedFloat.HalfPI, inputModelRef);
+				model.skiers[playerId] = new SkierModel(playerId * 1.0f, 0, inputModelRef);
 			}
 			
 		}

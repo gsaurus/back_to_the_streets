@@ -10,53 +10,37 @@ namespace RetroBread{
 	[ProtoContract]
 	public class PlayerInputModel:Model<PlayerInputModel>{
 
+		public static FixedFloat invalidAxis = -1;
+
 		// The player controlling this input
 		[ProtoMember(1)]
 		public uint playerId;
+
 		// axis control (normalized)
 		[ProtoMember(2)]
-		public FixedVector3[] axis;
-
-		// Need to store action coolers to recognize
-		// button presses and releasees during a few frames
-		[ProtoMember(3)]
-		public uint[] actionPressedCoolers;
-		[ProtoMember(4)]
-		public uint[] actionReleasedCoolers;
-		[ProtoMember(5)]
-		public bool[] actionsHold;
+		public FixedFloat axis;
 
 
 		#region Constructors
 
 		// Default constructor
 		public PlayerInputModel(){
-			// Nothing to do
+			axis = invalidAxis;
 		}
 
 		// Constructor
-		public PlayerInputModel(uint playerId, int numAxis, int numButtons)
-		:this(playerId, DefaultVCFactoryIds.PlayerInputControllerFactoryId, null, DefaultUpdateOrder.InputUpdateOrder, numAxis, numButtons)
-		{}
-
-		// Constructor
-		public PlayerInputModel(uint playerId, int updatingOrder, int numAxis, int numButtons)
-			:this(playerId, DefaultVCFactoryIds.PlayerInputControllerFactoryId, null, updatingOrder, numAxis, numButtons)
+		public PlayerInputModel(uint playerId)
+		:this(playerId, DefaultVCFactoryIds.PlayerInputControllerFactoryId, null, DefaultUpdateOrder.InputUpdateOrder)
 		{}
 
 		// Constructor
 		public PlayerInputModel(uint playerId,
 		                        string controllerFactoryId,
 		                        string viewFactoryId,
-		                        int updatingOrder,
-		                        int numAxis,
-		                        int numButtons
+		                        int updatingOrder
 		):base(controllerFactoryId, viewFactoryId, updatingOrder){
 			this.playerId = playerId;
-			axis = new FixedVector3[numAxis];
-			actionPressedCoolers = new uint[numButtons];
-			actionReleasedCoolers = new uint[numButtons];
-			actionsHold = new bool[numButtons];
+			this.axis = invalidAxis;
 		}
 	
 
