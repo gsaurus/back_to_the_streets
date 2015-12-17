@@ -8,14 +8,13 @@ namespace RetroBread{
 
 	public class TouchScreenInputSource: MonoBehaviour{
 
-		public float axisMaxRadius = 0.2f;
 		public float minDelayBetweenEvents = 0.1f; // in seconds
 
-	#if UNITY_IPHONE || UNITY_ANDROID
-	
-		private bool isTouchingDown = false;
-		private float axisCenter = 0.0f;
+		public float touchesMultFactor = 0.01f;
 
+	#if UNITY_IPHONE || UNITY_ANDROID
+
+		// Control timing of events sent
 		private double lastEventTimeStamp = 0.0;
 		private float latestAxis = 0.0f;
 		private bool isCoroutineRunning = false;
@@ -32,11 +31,11 @@ namespace RetroBread{
 			latestAxis = axis;
 			double newTimeStamp = DateTime.Now.TimeOfDay.TotalSeconds;
 			if (!isCoroutineRunning) {
-				float timeToWait = (float)(newTimeStamp - lastEventTimeStamp) - minDelayBetweenEvents;
-				if (timeToWait <= 0.0f){
+				double timeToWait = newTimeStamp - lastEventTimeStamp;
+				if (timeToWait > minDelayBetweenEvents){
 					AddAxisEventToStateManager(latestAxis);
 				}else {
-					StartCoroutine(WaitAndSendNextAxis(timeToWait));
+					StartCoroutine(WaitAndSendNextAxis((float)timeToWait));
 					newTimeStamp += timeToWait;
 				}
 			}
@@ -59,26 +58,12 @@ namespace RetroBread{
 
 		public void Update(){
 
-			if (Input.touchCount > 0){
+			if (Network.NetworkCenter.Instance.IsConnected() && Input.touchCount > 0){
 				Touch touch = Input.touches[0];
-
-				if (isTouchingDown){
-					float deltaX = touch.position.x - axisCenter;
-					// Clamp to limits
-					if (deltaX > axisMaxRadius){
-						axisCenter = touch.position.x - axisMaxRadius;
-						deltaX = axisMaxRadius;
-					}else if (deltaX < axisMaxRadius) {
-						axisCenter = touch.position.x + axisMaxRadius;
-						deltaX = axisMaxRadius;
-					}
-					SendAxis(deltaX);
-				}else {
-					// first touch down, selects the axis center (no event sent)
-					// TODO: well we can send a sync start here :D
-					axisCenter = touch.position.x;
-					isTouchingDown = true;
+				if (touch.phase == TouchPhase.Moved){
+					SendAxis(touch.deltaPosition.x * touchesMultFactor);
 				}
+
 			}
 
 		}

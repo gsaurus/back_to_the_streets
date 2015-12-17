@@ -7,12 +7,13 @@ using System.Collections;
 namespace RetroBread{
 
 
-	public class KeyboardInputSource: MonoBehaviour{
+	public class MouseInputSource: MonoBehaviour{
 
 		public float minDelayBetweenEvents = 0.1f; // in seconds
 
 	#if !UNITY_IPHONE && !UNITY_ANDROID
 
+		// Control events sent
 		private double lastEventTimeStamp = 0.0;
 		private float latestAxis = 0.0f;
 		private bool isCoroutineRunning = false;
@@ -27,11 +28,11 @@ namespace RetroBread{
 			latestAxis = axis;
 			double newTimeStamp = DateTime.Now.TimeOfDay.TotalSeconds;
 			if (!isCoroutineRunning) {
-				float timeToWait = newTimeStamp - lastEventTimeStamp - minDelayBetweenEvents;
-				if (timeToWait <= 0.0f){
+				double timeToWait = newTimeStamp - lastEventTimeStamp;
+				if (timeToWait > minDelayBetweenEvents){
 					AddAxisEventToStateManager(latestAxis);
 				}else {
-					StartCoroutine(WaitAndSendNextAxis(timeToWait));
+					StartCoroutine(WaitAndSendNextAxis((float)timeToWait));
 					newTimeStamp += timeToWait;
 				}
 			}
@@ -46,15 +47,16 @@ namespace RetroBread{
 		}
 
 		void AddAxisEventToStateManager(float newAxis){
+//			UnityEngine.Debug.Log("Axis sent: " + newAxis);
 			StateManager.Instance.AddEvent(new AxisInputEvent(newAxis));
 		}
 
 
 		public void Update(){
-
-			float axis = Input.GetAxis("Horizontal");
-			SendAxis(axis);
-
+			if (Network.NetworkCenter.Instance.IsConnected()) {
+				float axis = Input.GetAxis("Horizontal");
+				SendAxis(axis);
+			}
 		}
 
 	#endif

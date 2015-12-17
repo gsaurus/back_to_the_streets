@@ -27,7 +27,19 @@ namespace RetroBread{
 		// Update coolers and input state based on input events
 		protected override void Update(PlayerInputModel model){
 
-			// Nothing to do
+			// Update model input state based on player events
+			List<Event> playerEvents = StateManager.Instance.GetEventsForPlayer(model.playerId);
+			if (playerEvents != null){
+				AxisInputEvent axisEvent;
+				foreach (Event e in playerEvents){
+					axisEvent = e as AxisInputEvent;
+					if (axisEvent != null){
+						model.axis = axisEvent.axis;
+					} // axisEvent != null
+
+				} // foreach event
+				
+			} // playerEvents != null
 
 		} // Update
 

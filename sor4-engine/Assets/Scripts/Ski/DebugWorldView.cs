@@ -13,7 +13,9 @@ public class DebugWorldView:View<WorldModel>{
 	// Common material used by all views
 	static Material meshesMaterial;
 
-	const float lerpTimeFactor = 5.0f; 
+	const float lerpTimeFactor = 0.25f; 
+	
+	static GameObject skierPrefab;
 
 	// local copy of last state's map, to identify map changes
 	int[] lastKnownMap;
@@ -21,6 +23,8 @@ public class DebugWorldView:View<WorldModel>{
 	static DebugWorldView(){
 		// setup imutable stuff
 		meshesMaterial = new Material(Shader.Find("Sprites/Default"));
+
+		skierPrefab 		= Resources.Load("skier") 		as GameObject;
 	}
 
 
@@ -84,10 +88,13 @@ public class DebugWorldView:View<WorldModel>{
 		}else {
 			color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
 		}
-		GameObject mainObj = CreateView(1.0f, 1.0f, color);
-		GameObject aimObj = CreateView(0.2f, 0.8f, new Color(color.r * 0.5f, color.g * 0.5f, color.b * 0.5f));
-		aimObj.transform.position = new Vector3(0.4f, 0.3f, -0.005f);
-		aimObj.transform.parent = mainObj.transform;
+		GameObject mainObj = GameObject.Instantiate(skierPrefab);
+//		MeshRenderer renderer = mainObj.GetComponent<MeshRenderer>();
+//		renderer.material.color = color;
+
+		if (own) {
+			mainObj.AddComponent<CameraTracker>();
+		}
 		return mainObj;
 	}
 

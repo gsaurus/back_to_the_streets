@@ -9,6 +9,29 @@ public class WorldController:Controller<WorldModel>{
 
 	public const uint totalGameFrames = 9997200; // 2 minutes
 
+	// velocity applied to horizontal movement
+	public FixedFloat maxHorizontalVelocity = 0.165f;
+	// velocity applied to vertical movement
+	public FixedFloat maxVerticalVelocity = 0.25f;
+
+	public FixedFloat minVerticalVelocity = 0.02f;
+
+	// how friction is reduced over time
+	public FixedFloat frictionReductionFactorX = 0.0001f;
+	public FixedFloat frictionReductionFactorY = 0.001f;
+
+	public FixedFloat accX = 0.085f;
+	public FixedFloat accY = 0.025f;
+	
+
+	// how much turning effects friction
+	public FixedFloat frictionIncreaseFactor = 0.6f;
+
+	// How the movement adapts to input changes
+	public FixedFloat movementLerpFactor = 0.1f;
+
+	public FixedFloat maxXValue = 0.9f;
+
 
 #region Initializations
 
@@ -51,7 +74,7 @@ public class WorldController:Controller<WorldModel>{
 	
 
 
-#region Tanks
+#region Skiers
 
 	private void UpdateSkiers(WorldModel world){
 
@@ -61,19 +84,86 @@ public class WorldController:Controller<WorldModel>{
 			skier = world.skiers[skierId];
 			if (skier != null){
 
+				// Use input to update skier direction
 				PlayerInputModel inputModel = StateManager.state.GetModel(skier.inputModelRef) as PlayerInputModel;
 				if (inputModel != null){
-
-					// Use input to update skier direction
-
+					UpdateSkierDirectionBasedOnInput(skier, inputModel);
 				}
 
+				// Update skier position
+				UpdateSkierPosition(skier);
+
 			}
-
-			// Update skier position
-
 		}
 
+	}
+
+	private void UpdateSkierDirectionBasedOnInput(SkierModel skier, PlayerInputModel inputModel){
+		FixedFloat deltaVel = inputModel.axis;
+
+		if (deltaVel == 0) return;
+
+		if (deltaVel < 0 && skier.targetVelX < -maxXValue - deltaVel) {
+			deltaVel = -maxXValue - skier.targetVelX;
+		}else if (deltaVel > 0 && skier.targetVelX > maxXValue - deltaVel) {
+			deltaVel = maxXValue - skier.targetVelX;
+		}
+
+		skier.targetVelX = skier.targetVelX + deltaVel;
+		skier.targetVelY = -FixedFloat.One + FixedFloat.Abs(skier.targetVelX);
+		if (skier.targetVelX != 0) {
+			skier.targetVelY = FixedFloat.Sin(FixedFloat.Atan2(skier.targetVelY, skier.targetVelX));
+		}
+
+//		skier.frictionX = FixedFloat.Min(skier.frictionX + frictionIncreaseFactor * FixedFloat.Abs(deltaVel), FixedFloat.One);
+//		skier.frictionY = FixedFloat.Min(skier.frictionY + frictionIncreaseFactor * FixedFloat.Abs(deltaVel), FixedFloat.One);
+//		skier.velX = skier.velX + deltaVel;
+//		skier.velX = FixedFloat.Lerp(skier.velX, skier.velX + deltaVel, movementLerpFactor);
+//		skier.velY = -FixedFloat.One + FixedFloat.Abs(skier.velX);
+//		UnityEngine.Debug.Log("velX: " + skier.velX + ", deltaVel: " + deltaVel);
+	}
+
+	private void UpdateSkierPosition(SkierModel skier) {
+//		skier.velX * maxHorizontalVelocity;
+//		FixedFloat vY = maxVerticalVelocity;
+//
+//		// Update friction
+//		if (skier.frictionY > FixedFloat.Zero) {
+//			FixedFloat inversedFriction = (FixedFloat.One - skier.frictionY);
+//			vY *= inversedFriction * vX;
+//			
+//			skier.frictionY -= frictionReductionFactorY;
+//			if (skier.frictionY < FixedFloat.Zero) skier.frictionY = FixedFloat.Zero;
+//		}
+//		if (skier.frictionX > FixedFloat.Zero) {
+//			FixedFloat inversedFriction = (FixedFloat.One - skier.frictionX);
+//			vX *= inversedFriction;
+//			
+//			skier.frictionX -= frictionReductionFactorX;
+//			if (skier.frictionX < FixedFloat.Zero) skier.frictionX = FixedFloat.Zero;
+//		}
+
+		if (skier.velX < skier.targetVelX){
+			skier.velX = FixedFloat.Min(skier.velX + accX, skier.targetVelX);
+		}else if (skier.velX > skier.targetVelX) {
+			skier.velX = FixedFloat.Max(skier.velX - accX, skier.targetVelX);
+		}
+
+		if (skier.velY < skier.targetVelY){
+			skier.velY = FixedFloat.Min(skier.velY + accY, skier.targetVelY);
+		}else if (skier.velY > skier.targetVelY) {
+			skier.velY = FixedFloat.Max(skier.velY - accY, skier.targetVelY);
+		}
+
+		FixedFloat vX = skier.velX * maxHorizontalVelocity;
+		FixedFloat vY = skier.velY * maxVerticalVelocity;
+		if (vY > -minVerticalVelocity) vY = -minVerticalVelocity;
+
+		skier.x += vX;
+		skier.y += vY;
+
+
+		// TODO: handle collisions and the hell..
 	}
 
 

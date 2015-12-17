@@ -590,6 +590,10 @@ namespace RetroBread{
 			return angle;
 		}
 
+		public static FixedFloat Lerp(FixedFloat first, FixedFloat second, FixedFloat blend) {
+			return first + (second - first)*blend;
+		}
+
 	}
 
 }

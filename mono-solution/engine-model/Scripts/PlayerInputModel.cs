@@ -10,8 +10,6 @@ namespace RetroBread{
 	[ProtoContract]
 	public class PlayerInputModel:Model<PlayerInputModel>{
 
-		public static FixedFloat invalidAxis = -1;
-
 		// The player controlling this input
 		[ProtoMember(1)]
 		public uint playerId;
@@ -25,7 +23,7 @@ namespace RetroBread{
 
 		// Default constructor
 		public PlayerInputModel(){
-			axis = invalidAxis;
+			axis = 0;
 		}
 
 		// Constructor
@@ -40,7 +38,7 @@ namespace RetroBread{
 		                        int updatingOrder
 		):base(controllerFactoryId, viewFactoryId, updatingOrder){
 			this.playerId = playerId;
-			this.axis = invalidAxis;
+			this.axis = 0;
 		}
 	
 

@@ -27,7 +27,18 @@ public class SkierModel{
 	[ProtoMember(6)]
 	public uint frozenTimer;
 
+	// Used to slowdown the skier when doing tight curves
 	[ProtoMember(7)]
+	public FixedFloat frictionX;
+	[ProtoMember(8)]
+	public FixedFloat frictionY;
+
+	[ProtoMember(9)]
+	public FixedFloat targetVelX;
+	[ProtoMember(10)]
+	public FixedFloat targetVelY;
+	
+	[ProtoMember(11)]
 	public ModelReference inputModelRef;
 
 	// Default Constructor
@@ -39,11 +50,18 @@ public class SkierModel{
 
 	// Constructor
 	public SkierModel(FixedFloat x, FixedFloat y, ModelReference inputModelRef){
-		// setup initial velocity
 		this.x = x;
 		this.y = y;
+		// moving straight down
 		this.velX = 0;
 		this.velY = 0;
+		this.targetVelX = 0;
+		this.targetVelY = -1.0f;
+
+		// initial full friction, so it will accelerate at the start
+		this.frictionX = 1.0f;
+		this.frictionY = 1.0f;
+
 		this.fallenTimer = 0;
 		this.frozenTimer = 0;
 		this.inputModelRef = inputModelRef;
