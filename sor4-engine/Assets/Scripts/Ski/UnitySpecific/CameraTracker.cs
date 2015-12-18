@@ -8,9 +8,11 @@ public class CameraTracker : MonoBehaviour {
 	private Vector3 previousPos;
 	private Quaternion previousRot;
 
+	private Vector3 originalPosition;
+
 	void Start(){
 		Camera mainCamera = Camera.main;
-		mainCamera.transform.parent = transform;
+		originalPosition = mainCamera.transform.position;
 //		mainCamera.transform.position = transform.position + new Vector3(4,3,0);
 //		mainCamera.transform.LookAt(transform.position);
 //		previousPos = mainCamera.transform.position;
@@ -19,7 +21,8 @@ public class CameraTracker : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-//		Camera mainCamera = Camera.main;
+		Camera mainCamera = Camera.main;
+		mainCamera.transform.position = transform.position + originalPosition;
 //	
 //		Vector3 target = new Vector3(transform.position.x, //Mathf.Lerp(0f, transform.position.x, 0.95f),
 //		                             transform.position.y + 4,

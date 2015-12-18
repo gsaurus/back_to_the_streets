@@ -10,7 +10,7 @@ namespace RetroBread{
 
 		public float minDelayBetweenEvents = 0.1f; // in seconds
 
-		public float touchesMultFactor = 0.1f;
+		public float touchesMultFactor = 0.01f;
 
 	#if UNITY_IPHONE || UNITY_ANDROID
 
@@ -66,9 +66,7 @@ namespace RetroBread{
 						lastTouchPos = touch.position.x;
 					}break;
 					case TouchPhase.Moved: {
-						float dpi = Screen.dpi;
-						if (dpi == 0) dpi = 1.0f;
-						SendAxis(((touch.position.x - lastTouchPos) / Screen.dpi) * touchesMultFactor);
+						SendAxis((touch.position.x - lastTouchPos) * touchesMultFactor);
 						lastTouchPos = touch.position.x;
 					}break;
 					case TouchPhase.Ended:

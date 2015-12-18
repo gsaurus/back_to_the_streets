@@ -13,7 +13,8 @@ public class DebugWorldView:View<WorldModel>{
 	// Common material used by all views
 	static Material meshesMaterial;
 
-	const float lerpTimeFactor = 0.25f; 
+	const float lerpTimeFactor = 0.2f; 
+	const float lerpAngleFactor = 0.1f;
 	
 	static GameObject skierPrefab;
 	static int rideAnimHash;
@@ -52,6 +53,11 @@ public class DebugWorldView:View<WorldModel>{
 			SkierModel skierModel = model.skiers[i];
 			if (skierModel != null && skierViews[i] == null) {
 				skierViews[i] = CreateSkier(NetworkCenter.Instance.GetPlayerNumber() == i);
+
+				float targetAngle = skierModel.targetVelY == 0 ? -Mathf.PI * 0.5f : (float)Mathf.Atan2((float)skierModel.targetVelX, (float)skierModel.targetVelY);
+				targetAngle = targetAngle * Mathf.Rad2Deg;
+				skierViews[i].transform.localEulerAngles = new Vector3(0, targetAngle, 0);
+
 			}else if (skierModel == null && skierViews[i] != null){
 				GameObject.Destroy(skierViews[i]);
 				skierViews[i] = null;
@@ -66,11 +72,12 @@ public class DebugWorldView:View<WorldModel>{
 				UpdatePosition(skierView, targetPos);
 
 				// update angle
-				float targetAngle = skierModel.targetVelX == 0 ? -Mathf.PI * 0.5f : (float)Mathf.Atan2((float)skierModel.targetVelY, (float)skierModel.targetVelX);
+				float targetAngle = skierModel.targetVelY == 0 ? -Mathf.PI * 0.5f : (float)Mathf.Atan2((float)skierModel.targetVelX, (float)skierModel.targetVelY);
 				targetAngle = targetAngle * Mathf.Rad2Deg;
 				float originalAngle = skierView.transform.localEulerAngles.y;
-				targetAngle = Mathf.Lerp(originalAngle, targetAngle, lerpTimeFactor);
-				skierView.transform.localEulerAngles = new Vector3(0, 0, 0);
+				normalizeAnglesDifference(ref targetAngle, originalAngle);
+				targetAngle = Mathf.Lerp(originalAngle, targetAngle, lerpAngleFactor);
+				skierView.transform.localEulerAngles = new Vector3(0, targetAngle, 0);
 
 				// update animation
 				Animator animator = skierView.GetComponent<Animator>();
@@ -78,7 +85,9 @@ public class DebugWorldView:View<WorldModel>{
 					// update moving animation
 					if (skierModel.fallenTimer == 0 && skierModel.frozenTimer == 0){
 						animator.Play(rideAnimHash);
-						animator.SetFloat("Blend", (float)(skierModel.friction)*0.5f + 1.0f);
+						float blendFactor = (float)(skierModel.friction)*0.5f + 0.5f;
+						blendFactor = Mathf.Min(blendFactor * 2.0f);
+						animator.SetFloat("Blend", blendFactor);
 						animator.speed = new Vector2((float)skierModel.velX, (float)skierModel.velY).magnitude;
 					}
 
@@ -92,11 +101,7 @@ public class DebugWorldView:View<WorldModel>{
 
 	private void UpdatePosition(GameObject obj, Vector3 targetPos){
 		float dist = Vector3.Distance(obj.transform.position, targetPos);
-		if (dist < 0.05f || dist > 2) {
-			obj.transform.position = targetPos;
-		}else{
-			obj.transform.position = Vector3.Lerp(obj.transform.position, targetPos, lerpTimeFactor);
-		}
+		obj.transform.position = Vector3.Lerp(obj.transform.position, targetPos, lerpTimeFactor);
 	}
 	
 	
@@ -114,7 +119,8 @@ public class DebugWorldView:View<WorldModel>{
 			color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
 		}
 		GameObject mainObj = GameObject.Instantiate(skierPrefab);
-//		MeshRenderer renderer = mainObj.GetComponent<MeshRenderer>();
+		
+		//		MeshRenderer renderer = mainObj.GetComponent<MeshRenderer>();
 //		renderer.material.color = color;
 
 		if (own) {
@@ -207,6 +213,16 @@ public class DebugWorldView:View<WorldModel>{
 		
 		//Return the mesh
 		return mesh;
+	}
+
+
+	private void normalizeAnglesDifference(ref float a1, float a2){
+		while (a1 - a2 > 180){
+			a1 -= 360;
+		}
+		while (a1 - a2 < -180){
+			a1 += 360;
+		}
 	}
 
 #endregion

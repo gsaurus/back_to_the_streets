@@ -9,23 +9,29 @@ public class WorldController:Controller<WorldModel>{
 
 	public const uint totalGameFrames = 9997200; // 2 minutes
 
-	// velocity applied to horizontal movement
-	public FixedFloat maxHorizontalVelocity = 0.165f;
-	// velocity applied to vertical movement
-	public FixedFloat maxVerticalVelocity = 0.25f;
+//	// velocity applied to horizontal movement
+//	public FixedFloat maxHorizontalVelocity = 0.165f;
+//	// velocity applied to vertical movement
+//	public FixedFloat maxVerticalVelocity = 0.25f;
+//
+//	public FixedFloat minVerticalVelocity = 0.02f;
 
+	// velocity applied to horizontal movement
+	public FixedFloat maxHorizontalVelocity = 0.265f;
+	// velocity applied to vertical movement
+	public FixedFloat maxVerticalVelocity = 0.35f;
+	
 	public FixedFloat minVerticalVelocity = 0.02f;
 
 	// how friction is reduced over time
-	public FixedFloat frictionReductionFactorX = 0.0001f;
-	public FixedFloat frictionReductionFactorY = 0.001f;
+	public FixedFloat frictionReductionFactor = 0.02f;
 
 	public FixedFloat accX = 0.085f;
 	public FixedFloat accY = 0.025f;
 	
 
 	// how much turning effects friction
-	public FixedFloat frictionIncreaseFactor = 0.6f;
+	public FixedFloat frictionIncreaseFactor = 1.0f;
 
 	// How the movement adapts to input changes
 	public FixedFloat movementLerpFactor = 0.1f;
@@ -99,7 +105,9 @@ public class WorldController:Controller<WorldModel>{
 	}
 
 	private void UpdateSkierDirectionBasedOnInput(SkierModel skier, PlayerInputModel inputModel){
-		FixedFloat deltaVel = inputModel.axis;
+
+		// controls reversed cose camera was reversed too
+		FixedFloat deltaVel = -inputModel.axis;
 
 		if (deltaVel == 0) return;
 
@@ -115,7 +123,8 @@ public class WorldController:Controller<WorldModel>{
 			skier.targetVelY = FixedFloat.Sin(FixedFloat.Atan2(skier.targetVelY, skier.targetVelX));
 		}
 
-//		skier.frictionX = FixedFloat.Min(skier.frictionX + frictionIncreaseFactor * FixedFloat.Abs(deltaVel), FixedFloat.One);
+		skier.friction = skier.friction + frictionIncreaseFactor * deltaVel;
+		skier.friction = FixedFloat.Clamp(skier.friction, -FixedFloat.One, FixedFloat.One);
 //		skier.frictionY = FixedFloat.Min(skier.frictionY + frictionIncreaseFactor * FixedFloat.Abs(deltaVel), FixedFloat.One);
 //		skier.velX = skier.velX + deltaVel;
 //		skier.velX = FixedFloat.Lerp(skier.velX, skier.velX + deltaVel, movementLerpFactor);
@@ -124,24 +133,6 @@ public class WorldController:Controller<WorldModel>{
 	}
 
 	private void UpdateSkierPosition(SkierModel skier) {
-//		skier.velX * maxHorizontalVelocity;
-//		FixedFloat vY = maxVerticalVelocity;
-//
-//		// Update friction
-//		if (skier.frictionY > FixedFloat.Zero) {
-//			FixedFloat inversedFriction = (FixedFloat.One - skier.frictionY);
-//			vY *= inversedFriction * vX;
-//			
-//			skier.frictionY -= frictionReductionFactorY;
-//			if (skier.frictionY < FixedFloat.Zero) skier.frictionY = FixedFloat.Zero;
-//		}
-//		if (skier.frictionX > FixedFloat.Zero) {
-//			FixedFloat inversedFriction = (FixedFloat.One - skier.frictionX);
-//			vX *= inversedFriction;
-//			
-//			skier.frictionX -= frictionReductionFactorX;
-//			if (skier.frictionX < FixedFloat.Zero) skier.frictionX = FixedFloat.Zero;
-//		}
 
 		if (skier.velX < skier.targetVelX){
 			skier.velX = FixedFloat.Min(skier.velX + accX, skier.targetVelX);
@@ -157,6 +148,25 @@ public class WorldController:Controller<WorldModel>{
 
 		FixedFloat vX = skier.velX * maxHorizontalVelocity;
 		FixedFloat vY = skier.velY * maxVerticalVelocity;
+
+
+		// Update friction
+		FixedFloat absFriction = FixedFloat.Abs(skier.friction);
+		if (absFriction > FixedFloat.Zero) {
+			FixedFloat inversedFriction = (FixedFloat.One - absFriction);
+			vX *= inversedFriction;
+			vY *= inversedFriction;
+
+			if (skier.friction > 0){
+				skier.friction -= frictionReductionFactor;
+				if (skier.friction < FixedFloat.Zero) skier.friction = FixedFloat.Zero;
+			}else if (skier.friction < 0) {
+				skier.friction += frictionReductionFactor;
+				if (skier.friction > FixedFloat.Zero) skier.friction = FixedFloat.Zero;
+			}
+		}
+		
+		
 		if (vY > -minVerticalVelocity) vY = -minVerticalVelocity;
 
 		skier.x += vX;
@@ -172,7 +182,26 @@ public class WorldController:Controller<WorldModel>{
 
 
 	protected override void Update(WorldModel model){
-		
+
+		// update track
+		FixedFloat minY = 0;
+		FixedFloat maxY = 0;
+		SkierModel skier;
+		// For each tank update it's position and orientation
+		for (uint skierId = 0 ; skierId < model.skiers.Length ; ++skierId){
+			skier = model.skiers[skierId];
+			if (skier != null){
+				if (minY == 0 || skier.y > minY){
+					minY = skier.y;
+				}
+				if (maxY == 0 || skier.y < maxY){
+					maxY = skier.y;
+				}
+			}
+		}
+
+		WorldObjects.UpdateTrack(minY, maxY);
+
 		HandlePlayerConnections(model);
 		UpdateSkiers(model);
 	}
