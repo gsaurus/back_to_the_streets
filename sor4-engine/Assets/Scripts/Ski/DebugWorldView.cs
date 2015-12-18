@@ -16,6 +16,8 @@ public class DebugWorldView:View<WorldModel>{
 	const float lerpTimeFactor = 0.25f; 
 	
 	static GameObject skierPrefab;
+	static int rideAnimHash;
+
 
 	// local copy of last state's map, to identify map changes
 	int[] lastKnownMap;
@@ -24,7 +26,8 @@ public class DebugWorldView:View<WorldModel>{
 		// setup imutable stuff
 		meshesMaterial = new Material(Shader.Find("Sprites/Default"));
 
-		skierPrefab 		= Resources.Load("skier") 		as GameObject;
+		skierPrefab = Resources.Load("skier") as GameObject;
+		rideAnimHash = Animator.StringToHash("Ride");
 	}
 
 
@@ -53,11 +56,33 @@ public class DebugWorldView:View<WorldModel>{
 				GameObject.Destroy(skierViews[i]);
 				skierViews[i] = null;
 			}
+			GameObject skierView = skierViews[i];
 
 			// update position
-			if (skierViews[i] != null){
-				Vector3 targetPos = new Vector3((float)skierModel.x, (float)skierModel.y, -0.2f);
-				UpdatePosition(skierViews[i], targetPos);
+			if (skierView != null){
+
+				// update position
+				Vector3 targetPos = new Vector3((float)skierModel.x, 0.0f, (float)skierModel.y);
+				UpdatePosition(skierView, targetPos);
+
+				// update angle
+				float targetAngle = skierModel.targetVelX == 0 ? -Mathf.PI * 0.5f : (float)Mathf.Atan2((float)skierModel.targetVelY, (float)skierModel.targetVelX);
+				targetAngle = targetAngle * Mathf.Rad2Deg;
+				float originalAngle = skierView.transform.localEulerAngles.y;
+				targetAngle = Mathf.Lerp(originalAngle, targetAngle, lerpTimeFactor);
+				skierView.transform.localEulerAngles = new Vector3(0, 0, 0);
+
+				// update animation
+				Animator animator = skierView.GetComponent<Animator>();
+				if (animator != null) {
+					// update moving animation
+					if (skierModel.fallenTimer == 0 && skierModel.frozenTimer == 0){
+						animator.Play(rideAnimHash);
+						animator.SetFloat("Blend", (float)(skierModel.friction)*0.5f + 1.0f);
+						animator.speed = new Vector2((float)skierModel.velX, (float)skierModel.velY).magnitude;
+					}
+
+				}
 
 				//tankViews[i].transform.RotateAround(new Vector3(0.5f, 0.5f, 0.0f), Vector3.forward, 0.4f);
 			}
@@ -67,7 +92,7 @@ public class DebugWorldView:View<WorldModel>{
 
 	private void UpdatePosition(GameObject obj, Vector3 targetPos){
 		float dist = Vector3.Distance(obj.transform.position, targetPos);
-		if (dist < 0.25f || dist > 2) {
+		if (dist < 0.05f || dist > 2) {
 			obj.transform.position = targetPos;
 		}else{
 			obj.transform.position = Vector3.Lerp(obj.transform.position, targetPos, lerpTimeFactor);
