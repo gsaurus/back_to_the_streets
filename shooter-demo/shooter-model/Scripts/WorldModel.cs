@@ -20,12 +20,28 @@ public class WorldModel:Model<WorldModel>{
 	[ProtoMember(2, OverwriteList=true)]
 	public ModelReference[] playersInputModelIds;
 
+	[ProtoMember(3)]
+	public FixedFloat lastTrackX;
+	[ProtoMember(4)]
+	public FixedFloat maxYKnown;
+
+	[ProtoMember(5)]
+	public FixedFloat nextTrackX;
+
+	[ProtoMember(6)]
+	public FixedFloat nextTrackY;
+
+
 
 	// Constructors
 	public WorldModel():base(WorldControllerFactoryId, WorldViewFactoryId){
 		// Default stuff
 		skiers = new SkierModel[MaxPlayers];
 		playersInputModelIds = new ModelReference[MaxPlayers];
+		lastTrackX = FixedFloat.Zero;
+		maxYKnown = FixedFloat.Zero;
+		nextTrackX = FixedFloat.Zero;
+		nextTrackY = FixedFloat.Zero;
 	}
 
 }

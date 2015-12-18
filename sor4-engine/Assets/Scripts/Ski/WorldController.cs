@@ -200,7 +200,7 @@ public class WorldController:Controller<WorldModel>{
 			}
 		}
 
-		WorldObjects.UpdateTrack(minY, maxY);
+		WorldObjects.UpdateTrack(model, minY, maxY);
 
 		HandlePlayerConnections(model);
 		UpdateSkiers(model);
