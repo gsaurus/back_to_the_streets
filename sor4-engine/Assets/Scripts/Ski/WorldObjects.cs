@@ -102,13 +102,13 @@ public class WorldObject
 public class WorldObjects{
 
 	// 
-	static SimpleRandomGenerator rnd = new SimpleRandomGenerator();
+	static SimpleRandomGenerator rnd = null;
 
-	static uint collisionFallenTime = 45;
+	public static uint collisionFallenTime = 45;
 
 	static FixedFloat maxHorizontalDistance = 20;
 	static FixedFloat maxDistanceBehind = 10;
-	static FixedFloat minDistanceAhead = 70;
+	static FixedFloat minDistanceAhead = 80;
 	// every 50 units, resort the list
 	static FixedFloat controlRange = 1.0f;
 
@@ -181,6 +181,10 @@ public class WorldObjects{
 
 
 	public static void UpdateTrack(WorldModel world, FixedFloat minY, FixedFloat maxY) {
+
+		if (rnd == null){
+			rnd = new SimpleRandomGenerator(StateManager.state.Random.NextUnsignedInt());
+		}
 
 		if (yList.Count > 0) {
 

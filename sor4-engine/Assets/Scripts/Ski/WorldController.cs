@@ -27,7 +27,7 @@ public class WorldController:Controller<WorldModel>{
 	public FixedFloat frictionReductionFactor = 0.02f;
 
 	public FixedFloat accX = 0.085f;
-	public FixedFloat accY = 0.0235f;
+	public FixedFloat accY = 0.0190f;
 	
 
 	// how much turning effects friction

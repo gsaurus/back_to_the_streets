@@ -9,6 +9,7 @@ public class DebugWorldView:View<WorldModel>{
 	
 	// The views
 	GameObject[] skierViews;
+	bool[] skierCollisionSoundActivated;
 
 	// Common material used by all views
 	static Material meshesMaterial;
@@ -37,6 +38,7 @@ public class DebugWorldView:View<WorldModel>{
 	public DebugWorldView(WorldModel world){
 		// Allocate memory for views arrays
 		skierViews = new GameObject[WorldModel.MaxPlayers];
+		skierCollisionSoundActivated = new bool[WorldModel.MaxPlayers];
 	}
 
 
@@ -86,6 +88,9 @@ public class DebugWorldView:View<WorldModel>{
 				if (animator != null) {
 					// update moving animation
 					if (skierModel.fallenTimer == 0 && skierModel.frozenTimer == 0){
+
+						float frictionRate = Mathf.Abs((float)skierModel.friction);
+
 						animator.Play(rideAnimHash);
 						float blendFactor = (float)(skierModel.friction) * 2.0f;
 						Mathf.Clamp(blendFactor, -1, 1);
@@ -96,11 +101,25 @@ public class DebugWorldView:View<WorldModel>{
 						ParticleSystem particles = skierView.GetComponentInChildren<ParticleSystem>();
 						if (particles != null) {
 							particles.enableEmission = true;
-							float frictionRate = Mathf.Abs((float)skierModel.friction);
-							particles.emissionRate = 1 + animator.speed * 10 + frictionRate * 250;
+							particles.emissionRate = 1 + animator.speed * 20 + frictionRate * 329;
 							particles.transform.localEulerAngles = new Vector3(30 + (1 - frictionRate) * 60, 90, 0);
 							particles.transform.localPosition = new Vector3(particles.transform.localPosition.x, -0.75f, particles.transform.localPosition.z);
 						}
+
+						// Audio
+						AudioSource[] audio = skierView.GetComponents<AudioSource>();
+						if (audio != null){
+							if(!audio[0].isPlaying){
+								audio[0].Play();
+							}
+							if(!audio[1].isPlaying){
+								audio[1].Play();
+							}
+							audio[0].volume = animator.speed * animator.speed * 0.3f;
+							audio[1].volume = frictionRate * 0.4f;
+							skierCollisionSoundActivated[i] = false;
+						}
+
 					}else {
 						animator.Play(fallAnimHash);
 						skierView.transform.localEulerAngles = new Vector3(0, 180, 0);
@@ -110,6 +129,17 @@ public class DebugWorldView:View<WorldModel>{
 						if (particles != null) {
 							particles.enableEmission = false;
 							particles.transform.localPosition = new Vector3(particles.transform.localPosition.x, -999, particles.transform.localPosition.z);
+						}
+
+						// Audio
+						AudioSource[] audio = skierView.GetComponents<AudioSource>();
+						if (audio != null && !skierCollisionSoundActivated[i]){
+							audio[0].Stop();
+							audio[1].Stop();
+							audio[2].Stop();
+							audio[2].pitch = UnityEngine.Random.Range(0.5f, 1.5f);
+							audio[2].Play();
+							skierCollisionSoundActivated[i] = true;
 						}
 					}
 
