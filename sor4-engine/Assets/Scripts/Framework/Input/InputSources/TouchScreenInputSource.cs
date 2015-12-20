@@ -69,6 +69,7 @@ namespace RetroBread{
 						SendAxis((touch.position.x - lastTouchPos) * touchesMultFactor);
 						lastTouchPos = touch.position.x;
 					}break;
+					case TouchPhase.Stationary:
 					case TouchPhase.Ended:
 					case TouchPhase.Canceled:{
 						SendAxis(0);
