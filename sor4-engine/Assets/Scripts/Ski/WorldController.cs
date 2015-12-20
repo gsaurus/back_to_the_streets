@@ -38,6 +38,9 @@ public class WorldController:Controller<WorldModel>{
 
 	public FixedFloat maxXValue = 0.9f;
 
+	private SkierModel topSkierRef;
+	private SkierModel bottomSkierRef;
+
 
 #region Initializations
 
@@ -82,7 +85,35 @@ public class WorldController:Controller<WorldModel>{
 
 #region Skiers
 
+
+
+	private void CheckTopAndBottomSkiers(WorldModel world){
+	
+		SkierModel skier;
+		// For each tank update it's position and orientation
+		FixedFloat topY = 0;
+		FixedFloat bottomY = 0;
+		topSkierRef = null;
+		bottomSkierRef = null;
+		for (uint skierId = 0 ; skierId < world.skiers.Length ; ++skierId){
+			skier = world.skiers[skierId];
+			if (skier != null){
+				if (topSkierRef == null || skier.y < topY){
+					topY = skier.y;
+					topSkierRef = skier;
+				}
+				else if (bottomSkierRef == null || skier.y > bottomY){
+					bottomY = skier.y;
+					bottomSkierRef = skier;
+				}
+			}
+		}
+	}
+
+
 	private void UpdateSkiers(WorldModel world){
+
+		CheckTopAndBottomSkiers(world);
 
 		SkierModel skier;
 		// For each tank update it's position and orientation
@@ -183,6 +214,14 @@ public class WorldController:Controller<WorldModel>{
 		    && vY > -minVerticalVelocity
 		){
 			vY = -minVerticalVelocity;
+		}
+
+		if (skier == topSkierRef){
+			vX *= 0.9f;
+			vY *= 0.9f;
+		}else if (skier == bottomSkierRef){
+			vX *= 1.1f;
+			vY *= 1.1f;
 		}
 
 		skier.x += vX;
