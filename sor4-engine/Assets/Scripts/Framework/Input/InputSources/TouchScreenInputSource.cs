@@ -10,7 +10,7 @@ namespace RetroBread{
 
 		public float minDelayBetweenEvents = 0.1f; // in seconds
 
-		public float touchesMultFactor = 0.002f;
+		public float touchesMultFactor = 0.00075f;
 
 	#if UNITY_IPHONE || UNITY_ANDROID
 

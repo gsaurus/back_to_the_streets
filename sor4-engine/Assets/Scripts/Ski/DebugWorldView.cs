@@ -92,10 +92,25 @@ public class DebugWorldView:View<WorldModel>{
 						blendFactor = blendFactor*0.5f + 0.5f;
 						animator.SetFloat("Blend", blendFactor);
 						animator.speed = new Vector2((float)skierModel.velX, (float)skierModel.velY).magnitude;
+
+						ParticleSystem particles = skierView.GetComponentInChildren<ParticleSystem>();
+						if (particles != null) {
+							particles.enableEmission = true;
+							float frictionRate = Mathf.Abs((float)skierModel.friction);
+							particles.emissionRate = 1 + animator.speed * 10 + frictionRate * 250;
+							particles.transform.localEulerAngles = new Vector3(30 + (1 - frictionRate) * 60, 90, 0);
+							particles.transform.localPosition = new Vector3(particles.transform.localPosition.x, -0.75f, particles.transform.localPosition.z);
+						}
 					}else {
 						animator.Play(fallAnimHash);
 						skierView.transform.localEulerAngles = new Vector3(0, 180, 0);
 						animator.speed = 1.0f;
+
+						ParticleSystem particles = skierView.GetComponentInChildren<ParticleSystem>();
+						if (particles != null) {
+							particles.enableEmission = false;
+							particles.transform.localPosition = new Vector3(particles.transform.localPosition.x, -999, particles.transform.localPosition.z);
+						}
 					}
 
 				}
