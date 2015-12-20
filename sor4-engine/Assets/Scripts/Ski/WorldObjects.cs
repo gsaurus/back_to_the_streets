@@ -18,6 +18,7 @@ public class WorldObject
 {
 	public int type;
 
+	public FixedFloat y;
 	public FixedFloat x1;
 	public FixedFloat x2;
 	public bool isRight;
@@ -67,6 +68,7 @@ public class WorldObject
 
 	public WorldObject(int type, FixedFloat x, FixedFloat y, bool isRight) {
 		this.type = type;
+		this.y = y;
 		this.x1 = x - 1.0f;
 		this.x2 = x + 1.0f;
 		this.isRight = isRight;
@@ -99,6 +101,8 @@ public class WorldObject
 
 public class WorldObjects{
 
+	// 
+	static SimpleRandomGenerator rnd = new SimpleRandomGenerator();
 
 	static uint collisionFallenTime = 45;
 
@@ -110,6 +114,13 @@ public class WorldObjects{
 
 	static List<int> yList = new List<int>(100);
 	static Dictionary<int, List<WorldObject>> objectsByY = new Dictionary<int, List<WorldObject>>(100);
+
+
+	static FixedFloat maxYKnown;
+	static FixedFloat lastTrackX;
+	static FixedFloat lastTrackY;
+	static FixedFloat nextTrackX;
+	static FixedFloat nextTrackY;
 
 
 
@@ -127,17 +138,6 @@ public class WorldObjects{
 
 
 	public static void HandleCollisionWithWorld(WorldModel world, SkierModel skier){
-
-//		// world limits
-//		FixedFloat centerX = GetCenterXForY(skier.y, world.lastTrackY, world.nextTrackY, world.lastTrackX, world.nextTrackX);
-//		if (skier.x < centerX - maxHorizontalDistance) {
-//			skier.x = centerX - maxHorizontalDistance;
-//			if (skier.velX < 0.01f) skier.velX = 0.01f;
-//		}else if (skier.x > centerX + maxHorizontalDistance) {
-//			skier.x = centerX + maxHorizontalDistance;
-//			if (skier.velX > -0.01f) skier.velX = -0.01f;
-//		}
-
 
 		if (skier.fallenTimer > 0 || skier.frozenTimer > 0){
 			return; // ignore if already collided
@@ -184,23 +184,8 @@ public class WorldObjects{
 
 		if (yList.Count > 0) {
 
-			// remove future objects...
+			bool removedSome;
 			int index;
-			bool removedSome = false;
-			for (index = yList.Count-1 ; index > 0 && yList[index] <  world.maxYKnown; --index){
-				List<WorldObject> objects;
-				if (objectsByY.TryGetValue(yList[index], out objects)){
-					foreach (WorldObject obj in objects) {
-						obj.OnDestroy();
-					}
-				}
-				objectsByY.Remove(yList[index]);
-				removedSome = true;
-			}
-			if (removedSome) {
-				yList.RemoveRange(index, yList.Count - index);
-			}
-
 			// remove old objects
 			if (yList.Count > 0){
 				FixedFloat minKnownY = yList[0];
@@ -229,13 +214,13 @@ public class WorldObjects{
 
 		FixedFloat nextY;
 		int latestIntY = (int)maxKnownY;
-		for (nextY = maxKnownY - 0.001f ; nextY > nextTargetY ; nextY -= StateManager.state.Random.NextFloat(0.0001f, 1.5f)){
+		for (nextY = maxKnownY - 0.001f ; nextY > nextTargetY ; nextY -= rnd.NextFloat(0.0001f, 1.5f)){
 
-			while (nextY < world.nextTrackY){
-				world.lastTrackY = nextY;
-				world.lastTrackX = world.nextTrackX;
-				world.nextTrackX = world.nextTrackX + StateManager.state.Random.NextFloat(-30, 30);
-				world.nextTrackY = nextY - StateManager.state.Random.NextFloat(20, 60);
+			while (nextY < nextTrackY){
+				lastTrackY = nextY;
+				lastTrackX = nextTrackX;
+				nextTrackX = nextTrackX + rnd.NextFloat(-30, 30);
+				nextTrackY = nextY - rnd.NextFloat(20, 60);
 			}
 
 			int nextIntY = (int)nextY;
@@ -251,14 +236,14 @@ public class WorldObjects{
 			FixedFloat centerX;
 			FixedFloat randomX;
 
-			centerX = GetCenterXForY(nextY, world.lastTrackY, world.nextTrackY, world.lastTrackX, world.nextTrackX);
+			centerX = GetCenterXForY(nextY, lastTrackY, nextTrackY, lastTrackX, nextTrackX);
 			randomX = GetRandomXAroundCenter(centerX);
-			newObjects.Add(new WorldObject(StateManager.state.Random.NextInt(0, 5), randomX, nextY, randomX > centerX));
+			newObjects.Add(new WorldObject(rnd.NextInt(0, 5), randomX, nextY, randomX > centerX));
 
 
 		}
 
-		world.maxYKnown = maxKnownY = nextY;
+		maxYKnown = maxKnownY = nextY;
 
 	}
 
@@ -271,10 +256,10 @@ public class WorldObjects{
 	}
 	
 	static FixedFloat GetRandomXAroundCenter(FixedFloat center) {
-		FixedFloat randomT = StateManager.state.Random.NextFloat(0, 1);
+		FixedFloat randomT = rnd.NextFloat(0, 1);
 		randomT = randomT * randomT * randomT;
 		randomT = 1.05f - randomT;
-		if (StateManager.state.Random.NextInt(0,1) == 0) {
+		if (rnd.NextInt(0,1) == 0) {
 			randomT *= -1;
 		}
 		return center + (randomT * maxHorizontalDistance);

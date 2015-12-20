@@ -17,9 +17,9 @@ public class WorldController:Controller<WorldModel>{
 //	public FixedFloat minVerticalVelocity = 0.02f;
 
 	// velocity applied to horizontal movement
-	public FixedFloat maxHorizontalVelocity = 0.265f;
+	public FixedFloat maxHorizontalVelocity = 0.25f;
 	// velocity applied to vertical movement
-	public FixedFloat maxVerticalVelocity = 0.35f;
+	public FixedFloat maxVerticalVelocity = 0.3f;
 	
 	public FixedFloat minVerticalVelocity = 0.02f;
 
@@ -27,7 +27,7 @@ public class WorldController:Controller<WorldModel>{
 	public FixedFloat frictionReductionFactor = 0.02f;
 
 	public FixedFloat accX = 0.085f;
-	public FixedFloat accY = 0.025f;
+	public FixedFloat accY = 0.0235f;
 	
 
 	// how much turning effects friction
