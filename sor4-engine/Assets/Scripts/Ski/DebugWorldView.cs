@@ -18,6 +18,7 @@ public class DebugWorldView:View<WorldModel>{
 	
 	static GameObject skierPrefab;
 	static int rideAnimHash;
+	static int fallAnimHash;
 
 
 	// local copy of last state's map, to identify map changes
@@ -29,6 +30,7 @@ public class DebugWorldView:View<WorldModel>{
 
 		skierPrefab = Resources.Load("skier") as GameObject;
 		rideAnimHash = Animator.StringToHash("Ride");
+		fallAnimHash = Animator.StringToHash("Fall");
 	}
 
 
@@ -85,10 +87,15 @@ public class DebugWorldView:View<WorldModel>{
 					// update moving animation
 					if (skierModel.fallenTimer == 0 && skierModel.frozenTimer == 0){
 						animator.Play(rideAnimHash);
-						float blendFactor = (float)(skierModel.friction)*0.5f + 0.5f;
-						blendFactor = Mathf.Min(blendFactor * 2.0f);
+						float blendFactor = (float)(skierModel.friction) * 2.0f;
+						Mathf.Clamp(blendFactor, -1, 1);
+						blendFactor = blendFactor*0.5f + 0.5f;
 						animator.SetFloat("Blend", blendFactor);
 						animator.speed = new Vector2((float)skierModel.velX, (float)skierModel.velY).magnitude;
+					}else {
+						animator.Play(fallAnimHash);
+						skierView.transform.localEulerAngles = new Vector3(0, 180, 0);
+						animator.speed = 1.0f;
 					}
 
 				}

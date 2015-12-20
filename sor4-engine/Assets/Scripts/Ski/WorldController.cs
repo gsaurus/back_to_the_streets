@@ -68,7 +68,7 @@ public class WorldController:Controller<WorldModel>{
 			if (model.skiers[playerId] == null){
 				Model inputModel = new PlayerInputModel(playerId);
 				ModelReference inputModelRef = StateManager.state.AddModel(inputModel);
-				model.skiers[playerId] = new SkierModel(playerId * 1.0f, 0, inputModelRef);
+				model.skiers[playerId] = new SkierModel(playerId * 1.5f, 0, inputModelRef);
 			}
 			
 		}
@@ -90,26 +90,38 @@ public class WorldController:Controller<WorldModel>{
 			skier = world.skiers[skierId];
 			if (skier != null){
 
+				if (skier.fallenTimer > 0){
+					if (--skier.fallenTimer == 0){
+						UpdateSkierDirectionBasedOnInput(skier, 0);
+					}
+				}
+				if (skier.frozenTimer > 0){
+					if (--skier.frozenTimer == 0){
+						UpdateSkierDirectionBasedOnInput(skier, 0);
+					}
+				}
+
 				// Use input to update skier direction
-				PlayerInputModel inputModel = StateManager.state.GetModel(skier.inputModelRef) as PlayerInputModel;
-				if (inputModel != null){
-					UpdateSkierDirectionBasedOnInput(skier, inputModel);
+				if (skier.fallenTimer == 0 && skier.frozenTimer == 0){
+					PlayerInputModel inputModel = StateManager.state.GetModel(skier.inputModelRef) as PlayerInputModel;
+					if (inputModel != null && inputModel.axis != 0.0f){
+						// reversed cose camera is reversed too
+						UpdateSkierDirectionBasedOnInput(skier, -inputModel.axis);
+					}
 				}
 
 				// Update skier position
 				UpdateSkierPosition(skier);
 
+				// check collisions
+				WorldObjects.HandleCollisionWithWorld(world, skier);
+				WorldObjects.HandleCollisionWithOtherSkiers(world, skier);
 			}
 		}
 
 	}
 
-	private void UpdateSkierDirectionBasedOnInput(SkierModel skier, PlayerInputModel inputModel){
-
-		// controls reversed cose camera was reversed too
-		FixedFloat deltaVel = -inputModel.axis;
-
-		if (deltaVel == 0) return;
+	private void UpdateSkierDirectionBasedOnInput(SkierModel skier, FixedFloat deltaVel){
 
 		if (deltaVel < 0 && skier.targetVelX < -maxXValue - deltaVel) {
 			deltaVel = -maxXValue - skier.targetVelX;
@@ -167,7 +179,11 @@ public class WorldController:Controller<WorldModel>{
 		}
 		
 		
-		if (vY > -minVerticalVelocity) vY = -minVerticalVelocity;
+		if (skier.fallenTimer == 0 && skier.frozenTimer == 0
+		    && vY > -minVerticalVelocity
+		){
+			vY = -minVerticalVelocity;
+		}
 
 		skier.x += vX;
 		skier.y += vY;

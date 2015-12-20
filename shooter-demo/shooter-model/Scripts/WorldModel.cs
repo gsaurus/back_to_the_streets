@@ -21,14 +21,18 @@ public class WorldModel:Model<WorldModel>{
 	public ModelReference[] playersInputModelIds;
 
 	[ProtoMember(3)]
-	public FixedFloat lastTrackX;
-	[ProtoMember(4)]
 	public FixedFloat maxYKnown;
 
+	[ProtoMember(4)]
+	public FixedFloat lastTrackX;
+
 	[ProtoMember(5)]
-	public FixedFloat nextTrackX;
+	public FixedFloat lastTrackY;
 
 	[ProtoMember(6)]
+	public FixedFloat nextTrackX;
+
+	[ProtoMember(7)]
 	public FixedFloat nextTrackY;
 
 
@@ -39,6 +43,7 @@ public class WorldModel:Model<WorldModel>{
 		skiers = new SkierModel[MaxPlayers];
 		playersInputModelIds = new ModelReference[MaxPlayers];
 		lastTrackX = FixedFloat.Zero;
+		lastTrackY = FixedFloat.Zero;
 		maxYKnown = FixedFloat.Zero;
 		nextTrackX = FixedFloat.Zero;
 		nextTrackY = FixedFloat.Zero;

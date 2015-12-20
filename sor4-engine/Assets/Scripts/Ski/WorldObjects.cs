@@ -20,6 +20,7 @@ public class WorldObject
 
 	public FixedFloat x1;
 	public FixedFloat x2;
+	public bool isRight;
 
 	// Keep track of visual object
 	GameObject view;
@@ -42,9 +43,9 @@ public class WorldObject
 		tree2Prefab = Resources.Load("tree2") as GameObject;
 
 		// Instantiate objects pools
-		rocksPool = new GameObject[50];
-		tree1Pool = new GameObject[100];
-		tree2Pool = new GameObject[100];
+		rocksPool = new GameObject[500];
+		tree1Pool = new GameObject[1000];
+		tree2Pool = new GameObject[1000];
 
 		for (int i = 0 ; i < rocksPool.Length ; ++i) {
 			rocksPool[i] = GameObject.Instantiate(rockPrefab);
@@ -64,10 +65,11 @@ public class WorldObject
 	}
 
 
-	public WorldObject(int type, FixedFloat x, FixedFloat y) {
+	public WorldObject(int type, FixedFloat x, FixedFloat y, bool isRight) {
 		this.type = type;
-		this.x1 = x - 0.5f;
-		this.x2 = x + 0.5f;
+		this.x1 = x - 1.0f;
+		this.x2 = x + 1.0f;
+		this.isRight = isRight;
 
 		if (type == 0) {
 			view = rocksPool[rockPoolId++];
@@ -81,8 +83,8 @@ public class WorldObject
 		}
 		view.SetActive(true);
 		view.transform.eulerAngles = new Vector3(310 + UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(0, 360));
-		float radius = UnityEngine.Random.Range(0.75f, 1.25f);
-		view.transform.localScale = new Vector3(radius, UnityEngine.Random.Range(0.75f, 1.5f), radius);
+		float radius = type == 0 ? UnityEngine.Random.Range(1.0f, 1.3f) : UnityEngine.Random.Range(0.75f, 1.25f);
+		view.transform.localScale = new Vector3(radius, UnityEngine.Random.Range(0.75f, 1.75f), radius);
 		view.transform.localPosition  = new Vector3((float)x, -0.25f, (float)y);
 	}
 
@@ -97,19 +99,84 @@ public class WorldObject
 
 public class WorldObjects{
 
-	static FixedFloat maxHorizontalDistance = 30;
+
+	static uint collisionFallenTime = 45;
+
+	static FixedFloat maxHorizontalDistance = 20;
 	static FixedFloat maxDistanceBehind = 10;
 	static FixedFloat minDistanceAhead = 70;
 	// every 50 units, resort the list
-	static FixedFloat controlRange = 0.1f;
+	static FixedFloat controlRange = 1.0f;
 
-	static List<FixedFloat> yList = new List<FixedFloat>(100);
-	static Dictionary<FixedFloat, List<WorldObject>> objectsByY = new Dictionary<FixedFloat, List<WorldObject>>(100);
+	static List<int> yList = new List<int>(100);
+	static Dictionary<int, List<WorldObject>> objectsByY = new Dictionary<int, List<WorldObject>>(100);
 
 
 
-	public static WorldObject getCollisionObject(FixedFloat x, FixedFloat lastY, FixedFloat newY){
+	public static WorldObject GetCollisionObject(FixedFloat x, FixedFloat y){
+		List<WorldObject> objects;
+		if (objectsByY.TryGetValue((int)y, out objects)){
+			foreach (WorldObject obj in objects){
+				if (x > obj.x1 && x < obj.x2){
+					return obj;
+				}
+			}
+		}
 		return null;
+	}
+
+
+	public static void HandleCollisionWithWorld(WorldModel world, SkierModel skier){
+
+//		// world limits
+//		FixedFloat centerX = GetCenterXForY(skier.y, world.lastTrackY, world.nextTrackY, world.lastTrackX, world.nextTrackX);
+//		if (skier.x < centerX - maxHorizontalDistance) {
+//			skier.x = centerX - maxHorizontalDistance;
+//			if (skier.velX < 0.01f) skier.velX = 0.01f;
+//		}else if (skier.x > centerX + maxHorizontalDistance) {
+//			skier.x = centerX + maxHorizontalDistance;
+//			if (skier.velX > -0.01f) skier.velX = -0.01f;
+//		}
+
+
+		if (skier.fallenTimer > 0 || skier.frozenTimer > 0){
+			return; // ignore if already collided
+		}
+		WorldObject obj = GetCollisionObject(skier.x, skier.y);
+		if (obj != null){
+			skier.fallenTimer = collisionFallenTime;
+			skier.velX = obj.isRight ? -1.4 : 1.4;
+			skier.velY = 0.6f;
+			skier.targetVelX = 0;
+			skier.targetVelY = 0;
+		}
+	}
+
+
+
+	public static void HandleCollisionWithOtherSkiers(WorldModel world, SkierModel skier){
+
+		if (skier.fallenTimer > 0 || skier.frozenTimer > 0){
+			return; // ignore if already collided
+		}
+
+		SkierModel otherSkier;
+
+		for (uint skierId = 0 ; skierId < world.skiers.Length ; ++skierId){
+			otherSkier = world.skiers[skierId];
+		
+			if (otherSkier != null && otherSkier != skier){
+				if ((int)skier.y == (int)otherSkier.y){
+					if (FixedFloat.Abs(skier.x - otherSkier.x) < 0.8f){
+						skier.fallenTimer = collisionFallenTime;
+						skier.velX = skier.x < otherSkier.x ? -1.2 : 1.2;
+						skier.velY = 0.4f;
+						skier.targetVelX = 0;
+						skier.targetVelY = 0;
+					}
+				}
+			}
+		}
 	}
 
 
@@ -158,34 +225,41 @@ public class WorldObjects{
 
 		// create more track
 		FixedFloat maxKnownY = yList.Count == 0 ? 0 : yList[yList.Count-1];
-		FixedFloat nextTargetY = maxKnownY + minDistanceAhead + controlRange;
-		while (maxY < nextTargetY) {
+		FixedFloat nextTargetY = maxY - minDistanceAhead - controlRange;
 
-			FixedFloat nextY;
-			for (nextY = maxKnownY - 0.001f ; nextY > nextTargetY ; nextY -= StateManager.state.Random.NextFloat(0.0001f, 2.0f)){
+		FixedFloat nextY;
+		int latestIntY = (int)maxKnownY;
+		for (nextY = maxKnownY - 0.001f ; nextY > nextTargetY ; nextY -= StateManager.state.Random.NextFloat(0.0001f, 1.5f)){
 
-				if (nextY < world.nextTrackY){
-					world.nextTrackX = world.lastTrackX + StateManager.state.Random.NextFloat(-30, 30);
-					world.nextTrackY = nextY - StateManager.state.Random.NextFloat(20, 60);
-				}
-
-				yList.Add(nextY);
-				List<WorldObject> newObjects = new List<WorldObject>();
-				FixedFloat centerX;
-				FixedFloat randomX;
-				do {
-					centerX = GetCenterXForY(nextY, maxKnownY, world.nextTrackY, world.lastTrackX, world.nextTrackX);
-					randomX = GetRandomXAroundCenter(centerX);
-					newObjects.Add(new WorldObject(StateManager.state.Random.NextInt(0, 5), randomX, nextY));
-				}while (StateManager.state.Random.NextInt(0, 1) != 0);
-				UnityEngine.Debug.Log("next: " + nextY);
-				objectsByY.Add(nextY,newObjects);
+			while (nextY < world.nextTrackY){
+				world.lastTrackY = nextY;
+				world.lastTrackX = world.nextTrackX;
+				world.nextTrackX = world.nextTrackX + StateManager.state.Random.NextFloat(-30, 30);
+				world.nextTrackY = nextY - StateManager.state.Random.NextFloat(20, 60);
 			}
 
-			world.lastTrackX = world.nextTrackX;
-			world.maxYKnown = maxKnownY = nextY;
+			int nextIntY = (int)nextY;
+			if (nextIntY != latestIntY){
+				yList.Add(nextIntY);
+				latestIntY = nextIntY;
+			}
+			List<WorldObject> newObjects;
+			if (!objectsByY.TryGetValue(nextIntY, out newObjects)) {
+				newObjects = new List<WorldObject>();
+				objectsByY.Add(nextIntY,newObjects);
+			}
+			FixedFloat centerX;
+			FixedFloat randomX;
+
+			centerX = GetCenterXForY(nextY, world.lastTrackY, world.nextTrackY, world.lastTrackX, world.nextTrackX);
+			randomX = GetRandomXAroundCenter(centerX);
+			newObjects.Add(new WorldObject(StateManager.state.Random.NextInt(0, 5), randomX, nextY, randomX > centerX));
+
 
 		}
+
+		world.maxYKnown = maxKnownY = nextY;
+
 	}
 
 
@@ -199,7 +273,7 @@ public class WorldObjects{
 	static FixedFloat GetRandomXAroundCenter(FixedFloat center) {
 		FixedFloat randomT = StateManager.state.Random.NextFloat(0, 1);
 		randomT = randomT * randomT * randomT;
-		randomT = 1 - randomT;
+		randomT = 1.05f - randomT;
 		if (StateManager.state.Random.NextInt(0,1) == 0) {
 			randomT *= -1;
 		}
