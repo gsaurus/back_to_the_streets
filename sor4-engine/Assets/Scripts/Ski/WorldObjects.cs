@@ -167,7 +167,7 @@ public class WorldObjects{
 		
 			if (otherSkier != null && otherSkier != skier){
 				if ((int)skier.y == (int)otherSkier.y){
-					if (FixedFloat.Abs(skier.x - otherSkier.x) < 0.5f){
+					if (FixedFloat.Abs(skier.x - otherSkier.x) < 0.25f){
 						skier.fallenTimer = collisionFallenTime;
 						skier.velX = skier.x < otherSkier.x ? -1.2 : 1.2;
 						skier.velY = 0.4f;
@@ -214,7 +214,13 @@ public class WorldObjects{
 
 		// create more track
 		FixedFloat maxKnownY = yList.Count == 0 ? 0 : yList[yList.Count-1];
-		FixedFloat nextTargetY = maxY - minDistanceAhead - controlRange;
+		FixedFloat distanceAhead;
+		if (StateManager.state.Keyframe > 180){
+			distanceAhead = minDistanceAhead - controlRange;
+		}else {
+			distanceAhead = (FixedFloat.Create(StateManager.state.Keyframe) / 180.0f) * (minDistanceAhead - controlRange);
+		}
+		FixedFloat nextTargetY = maxY - distanceAhead;
 
 		FixedFloat nextY;
 		int latestIntY = (int)maxKnownY;

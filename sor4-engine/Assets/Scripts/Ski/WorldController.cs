@@ -258,7 +258,11 @@ public class WorldController:Controller<WorldModel>{
 		WorldObjects.UpdateTrack(model, minY, maxY);
 
 		HandlePlayerConnections(model);
-		UpdateSkiers(model);
+
+		if (StateManager.state.Keyframe > 178){
+			// Update skiers only after initial countdown
+			UpdateSkiers(model);
+		}
 	}
 	
 }

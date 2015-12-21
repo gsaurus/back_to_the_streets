@@ -6,8 +6,9 @@ using RetroBread.Network;
 
 public class GuiConnection : MonoBehaviour
 {
-	public Canvas mainCanvas;
+	public GameObject mainParent;
 	public GameObject goButton;
+	public GameObject inGameParent;
 
 	public UnityEngine.UI.Text infoText;
 
@@ -112,7 +113,8 @@ public class GuiConnection : MonoBehaviour
 		if (NetworkSync.Instance.IsEveryoneReady()) {
 			// game starting, dismiss GUI
 			this.enabled = false;
-			mainCanvas.enabled = false;
+			mainParent.SetActive(false);
+			inGameParent.SetActive(true);
 		}
 
 	}

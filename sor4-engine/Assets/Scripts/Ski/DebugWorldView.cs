@@ -20,6 +20,7 @@ public class DebugWorldView:View<WorldModel>{
 	static GameObject skierPrefab;
 	static int rideAnimHash;
 	static int fallAnimHash;
+	static int crashAnimHash;
 
 
 	// local copy of last state's map, to identify map changes
@@ -32,6 +33,7 @@ public class DebugWorldView:View<WorldModel>{
 		skierPrefab = Resources.Load("skier") as GameObject;
 		rideAnimHash = Animator.StringToHash("Ride");
 		fallAnimHash = Animator.StringToHash("Fall");
+		crashAnimHash = Animator.StringToHash("Crash");
 	}
 
 
@@ -121,9 +123,12 @@ public class DebugWorldView:View<WorldModel>{
 						}
 
 					}else {
-						animator.Play(fallAnimHash);
-						skierView.transform.localEulerAngles = new Vector3(0, 180, 0);
-						animator.speed = 1.0f;
+						if (animator.GetCurrentAnimatorStateInfo(0).shortNameHash != crashAnimHash && animator.GetCurrentAnimatorStateInfo(0).shortNameHash != fallAnimHash){
+							bool pickCrash = UnityEngine.Random.Range(0,4) == 1;
+							animator.Play(pickCrash ? crashAnimHash : fallAnimHash);
+							skierView.transform.localEulerAngles = new Vector3(0, 180, 0);
+							animator.speed = pickCrash ? 1.25f : 1.0f;
+						}
 
 						ParticleSystem particles = skierView.GetComponentInChildren<ParticleSystem>();
 						if (particles != null) {
@@ -178,6 +183,7 @@ public class DebugWorldView:View<WorldModel>{
 		if (own) {
 			mainObj.AddComponent<CameraTracker>();
 		}
+
 		return mainObj;
 	}
 
