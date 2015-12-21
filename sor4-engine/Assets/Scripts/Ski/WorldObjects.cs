@@ -44,9 +44,9 @@ public class WorldObject
 		tree2Prefab = Resources.Load("tree2") as GameObject;
 
 		// Instantiate objects pools
-		rocksPool = new GameObject[500];
-		tree1Pool = new GameObject[1000];
-		tree2Pool = new GameObject[1000];
+		rocksPool = new GameObject[1000];
+		tree1Pool = new GameObject[4000];
+		tree2Pool = new GameObject[4000];
 
 		for (int i = 0 ; i < rocksPool.Length ; ++i) {
 			rocksPool[i] = GameObject.Instantiate(rockPrefab);
@@ -84,7 +84,7 @@ public class WorldObject
 			if (tree2PoolId >= tree2Pool.Length) tree2PoolId = 0;
 		}
 		view.SetActive(true);
-		view.transform.eulerAngles = new Vector3(310 + UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(0, 360));
+		view.transform.localEulerAngles = new Vector3(310 + UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(0, 360));
 		float radius = type == 0 ? UnityEngine.Random.Range(1.0f, 1.3f) : UnityEngine.Random.Range(0.75f, 1.25f);
 		view.transform.localScale = new Vector3(radius, UnityEngine.Random.Range(0.75f, 1.75f), radius);
 		view.transform.localPosition  = new Vector3((float)x, -0.25f, (float)y);
@@ -167,7 +167,7 @@ public class WorldObjects{
 		
 			if (otherSkier != null && otherSkier != skier){
 				if ((int)skier.y == (int)otherSkier.y){
-					if (FixedFloat.Abs(skier.x - otherSkier.x) < 0.8f){
+					if (FixedFloat.Abs(skier.x - otherSkier.x) < 0.5f){
 						skier.fallenTimer = collisionFallenTime;
 						skier.velX = skier.x < otherSkier.x ? -1.2 : 1.2;
 						skier.velY = 0.4f;
@@ -242,7 +242,7 @@ public class WorldObjects{
 
 			centerX = GetCenterXForY(nextY, lastTrackY, nextTrackY, lastTrackX, nextTrackX);
 			randomX = GetRandomXAroundCenter(centerX);
-			newObjects.Add(new WorldObject(rnd.NextInt(0, 5), randomX, nextY, randomX > centerX));
+			newObjects.Add(new WorldObject(rnd.NextInt(0, 4), randomX, nextY, randomX > centerX));
 
 
 		}
