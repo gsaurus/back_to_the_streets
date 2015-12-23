@@ -19,6 +19,8 @@ ModelImporter:
     400008: Dummy015
     400010: Dummy016
     400012: //RootNode
+    2300000: Box005
+    3300000: Box005
     4300000: Box005
     9500000: //RootNode
     13700000: Box005
@@ -65,7 +67,7 @@ ModelImporter:
     splitTangentsAcrossUV: 1
     normalImportMode: 0
     tangentImportMode: 1
-  importAnimation: 1
+  importAnimation: 0
   copyAvatar: 0
   humanDescription:
     human: []
@@ -80,7 +82,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

@@ -14,6 +14,7 @@ public class DebugWorldView:View<WorldModel>{
 	// Common material used by all views
 	static Material meshesMaterial;
 
+	const float lerpFrozenTimeFactor = 0.05f;
 	const float lerpTimeFactor = 0.2f; 
 	const float lerpAngleFactor = 0.1f;
 	
@@ -75,7 +76,7 @@ public class DebugWorldView:View<WorldModel>{
 
 				// update position
 				Vector3 targetPos = new Vector3((float)skierModel.x, 0.0f, (float)skierModel.y);
-				UpdatePosition(skierView, targetPos);
+				UpdatePosition(skierModel, skierView, targetPos);
 
 				// update angle
 				float targetAngle = skierModel.targetVelY == 0 ? -Mathf.PI * 0.5f : (float)Mathf.Atan2((float)skierModel.targetVelX, (float)skierModel.targetVelY);
@@ -124,10 +125,10 @@ public class DebugWorldView:View<WorldModel>{
 
 					}else {
 						if (animator.GetCurrentAnimatorStateInfo(0).shortNameHash != crashAnimHash && animator.GetCurrentAnimatorStateInfo(0).shortNameHash != fallAnimHash){
-							bool pickCrash = UnityEngine.Random.Range(0,4) == 1;
+							bool pickCrash = skierModel.frozenTimer != 0 || UnityEngine.Random.Range(0,4) == 1;
 							animator.Play(pickCrash ? crashAnimHash : fallAnimHash);
 							skierView.transform.localEulerAngles = new Vector3(0, 180, 0);
-							animator.speed = pickCrash ? 1.25f : 1.0f;
+							animator.speed = pickCrash ? 1.5f : 1.0f;//(pickCrash && skierModel.frozenTimer != 0) ? 1.25f : 1.0f;
 						}
 
 						ParticleSystem particles = skierView.GetComponentInChildren<ParticleSystem>();
@@ -156,9 +157,13 @@ public class DebugWorldView:View<WorldModel>{
 	}
 
 
-	private void UpdatePosition(GameObject obj, Vector3 targetPos){
+	private void UpdatePosition(SkierModel skierModel, GameObject obj, Vector3 targetPos){
 		float dist = Vector3.Distance(obj.transform.position, targetPos);
-		obj.transform.position = Vector3.Lerp(obj.transform.position, targetPos, lerpTimeFactor);
+		if (skierModel.frozenTimer == 0){
+			obj.transform.position = Vector3.Lerp(obj.transform.position, targetPos, lerpTimeFactor);
+		}else {
+			obj.transform.position = Vector3.Lerp(obj.transform.position, targetPos, lerpFrozenTimeFactor);
+		}
 	}
 	
 	
