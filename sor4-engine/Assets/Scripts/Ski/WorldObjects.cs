@@ -289,8 +289,9 @@ public class WorldObjects{
 		FixedFloat nextY;
 		int latestIntY = (int)maxKnownY;
 		bool nextObjectIsFlag;
-		FixedFloat limitForObjects = nextTargetY < -maxDifficultyDistance ? 1.5f : 1.5f + (1-(-nextTargetY / maxDifficultyDistance)) * 50.0f;
-		for (nextY = maxKnownY - rnd.NextFloat(0.0001f, limitForObjects) ; nextY > nextTargetY ; nextY -= rnd.NextFloat(0.0001f, limitForObjects)){
+		FixedFloat limitForObjects = nextTargetY < -maxDifficultyDistance ? 1.5f : 1.5f + (1-(-nextTargetY / maxDifficultyDistance)) * 30.0f;
+		for (nextY = maxKnownY - 0.0001f ; nextY > nextTargetY ; ){
+			nextY -= rnd.NextFloat(0.0001f, limitForObjects);
 			nextObjectIsFlag = nextY < nextFlagDistance;
 			while (nextY < nextTrackY){
 				lastTrackY = nextY;
