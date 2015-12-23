@@ -2098,6 +2098,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 132238, guid: 180e1658d0dfaf84fa6035e338f17ee6, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 180e1658d0dfaf84fa6035e338f17ee6, type: 2}
   m_IsPrefabParent: 0
@@ -6380,7 +6384,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minDelayBetweenEvents: .100000001
-  touchesMultFactor: .00300000003
+  touchesMultFactor: .00749999983
 --- !u!114 &1875803922
 MonoBehaviour:
   m_ObjectHideFlags: 0
