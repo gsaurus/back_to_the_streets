@@ -315,7 +315,7 @@ public class WorldObjects{
 
 			centerX = GetCenterXForY(nextY, lastTrackY, nextTrackY, lastTrackX, nextTrackX);
 			if (nextObjectIsFlag){
-				randomX = rnd.NextFloat(maxHorizontalDistance* 0.05f, maxHorizontalDistance * 0.4f);
+				randomX = rnd.NextFloat(maxHorizontalDistance* 0.1f, maxHorizontalDistance * 0.5f);
 				randomX = centerX + (nextFlagIsRight ? randomX : -randomX);
 				newObjects.Add(new WorldObject(nextFlagIsRight ? -2 : -1, randomX, nextY, nextFlagIsRight));
 				nextFlagDistance = GetNextFlagY();

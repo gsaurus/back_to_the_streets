@@ -143,8 +143,10 @@ public class DebugWorldView:View<WorldModel>{
 							audio[0].Stop();
 							audio[1].Stop();
 							audio[2].Stop();
-							audio[2].pitch = UnityEngine.Random.Range(0.5f, 1.5f);
-							audio[2].Play();
+							if (skierModel.frozenTimer == 0) {
+								audio[2].pitch = UnityEngine.Random.Range(0.5f, 1.5f);
+								audio[2].Play();
+							}
 							skierCollisionSoundActivated[i] = true;
 						}
 					}

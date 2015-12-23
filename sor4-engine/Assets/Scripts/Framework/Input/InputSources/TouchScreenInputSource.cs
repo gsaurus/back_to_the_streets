@@ -8,9 +8,9 @@ namespace RetroBread{
 
 	public class TouchScreenInputSource: MonoBehaviour{
 
-		public float minDelayBetweenEvents = 0.1f; // in seconds
+		const float minDelayBetweenEvents = 0.1f; // in seconds
 
-		public float touchesMultFactor = 0.0075f;
+		const float touchesMultFactor = 4.0f;
 
 	#if UNITY_IPHONE || UNITY_ANDROID
 
@@ -66,7 +66,7 @@ namespace RetroBread{
 						lastTouchPos = touch.position.x;
 					}break;
 					case TouchPhase.Moved: {
-						float deltaPos = touch.position.x - lastTouchPos;
+						float deltaPos = (touch.position.x - lastTouchPos) / Screen.width;
 						SendAxis(deltaPos * touchesMultFactor);
 						lastTouchPos = touch.position.x;
 					}break;

@@ -9,7 +9,7 @@ namespace RetroBread{
 
 	public class MouseInputSource: MonoBehaviour{
 
-		public float minDelayBetweenEvents = 0.1f; // in seconds
+		const float minDelayBetweenEvents = 0.1f; // in seconds
 
 	#if !UNITY_IPHONE && !UNITY_ANDROID
 
