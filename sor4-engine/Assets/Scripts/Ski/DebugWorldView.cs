@@ -23,6 +23,8 @@ public class DebugWorldView:View<WorldModel>{
 	static int fallAnimHash;
 	static int crashAnimHash;
 
+	static GameObject arrowsToPointNextFlag;
+
 
 	// local copy of last state's map, to identify map changes
 	int[] lastKnownMap;
@@ -35,6 +37,9 @@ public class DebugWorldView:View<WorldModel>{
 		rideAnimHash = Animator.StringToHash("Ride");
 		fallAnimHash = Animator.StringToHash("Fall");
 		crashAnimHash = Animator.StringToHash("Crash");
+
+		arrowsToPointNextFlag = GameObject.Find("nextFlagPointingArrows");
+		arrowsToPointNextFlag.SetActive(false);
 	}
 
 
@@ -51,6 +56,41 @@ public class DebugWorldView:View<WorldModel>{
 
 		UpdateSkiers(model, deltaTime);
 
+		// check if next flag is outside screen
+
+		int playerId = NetworkCenter.Instance.GetPlayerNumber();
+		if (playerId < 0 || playerId >= model.skiers.Length)
+			return;
+
+		SkierModel mySkier = model.skiers[playerId];
+
+		WorldObject flag = WorldObjects.GetNextFlagForSkier(mySkier);
+		if (flag == null) return;
+		Vector3 flagScreenPos = new Vector3((float)(flag.isRight ? flag.x1 : flag.x2), 0.0f, (float)flag.y);
+		flagScreenPos = Camera.main.WorldToScreenPoint(flagScreenPos);
+		flagScreenPos = new Vector3(flagScreenPos.x / Camera.main.pixelWidth, flagScreenPos.y / Camera.main.pixelHeight, 2.0f);
+		bool setActive = false;
+		float distanceAway = 0.0f;
+		if (flagScreenPos.x < 0 && flag.isRight) {
+			distanceAway = -flagScreenPos.x;
+			arrowsToPointNextFlag.transform.localEulerAngles = new Vector3(0, 180, 0);
+			Vector3 arrowsPosition = Camera.main.ScreenToWorldPoint(new Vector3(0.00f * Camera.main.pixelWidth, Mathf.Clamp(flagScreenPos.y, 0.1f, 0.95f) * Camera.main.pixelHeight, flagScreenPos.z));
+			arrowsToPointNextFlag.transform.position = arrowsPosition;
+			setActive = true;
+		}else if (flagScreenPos.x > 1 && !flag.isRight) {
+			distanceAway = flagScreenPos.x - 1;
+			arrowsToPointNextFlag.transform.localEulerAngles = new Vector3(0, 0, 0);
+			Vector3 arrowsPosition = Camera.main.ScreenToWorldPoint(new Vector3(1.0f * Camera.main.pixelWidth, Mathf.Clamp(flagScreenPos.y, 0.1f, 0.95f) * Camera.main.pixelHeight, flagScreenPos.z));
+			arrowsToPointNextFlag.transform.position = arrowsPosition;
+			setActive = true;
+		}
+		if (setActive) {
+			arrowsToPointNextFlag.SetActive(true);
+			flag.ApplyColorToFlagArros(arrowsToPointNextFlag);
+			float scale = 0.1f - 0.08f * (1 - Mathf.Min(distanceAway, 3) / 3) + Mathf.Max(0.8f - flagScreenPos.y,0) * 0.25f;
+			arrowsToPointNextFlag.transform.localScale = new Vector3(scale, scale, scale);
+		}
+		arrowsToPointNextFlag.SetActive(setActive);
 	}
 
 

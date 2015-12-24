@@ -68,6 +68,16 @@ public class WorldObject
 	}
 
 
+	public void ApplyColorToFlagArros(GameObject arrowsObj)
+	{
+		SpriteRenderer[] sprites = arrowsObj.GetComponentsInChildren<SpriteRenderer>();
+		Color flagColor = type == -2 ? Color.red : Color.blue;
+		foreach (SpriteRenderer sprite in sprites){
+			sprite.material.color = flagColor;
+		}
+	}
+	
+
 	public WorldObject(int type, FixedFloat x, FixedFloat y, bool isRight) {
 		this.type = type;
 		this.y = y;
@@ -89,11 +99,7 @@ public class WorldObject
 			}
 			view.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
-			SpriteRenderer[] sprites = view.GetComponentsInChildren<SpriteRenderer>();
-			Color flagColor = type == -2 ? Color.red : Color.blue;
-			foreach (SpriteRenderer sprite in sprites){
-				sprite.material.color = flagColor;
-			}
+			ApplyColorToFlagArros(view);
 
 			yPos = 0.0f;
 		}else {
@@ -134,7 +140,7 @@ public class WorldObjects{
 	static SimpleRandomGenerator rnd = null;
 
 	public static uint collisionFallenTime = 45;
-	public static uint frozenTime = 55;
+	public static uint frozenTime = 150;
 
 	static FixedFloat maxHorizontalDistance = 20;
 	static FixedFloat maxDistanceBehind = 10;
@@ -154,6 +160,28 @@ public class WorldObjects{
 	static FixedFloat nextTrackY;
 	static bool nextFlagIsRight;
 	static FixedFloat nextFlagDistance;
+
+
+	static List<WorldObject> flags = new List<WorldObject>();
+
+
+
+	public static WorldObject GetNextFlagForSkier(SkierModel skierModel){
+		WorldObject flag = null;
+		int removeCount = 0;
+		for (int i = 0 ; i < flags.Count ; ++i) {
+			flag = flags[i];
+			if (flag.y < skierModel.y) {
+				break;
+			}else {
+				++removeCount;
+			}
+		}
+		if (removeCount > 0) {
+			flags.RemoveRange(0, removeCount);
+		}
+		return flag;
+	}
 
 
 
@@ -194,17 +222,20 @@ public class WorldObjects{
 				skier.targetVelY = 0;
 			}else {
 				// flag
+				FixedFloat target;
 				if (obj.type == -2){
-					skier.x = obj.x2;
-				}else if (obj.type == -1){
-					skier.x = obj.x1;
+					target = obj.x2;
+				}else{ //if (obj.type == -1){
+					target = obj.x1;
 				}
 				skier.y = obj.y + 1;
-				skier.frozenTimer = frozenTime;
+				skier.frozenTimer =  (uint)(FixedFloat.Abs(skier.x-target) / maxHorizontalDistance) * frozenTime;
+				if (skier.frozenTimer < collisionFallenTime) skier.frozenTimer = collisionFallenTime;
 				skier.velX = 0;
 				skier.velY = 0;
 				skier.targetVelX = 0;
 				skier.targetVelY = 0;
+				skier.x = target;
 			}
 		}
 	}
@@ -317,9 +348,11 @@ public class WorldObjects{
 			if (nextObjectIsFlag){
 				randomX = rnd.NextFloat(maxHorizontalDistance* 0.1f, maxHorizontalDistance * 0.5f);
 				randomX = centerX + (nextFlagIsRight ? randomX : -randomX);
-				newObjects.Add(new WorldObject(nextFlagIsRight ? -2 : -1, randomX, nextY, nextFlagIsRight));
+				WorldObject flagObj = new WorldObject(nextFlagIsRight ? -2 : -1, randomX, nextY, nextFlagIsRight);
+				newObjects.Add(flagObj);
 				nextFlagDistance = GetNextFlagY();
 				nextFlagIsRight = !nextFlagIsRight;
+				flags.Add(flagObj);
 			}else {
 				randomX = GetRandomXAroundCenter(centerX);
 				newObjects.Add(new WorldObject(rnd.NextInt(0, 4), randomX, nextY, randomX > centerX));
