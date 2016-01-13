@@ -21,3 +21,4 @@ character-editor/*.sln
 *.DS_store?
 sor4-engine/playback.txt
 **/obj/Debug/*
+Backups
