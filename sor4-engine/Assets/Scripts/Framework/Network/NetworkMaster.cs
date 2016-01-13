@@ -13,7 +13,7 @@ namespace RetroBread{
 		// Let player create a new server
 		public sealed class NetworkMaster: SingletonMonoBehaviour<NetworkMaster>{
 
-			public static string masterServerIP = "192.168.7.68";
+			public static string masterServerIP = "127.0.0.1"; //"192.168.7.68";
 
 
 			// A host state indicating it's open to new connections
