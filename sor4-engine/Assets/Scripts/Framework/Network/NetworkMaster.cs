@@ -40,6 +40,8 @@ namespace RetroBread{
 
 
 			public void RefreshServersList() {
+				MasterServer.ipAddress = "192.168.7.68"; //"85.88.138.242";
+				MasterServer.port = 23466;
 				MasterServer.ClearHostList();
 				hosts = new List<HostData>();
 				MasterServer.RequestHostList(gameIdentifier);
