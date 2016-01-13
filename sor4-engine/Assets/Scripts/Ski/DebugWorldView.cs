@@ -179,15 +179,36 @@ public class DebugWorldView:View<WorldModel>{
 
 						// Audio
 						AudioSource[] audio = skierView.GetComponents<AudioSource>();
-						if (audio != null && !skierCollisionSoundActivated[i]){
-							audio[0].Stop();
-							audio[1].Stop();
-							audio[2].Stop();
-							if (skierModel.frozenTimer == 0) {
-								audio[2].pitch = UnityEngine.Random.Range(0.5f, 1.5f);
-								audio[2].Play();
+						if (audio != null) {
+							if (!skierCollisionSoundActivated[i]){
+								audio[0].Stop();
+								audio[1].Stop();
+								audio[2].Stop();
+								if (skierModel.frozenTimer == 0) {
+									audio[2].pitch = UnityEngine.Random.Range(0.5f, 1.5f);
+									audio[2].Play();
+								}
+								skierCollisionSoundActivated[i] = true;
+
+//								int painIndex = 3 + UnityEngine.Random.Range(0,9);
+//								audio[painIndex].pitch = UnityEngine.Random.Range(0.5f, 1.5f);
+//								audio[painIndex].Play();
 							}
-							skierCollisionSoundActivated[i] = true;
+
+//							if (skierModel.fallenTimer == 0) {
+//								bool ouchSoundPlaying = false;
+//								for (int k = 3 ; i < 13 ; ++i) {
+//									if (audio[k].isPlaying) {
+//										ouchSoundPlaying = true;
+//										break;
+//									}
+//								}
+//								if (!ouchSoundPlaying){
+//									int painIndex = 3 + UnityEngine.Random.Range(0,9);
+//									audio[painIndex].pitch = UnityEngine.Random.Range(0.5f, 1.5f);
+//									audio[painIndex].Play();
+//								}
+//							}
 						}
 					}
 
