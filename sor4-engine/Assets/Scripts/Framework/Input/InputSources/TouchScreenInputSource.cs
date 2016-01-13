@@ -10,7 +10,7 @@ namespace RetroBread{
 
 		const float minDelayBetweenEvents = 0.1f; // in seconds
 
-		const float touchesMultFactor = 4.0f;
+		const float touchesMultFactor = 4.5f;
 
 	#if UNITY_IPHONE || UNITY_ANDROID
 
