@@ -13,7 +13,7 @@ namespace RetroBread{
 		// Let player create a new server
 		public sealed class NetworkMaster: SingletonMonoBehaviour<NetworkMaster>{
 			
-			private static string masterServerIP = "127.0.0.1"; //"192.168.7.68";
+			private static string masterServerIP = "79.168.106.90"; //"127.0.0.1";
 			
 			
 			// A host state indicating it's open to new connections
@@ -43,10 +43,10 @@ namespace RetroBread{
 			
 			
 			public void RefreshServersList() {
-				MasterServer.ipAddress = masterServerIP;
-				MasterServer.port = 23466;
-				UnityEngine.Network.natFacilitatorIP = masterServerIP;
-				UnityEngine.Network.natFacilitatorPort = 50005;
+//				MasterServer.ipAddress = masterServerIP;
+//				MasterServer.port = 23466;
+//				UnityEngine.Network.natFacilitatorIP = masterServerIP;
+//				UnityEngine.Network.natFacilitatorPort = 50005;
 				MasterServer.ClearHostList();
 				hosts = new List<HostData>();
 				MasterServer.RequestHostList(gameIdentifier);

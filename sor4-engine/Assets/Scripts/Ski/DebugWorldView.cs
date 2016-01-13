@@ -23,6 +23,9 @@ public class DebugWorldView:View<WorldModel>{
 	static int fallAnimHash;
 	static int crashAnimHash;
 
+	static AudioClip[] painClips;
+	static AudioClip failClip;
+
 	static GameObject arrowsToPointNextFlag;
 
 
@@ -40,6 +43,13 @@ public class DebugWorldView:View<WorldModel>{
 
 		arrowsToPointNextFlag = GameObject.Find("nextFlagPointingArrows");
 		arrowsToPointNextFlag.SetActive(false);
+
+		painClips = new AudioClip[10];
+		for (int i = 0 ; i < 10 ; ++i){
+			painClips[i] = Resources.Load("sound/WS_pain_" + (i+1)) as AudioClip;
+		}
+
+		failClip = Resources.Load("sound/WS_penalty") as AudioClip;
 	}
 
 
@@ -185,18 +195,35 @@ public class DebugWorldView:View<WorldModel>{
 								audio[1].Stop();
 								audio[2].Stop();
 								if (skierModel.frozenTimer == 0) {
-									audio[2].pitch = UnityEngine.Random.Range(0.5f, 1.5f);
-									audio[2].Play();
-								}
-								skierCollisionSoundActivated[i] = true;
 
-//								int painIndex = 3 + UnityEngine.Random.Range(0,9);
-//								audio[painIndex].pitch = UnityEngine.Random.Range(0.5f, 1.5f);
-//								audio[painIndex].Play();
+									audio[2].pitch = UnityEngine.Random.Range(0.8f, 1.2f);
+									audio[2].Play();
+//									audio[0].clip = painClips[painIndex];
+//									audio[0].Play();
+//									AudioSource.PlayClipAtPoint(painClips[painIndex], skierView.transform.position);
+								}else {
+									if (NetworkCenter.Instance.GetPlayerNumber() == i){
+										audio[2].PlayOneShot(failClip);
+									}
+								}
+
+								int painIndex = UnityEngine.Random.Range(0,9);
+								audio[1].volume = 1;
+								audio[1].pitch = UnityEngine.Random.Range(0.8f, 1.2f);
+								audio[1].PlayOneShot(painClips[painIndex]);
+
+								skierCollisionSoundActivated[i] = true;
+							}
+
+							if (skierModel.fallenTimer == 0 && skierModel.frozenTimer > 20 && UnityEngine.Random.Range(0, 100) < 5){
+								int painIndex = UnityEngine.Random.Range(0,9);
+								audio[1].volume = 0.5f;
+								audio[1].pitch = UnityEngine.Random.Range(0.8f, 1.2f);
+								audio[1].PlayOneShot(painClips[painIndex]);
 							}
 
 //							if (skierModel.fallenTimer == 0) {
-//								bool ouchSoundPlaying = false;
+//								bool ouchSoundPlaying = audio[0].isPlaying;
 //								for (int k = 3 ; i < 13 ; ++i) {
 //									if (audio[k].isPlaying) {
 //										ouchSoundPlaying = true;
@@ -204,9 +231,9 @@ public class DebugWorldView:View<WorldModel>{
 //									}
 //								}
 //								if (!ouchSoundPlaying){
-//									int painIndex = 3 + UnityEngine.Random.Range(0,9);
-//									audio[painIndex].pitch = UnityEngine.Random.Range(0.5f, 1.5f);
-//									audio[painIndex].Play();
+//									int painIndex = UnityEngine.Random.Range(0,9);
+//									audio[0].pitch = UnityEngine.Random.Range(0.5f, 1.5f);
+//									audio[0].PlayOneShot(painClips[painIndex]);
 //								}
 //							}
 						}
