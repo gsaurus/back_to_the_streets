@@ -43,10 +43,10 @@ namespace RetroBread{
 
 
 			public void RefreshServersList() {
-				MasterServer.ipAddress = masterServerIP;
-				MasterServer.port = 23466;
-				UnityEngine.Network.natFacilitatorIP = masterServerIP;
-				UnityEngine.Network.natFacilitatorPort = 50005;
+//				MasterServer.ipAddress = masterServerIP;
+//				MasterServer.port = 23466;
+//				UnityEngine.Network.natFacilitatorIP = masterServerIP;
+//				UnityEngine.Network.natFacilitatorPort = 50005;
 				MasterServer.ClearHostList();
 				hosts = new List<HostData>();
 				MasterServer.RequestHostList(gameIdentifier);
