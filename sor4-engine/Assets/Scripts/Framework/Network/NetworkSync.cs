@@ -4,7 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+#pragma warning disable 618 
 
+// Keeps track of RTTs and lag values from a player to all others
 namespace RetroBread{
 	namespace Network{
 	
@@ -19,6 +21,7 @@ namespace RetroBread{
 			public float maxRTT = 2.0f;
 
 			public void Update(float tt){
+				// First pings take heavier integration weight
 				float integrationRatio = 1f / (pingsCount + 1);
 				if (integrationRatio > NetworkSync.lagIntegrationRate) {
 					++pingsCount;
@@ -66,6 +69,7 @@ namespace RetroBread{
 			
 
 			// On awake we register delegates
+			// Delegates used to know when a player connects / disconnects to add / remove it's synk state
 			void Awake(){
 				// register connection delegates
 				NetworkCenter.Instance.playerConnectedEvent += OnPlayerConnectionConfirmed;
@@ -73,11 +77,14 @@ namespace RetroBread{
 			}
 
 			// On destroy we unregister delegates
+			// Delegates used to know when a player connects / disconnects to add / remove it's synk state
 			void OnDestroy(){
 				// unregister connection delegates
 				NetworkCenter.Instance.playerConnectedEvent -= OnPlayerConnectionConfirmed;
 				NetworkCenter.Instance.playerDisconnectedEvent -= OnPlayerDisconnectionConfirmed;
 			}
+
+		#region Lag
 			
 
 			// Get the maximum lag with all connected peers
@@ -101,6 +108,11 @@ namespace RetroBread{
 				}
 				return 0;
 			}
+
+
+		#endregion
+
+
 
 
 		#region Ping - Pong
@@ -226,6 +238,10 @@ namespace RetroBread{
 
 		#endregion
 			
+
+		#region connection delegates
+		// Delegates used to know when a player connects / disconnects to add / remove it's synk state
+
 			// When the player first connects with someone else we start the ping coroutine
 			void OnPlayerConnectionConfirmed(string guid) {
 				if (guid != UnityEngine.Network.player.guid) {
@@ -255,6 +271,8 @@ namespace RetroBread{
 					syncStates.Remove(guid);
 				}
 			}
+
+		#endregion
 
 
 		}

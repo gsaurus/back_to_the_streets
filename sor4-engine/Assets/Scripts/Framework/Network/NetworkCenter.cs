@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+#pragma warning disable 618 
 
 
 namespace RetroBread{
@@ -36,6 +37,9 @@ namespace RetroBread{
 			public delegate void OnPlayerConnectionEvent(string guid);
 			public event OnPlayerConnectionEvent playerConnectedEvent;
 			public event OnPlayerConnectionEvent playerDisconnectedEvent;
+
+			// Timeout in seconds to get a response from a connecting player
+			private float connectingPlayerTimeout = 5;
 
 		#endregion
 
@@ -181,7 +185,7 @@ namespace RetroBread{
 			// If after a few seconds the player wasn't added, close it's connection
 			IEnumerator WaitForPlayerData(NetworkPlayer player){
 				//Debug.Log("wait");
-				yield return new WaitForSeconds(5);
+				yield return new WaitForSeconds(connectingPlayerTimeout);
 				if (GetPlayerData(player) == null) {
 					//Debug.Log("wait ended, kill!");
 					TryCloseConnection(player);
@@ -351,7 +355,7 @@ namespace RetroBread{
 
 			// If after a few seconds the server didn't accept this player, close connection
 			IEnumerator WaitForServerData(){
-				yield return new WaitForSeconds(5);
+				yield return new WaitForSeconds(connectingPlayerTimeout);
 				if (GetNumPlayersOnline() <= 1) {
 					UnityEngine.Network.Disconnect();
 				}

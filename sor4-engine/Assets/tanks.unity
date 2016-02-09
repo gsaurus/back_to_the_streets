@@ -8,25 +8,25 @@ SceneSettings:
   m_PVSPortalsArray: []
   m_OcclusionBakeSettings:
     smallestOccluder: 5
-    smallestHole: .25
+    smallestHole: 0.25
     backfaceThreshold: 100
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 6
   m_Fog: 0
-  m_FogColor: {r: .5, g: .5, b: .5, a: 1}
+  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
-  m_FogDensity: .00999999978
+  m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 1, g: .68275857, b: 0, a: 1}
-  m_AmbientEquatorColor: {r: .860294104, g: .409555823, b: .0632569268, a: 1}
-  m_AmbientGroundColor: {r: .588235259, g: .221333936, b: .0562283546, a: 1}
-  m_AmbientIntensity: .561999977
+  m_AmbientSkyColor: {r: 1, g: 0.68275857, b: 0, a: 1}
+  m_AmbientEquatorColor: {r: 0.8602941, g: 0.40955582, b: 0.06325693, a: 1}
+  m_AmbientGroundColor: {r: 0.58823526, g: 0.22133394, b: 0.056228355, a: 1}
+  m_AmbientIntensity: 0.562
   m_AmbientMode: 1
   m_SkyboxMaterial: {fileID: 2100000, guid: 361dab9c2b852485aa772a32c0291264, type: 2}
-  m_HaloStrength: .5
+  m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
@@ -40,7 +40,7 @@ RenderSettings:
 --- !u!157 &4
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 5
+  serializedVersion: 6
   m_GIWorkflowMode: 1
   m_LightmapsMode: 1
   m_GISettings:
@@ -66,7 +66,7 @@ LightmapSettings:
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
-  m_LightmapSnapshot: {fileID: 0}
+  m_LightingDataAsset: {fileID: 0}
   m_RuntimeCPUUsage: 25
 --- !u!196 &5
 NavMeshSettings:
@@ -74,15 +74,15 @@ NavMeshSettings:
   m_ObjectHideFlags: 0
   m_BuildSettings:
     serializedVersion: 2
-    agentRadius: .5
+    agentRadius: 0.5
     agentHeight: 2
     agentSlope: 45
-    agentClimb: .400000006
+    agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     accuratePlacement: 0
     minRegionArea: 2
-    cellSize: .166666657
+    cellSize: 0.16666666
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
 --- !u!1 &326360822
@@ -177,6 +177,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &766733176
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,7 +234,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .300000012
+  near clip plane: 0.3
   far clip plane: 20
   field of view: 60
   orthographic: 1
@@ -249,7 +250,7 @@ Camera:
   m_HDR: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
-  m_StereoSeparation: .0219999999
+  m_StereoSeparation: 0.022
   m_StereoMirrorMode: 0
 --- !u!4 &766733181
 Transform:
@@ -297,8 +298,9 @@ Light:
     m_Type: 0
     m_Resolution: -1
     m_Strength: 1
-    m_Bias: .0500000007
-    m_NormalBias: .400000006
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
@@ -317,8 +319,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 956530656}
-  m_LocalRotation: {x: .408217937, y: -.234569728, z: .109381661, w: .875426114}
-  m_LocalPosition: {x: .45633626, y: -3.41932702, z: -.120004654}
+  m_LocalRotation: {x: 0.40821794, y: -0.23456973, z: 0.10938166, w: 0.8754261}
+  m_LocalPosition: {x: 0.45633626, y: -3.419327, z: -0.120004654}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -352,11 +354,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 326360823}
   m_RootOrder: 2
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 262, y: 88}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1044832033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,7 +371,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: .352941185}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.3529412}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -419,7 +421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: .352941185}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.3529412}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -452,11 +454,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 326360823}
   m_RootOrder: 0
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -291, y: -118}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1488680105
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,7 +550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb76feb1a20ea444ae90e007e9e0676, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseWhenPlayersNotReady: 1
+  pauseWhenPlayersNotReady: 0
 --- !u!114 &1488680112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -616,11 +618,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonsLocation:
-  - {x: .140000001, y: .289999992}
-  - {x: .860000014, y: .289999992}
-  buttonsMaxRadius: .400000006
-  axisMaxRadius: .0500000007
-  minAxisDelta: .00999999978
+  - {x: 0.14, y: 0.29}
+  - {x: 0.86, y: 0.29}
+  buttonsMaxRadius: 0.4
+  axisMaxRadius: 0.05
+  minAxisDelta: 0.01
 --- !u!114 &1875803921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -666,7 +668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 322b504e272be88418d6cad0a6968b44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minAxisDelta: .100000001
+  minAxisDelta: 0.1
   buttonNames:
   - A
   - B
@@ -675,9 +677,9 @@ MonoBehaviour:
   - E
   - F
   supportDoubleTap: 0
-  directionKeyCooler: .200000003
-  walkHorizontalFactor: .5
-  walkVerticalFactor: .600000024
+  directionKeyCooler: 0.2
+  walkHorizontalFactor: 0.5
+  walkVerticalFactor: 0.6
 --- !u!1 &1891570219
 GameObject:
   m_ObjectHideFlags: 0
@@ -707,11 +709,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 326360823}
   m_RootOrder: 1
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 290, y: -121}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1891570221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -724,7 +726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: .352941185}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.3529412}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -791,7 +793,7 @@ MonoBehaviour:
   m_SubmitButton: Submit
   m_CancelButton: Cancel
   m_InputActionsPerSecond: 10
-  m_RepeatDelay: .5
+  m_RepeatDelay: 0.5
   m_ForceModuleActive: 0
 --- !u!114 &1926280494
 MonoBehaviour:
