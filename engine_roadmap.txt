@@ -1,0 +1,55 @@
+massive work ahead, the storage format for the characters is one, the format in the editor is other, and the in-game format is other, and I have to:
+1 - define each format
+2 - code each format
+3 - code translation between each other (editor read and write to storage format; game read from storage format)
+
+Then start with the editor..
+1 - study Unity UI stuff, do some experiments..
+2 - do some experiments with plugins.. the editor will need plugins to add functionality on the fly
+3 - define the editor screens layout and functionality..
+4 - able to load in a 2D or 3D model, I have done a few work in the past, so 15% done..
+5 - Create the basic UI layouts
+6 - Associate the model to a stub character data
+7 - scroll between animations, playback features (play, pause, next frame, etc)
+8 - Code basic functionality such as load, save
+9 - Collision boxes
+10 - Hit boxes (basic stuff only)
+11 - Direct events (stub stuff only)
+12 - Conditional events (stub stuff only)
+
+Back to game:
+1 - load character data and model
+2 - construct character controller (basic stuff only)
+
+By now, all we can see in-game is character on idle animation.
+Next step: create some plugins that provide with basic functionality. Each functionality generates two plugins:
+ - One for editor to show specific options and translate them into storage data
+ - One for game to load specific options from storage data
+There are conditional plugins and event plugins. Plan is:
+1 - Create frame conditions (at frame x, do something)
+2 - Create animation transition events for editor (at frame x, move to animation y)
+3 - Load and play animation transitions in-game
+If everything goes well until here, other plugins will be easy to create:
+4 - Input conditions, Velocity events, Velocity conditions, etc (check old GameEntityController)
+5 - Create a test character with simple movement: walk, jump, fall 
+
+By now, in-game character should be able to walk, jump, fall.
+Basic stuff is done.
+
+TODO: need to detail next things:
+
+Next will be:
+- Attack, collision & hits, energy, death (both game code, and editor code)
+- Grab and release objects in anchor points
+
+Because I'm lazy, polish comes last, or when I get bored! This is relatively simple but low priority:
+- Editor camera: scroll, pan, zoom
+- View anchored objects in editor
+
+Much more in the future comes the game stuff itself:
+- VS mode is the simplest, we start from here
+- Simple menus and whatever
+Other plans:
+- enemies, AI scripts
+- special backup calls (if everything goes well, this should be easy, I may do some experiments when bored)
+- do an actual beat'em up level
