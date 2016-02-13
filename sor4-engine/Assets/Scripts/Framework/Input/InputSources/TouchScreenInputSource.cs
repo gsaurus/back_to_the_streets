@@ -13,13 +13,15 @@ namespace RetroBread{
 
 		public float minAxisDelta = 0.1f;
 
+		public GameObject controlsView;
+
 	#if UNITY_IPHONE || UNITY_ANDROID
 		private Vector2 lastAxis = Vector2.zero;
 		private bool[] buttonsDown;
 
 
 		public void Awake(){
-
+			controlsView.SetActive(true);
 			Input.simulateMouseWithTouches = true;
 			buttonsDown = new bool[PlayerInputModel.NumButtonsSupported];
 		}
@@ -88,6 +90,10 @@ namespace RetroBread{
 			}
 			buttonsDown = newButtonsDown;
 
+		}
+	#else
+		public void Awake(){
+			controlsView.SetActive(false);
 		}
 	#endif
 

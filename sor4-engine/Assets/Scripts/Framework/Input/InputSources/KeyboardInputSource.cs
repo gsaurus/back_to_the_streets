@@ -94,9 +94,7 @@ namespace RetroBread{
 
 
 		public void Awake(){
-			// Deactivate mobile HUD
-			GameObject canvas = GameObject.Find("/Canvas");
-			canvas.SetActive(false);
+			
 		}
 
 
