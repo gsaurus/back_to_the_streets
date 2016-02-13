@@ -39,7 +39,7 @@ namespace RetroBread{
 
 	public class SerializationConstants{
 		public const string SerializerName = "RbSerializer";
-		public const string SerializerDllName = "rb-serializer.dll";
+		public const string SerializerDllName = "shooter-serializer.dll";
 	}
 
 }

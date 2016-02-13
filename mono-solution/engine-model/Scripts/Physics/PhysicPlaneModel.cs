@@ -115,19 +115,7 @@ namespace RetroBread{
 			ComputeNormal();
 			ComputeBoundingBox();
 		}
-
-
-		// Copy fields from other model
-		protected override void AssignCopy(PhysicPlaneModel other){
-			base.AssignCopy(other);
-			origin = other.origin;
-			lastOriginPosition = other.lastOriginPosition;
-			offsets = new List<FixedVector3>(other.offsets);
-			normal = other.normal;
-			minPos = other.minPos;
-			maxPos = other.maxPos;
-		}
-
+			
 
 		[ProtoAfterDeserialization]
 		public void OnDeserialization(){

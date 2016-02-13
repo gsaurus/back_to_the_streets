@@ -55,17 +55,6 @@ namespace RetroBread{
 			this.ownerId = ownerId;
 		}
 
-		// Copy fields from other model
-		protected override void AssignCopy(AnimationModel other){
-			base.AssignCopy(other);
-
-			ownerId = new ModelReference(other.ownerId);
-			currentFrame = other.currentFrame;
-			characterName = string.Copy(other.characterName);
-			animationName = string.Copy(other.animationName);
-
-		}
-
 
 		#endregion
 	

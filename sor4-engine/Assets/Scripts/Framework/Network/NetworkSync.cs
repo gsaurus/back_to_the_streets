@@ -4,7 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+#pragma warning disable 618 
 
+// Keeps track of RTTs and lag values from a player to all others
 namespace RetroBread{
 	namespace Network{
 	
@@ -15,15 +17,20 @@ namespace RetroBread{
 			private int pingsCount;
 			public float TravelTime { get; private set; }
 			public bool isReady;
+			// travel times higher than this threshold are not considered
+			public float maxRTT = 2.0f;
 
 			public void Update(float tt){
+				// First pings take heavier integration weight
 				float integrationRatio = 1f / (pingsCount + 1);
 				if (integrationRatio > NetworkSync.lagIntegrationRate) {
 					++pingsCount;
 				}else {
 					integrationRatio = NetworkSync.lagIntegrationRate;
 				}
-				TravelTime = (TravelTime * (1 - integrationRatio)) + (tt * integrationRatio);
+				if (tt < maxRTT) {
+					TravelTime = (TravelTime * (1 - integrationRatio)) + (tt * integrationRatio);
+				}
 				//Debug.Log("Ping response: " + tt + ", integrated: " + TravelTime + ", ratio: " + integrationRatio + ", count: " + pingsCount);
 			}
 
@@ -39,7 +46,7 @@ namespace RetroBread{
 			public static float lagIntegrationRate = 0.2f;
 
 			// How much of the latency we use in our game input
-			public static float lagCompensationRate = 1.0f; 
+			public static float lagCompensationRate = 1.1f; 
 
 			// how often to ping peers
 			public static float pingRate = 2.0f;
@@ -62,6 +69,7 @@ namespace RetroBread{
 			
 
 			// On awake we register delegates
+			// Delegates used to know when a player connects / disconnects to add / remove it's synk state
 			void Awake(){
 				// register connection delegates
 				NetworkCenter.Instance.playerConnectedEvent += OnPlayerConnectionConfirmed;
@@ -69,11 +77,14 @@ namespace RetroBread{
 			}
 
 			// On destroy we unregister delegates
+			// Delegates used to know when a player connects / disconnects to add / remove it's synk state
 			void OnDestroy(){
 				// unregister connection delegates
 				NetworkCenter.Instance.playerConnectedEvent -= OnPlayerConnectionConfirmed;
 				NetworkCenter.Instance.playerDisconnectedEvent -= OnPlayerDisconnectionConfirmed;
 			}
+
+		#region Lag
 			
 
 			// Get the maximum lag with all connected peers
@@ -97,6 +108,11 @@ namespace RetroBread{
 				}
 				return 0;
 			}
+
+
+		#endregion
+
+
 
 
 		#region Ping - Pong
@@ -222,6 +238,10 @@ namespace RetroBread{
 
 		#endregion
 			
+
+		#region connection delegates
+		// Delegates used to know when a player connects / disconnects to add / remove it's synk state
+
 			// When the player first connects with someone else we start the ping coroutine
 			void OnPlayerConnectionConfirmed(string guid) {
 				if (guid != UnityEngine.Network.player.guid) {
@@ -244,10 +264,15 @@ namespace RetroBread{
 				if (guid == UnityEngine.Network.player.guid) {
 					StopCoroutine(PingPeers());
 					isReady = false;
+					if (syncStates != null) {
+						syncStates.Clear();
+					}
 				}else if (syncStates != null){
 					syncStates.Remove(guid);
 				}
 			}
+
+		#endregion
 
 
 		}

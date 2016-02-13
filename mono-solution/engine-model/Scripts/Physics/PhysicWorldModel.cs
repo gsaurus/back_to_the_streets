@@ -51,32 +51,7 @@ namespace RetroBread{
 			worldName = name;
 			this.gravity = gravity;
 		}
-
-
-		// Copy fields from other model
-		protected override void AssignCopy(PhysicWorldModel other){
-			base.AssignCopy(other);
-			gravity = other.gravity;
-			worldName = string.Copy(other.worldName);
-			if (other.pointModels != null){
-				pointModels = new List<ModelReference>(other.pointModels.Count);
-				foreach(ModelReference modelRef in other.pointModels){
-					pointModels.Add(new ModelReference(modelRef));
-				}
-			}else{
-				pointModels = null;
-			}
-			if (other.planeModels != null){
-				planeModels = new List<ModelReference>(other.planeModels.Count);
-				foreach(ModelReference modelRef in other.planeModels){
-					planeModels.Add(new ModelReference(modelRef));
-				}
-			}else{
-				planeModels = null;
-			}
-
-
-		}
+			
 
 		#endregion
 		

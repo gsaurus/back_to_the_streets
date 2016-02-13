@@ -48,8 +48,6 @@ namespace RetroBread{
 		// Access to the random generator
 		RandomGenerator Random { get; }
 
-		State Clone();
-
 	}
 
 	// In a nutshell, State has all the information necessary to roll deterministic gameplay.
@@ -160,27 +158,7 @@ namespace RetroBread{
 			++nextModelIndex;
 
 		}
-
-		// Clone state and it's models
-		public State Clone(){
-			Debug.StartProfiling("Clone State");
-			InternalState clone = new InternalState();
-			clone.nextModelIndex = nextModelIndex;
-			clone.mainModelIndex = mainModelIndex;
-			clone.Keyframe = Keyframe;
-			clone.random = random != null ? random.Clone() : null;
-
-			if (models != null){
-				Model newModel;
-				foreach(KeyValuePair<uint, Model> pair in models){
-					newModel = pair.Value.Clone();
-					clone.models.Add(pair.Key, newModel);
-					clone.sortedModels.Add(newModel, null);
-				}
-			}
-			Debug.StopProfiling();
-			return clone;
-		}
+	
 
 		// Update all views
 		public void UpdateViews(float deltaTime) {

@@ -13,9 +13,13 @@ namespace ShooterSerializer
 			RuntimeTypeModel model = TypeModel.Create(); //RuntimeTypeModel.Default;
 
 			// Add new derived models
+			Console.WriteLine("1");
 			model[typeof(Model)].AddSubType(100, typeof(WorldModel));
+			Console.WriteLine("2");
 			model[typeof(GameEntityModel)].AddSubType(100, typeof(ShooterEntityModel));
+			Console.WriteLine("3");
 			model[typeof(PhysicPlaneModel)].AddSubType(100, typeof(MovingPlaneModel));
+			Console.WriteLine("4");
 			model[typeof(PhysicPointModel)].AddSubType(100, typeof(BulletPointModel));
 
 			// There seems to be a bug in protobuf-net,
@@ -64,6 +68,7 @@ namespace ShooterSerializer
 				Console.WriteLine("deep cloned AxisInputEvent as Event");
 			}
 
+			Console.WriteLine("compiling..");
 			model.Compile(SerializationConstants.SerializerName, SerializationConstants.SerializerDllName);
 		}
 	}

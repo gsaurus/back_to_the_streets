@@ -53,3 +53,22 @@ Other plans:
 - enemies, AI scripts
 - special backup calls (if everything goes well, this should be easy, I may do some experiments when bored)
 - do an actual beat'em up level
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Log
+
+13-02-16
+	- Schematic definition of character storage definition
+	- Update project with latest changes from tanks & ski prototypes

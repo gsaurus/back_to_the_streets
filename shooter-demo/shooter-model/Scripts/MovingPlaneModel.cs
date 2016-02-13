@@ -27,24 +27,7 @@ public class MovingPlaneModel: PhysicPlaneModel{
 	:base(MovingPlaneControllerFactoryId, MovingPlaneViewFactoryId, updatingOrder, paramPoints){
 		this.planePath = path;
 	}
-
-
-	// Assign copy.
-	// Need to override Clone too because the generic method won't build this class
-	protected override void AssignCopy(PhysicPlaneModel other){
-		base.AssignCopy(other);
-
-		MovingPlaneModel otherPlane = other as MovingPlaneModel;
-		if (otherPlane == null) return;
-		movingState = otherPlane.movingState;
-		blendFactor = otherPlane.blendFactor;
-		planePath = (FixedVector3[])otherPlane.planePath.Clone();
-	}
-	public override Model Clone(){
-		MovingPlaneModel newModel = new MovingPlaneModel();
-		newModel.AssignCopy(this);
-		return newModel;
-	}
+		
 
 }
 

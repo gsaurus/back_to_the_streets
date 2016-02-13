@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+#pragma warning disable 618 
+
 
 namespace RetroBread{
 	namespace Network{
@@ -87,7 +89,7 @@ namespace RetroBread{
 			// 1) game allow players to leave on middle game: nothing happens
 			// 2) game doesn't allow leave on middle game: pause game to all until everyone is ready again
 			void OnPlayerNotReadyEvent(string guid){
-				if (pauseWhenPlayersNotReady){
+				if (NetworkCenter.Instance.IsConnected() && pauseWhenPlayersNotReady){
 					GetComponent<NetworkView>().RPC("PauseGame",RPCMode.All); 
 				}
 		//		else {
@@ -186,6 +188,7 @@ namespace RetroBread{
 
 			// Add events to be sent through the network
 			public void AddEvent(Event e){
+				// TODO: no need to send playerId on the event through the network, remove redundant information
 				ApplyNetworkPlayerOnEvent(e);
 				ApplyLagCompensationOnEvent(e);
 				eventsBuffer.Add(e);
@@ -201,11 +204,20 @@ namespace RetroBread{
 
 			// When receiving game events from the network, we forward them to listeners
 			[RPC]
-			void OnEventsAdded(byte[] eventsData){
+			void OnEventsAdded(byte[] eventsData, NetworkMessageInfo info){
 				if (onEventsAddedEvent != null){
 					List<Event> events;
 					events = NetworkCenter.Instance.serializer.Deserialize<List<Event>>(eventsData);
 					if (events != null){
+						// Security: if there's any event that doesn't pertain to sender, cancel it
+						// TODO: no need to send playerId on the event through the network, remove redundant information
+						int senderId = NetworkCenter.Instance.GetPlayerNumber(info.sender.guid);
+						foreach (Event playerEvent in events){
+							if (playerEvent.PlayerId != (uint)senderId){
+								Debug.LogWarning("Player #" + senderId + " trying to register events for player #" + playerEvent.PlayerId);
+								return;
+							}
+						}
 						onEventsAddedEvent(events);
 					}
 				}

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: de8f8d38f24d24bdba8cf920f06645b8
-timeCreated: 1430395532
+guid: 96dc7d06928315641856a900e2c576b8
+timeCreated: 1455381994
 licenseType: Free
 PluginImporter:
   serializedVersion: 1
@@ -15,6 +15,10 @@ PluginImporter:
       enabled: 0
       settings:
         DefaultValueInitialized: true
+    WindowsStoreApps:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
   userData: 
   assetBundleName: 
   assetBundleVariant: 

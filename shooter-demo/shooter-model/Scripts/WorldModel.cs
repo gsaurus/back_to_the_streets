@@ -26,19 +26,7 @@ public class WorldModel:Model<WorldModel>{
 	public WorldModel():base(WorldControllerFactoryId){
 		// Nothing to do
 	}
-
-
-	protected override void AssignCopy(WorldModel other){
-		base.AssignCopy(other);
-
-		lastSpawnWasLeft = other.lastSpawnWasLeft;
-		physicsModelId = new ModelReference(other.physicsModelId);
-		players = new Dictionary<uint, ModelReference>(other.players.Count);
-		foreach(KeyValuePair<uint, ModelReference> pair in other.players){
-			players.Add(pair.Key, new ModelReference(pair.Value));
-		}
-
-	}
+		
 
 }
 

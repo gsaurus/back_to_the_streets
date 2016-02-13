@@ -31,8 +31,6 @@ namespace RetroBread{
 			// Nothing to do
 		}
 
-		public abstract RandomGenerator Clone();
-
 	}
 
 }
