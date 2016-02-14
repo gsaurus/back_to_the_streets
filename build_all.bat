@@ -8,21 +8,20 @@ copy libs\full_protobuf\protobuf-net.dll libs\
 
 
 :: rebuild all projects
-call build_project.bat mono-solution\engine-model\ %1
+:: low level model
+call build_project.bat data-model\engine-model\ %1
 
-call build_project.bat storage-model\storage-model\ %1
-call build_project.bat storage-model\storage-serializer\ %1
+:: storage model
+call build_project.bat data-model\storage-model\ %1
+call build_project.bat data-model\storage-serializer\ %1
 
-call build_project.bat shooter-demo\shooter-model\ %1
-call build_project.bat shooter-demo\shooter-serializer\ %1
+:: game specific model
+call build_project.bat data-model\game-model\ %1
+call build_project.bat data-model\game-serializer\ %1
 
 
-:: copy libs to unity project
-del /q sor4-engine\Assets\libs\*
-copy libs\%1\*.dll sor4-engine\Assets\libs\
-:: copy original protocol buffers dll
-copy libs\full_protobuf\protobuf-net.dll sor4-engine\Assets\libs\
-:: if debug, copy mdb files
-if %1==Debug (
-	copy libs\%1\*.dll.mdb sor4-engine\Assets\libs\
-)
+:: copy libs to unity-game project
+call copy_dlls.bat unity-game %1
+
+:: copy libs to character editor project
+call copy_dlls.bat editor\character-editor %1

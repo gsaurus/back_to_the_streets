@@ -1,12 +1,14 @@
 massive work ahead, the storage format for the characters is one, the format in the editor is other, and the in-game format is other, and I have to:
 OK - define storage format
 OK - code storage format
-3 - refactor projects names
+OK - refactor projects names
 4 - create basic documentation about the projects
 5 - refactor game format (currently transitions and events are different things, need to be the same)
 6 - game read from storage format
 7 - editor read/write from/to storage format
 
+TODO: support offline mode
+TODO: investigate double messages on single key event?.. 
 
 Then start with the editor..
 1 - study Unity UI stuff, do some experiments..
