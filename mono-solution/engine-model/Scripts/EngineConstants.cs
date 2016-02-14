@@ -38,8 +38,13 @@ namespace RetroBread{
 	}
 
 	public class SerializationConstants{
-		public const string SerializerName = "RbSerializer";
-		public const string SerializerDllName = "shooter-serializer.dll";
+		// Serializer used for game state (for network and save / load state)
+		public const string StateSerializerName 	= "RbStateSerializer";
+		public const string StateDllName	   		= "shooter-serializer.dll";
+		
+		// Serializer used for content storage (characters, levels...)
+		public const string StorageSerializerName	= "RbStorageSerializer";
+		public const string StorageDllName 			= "storage-serializer.dll";
 	}
 
 }

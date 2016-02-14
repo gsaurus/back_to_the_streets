@@ -1,7 +1,12 @@
 massive work ahead, the storage format for the characters is one, the format in the editor is other, and the in-game format is other, and I have to:
-1 - define each format
-2 - code each format
-3 - code translation between each other (editor read and write to storage format; game read from storage format)
+OK - define storage format
+OK - code storage format
+3 - refactor projects names
+4 - create basic documentation about the projects
+5 - refactor game format (currently transitions and events are different things, need to be the same)
+6 - game read from storage format
+7 - editor read/write from/to storage format
+
 
 Then start with the editor..
 1 - study Unity UI stuff, do some experiments..
@@ -72,3 +77,7 @@ Log
 13-02-16
 	- Schematic definition of character storage definition
 	- Update project with latest changes from tanks & ski prototypes
+	- Automatically connect to server (whatever, will be modified later anyway)
+	- Investigated why not building to webGL. Reason: limited network support. Would have to refactor all network for that.
+14-02-16
+	- Code storage model

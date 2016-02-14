@@ -37,6 +37,8 @@ public class CharacterLoader : MonoBehaviour {
 		}
 		//RuntimeAnimatorController animator = prefab.GetComponent<RuntimeAnimatorController>();
 
+		GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity);
+
 	}
 	
 	// Update is called once per frame

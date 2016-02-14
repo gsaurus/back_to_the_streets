@@ -6,10 +6,16 @@ rm -d libs/${1}/*.dll.mdb
 # copy original protocol buffers dll
 cp libs/full_protobuf/protobuf-net.dll libs/
 
+
 # rebuild all projects
 sh build_project.sh mono-solution/engine-model/ $1
+
+sh build_project.sh storage-model/storage-model/ $1
+sh build_project.sh storage-model/storage-serializer/ $1
+
 sh build_project.sh shooter-demo/shooter-model/ $1
 sh build_project.sh shooter-demo/shooter-serializer/ $1
+
 
 # copy libs to unity project
 rm -d sor4-engine/Assets/libs/*

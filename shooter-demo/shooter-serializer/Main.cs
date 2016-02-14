@@ -69,7 +69,7 @@ namespace ShooterSerializer
 			}
 
 			Console.WriteLine("compiling..");
-			model.Compile(SerializationConstants.SerializerName, SerializationConstants.SerializerDllName);
+			model.Compile(SerializationConstants.StateSerializerName, SerializationConstants.StateDllName);
 		}
 	}
 

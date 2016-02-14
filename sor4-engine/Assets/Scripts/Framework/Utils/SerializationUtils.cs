@@ -7,7 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace RetroBread{
 
 	public abstract class Serializer{
-		public static Serializer defaultSerializer = new ProtobufSerializer();
+		public static Serializer defaultSerializer = new ProtobufStateSerializer();
 		public static Serializer DefaultSerializer {
 			get{
 				return defaultSerializer;
@@ -35,14 +35,14 @@ namespace RetroBread{
 
 
 	// Serializer provides a simple way to serialize / deserialize data
-	public class ProtobufSerializer: Serializer
+	public class ProtobufStateSerializer: Serializer
 	{
 
 		// The protobuffer serializer
-		private RbSerializer rbSerializer;
+		private RbStateSerializer rbSerializer;
 
-		public ProtobufSerializer() {
-			rbSerializer = new RbSerializer();
+		public ProtobufStateSerializer() {
+			rbSerializer = new RbStateSerializer();
 		}
 
 		public override void Serialize(Stream stream, object obj){

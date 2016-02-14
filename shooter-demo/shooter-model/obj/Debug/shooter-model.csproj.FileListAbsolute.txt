@@ -2,6 +2,6 @@ C:\Users\TOSHIBA\Documents\Git\engine\shooter-demo\shooter-model\bin\Debug\shoot
 C:\Users\TOSHIBA\Documents\Git\engine\shooter-demo\shooter-model\bin\Debug\shooter-model.pdb
 C:\Users\TOSHIBA\Documents\Git\engine\shooter-demo\shooter-model\bin\Debug\engine-model.dll
 C:\Users\TOSHIBA\Documents\Git\engine\shooter-demo\shooter-model\bin\Debug\protobuf-net.dll
-C:\Users\TOSHIBA\Documents\Git\engine\shooter-demo\shooter-model\obj\Debug\shooter-model.dll
-C:\Users\TOSHIBA\Documents\Git\engine\shooter-demo\shooter-model\obj\Debug\shooter-model.pdb
 C:\Users\TOSHIBA\Documents\Git\engine\shooter-demo\shooter-model\obj\debug\ResolveAssemblyReference.cache
+C:\Users\TOSHIBA\Documents\Git\engine\shooter-demo\shooter-model\obj\debug\shooter-model.dll
+C:\Users\TOSHIBA\Documents\Git\engine\shooter-demo\shooter-model\obj\debug\shooter-model.pdb
