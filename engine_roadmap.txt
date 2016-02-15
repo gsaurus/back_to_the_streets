@@ -1,8 +1,11 @@
+Engine documentation:
+https://docs.google.com/document/d/1YAtgp1-7RQTSQqmVyXsWawJDXM8KLNKdgQm-GsvNzPs/
+
 massive work ahead, the storage format for the characters is one, the format in the editor is other, and the in-game format is other, and I have to:
 OK - define storage format
 OK - code storage format
 OK - refactor projects names
-4 - create basic documentation about the projects
+OK - create basic documentation about the projects
 5 - refactor game format (currently transitions and events are different things, need to be the same)
 6 - game read from storage format
 7 - editor read/write from/to storage format
@@ -83,3 +86,8 @@ Log
 	- Investigated why not building to webGL. Reason: limited network support. Would have to refactor all network for that.
 14-02-16
 	- Code storage model
+	- Refactor projects names
+15-02-16
+	- Investigate a Mac build problem
+	- Added missing C# projects to git
+	- Documentation: Basic projects overview
