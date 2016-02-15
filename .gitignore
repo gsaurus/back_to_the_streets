@@ -1,7 +1,6 @@
 **/Library/**
 **/bin/**
 */Temp/
-*.csproj
 *.unityproj
 *.user
 *.userprefs
@@ -9,5 +8,8 @@
 unity-game/playback.txt
 unity-game/webplayer/
 unity-game/*.sln
+unity-game/*.csproj
 editor/asset-packer/*.sln
 editor/character-editor/*.sln
+editor/asset-packer/*.csproj
+editor/character-editor/*.csproj

@@ -1,3 +1,6 @@
+# verbose
+set -x
+
 # cleanup libs directory
 rm -d libs/*.dll
 rm -d libs/${1}/*.dll
