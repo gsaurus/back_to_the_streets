@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3B4F43FB-226E-432E-9C97-928BDFEC5471}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>enginemodel</RootNamespace>
+    <AssemblyName>engine-model</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="protobuf-net">
+      <HintPath>..\..\libs\protobuf-net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Scripts\EngineConstants.cs" />
+    <Compile Include="Scripts\Physics\PhysicPlaneModel.cs" />
+    <Compile Include="Scripts\Physics\PhysicPointModel.cs" />
+    <Compile Include="Scripts\Physics\PhysicWorldModel.cs" />
+    <Compile Include="Scripts\States\State.cs" />
+    <Compile Include="Scripts\States\MVC\Controller.cs" />
+    <Compile Include="Scripts\States\MVC\Model.cs" />
+    <Compile Include="Scripts\States\MVC\ModelReference.cs" />
+    <Compile Include="Scripts\States\MVC\VCFactoriesManager.cs" />
+    <Compile Include="Scripts\States\MVC\View.cs" />
+    <Compile Include="Scripts\Utils\Singleton.cs" />
+    <Compile Include="Scripts\Utils\Math\FixedFloat.cs" />
+    <Compile Include="Scripts\Utils\Math\FixedVector3.cs" />
+    <Compile Include="Scripts\Utils\Math\RandomGenerator.cs" />
+    <Compile Include="Scripts\Utils\Math\SimpleRandomGenerator.cs" />
+    <Compile Include="Scripts\AnimationModel.cs" />
+    <Compile Include="Scripts\GameEntityModel.cs" />
+    <Compile Include="Scripts\PlayerInputModel.cs" />
+    <Compile Include="Scripts\States\Event.cs" />
+    <Compile Include="Scripts\StandardInputEvents.cs" />
+    <Compile Include="Scripts\NetworkPlayerData.cs" />
+    <Compile Include="Scripts\Utils\Debug.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+</Project>

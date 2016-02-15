@@ -9,7 +9,7 @@ unity-game/playback.txt
 unity-game/webplayer/
 unity-game/*.sln
 unity-game/*.csproj
-editor/asset-packer/*.sln
+editor/assets-packer/*.sln
 editor/character-editor/*.sln
-editor/asset-packer/*.csproj
+editor/assets-packer/*.csproj
 editor/character-editor/*.csproj
