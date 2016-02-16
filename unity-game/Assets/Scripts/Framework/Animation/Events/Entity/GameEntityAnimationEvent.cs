@@ -17,13 +17,15 @@ namespace RetroBread{
 		
 		
 		// Constructor with delegate and parameters
-		public SimpleEntityAnimationEvent(EventExecutionDelegate eventDelegate){
+		public SimpleEntityAnimationEvent(AnimationTriggerCondition condition, EventExecutionDelegate eventDelegate)
+		:base(condition)
+		{
 			this.eventExecutionDelegate = eventDelegate;
 		}
 		
 		
 		// Execute event trough the delegate
-		public void Execute(AnimationModel model){
+		protected override void Execute(AnimationModel model){
 			GameEntityModel entityModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
 			if (entityModel == null) return;
 			eventExecutionDelegate(entityModel);
@@ -44,14 +46,16 @@ namespace RetroBread{
 		
 		
 		// Constructor with delegate and parameters
-		public SingleEntityAnimationEvent(EventExecutionDelegate eventDelegate, T param){
+		public SingleEntityAnimationEvent(AnimationTriggerCondition condition, EventExecutionDelegate eventDelegate, T param)
+		:base(condition)
+		{
 			this.eventExecutionDelegate = eventDelegate;
 			this.param = param;
 		}
 		
 		
 		// Execute event trough the delegate
-		public void Execute(AnimationModel model){
+		protected override void Execute(AnimationModel model){
 			GameEntityModel entityModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
 			if (entityModel == null) return;
 			eventExecutionDelegate(entityModel, param);
@@ -73,7 +77,9 @@ namespace RetroBread{
 		
 		
 		// Constructor with delegate and parameters
-		public DoubleEntityAnimationEvent(EventExecutionDelegate eventDelegate, U param1, V param2){
+		public DoubleEntityAnimationEvent(AnimationTriggerCondition condition, EventExecutionDelegate eventDelegate, U param1, V param2)
+		:base(condition)
+		{
 			this.eventExecutionDelegate = eventDelegate;
 			this.param1 = param1;
 			this.param2 = param2;
@@ -81,7 +87,7 @@ namespace RetroBread{
 		
 		
 		// Execute event trough the delegate
-		public void Execute(AnimationModel model){
+		protected override void Execute(AnimationModel model){
 			GameEntityModel entityModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
 			if (entityModel == null) return;
 			eventExecutionDelegate(entityModel, param1, param2);

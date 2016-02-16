@@ -17,13 +17,15 @@ namespace RetroBread{
 		
 		
 		// Constructor with delegate and parameters
-		public SimpleAnimationEvent(EventExecutionDelegate eventDelegate){
+		public SimpleAnimationEvent(AnimationTriggerCondition condition, EventExecutionDelegate eventDelegate)
+		:base(condition)
+		{
 			this.eventExecutionDelegate = eventDelegate;
 		}
 		
 		
 		// Execute event trough the delegate
-		public void Execute(AnimationModel model){
+		protected override void Execute(AnimationModel model){
 			eventExecutionDelegate(model);
 		}
 	}
@@ -42,14 +44,16 @@ namespace RetroBread{
 		
 		
 		// Constructor with delegate and parameters
-		public SingleAnimationEvent(EventExecutionDelegate eventDelegate, T param){
+		public SingleAnimationEvent(AnimationTriggerCondition condition, EventExecutionDelegate eventDelegate, T param)
+		:base(condition)
+		{
 			this.eventExecutionDelegate = eventDelegate;
 			this.param = param;
 		}
 		
 		
 		// Execute event trough the delegate
-		public void Execute(AnimationModel model){
+		protected override void Execute(AnimationModel model){
 			eventExecutionDelegate(model, param);
 		}
 	}
@@ -69,7 +73,9 @@ namespace RetroBread{
 		
 		
 		// Constructor with delegate and parameters
-		public DoubleAnimationEvent(EventExecutionDelegate eventDelegate, U param1, V param2){
+		public DoubleAnimationEvent(AnimationTriggerCondition condition, EventExecutionDelegate eventDelegate, U param1, V param2)
+		:base(condition)
+		{
 			this.eventExecutionDelegate = eventDelegate;
 			this.param1 = param1;
 			this.param2 = param2;
@@ -77,7 +83,7 @@ namespace RetroBread{
 		
 		
 		// Execute event trough the delegate
-		public void Execute(AnimationModel model){
+		protected override void Execute(AnimationModel model){
 			eventExecutionDelegate(model, param1, param2);
 		}
 	}
@@ -98,16 +104,17 @@ namespace RetroBread{
 		
 		// Constructor with delegate and parameters
 		public VariadicAnimationEvent(
+			AnimationTriggerCondition condition, 
 			EventExecutionDelegate eventDelegate,
 			params object[] parameters
-			){
+		):base(condition){
 			this.eventExecutionDelegate = eventDelegate;
 			this.parameters = parameters;
 		}
 		
 		
 		// Execute event trough the delegate
-		public void Execute(AnimationModel model){
+		protected override void Execute(AnimationModel model){
 			eventExecutionDelegate(model, parameters);
 		}
 		

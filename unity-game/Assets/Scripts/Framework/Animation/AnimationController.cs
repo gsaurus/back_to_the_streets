@@ -5,53 +5,32 @@ using System.Collections.Generic;
 namespace RetroBread{
 
 
-	// An animation event is something we can execute at a certain keyframe
-	// Implementations can store information to be used during execute
-	// Example: playSound stores the name of the sound and call playSound(soundName) on execute
-	public interface AnimationEvent{
-		void Execute(AnimationModel model);
-	}
-
 	// A trigger condition evaluates to true/false
 	public interface AnimationTriggerCondition{
 		bool Evaluate(AnimationModel model);
 	}
 
-	// A transition executes if a list of conditions are verified
-	public class AnimationTransition{
+	// An animation event is something we can execute if certain condition is met
+	// Implementations can store information to be used during execute
+	// Example: playSound stores the name of the sound and call playSound(soundName) on execute
+	public abstract class AnimationEvent{
 
-		// Transition endpoint
-		private string nextAnimation;
+		// Condition may be null if executed directly at a key frame
+		private AnimationTriggerCondition condition;
 
-		// List of conditions for the transition
-		private List<AnimationTriggerCondition> conditions;
-
-		public float transitionTime { get ; private set; }
-
-		// Constructor
-		public AnimationTransition(string nextAnimation, List<AnimationTriggerCondition> conditions, float transitionTime = 0.2f ){
-			this.nextAnimation = nextAnimation;
-			this.conditions = conditions;
-			this.transitionTime = transitionTime;
+		public AnimationEvent(AnimationTriggerCondition condition){
+			this.condition = condition;
 		}
 
-	//	// Execute some code when doing the transition
-	//	// Example: cleanup current animation state variables
-	//	protected virtual void OnTransition(AnimationModel model){
-	//		// Nothing by default
-	//	}
+		// To be implemented, execute the event
+		protected abstract void Execute(AnimationModel model);
 
-		// Evaluate conditions
-		public string CheckTransition(AnimationModel model){
-			foreach (AnimationTriggerCondition condition in conditions){
-				if (!condition.Evaluate(model)) {
-					return null;
-				}
+		// Check the condition and execute event if condition passes
+		public void Evaluate(AnimationModel model){
+			if (condition == null || condition.Evaluate(model)){
+				Execute(model);
 			}
-			// All conditions verified
-			return nextAnimation;
 		}
-
 	}
 
 
@@ -59,101 +38,86 @@ namespace RetroBread{
 	// Execute animation events and perform transitions automatically
 	public class AnimationController:Controller<AnimationModel>{
 
-		private Dictionary<uint, List<AnimationEvent>> events;
-		private List<AnimationTransition> transitions;
+		// Events associated to keyframes (evaluated once)
+		private Dictionary<uint, List<AnimationEvent>> keyframeEvents;
 
-		// can't hold it here cose same controller can act over various models
-		//private bool animationChanged;
+		// General events, evaluated every frame
+		private List<AnimationEvent> generalEvents;
 
 		public AnimationController(){
-			events = new Dictionary<uint, List<AnimationEvent>>();
-			transitions = new List<AnimationTransition>();
+			keyframeEvents = new Dictionary<uint, List<AnimationEvent>>();
+			generalEvents = new List<AnimationEvent>();
 		}
 
-		// Add animation events
-		public void AddEvent(uint keyframe, AnimationEvent e){
+		// Add frame based events
+		public void AddKeyframeEvent(uint keyframe, AnimationEvent e){
 			List<AnimationEvent> frameEvents;
-			if (!events.TryGetValue(keyframe, out frameEvents)){
+			if (!keyframeEvents.TryGetValue(keyframe, out frameEvents)){
 				frameEvents = new List<AnimationEvent>(1);
-				events.Add(keyframe, frameEvents);
+				keyframeEvents.Add(keyframe, frameEvents);
 			}
 			frameEvents.Add(e);
 		}
 
 		// Add transition
-		public void AddTransition(AnimationTransition transition){
-			transitions.Add(transition);
+		public void AddGeneralEvent(AnimationEvent e){
+			generalEvents.Add(e);
 		}
 
 
-		// Execute any events for this keyframe
-		private void ExecuteEvents(AnimationModel model){
-			if (events != null){
+		// Process any events for this keyframe
+		private void ProcessKeyframeEvents(AnimationModel model){
+			if (keyframeEvents != null){
 				List<AnimationEvent> currentFrameEvents;
-				if (events.TryGetValue(model.currentFrame, out currentFrameEvents)){
+				if (keyframeEvents.TryGetValue(model.currentFrame, out currentFrameEvents)){
 					foreach (AnimationEvent e in currentFrameEvents){
-						e.Execute(model);
+						e.Evaluate(model);
 					}
 				}
 			}
 		}
 
-
-		private void CheckTransitions(AnimationModel model){
-
-			// TODO: check global transitions (i.e. applicable to any state)
-
-			string nextAnimation = null;
-			AnimationTransition theTransition = null;
-			foreach(AnimationTransition transition in transitions){
-				nextAnimation = transition.CheckTransition(model);
-				if (nextAnimation != null){
-					theTransition = transition;
-					break;
-				}
+		// Process general animation events
+		private void ProcessGeneralEvents(AnimationModel model){
+			foreach (AnimationEvent e in generalEvents){
+				e.Evaluate(model);
 			}
-			
-			// If there is a transition pending, move to it
-			if (nextAnimation != null) {
-				SetAnimation(model, nextAnimation);
-				AnimationView view = model.View() as AnimationView;
-				if (view != null){
-					view.transitionTime = theTransition.transitionTime;
-				}
-			}
-
 		}
-
 
 
 		// On update we execute animation events 
 		protected override void Update(AnimationModel model){
 
-			// reset changed flag
-			model.animationChanged = false;
+			// reset animation & frame changed variables
+			model.ResetNextParameters();
 
-			// Check transitions based on how the state is now
-			CheckTransitions(model);
+			// process keyframe events
+			ProcessKeyframeEvents(model);
 
-			// Execute any events for this keyframe
-			ExecuteEvents(model);
+			// process general events
+			ProcessGeneralEvents(model);
 			
 		}
 
-		// Allow to force change animation
-		public void SetAnimation(AnimationModel model, string nextAnimation, uint initialFrame = 0){
-			model.animationName = nextAnimation;
-			model.currentFrame = initialFrame;
-			model.InvalidateVC();
-			model.animationChanged = true;
-		}
 
 
 		// On post-update we move to next frame, if animation didn't change
 		protected override void PostUpdate(AnimationModel model){
-			if (!model.animationChanged) {
+
+			bool haveNewNextFrame = model.nextFrame != AnimationModel.invalidFrameId;
+			bool haveNewAnimation = model.nextAnimation != null && model.nextAnimation != model.animationName;
+
+			if (haveNewNextFrame){
+				model.currentFrame = (uint) model.nextFrame;
+			}
+
+			if (haveNewAnimation) {
+				model.animationName = model.nextAnimation;
+				model.InvalidateVC();
+			}
+
+			if (!haveNewNextFrame && !haveNewAnimation){
 				// move to next frame
-				// Note: even though we increment it here, this update cycle was about currentFrame-1 
 				++model.currentFrame;
 			}
 		}

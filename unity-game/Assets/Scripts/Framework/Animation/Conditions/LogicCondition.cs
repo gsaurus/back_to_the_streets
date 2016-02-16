@@ -78,6 +78,26 @@ namespace RetroBread{
 	}
 
 
+	public class ConditionsList: AnimationTriggerCondition{
+		private List<AnimationTriggerCondition> conditions;
+
+		public ConditionsList(List<AnimationTriggerCondition> conditions){
+			this.conditions = conditions;
+		}
+
+		public bool Evaluate(AnimationModel model){
+			if (conditions == null) return true;
+			foreach (AnimationTriggerCondition condition in conditions){
+				if (!condition.Evaluate(model)){
+					return false;
+				}
+			}
+			return true;
+		}
+
+	}
+
+
 
 }
 

@@ -2,46 +2,46 @@ Engine documentation:
 https://docs.google.com/document/d/1YAtgp1-7RQTSQqmVyXsWawJDXM8KLNKdgQm-GsvNzPs/
 
 massive work ahead, the storage format for the characters is one, the format in the editor is other, and the in-game format is other, and I have to:
-OK - define storage format
-OK - code storage format
-OK - refactor projects names
-OK - create basic documentation about the projects
-5 - refactor game format (currently transitions and events are different things, need to be the same)
-6 - game read from storage format
-7 - editor read/write from/to storage format
+OK - define storage format 1
+OK - code storage format 1
+OK - refactor projects names 0.5
+OK - create basic documentation about the projects 0.5
+OK - refactor game format (currently transitions and events are different things, need to be the same) 2
+6 - game read from storage format 2
+7 - editor read/write from/to storage format 2
 
-TODO: support offline mode
-TODO: investigate double messages on single key event?.. 
+TODO: support offline mode 2
+TODO: investigate double messages on single key event?.. 1
 
 Then start with the editor..
-1 - study Unity UI stuff, do some experiments..
-2 - do some experiments with plugins.. the editor will need plugins to add functionality on the fly
-3 - define the editor screens layout and functionality..
-4 - able to load in a 2D or 3D model, I have done a few work in the past, so 15% done..
-5 - Create the basic UI layouts
-6 - Associate the model to a stub character data
-7 - scroll between animations, playback features (play, pause, next frame, etc)
-8 - Code basic functionality such as load, save
-9 - Collision boxes
-10 - Hit boxes (basic stuff only)
-11 - Direct events (stub stuff only)
-12 - Conditional events (stub stuff only)
+1 - study Unity UI stuff, do some experiments.. 2
+2 - do some experiments with plugins.. the editor will need plugins to add functionality on the fly 2
+3 - define the editor screens layout and functionality.. 1
+4 - able to load in a 2D or 3D model, I have done a few work in the past, so 15% done.. 3
+5 - Create the basic UI layouts 8
+6 - Associate the model to a stub character data 3
+7 - scroll between animations, playback features (play, pause, next frame, etc) 5
+8 - Code basic functionality such as load, save 3
+9 - Collision boxes 3
+10 - Hit boxes (basic stuff only) 3
+11 - Direct events (stub stuff only) 2
+12 - Conditional events (stub stuff only) 3
 
 Back to game:
-1 - load character data and model
-2 - construct character controller (basic stuff only)
+1 - load character data and model 1
+2 - construct character controller (basic stuff only) 2
 
 By now, all we can see in-game is character on idle animation.
 Next step: create some plugins that provide with basic functionality. Each functionality generates two plugins:
  - One for editor to show specific options and translate them into storage data
  - One for game to load specific options from storage data
 There are conditional plugins and event plugins. Plan is:
-1 - Create frame conditions (at frame x, do something)
-2 - Create animation transition events for editor (at frame x, move to animation y)
-3 - Load and play animation transitions in-game
+1 - Create frame conditions (at frame x, do something) 2
+2 - Create animation transition events for editor (at frame x, move to animation y) 2
+3 - Load and play animation transitions in-game 2
 If everything goes well until here, other plugins will be easy to create:
-4 - Input conditions, Velocity events, Velocity conditions, etc (check old GameEntityController)
-5 - Create a test character with simple movement: walk, jump, fall 
+4 - Input conditions, Velocity events, Velocity conditions, etc (check old GameEntityController) 5
+5 - Create a test character with simple movement: walk, jump, fall 3
 
 By now, in-game character should be able to walk, jump, fall.
 Basic stuff is done.
@@ -91,3 +91,5 @@ Log
 	- Investigate a Mac build problem
 	- Added missing C# projects to git
 	- Documentation: Basic projects overview
+16-02-16
+	- Refactor animations transitions and events (now only events and conditions)
