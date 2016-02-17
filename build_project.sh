@@ -1,15 +1,28 @@
+# verbose
+set -x
+
 original_dir=$(pwd)
 
 # extract project name from directory (last component of the path name is also the project name)
 new_dir=$1
 proj_name=$(basename $new_dir)
 
+# get mono & mdtool locations
+mdtool_cmd=/Applications/Unity/MonoDevelop.app/Contents/MacOS/mdtool
+mono_app=/Applications/Unity/MonoDevelop.app/Contents/Frameworks/Mono.framework/Versions/Current/bin/mono
+mdtool_exe=/Applications/Unity/MonoDevelop.app/Contents/MacOS/lib/monodevelop/bin/mdtool.exe
+
+if [ ! -f ${mdtool_cmd} ] ; then
+	mdtool_cmd=${mono_app}" "${mdtool_exe}
+fi
+
 pushd $new_dir
 
 	# clean and build the project
 	rm bin/$2 -d -f
-	/Applications/Unity/MonoDevelop.app/Contents/MacOS/mdtool build ${proj_name}.csproj -c:$2 -t:Clean
-	/Applications/Unity/MonoDevelop.app/Contents/MacOS/mdtool -v build ${proj_name}.csproj -c:$2 -t:Build
+	
+	${mdtool_cmd} build ${proj_name}.csproj -c:$2 -t:Clean
+	${mdtool_cmd} -v build ${proj_name}.csproj -c:$2 -t:Build
 	
 	pushd bin/$2
 	
