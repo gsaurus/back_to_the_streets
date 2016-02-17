@@ -16,7 +16,8 @@ namespace RetroBread{
 	public abstract class AnimationEvent{
 
 		// Condition may be null if executed directly at a key frame
-		private AnimationTriggerCondition condition;
+		// It is public only to be edited during character loading..
+		public AnimationTriggerCondition condition;
 
 		public AnimationEvent(AnimationTriggerCondition condition){
 			this.condition = condition;
@@ -124,7 +125,9 @@ namespace RetroBread{
 
 
 		public override bool IsCompatible(AnimationModel originalModel, AnimationModel newModel){
-			return originalModel.characterName == newModel.characterName && originalModel.animationName == newModel.animationName;
+			return originalModel.characterName == newModel.characterName
+				&& originalModel.animationName == newModel.animationName
+			;
 		}
 		
 	}

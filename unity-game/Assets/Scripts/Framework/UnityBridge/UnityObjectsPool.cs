@@ -48,7 +48,11 @@ namespace RetroBread{
 				if (ownerModel == null) return null;
 				AnimationModel animModel = StateManager.state.GetModel(ownerModel.animationModelId) as AnimationModel;
 				if (animModel == null) return null;
-				prefabName = animModel.characterName;
+				if (animModel.viewModelName != null){
+					prefabName = animModel.viewModelName;
+				}else{
+					prefabName = animModel.characterName;
+				}
 			}
 			
 			if (prefabName == null || modelId == ModelReference.InvalidModelIndex){

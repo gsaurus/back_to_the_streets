@@ -11,6 +11,7 @@ namespace RetroBread.Storage{
 [ProtoContract]
 public sealed class Character{
 
+	// Logical character name
 	[ProtoMember(1)]
 	public string name;
 
@@ -29,6 +30,10 @@ public sealed class Character{
 	// Names of transforms in model used as anchors for attached objects
 	[ProtoMember(6, OverwriteList=true)]
 	public string[] viewAnchors;
+
+	// Name of the 2D or 3D model(s) of the character (may have multiple skins)
+	[ProtoMember(7, OverwriteList=true)]
+	public string[] viewModels;
 
 	// Default Constructor
 	public Character(){

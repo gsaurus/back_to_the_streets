@@ -48,6 +48,7 @@ namespace RetroBread{
 			State state,
 			string characterName,
 			string animationName,
+			string viewModelName,
 			PhysicWorldModel worldModel,
 			Model inputModel,
 			FixedVector3 position,
@@ -55,6 +56,7 @@ namespace RetroBread{
 		):this(state,
 		       characterName,
 		       animationName,
+		       viewModelName,
 		       worldModel,
 		       inputModel,
 		       position,
@@ -70,6 +72,7 @@ namespace RetroBread{
 			State state,
 			string characterName,
 			string animationName,
+			string viewModelName,
 			PhysicWorldModel worldModel,
 			Model inputModel,
 			FixedVector3 position,
@@ -80,7 +83,7 @@ namespace RetroBread{
 		):base(controllerFactoryId, viewFactoryId, updatingOrder){
 			physicsModelId = state.AddModel(new PhysicPointModel(this.Index, position, stepTolerance));
 			worldModel.pointModels.Add(physicsModelId);
-			animationModelId = state.AddModel(new AnimationModel(this.Index, characterName, animationName));
+			animationModelId = state.AddModel(new AnimationModel(this.Index, characterName, animationName, viewModelName));
 			inputModelId = state.AddModel(inputModel);
 		}
 

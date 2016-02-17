@@ -54,6 +54,7 @@ public class ShooterEntityModel: GameEntityModel {
 	):base(state,
 	       characterName,
 	       animationName,
+		   characterName,
 	       worldModel,
 	       inputModel,
 	       position,

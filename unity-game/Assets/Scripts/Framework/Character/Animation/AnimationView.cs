@@ -102,7 +102,10 @@ namespace RetroBread{
 
 
 		public override bool IsCompatible(AnimationModel originalModel, AnimationModel newModel){
-			return originalModel.characterName == newModel.characterName && originalModel.animationName == newModel.animationName;
+			return originalModel.characterName == newModel.characterName
+				&& originalModel.animationName == newModel.animationName
+				&& originalModel.viewModelName == newModel.viewModelName
+			;
 		}
 
 	}

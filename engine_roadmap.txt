@@ -8,7 +8,9 @@ OK - refactor projects names 0.5
 OK - create basic documentation about the projects 0.5
 OK - refactor game format (currently transitions and events are different things, need to be the same) 2
 6 - game read from storage format 2
-7 - editor read/write from/to storage format 2
+7 - define the editor screens layout and functionality.. 1
+8 - define editor character format 1
+9 - editor read/write from/to storage format 2
 
 TODO: support offline mode 2
 TODO: investigate double messages on single key event?.. 1
@@ -16,16 +18,15 @@ TODO: investigate double messages on single key event?.. 1
 Then start with the editor..
 1 - study Unity UI stuff, do some experiments.. 2
 2 - do some experiments with plugins.. the editor will need plugins to add functionality on the fly 2
-3 - define the editor screens layout and functionality.. 1
-4 - able to load in a 2D or 3D model, I have done a few work in the past, so 15% done.. 3
-5 - Create the basic UI layouts 8
-6 - Associate the model to a stub character data 3
-7 - scroll between animations, playback features (play, pause, next frame, etc) 5
-8 - Code basic functionality such as load, save 3
-9 - Collision boxes 3
-10 - Hit boxes (basic stuff only) 3
-11 - Direct events (stub stuff only) 2
-12 - Conditional events (stub stuff only) 3
+3 - able to load in a 2D or 3D model, I have done a few work in the past, so 15% done.. 3
+4 - Create the basic UI layouts 8
+5 - Associate the model to a stub character data 3
+6 - scroll between animations, playback features (play, pause, next frame, etc) 5
+7 - Code basic functionality such as load, save 3
+8 - Collision boxes 3
+9 - Hit boxes (basic stuff only) 3
+10 - Direct events (stub stuff only) 2
+11 - Conditional events (stub stuff only) 3
 
 Back to game:
 1 - load character data and model 1
@@ -93,3 +94,7 @@ Log
 	- Documentation: Basic projects overview
 16-02-16
 	- Refactor animations transitions and events (now only events and conditions)
+17-02-16
+	- Fixed Mac build scripts (working again)
+	- Preliminar code to setup of a character from storage data
+	

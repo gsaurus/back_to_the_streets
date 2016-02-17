@@ -14,6 +14,9 @@ namespace RetroBread{
 		[ProtoMember(2)] public uint currentFrame;
 		[ProtoMember(3)] public string characterName;
 		[ProtoMember(4)] public string animationName;
+		// A character may have different skins (2D or 3D models),
+		// This variable tells which one to use
+		[ProtoMember(5)] public string viewModelName;
 
 		// This variables are used during each frame update only
 		public string nextAnimation {get; private set; }
@@ -47,10 +50,12 @@ namespace RetroBread{
 		// Constructor
 		public AnimationModel(ModelReference ownerId,
 		                      string characterName,
-		                      string animationName
+		                      string animationName,
+		                      string viewModelName
 		):this(ownerId,
 		       characterName,
 		       animationName,
+		       viewModelName,
 		       DefaultVCFactoryIds.AnimationControllerFactoryId,
 		       DefaultVCFactoryIds.AnimationViewFactoryId,
 		       DefaultUpdateOrder.AnimationsUpdateOrder
@@ -62,12 +67,14 @@ namespace RetroBread{
 		public AnimationModel(ModelReference ownerId,
 		                      string characterName,
 		                      string animationName,
+		                      string viewModelName,
 		                      string controllerFactoryId,
 		                      string viewFactoryId,
 		                      int updatingOrder
 		):base(controllerFactoryId, viewFactoryId, updatingOrder){
 			this.characterName = characterName;
 			this.animationName = animationName;
+			this.viewModelName = viewModelName;
 			this.currentFrame = 0;
 			this.ownerId = ownerId;
 		}
