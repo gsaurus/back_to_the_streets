@@ -32,13 +32,18 @@ namespace RetroBread{
 		private static AnimationTriggerCondition ReadCondition(Storage.GenericParameter condition){
 
 			// TODO: depending on parameter type, for now dummy condition
+			// TODO: call the plugin to create the condition
 			return new TemporaryFrameCondition(TemporaryFrameCondition.lastAnimationFrame);
 
 		}
 
 
 		private static AnimationEvent ReadEvent(Storage.CharacterEvent e){
-			// TODO ...
+
+			AnimationTriggerCondition condition = conditions[e.conditionId];
+
+			// TODO: create respective event based on parameter type
+			// TODO: call the plugin to create the event for the e.param with the given condition
 			return null;
 		}
 
@@ -77,6 +82,7 @@ namespace RetroBread{
 					AnimationEvent animEvent = events[eventIndex];
 					condition = animEvent.condition;
 					if (condition is TemporaryFrameCondition){
+						// Instead of frame condition, add event as keyframe event
 						tempCondition = condition as TemporaryFrameCondition;
 						animEvent.condition = tempCondition.subCondition;
 						if (tempCondition.frameNumber == TemporaryFrameCondition.lastAnimationFrame){

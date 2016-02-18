@@ -7,7 +7,7 @@ OK - code storage format 1
 OK - refactor projects names 0.5
 OK - create basic documentation about the projects 0.5
 OK - refactor game format (currently transitions and events are different things, need to be the same) 2
-6 - game read from storage format 2
+OK - game read basic condition/events from storage format (no plugin yet) 2
 7 - define the editor screens layout and functionality.. 1
 8 - define editor character format 1
 9 - editor read/write from/to storage format 2
@@ -19,7 +19,7 @@ Then start with the editor..
 1 - study Unity UI stuff, do some experiments.. 2
 2 - do some experiments with plugins.. the editor will need plugins to add functionality on the fly 2
 3 - able to load in a 2D or 3D model, I have done a few work in the past, so 15% done.. 3
-4 - Create the basic UI layouts 8
+4 - Create the basic UI layouts, and basic navigation 8
 5 - Associate the model to a stub character data 3
 6 - scroll between animations, playback features (play, pause, next frame, etc) 5
 7 - Code basic functionality such as load, save 3
