@@ -97,4 +97,8 @@ Log
 17-02-16
 	- Fixed Mac build scripts (working again)
 	- Preliminar code to setup of a character from storage data
+18-02-16
+	- Initial thinking on editor layouts
+	- Initial experiments with Unity UI
+	- Figured can make a selection list using a ToggleGroup
 	
