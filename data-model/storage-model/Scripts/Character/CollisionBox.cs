@@ -8,10 +8,7 @@ namespace RetroBread.Storage{
 [ProtoContract]
 public sealed class CollisionBox{
 
-	[ProtoMember(1)]
-	public int collisionId;
-
-	[ProtoMember(2, OverwriteList=true)]
+	[ProtoMember(1, OverwriteList=true)]
 	public int[] boxIds;
 
 	// Default Constructor
@@ -20,8 +17,8 @@ public sealed class CollisionBox{
 	}
 
 	// Constructor
-	public CollisionBox(int collisionId){
-		this.collisionId = collisionId;
+	public CollisionBox(int[] boxIds){
+		this.boxIds = boxIds;
 	}
 		
 

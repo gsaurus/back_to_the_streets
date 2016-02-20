@@ -8,17 +8,11 @@ namespace RetroBread.Storage{
 [ProtoContract]
 public sealed class HitBox{
 
-	[ProtoMember(1)]
-	public int boxId;
+	[ProtoMember(1, OverwriteList=true)]
+	public int[] boxIds;
 
 	[ProtoMember(2)]
-	public int startFrame;
-
-	[ProtoMember(3)]
-	public int endFrame;
-
-	[ProtoMember(4)]
-	public GenericParameter param;
+	public int paramId;
 
 	// Default Constructor
 	public HitBox(){
@@ -26,11 +20,9 @@ public sealed class HitBox{
 	}
 
 	// Constructor
-	public HitBox(int boxId, int startFrame, int endFrame, GenericParameter param){
-		this.boxId = boxId;
-		this.startFrame = startFrame;
-		this.endFrame = endFrame;
-		this.param = param;
+	public HitBox(int[] boxIds, int paramId){
+		this.boxIds = boxIds;
+		this.paramId = paramId;
 	}
 		
 

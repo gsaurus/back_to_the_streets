@@ -9,11 +9,13 @@ namespace RetroBread.Storage{
 [ProtoContract]
 public sealed class CharacterEvent{
 
+	// Pointers to GenericParameters
 	[ProtoMember(1)]
-	public int conditionId;
+	public int[] conditionIds;
 
+	// Pointers to GenericParameters
 	[ProtoMember(2)]
-	public GenericParameter param;
+	public int[] eventIds;
 
 	// Default Constructor
 	public CharacterEvent(){
@@ -21,9 +23,9 @@ public sealed class CharacterEvent{
 	}
 
 	// Constructor
-	public CharacterEvent(int conditionId, GenericParameter param){
-		this.conditionId = conditionId;
-		this.param = param;
+	public CharacterEvent(int[] conditionIds, int[] eventIds){
+		this.conditionIds = conditionIds;
+		this.eventIds = eventIds;
 	}
 		
 
