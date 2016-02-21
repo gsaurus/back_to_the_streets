@@ -6,7 +6,7 @@ using RetroBread;
 
 namespace RetroBread.Editor{
 
-	public class Animation {
+	public class CharacterAnimation {
 
 		public string name;
 		public int numFrames;
@@ -15,15 +15,15 @@ namespace RetroBread.Editor{
 		public List<ConditionalEvent> events;
 
 
-		public Animation(string name, int numFrames){
+		public CharacterAnimation(string name, int numFrames){
 			this.name = name;
 			this.numFrames = numFrames;
 		}
 
-		public static Animation LoadFromStorage(Storage.CharacterAnimation storageAnimation, Storage.Character storageCharacter){
+		public static CharacterAnimation LoadFromStorage(Storage.CharacterAnimation storageAnimation, Storage.Character storageCharacter){
 			// Build collisionboxes, hitboxes and events from storageCharacter
 			// No worries with performance here, get a copy to everything
-			Animation anim = new Animation(storageAnimation.name, storageAnimation.numFrames);
+			CharacterAnimation anim = new CharacterAnimation(storageAnimation.name, storageAnimation.numFrames);
 
 			// Populate collision boxes
 			anim.collisionBoxes = new List<CollisionBox>(storageAnimation.collisionBoxes.Length);

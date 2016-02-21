@@ -27,6 +27,7 @@ namespace RetroBread.Editor{
 		}
 
 		public static Box LoadFromStorage(Storage.Box storageBox){
+			if (storageBox == null) return null;
 			return new Box(storageBox.pointOne, storageBox.pointTwo);
 		}
 

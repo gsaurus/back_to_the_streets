@@ -9,7 +9,7 @@ namespace RetroBread.Editor{
 	public class Character {
 
 		public string name;
-		public List<Animation> animations;
+		public List<CharacterAnimation> animations;
 
 		public List<string> viewAnchors;
 		public List<string> viewModels;
@@ -25,9 +25,9 @@ namespace RetroBread.Editor{
 			character.viewAnchors = new List<string>(storageCharacter.viewAnchors);
 			character.viewModels = new List<string>(storageCharacter.viewModels);
 			// Populate animations
-			character.animations = new List<Animation>(storageCharacter.animations.Length);
+			character.animations = new List<CharacterAnimation>(storageCharacter.animations.Length);
 			foreach (Storage.CharacterAnimation storageAnimation in storageCharacter.animations){
-				character.animations.Add( Animation.LoadFromStorage(storageAnimation, storageCharacter) );
+				character.animations.Add( CharacterAnimation.LoadFromStorage(storageAnimation, storageCharacter) );
 			}
 
 			return character;
@@ -45,7 +45,7 @@ namespace RetroBread.Editor{
 			// Tricky step
 			List<Box> boxes = new List<Box>();
 			List<GenericParameter> genericParams = new List<GenericParameter>();
-			foreach (Animation anim in animations){
+			foreach (CharacterAnimation anim in animations){
 				anim.BuildStorage(boxes, genericParams);
 			}
 

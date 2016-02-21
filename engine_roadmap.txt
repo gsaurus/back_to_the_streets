@@ -12,10 +12,6 @@ OK - define the editor screens layout and functionality.. 3
 OK - define editor character format 1
 OK - editor read/write from/to storage format 2
 
- - Estimate roadmap schedule
-
-TODO: support offline mode 2
-TODO: investigate double messages on single key event?.. 1
 
 Then start with the editor..
 1 - study Unity UI stuff, do some experiments.. 2
@@ -30,6 +26,10 @@ Then start with the editor..
 10 - Hit boxes (basic stuff only) 3
 11 - Direct events (stub stuff only) 2
 12 - Conditional events (stub stuff only) 3
+
+
+TODO: support offline mode 2
+TODO: investigate double messages on single key event?.. 1
 
 Back to game:
 1 - load character data and model 1
@@ -108,3 +108,6 @@ Log
 	- Planned basic editor layout
 20-02-16
 	- Defined editor character model
+21-02-16
+	- Save/Load character data on editor (compiling, untested)
+	- Initial rough code for character edition (selecting elements)
