@@ -9,7 +9,7 @@ namespace RetroBread.Storage{
 public sealed class GenericParameter{
 
 	[ProtoMember(1)]
-	int type;
+	public int type;
 
 	[ProtoMember(2, OverwriteList=true)]
 	public int[] intsList;

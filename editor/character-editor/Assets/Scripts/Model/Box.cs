@@ -16,7 +16,7 @@ namespace RetroBread.Editor{
 		}
 
 
-		public Box(FixedFloat pointOne, FixedFloat pointTwo){
+		public Box(FixedVector3 pointOne, FixedVector3 pointTwo){
 			this.pointOne = pointOne;
 			this.pointTwo = pointTwo;
 		}

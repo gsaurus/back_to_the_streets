@@ -10,7 +10,7 @@ OK - refactor game format (currently transitions and events are different things
 OK - game read basic condition/events from storage format (no plugin yet) 2
 OK - define the editor screens layout and functionality.. 3
 OK - define editor character format 1
-9 - editor read/write from/to storage format 2
+OK - editor read/write from/to storage format 2
 
  - Estimate roadmap schedule
 
