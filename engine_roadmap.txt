@@ -15,7 +15,7 @@ OK - editor read/write from/to storage format 2
 
 Then start with the editor..
 1 - study Unity UI stuff, do some experiments.. 2
-2 - implement list prefab in Unity 1
+OK - implement list prefab in Unity 1
 3 - able to load in a 2D or 3D model, I have done a few work in the past, so 15% done.. 3
 4 - Create the basic UI layouts, and basic navigation 8
 5 - Associate the model to a stub character data 3
@@ -111,3 +111,4 @@ Log
 21-02-16
 	- Save/Load character data on editor (compiling, untested)
 	- Initial rough code for character edition (selecting elements)
+	- Implemented UI single selection list
