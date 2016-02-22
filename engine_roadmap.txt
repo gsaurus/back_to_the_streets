@@ -16,7 +16,7 @@ OK - editor read/write from/to storage format 2
 Then start with the editor..
 1 - study Unity UI stuff, do some experiments.. 2
 OK - implement list prefab in Unity 1
-3 - able to load in a 2D or 3D model, I have done a few work in the past, so 15% done.. 3
+OK - able to load in a 2D or 3D model, I have done a few work in the past, so 15% done.. 3
 4 - Create the basic UI layouts, and basic navigation 8
 5 - Associate the model to a stub character data 3
 6 - scroll between animations, playback features (play, pause, next frame, etc) 5
@@ -26,6 +26,9 @@ OK - implement list prefab in Unity 1
 10 - Hit boxes (basic stuff only) 3
 11 - Direct events (stub stuff only) 2
 12 - Conditional events (stub stuff only) 3
+
+- Automated script to create and copy AssetBundles into character-editor 1
+- Browse and load asset bundles from a folder near the editor executable file 2
 
 
 TODO: support offline mode 2
@@ -112,3 +115,7 @@ Log
 	- Save/Load character data on editor (compiling, untested)
 	- Initial rough code for character edition (selecting elements)
 	- Implemented UI single selection list
+22-02-16
+	- AssetBundles - Wasted 2:30h: Unity using old cached bundle instead of new one
+	- Asset bundles working between asset-packer and character-editor
+	- Layout for bundle-model (skin) selection

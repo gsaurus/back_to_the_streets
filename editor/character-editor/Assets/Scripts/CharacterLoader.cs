@@ -5,15 +5,18 @@ public class CharacterLoader : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		string url = "file://" + Application.streamingAssetsPath + "/characters/rocha";
+		Caching.CleanCache();
+		string url = "file://" + Application.streamingAssetsPath + "/aBundle"; //"/characters/rocha";
 		Debug.Log(url);
 		WWW www = WWW.LoadFromCacheOrDownload(url, 1);
 		if (www == null || www.assetBundle == null) return;
 		AssetBundle bundle = www.assetBundle;
-//		Debug.Log("going well.. " + bundle.name);
-//		foreach (string name in bundle.GetAllAssetNames()){
-//			Debug.Log(name);
-//		}
+
+		foreach (string name in bundle.GetAllAssetNames()){
+			Debug.Log(name);
+		}
+
+
 		GameObject prefab = bundle.LoadAsset("prefab") as GameObject;
 //		if (prefab == null){
 //			Debug.Log("fail one");
@@ -37,6 +40,9 @@ public class CharacterLoader : MonoBehaviour {
 		}
 		//RuntimeAnimatorController animator = prefab.GetComponent<RuntimeAnimatorController>();
 
+		GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity);
+
+		prefab = bundle.LoadAsset("a_simple_sprite") as GameObject;
 		GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity);
 
 	}

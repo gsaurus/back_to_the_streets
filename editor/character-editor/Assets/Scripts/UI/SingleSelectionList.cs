@@ -52,7 +52,7 @@ public class SingleSelectionList : MonoBehaviour {
 
 		RectTransform contentRect = contentObject.gameObject.GetComponent<RectTransform>();
 		ToggleGroup toggleGroup = contentObject.gameObject.GetComponent<ToggleGroup>();
-		contentRect.sizeDelta = new Vector2(0, 28 * options.Count);
+		contentRect.sizeDelta = new Vector2(0, 24 * options.Count);
 		// Recreate items
 		GameObject listItemObj;
 		Text itemText;
