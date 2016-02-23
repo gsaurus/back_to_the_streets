@@ -119,3 +119,5 @@ Log
 	- AssetBundles - Wasted 2:30h: Unity using old cached bundle instead of new one
 	- Asset bundles working between asset-packer and character-editor
 	- Layout for bundle-model (skin) selection
+23-02-16
+	- Layout for open/new character
