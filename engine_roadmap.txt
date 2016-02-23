@@ -121,3 +121,4 @@ Log
 	- Layout for bundle-model (skin) selection
 23-02-16
 	- Layout for open/new character
+	- Layout to select anchor nodes
