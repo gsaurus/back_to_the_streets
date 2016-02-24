@@ -122,3 +122,5 @@ Log
 23-02-16
 	- Layout for open/new character
 	- Layout to select anchor nodes
+24-02-16
+	- Layout for events editor
