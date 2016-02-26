@@ -14,7 +14,7 @@ OK - editor read/write from/to storage format 2
 
 
 Then start with the editor..
-1 - study Unity UI stuff, do some experiments.. 2
+OK - study Unity UI stuff, do some experiments.. 2
 OK - implement list prefab in Unity 1
 OK - able to load in a 2D or 3D model, I have done a few work in the past, so 15% done.. 3
 4 - Create the basic UI layouts, and basic navigation 8
@@ -124,3 +124,10 @@ Log
 	- Layout to select anchor nodes
 24-02-16
 	- Layout for events editor
+25-02-16
+	- Layout for collisions panel
+26-02-16
+	- Layout for hits panel (attack)
+	- Layout for events
+	- Layout for attachment tests (stub)
+	- Layout for animation playback
