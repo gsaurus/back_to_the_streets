@@ -1,99 +1,208 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using RetroBread;
 using RetroBread.Editor;
 
-public class CharacterEditor : MonoBehaviour {
+namespace RetroBread{
 
-	private enum EditorMode{
-		collisionMode,
-		attackMode,
-		eventsMode
-	};
+	// Central class
+	// Other editor classes use it to access data and model, and set selections
+	public class CharacterEditor : SingletonMonoBehaviour<CharacterEditor> {
 
+		public static string charactersDataPath = Application.streamingAssetsPath + "/Characters/Data/";
+		public static string charactersModelsPath = Application.streamingAssetsPath + "/Characters/Models/";
 
-	private Character character;
-
-	// UI objects references
-	public GameObject collisionPanel;
-	public GameObject attackPanel;
-	public GameObject eventsListPanel;
-	public GameObject eventsEditorPanel;
+		public static string dataExtension = ".bytes";
 
 
-	// Editor mode
-	private EditorMode selectedMode = EditorMode.collisionMode;
+		// The character being edited
+		public Character character { get ; private set; }
 
-	// Editor selections
-	private int selectedAnimationId;
-	private int selectedFrame;
-
-	// From the editor lists
-	private int selectedCollisionId;
-	private int selectedHitId;
-	private int selectedEventId;
-
-	public void LoadCharacter(string characterName){
-		// TODO: find the file, deserialize it and load into character
-		RetroBread.Storage.Character storageCharacter = null;
-		character = Character.LoadFromStorage(storageCharacter);
-	}
-
-	public void SaveCharacter(){
-		// TODO: serialize and save character into a file
-		RetroBread.Storage.Character storageCharacter = character.SaveToStorage();
-	}
+		// The skin model visible in the editor
+		public GameObject characterModel { get; private set; }
 
 
+		// Events when something changes
+		public delegate void OnSomethingChanged();
+		public event OnSomethingChanged OnAnimationChangedEvent;
+		public event OnSomethingChanged OnFrameChangedEvent;
+		public event OnSomethingChanged OnCollisionChangedEvent;
+		public event OnSomethingChanged OnHitChangedEvent;
+		public event OnSomethingChanged OnEventChangedEvent;
+		public event OnSomethingChanged OnSkinChangedEvent;
 
-	private void RefreshEditorPanel(){
-		switch (selectedMode){
-			case EditorMode.collisionMode:
-				SelectCollision(selectedCollisionId);
-			break;
-			case EditorMode.attackMode:
-				SelectHit(selectedHitId);
-			break;
-			case EditorMode.eventsMode:
-				SelectEvent(selectedEventId);
-			break;
+
+		// Editor selections
+		private int selectedAnimationId;
+		public int SelectedAnimationId {
+			get{ return selectedAnimationId; }
+			set{
+				selectedAnimationId = value;
+				OnAnimationChangedEvent();
+			}
 		}
+		private int selectedFrame;
+		public int SelectedFrame {
+			get{ return selectedFrame; }
+			set{
+				selectedFrame = value;
+				OnFrameChangedEvent();
+			}
+		}
+		private int selectedCollisionId;
+		public int SelectedCollisionId {
+			get{ return selectedCollisionId; }
+			set{
+				selectedCollisionId = value;
+				OnCollisionChangedEvent();
+			}
+		}
+		private int selectedHitId;
+		public int SelectedHitId {
+			get{ return selectedHitId; }
+			set {
+				selectedHitId = value;
+				OnHitChangedEvent();
+			}
+		}
+		private int selectedEventId;
+		public int SelectedEventId{
+			get{ return selectedEventId; }
+			set{
+				selectedEventId = value;
+				OnEventChangedEvent();
+			}
+		}
+
+		// temporary import information, used once a skin is selected
+		private List<string> collisionImportList;
+		private List<string> hitImportList;
+
+
+
+
+
+
+		void Start(){
+			// Cache is unwanted on editor - everything changes
+			Caching.CleanCache();
+		}
+
+
+		void Reset(){
+			
+			// Clear skin
+			if (characterModel != null) {
+				GameObject.Destroy(characterModel);
+				characterModel = null;
+				OnSkinChangedEvent();
+			}
+
+			// Reset selections
+			selectedAnimationId = 0;
+			selectedFrame = 0;
+			selectedCollisionId = 0;
+			selectedHitId = 0;
+			selectedEventId = 0;
+			OnAnimationChangedEvent();
+			OnFrameChangedEvent();
+			OnCollisionChangedEvent();
+			OnHitChangedEvent();
+			OnEventChangedEvent();
+
+			// Pick a skin
+			if (character.viewModels != null && character.viewModels.Count > 0) {
+				char[] delimiters = { ':' };
+				string[] pathItems = character.viewModels[0].Split(delimiters);
+				if (pathItems != null && pathItems.Length > 1) {
+					SetSkin(pathItems[0], pathItems[1]);
+				}
+			}
+
+		}
+
+
+
+		public void CreateCharacter(string characterName, List<string> collisionImportList, List<string> hitImportList){
+
+			// Fresh new character
+			character = new Character(characterName);
+
+			// store import data temporarily
+			this.collisionImportList = collisionImportList;
+			this.hitImportList = hitImportList;
+
+			Reset();
+		}
+
+
+		private void ImportCollisionAndHitData(){
+			if (characterModel == null || (collisionImportList == null && hitImportList == null)) {
+				// Nothing to import
+				UnityEngine.Debug.Log("No collision & attack data imported");
+			}
+			// TODO: find coordinates of each item in each "frame" of all animations
+
+			// clear import lists
+			collisionImportList = null;
+			hitImportList = null;
+		}
+
+
+
+
+		// Load
+		public void LoadCharacter(string characterName){
+
+			// Open file stream and deserialize it
+			FileInfo charFile = new FileInfo(charactersDataPath + characterName + dataExtension);
+			FileStream charStream = charFile.OpenRead();
+			RbStorageSerializer serializer = new RbStorageSerializer();
+			Storage.Character storageCharacter = serializer.Deserialize(charStream, null, typeof(Storage.Character)) as Storage.Character;
+
+			// Load character into editor character format
+			character = Character.LoadFromStorage(storageCharacter);
+
+			Reset();
+		}
+
+
+		// Save
+		public void SaveCharacter(){
+			// Convert to storage format
+			Storage.Character storageCharacter = character.SaveToStorage();
+
+			// Open file stream and serialize it
+			FileInfo charFile = new FileInfo (charactersDataPath + storageCharacter.name + dataExtension);
+			if (charFile.Exists) {
+				// TODO: store backup
+				charFile.Delete();
+			}
+			FileStream charStream = charFile.Create();
+			RbStorageSerializer serializer = new RbStorageSerializer();
+			serializer.Serialize(charStream, storageCharacter);
+		}
+
+
+		// Select a skin (2D or 3D model)
+		public void SetSkin(string bundleName, string modelName){
+			string url = "file://" + charactersModelsPath + bundleName;
+			WWW www = WWW.LoadFromCacheOrDownload(url, 1);
+			SetSkin(www, modelName);
+		}
+
+		public void SetSkin(WWW www, string modelName){
+			if (characterModel != null) {
+				GameObject.Destroy(characterModel);
+			}
+			GameObject prefab = www.assetBundle.LoadAsset(modelName) as GameObject;
+			characterModel = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
+			OnSkinChangedEvent();
+		}
+
+
+
 	}
-
-
-	public void SelectAnimation(int animationId){
-
-		selectedAnimationId = animationId;
-
-		// Update whatever panel that is visible at the momment
-		RefreshEditorPanel();
-
-		// TODO: update model animation & player
-
-	}
-
-
-	public void SelectFrame(int frameNum){
-		selectedFrame = frameNum;
-		RefreshEditorPanel();
-	}
-
-
-	public void SelectCollision(int collisionId){
-		selectedCollisionId = collisionId;
-		// TODO: update collision panel stuff
-	}
-
-	public void SelectHit(int hitId){
-		selectedHitId = hitId;
-		// TODO: update attack panel stuff
-	}
-
-	public void SelectEvent(int eventId){
-		selectedEventId = eventId;
-		// TODO: update event panel stuff
-	}
-
-
 
 }

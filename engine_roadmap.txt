@@ -131,3 +131,6 @@ Log
 	- Layout for events
 	- Layout for attachment tests (stub)
 	- Layout for animation playback
+27-02-16
+	- Layout for all events management
+	- CharacterEditor: events centralisation, load / save / create character, load skin
