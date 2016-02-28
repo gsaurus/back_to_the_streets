@@ -137,3 +137,5 @@ Log
 	- Coded most of Open / Create character panel
 28-02-16
 	- Coded skins selector panel
+	- Coded Character panel
+	- Coded Anchors panel

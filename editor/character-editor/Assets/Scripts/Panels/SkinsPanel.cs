@@ -31,7 +31,7 @@ namespace RetroBread{
 
 
 		// Use this for initialization
-		void Start () {
+		void Awake() {
 
 			// Get the scripts for buttons
 			_addButton 		= addButton.GetComponent<Button>();
@@ -43,17 +43,17 @@ namespace RetroBread{
 			_prefabsList = prefabsList.GetComponent<SingleSelectionList>();
 			_skinsList 	 = skinsList.GetComponent<SingleSelectionList>();
 
+		}
+
+		void OnEnable(){
 			// most buttons are initially inactive due to empty lists and input fields
 			_addButton.interactable = false;
 			_removeButton.interactable = false;
-
 
 			SetupBundlesList();
 
 			// can only close popup if a character is already selected
 			_closeButton.interactable = CharacterEditor.Instance.character.viewModels.Count > 0;
-
-
 		}
 
 
@@ -134,6 +134,7 @@ namespace RetroBread{
 
 		public void Close(){
 			this.gameObject.SetActive(false);
+			CharacterEditor.Instance.SaveCharacter();
 		}
 
 

@@ -16,6 +16,8 @@ namespace RetroBread.Editor{
 
 		public Character(string name){
 			this.name = name;
+			viewAnchors = new List<string>();
+			viewModels = new List<string>();
 		}
 
 
@@ -51,10 +53,10 @@ namespace RetroBread.Editor{
 			// Basic data
 			Storage.Character storageCharacter = new Storage.Character(name);
 			if (viewAnchors != null) {
-				storageCharacter.viewAnchors = viewAnchors.ToArray ();
+				storageCharacter.viewAnchors = viewAnchors.ToArray();
 			}
 			if (viewModels != null) {
-				storageCharacter.viewModels = viewModels.ToArray ();
+				storageCharacter.viewModels = viewModels.ToArray();
 			}
 
 			// Generate boxes, generic parameters, and imediately construct the rest of the data

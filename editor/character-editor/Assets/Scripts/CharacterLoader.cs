@@ -45,6 +45,8 @@ public class CharacterLoader : MonoBehaviour {
 		prefab = bundle.LoadAsset("a_simple_sprite") as GameObject;
 		GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity);
 
+		www.assetBundle.Unload(true);
+
 	}
 	
 	// Update is called once per frame

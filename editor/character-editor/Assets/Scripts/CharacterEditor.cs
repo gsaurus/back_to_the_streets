@@ -27,6 +27,7 @@ namespace RetroBread{
 
 		// Events when something changes
 		public delegate void OnSomethingChanged();
+		public event OnSomethingChanged OnCharacterChangedEvent;
 		public event OnSomethingChanged OnAnimationChangedEvent;
 		public event OnSomethingChanged OnFrameChangedEvent;
 		public event OnSomethingChanged OnCollisionChangedEvent;
@@ -111,11 +112,12 @@ namespace RetroBread{
 			selectedCollisionId = 0;
 			selectedHitId = 0;
 			selectedEventId = 0;
-			if (OnAnimationChangedEvent != null) OnAnimationChangedEvent();
-			if (OnFrameChangedEvent != null) OnFrameChangedEvent();
-			if (OnCollisionChangedEvent != null) OnCollisionChangedEvent();
-			if (OnHitChangedEvent != null) OnHitChangedEvent();
-			if (OnEventChangedEvent != null) OnEventChangedEvent();
+			if (OnCharacterChangedEvent != null)	OnCharacterChangedEvent();
+			if (OnAnimationChangedEvent != null) 	OnAnimationChangedEvent();
+			if (OnFrameChangedEvent		!= null)	OnFrameChangedEvent();
+			if (OnCollisionChangedEvent != null) 	OnCollisionChangedEvent();
+			if (OnHitChangedEvent 		!= null)	OnHitChangedEvent();
+			if (OnEventChangedEvent 	!= null) 	OnEventChangedEvent();
 
 			// Pick a skin
 			if (character.viewModels != null && character.viewModels.Count > 0) {
