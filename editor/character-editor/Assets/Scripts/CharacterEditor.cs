@@ -15,6 +15,8 @@ namespace RetroBread{
 
 		public static string dataExtension = ".bytes";
 
+		public static string skinsDelimiter = ":";
+
 
 		// The character being edited
 		public Character character { get ; private set; }

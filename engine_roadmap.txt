@@ -135,3 +135,5 @@ Log
 	- Layout for all events management
 	- CharacterEditor: events centralisation, load / save / create character, load skin
 	- Coded most of Open / Create character panel
+28-02-16
+	- Coded skins selector panel

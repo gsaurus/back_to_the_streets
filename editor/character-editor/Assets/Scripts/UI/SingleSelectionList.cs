@@ -29,12 +29,14 @@ public class SingleSelectionList : MonoBehaviour {
 	public List<string> Options {
 		// getter returns a copy
 		get{ return new List<string>(_options); }
-		// setter refreshes the list
-		set{ _options = value; Refresh(); }
+		// setter copies the list and refreshes
+		set{ _options = new List<string>(value); Refresh(); }
 	}
 
 
-	public int OptionsCount { get { return Options.Count; } }
+	public int OptionsCount { get { return _options.Count; } }
+
+	public string SelectedOption { get { return _options.Count == 0 ? null : _options[selectedItem]; } }
 
 
 	public Transform contentObject;

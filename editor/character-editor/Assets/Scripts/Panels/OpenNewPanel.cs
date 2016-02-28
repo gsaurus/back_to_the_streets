@@ -8,6 +8,9 @@ namespace RetroBread{
 
 	public class OpenNewPanel : MonoBehaviour {
 
+		// Reference to skins panel, next panel when creating a character
+		public GameObject skinsPanel;
+
 		// References to relevant objects
 		public GameObject filesList;
 		public GameObject collisionsList;
@@ -35,7 +38,6 @@ namespace RetroBread{
 		private string newCharacterName;
 		private string newCollisionName;
 		private string newHitName;
-
 
 
 
@@ -164,7 +166,7 @@ namespace RetroBread{
 
 		public void OnOpen(){
 			
-			CharacterEditor.Instance.LoadCharacter( _filesList.Options[_filesList.SelectedItem] );
+			CharacterEditor.Instance.LoadCharacter( _filesList.SelectedOption );
 			ClosePanel();
 		}
 
@@ -178,7 +180,15 @@ namespace RetroBread{
 
 
 		public void ClosePanel(){
-			// TODO...
+
+			this.gameObject.SetActive(false);
+
+			// Check if there is at least one skin
+			// If not, show skins panel
+			if (CharacterEditor.Instance.character.viewModels.Count == 0) {
+				skinsPanel.SetActive(true);
+			}
+
 		}
 
 
