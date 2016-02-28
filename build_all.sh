@@ -1,5 +1,5 @@
 # verbose
-set -x
+#set -x
 
 # cleanup libs directory
 rm -d libs/*.dll

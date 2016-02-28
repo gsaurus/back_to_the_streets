@@ -39,7 +39,7 @@ namespace RetroBread{
 			get{ return selectedAnimationId; }
 			set{
 				selectedAnimationId = value;
-				OnAnimationChangedEvent();
+				if (OnAnimationChangedEvent != null) OnAnimationChangedEvent();
 			}
 		}
 		private int selectedFrame;
@@ -47,7 +47,7 @@ namespace RetroBread{
 			get{ return selectedFrame; }
 			set{
 				selectedFrame = value;
-				OnFrameChangedEvent();
+				if (OnFrameChangedEvent != null) OnFrameChangedEvent();
 			}
 		}
 		private int selectedCollisionId;
@@ -55,7 +55,7 @@ namespace RetroBread{
 			get{ return selectedCollisionId; }
 			set{
 				selectedCollisionId = value;
-				OnCollisionChangedEvent();
+				if (OnCollisionChangedEvent != null) OnCollisionChangedEvent();
 			}
 		}
 		private int selectedHitId;
@@ -63,7 +63,7 @@ namespace RetroBread{
 			get{ return selectedHitId; }
 			set {
 				selectedHitId = value;
-				OnHitChangedEvent();
+				if (OnHitChangedEvent != null) OnHitChangedEvent();
 			}
 		}
 		private int selectedEventId;
@@ -71,7 +71,7 @@ namespace RetroBread{
 			get{ return selectedEventId; }
 			set{
 				selectedEventId = value;
-				OnEventChangedEvent();
+				if (OnEventChangedEvent != null) OnEventChangedEvent();
 			}
 		}
 
@@ -81,10 +81,14 @@ namespace RetroBread{
 
 
 
-
+		static CharacterEditor(){
+			// Setup debug
+			RetroBread.Debug.Instance = new UnityDebug();
+		}
 
 
 		void Start(){
+			
 			// Cache is unwanted on editor - everything changes
 			Caching.CleanCache();
 		}
@@ -96,7 +100,7 @@ namespace RetroBread{
 			if (characterModel != null) {
 				GameObject.Destroy(characterModel);
 				characterModel = null;
-				OnSkinChangedEvent();
+				if (OnSkinChangedEvent != null) OnSkinChangedEvent();
 			}
 
 			// Reset selections
@@ -105,11 +109,11 @@ namespace RetroBread{
 			selectedCollisionId = 0;
 			selectedHitId = 0;
 			selectedEventId = 0;
-			OnAnimationChangedEvent();
-			OnFrameChangedEvent();
-			OnCollisionChangedEvent();
-			OnHitChangedEvent();
-			OnEventChangedEvent();
+			if (OnAnimationChangedEvent != null) OnAnimationChangedEvent();
+			if (OnFrameChangedEvent != null) OnFrameChangedEvent();
+			if (OnCollisionChangedEvent != null) OnCollisionChangedEvent();
+			if (OnHitChangedEvent != null) OnHitChangedEvent();
+			if (OnEventChangedEvent != null) OnEventChangedEvent();
 
 			// Pick a skin
 			if (character.viewModels != null && character.viewModels.Count > 0) {
@@ -128,6 +132,7 @@ namespace RetroBread{
 
 			// Fresh new character
 			character = new Character(characterName);
+			SaveCharacter();
 
 			// store import data temporarily
 			this.collisionImportList = collisionImportList;
@@ -143,6 +148,7 @@ namespace RetroBread{
 				UnityEngine.Debug.Log("No collision & attack data imported");
 			}
 			// TODO: find coordinates of each item in each "frame" of all animations
+			// do something with collisionImportList & hitImportList
 
 			// clear import lists
 			collisionImportList = null;
@@ -198,7 +204,7 @@ namespace RetroBread{
 			}
 			GameObject prefab = www.assetBundle.LoadAsset(modelName) as GameObject;
 			characterModel = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
-			OnSkinChangedEvent();
+			if (OnSkinChangedEvent != null) OnSkinChangedEvent();
 		}
 
 

@@ -134,3 +134,4 @@ Log
 27-02-16
 	- Layout for all events management
 	- CharacterEditor: events centralisation, load / save / create character, load skin
+	- Coded most of Open / Create character panel

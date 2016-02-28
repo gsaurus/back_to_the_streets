@@ -22,12 +22,24 @@ namespace RetroBread.Editor{
 		public static Character LoadFromStorage(Storage.Character storageCharacter){
 			// Basic data
 			Character character = new Character(storageCharacter.name);
-			character.viewAnchors = new List<string>(storageCharacter.viewAnchors);
-			character.viewModels = new List<string>(storageCharacter.viewModels);
+			if (storageCharacter.viewAnchors != null) {
+				character.viewAnchors = new List<string>(storageCharacter.viewAnchors);
+			} else {
+				character.viewAnchors = new List<string>();
+			}
+			if (storageCharacter.viewModels != null) {
+				character.viewModels = new List<string>(storageCharacter.viewModels);
+			} else {
+				character.viewModels = new List<string>();
+			}
 			// Populate animations
-			character.animations = new List<CharacterAnimation>(storageCharacter.animations.Length);
-			foreach (Storage.CharacterAnimation storageAnimation in storageCharacter.animations){
-				character.animations.Add( CharacterAnimation.LoadFromStorage(storageAnimation, storageCharacter) );
+			if (storageCharacter.animations != null) {
+				character.animations = new List<CharacterAnimation>(storageCharacter.animations.Length);
+				foreach (Storage.CharacterAnimation storageAnimation in storageCharacter.animations) {
+					character.animations.Add(CharacterAnimation.LoadFromStorage(storageAnimation, storageCharacter));
+				}
+			} else {
+				character.animations = new List<CharacterAnimation>();
 			}
 
 			return character;
@@ -38,31 +50,43 @@ namespace RetroBread.Editor{
 
 			// Basic data
 			Storage.Character storageCharacter = new Storage.Character(name);
-			storageCharacter.viewAnchors = viewAnchors.ToArray();
-			storageCharacter.viewModels = viewModels.ToArray();
+			if (viewAnchors != null) {
+				storageCharacter.viewAnchors = viewAnchors.ToArray ();
+			}
+			if (viewModels != null) {
+				storageCharacter.viewModels = viewModels.ToArray ();
+			}
 
 			// Generate boxes, generic parameters, and imediately construct the rest of the data
 			// Tricky step
 			List<Box> boxes = new List<Box>();
 			List<GenericParameter> genericParams = new List<GenericParameter>();
-			foreach (CharacterAnimation anim in animations){
-				anim.BuildStorage(boxes, genericParams);
+			if (animations != null) {
+				foreach (CharacterAnimation anim in animations) {
+					anim.BuildStorage (boxes, genericParams);
+				}
 			}
 
 			// Populate boxes and generic params
-			storageCharacter.boxes = new Storage.Box[boxes.Count];
-			for (int i = 0 ; i < boxes.Count ; ++i){
-				storageCharacter.boxes[i] = boxes[i].SaveToStorage();
+			if (boxes != null) {
+				storageCharacter.boxes = new Storage.Box[boxes.Count];
+				for (int i = 0; i < boxes.Count; ++i) {
+					storageCharacter.boxes[i] = boxes[i].SaveToStorage();
+				}
 			}
-			storageCharacter.genericParameters = new Storage.GenericParameter[genericParams.Count];
-			for (int i = 0 ; i < genericParams.Count ; ++i){
-				storageCharacter.genericParameters[i] = genericParams[i].SaveToStorage();
+			if (genericParams != null) {
+				storageCharacter.genericParameters = new Storage.GenericParameter[genericParams.Count];
+				for (int i = 0; i < genericParams.Count; ++i) {
+					storageCharacter.genericParameters[i] = genericParams[i].SaveToStorage();
+				}
 			}
 
 			// Populate animations
-			storageCharacter.animations = new Storage.CharacterAnimation[animations.Count];
-			for (int i = 0 ; i < animations.Count ; ++i){
-				storageCharacter.animations[i] = animations[i].SaveToStorage();
+			if (animations != null) {
+				storageCharacter.animations = new Storage.CharacterAnimation[animations.Count];
+				for (int i = 0; i < animations.Count; ++i) {
+					storageCharacter.animations[i] = animations[i].SaveToStorage();
+				}
 			}
 
 			return storageCharacter;

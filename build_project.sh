@@ -1,5 +1,5 @@
 # verbose
-set -x
+#set -x
 
 original_dir=$(pwd)
 
@@ -29,7 +29,7 @@ pushd $new_dir
 		# the serializer generates an executable
 		if [ -f ${proj_name}.exe ] ; then
 			#run serializer project to generate the dll
-			mono ${proj_name}.exe
+			${mono_app} ${proj_name}.exe
 		fi
 		
 		# copy artefacts
