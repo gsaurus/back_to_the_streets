@@ -41,40 +41,60 @@ namespace RetroBread{
 		public int SelectedAnimationId {
 			get{ return selectedAnimationId; }
 			set{
-				selectedAnimationId = value;
-				if (OnAnimationChangedEvent != null) OnAnimationChangedEvent();
+				if (selectedAnimationId == value) {
+					selectedAnimationId = value;
+					if (OnAnimationChangedEvent != null) {
+						OnAnimationChangedEvent();
+					}
+				}
 			}
 		}
 		private int selectedFrame;
 		public int SelectedFrame {
 			get{ return selectedFrame; }
 			set{
-				selectedFrame = value;
-				if (OnFrameChangedEvent != null) OnFrameChangedEvent();
+				if (selectedFrame != value) {
+					selectedFrame = value;
+					if (OnFrameChangedEvent != null) {
+						OnFrameChangedEvent();
+					}
+				}
 			}
 		}
 		private int selectedCollisionId;
 		public int SelectedCollisionId {
 			get{ return selectedCollisionId; }
 			set{
-				selectedCollisionId = value;
-				if (OnCollisionChangedEvent != null) OnCollisionChangedEvent();
+				if (selectedCollisionId != value) {
+					selectedCollisionId = value;
+					if (OnCollisionChangedEvent != null) {
+						OnCollisionChangedEvent();
+					}
+				}
 			}
 		}
 		private int selectedHitId;
 		public int SelectedHitId {
 			get{ return selectedHitId; }
 			set {
-				selectedHitId = value;
-				if (OnHitChangedEvent != null) OnHitChangedEvent();
+				if (selectedHitId != value) {
+					selectedHitId = value;
+					if (OnHitChangedEvent != null) {
+						OnHitChangedEvent();
+					}
+				}
 			}
 		}
 		private int selectedEventId;
 		public int SelectedEventId{
 			get{ return selectedEventId; }
 			set{
-				selectedEventId = value;
-				if (OnEventChangedEvent != null) OnEventChangedEvent();
+				if (selectedEventId != value) {
+					selectedEventId = value;
+					if (OnEventChangedEvent != null) {
+						OnEventChangedEvent();
+					}
+				}
 			}
 		}
 
@@ -112,21 +132,21 @@ namespace RetroBread{
 			selectedCollisionId = 0;
 			selectedHitId = 0;
 			selectedEventId = 0;
+
+			// Pick a skin
+			if (character.viewModels != null && character.viewModels.Count > 0) {
+				string[] pathItems = character.viewModels[0].Split(skinsDelimiter.ToCharArray());
+				if (pathItems != null && pathItems.Length > 1) {
+					SetSkin(pathItems[0], pathItems[1]); // TODO: OnSkinChanged event is called inside, potentially dangerous
+				}
+			}
+
 			if (OnCharacterChangedEvent != null)	OnCharacterChangedEvent();
 			if (OnAnimationChangedEvent != null) 	OnAnimationChangedEvent();
 			if (OnFrameChangedEvent		!= null)	OnFrameChangedEvent();
 			if (OnCollisionChangedEvent != null) 	OnCollisionChangedEvent();
 			if (OnHitChangedEvent 		!= null)	OnHitChangedEvent();
 			if (OnEventChangedEvent 	!= null) 	OnEventChangedEvent();
-
-			// Pick a skin
-			if (character.viewModels != null && character.viewModels.Count > 0) {
-				char[] delimiters = { ':' };
-				string[] pathItems = character.viewModels[0].Split(delimiters);
-				if (pathItems != null && pathItems.Length > 1) {
-					SetSkin(pathItems[0], pathItems[1]);
-				}
-			}
 
 		}
 
@@ -199,18 +219,63 @@ namespace RetroBread{
 		public void SetSkin(string bundleName, string modelName){
 			string url = "file://" + charactersModelsPath + bundleName;
 			WWW www = WWW.LoadFromCacheOrDownload(url, 1);
-			SetSkin(www, modelName);
-		}
+			GameObject prefab = www.assetBundle.LoadAsset(modelName) as GameObject;
 
-		public void SetSkin(WWW www, string modelName){
+			// Update known animations
+			Animator charAnimator = prefab.GetComponent<Animator>();
+			UpdateKnownAnimations(charAnimator);
+
+			// Set skin
+			SetSkin(prefab, modelName);
+			www.assetBundle.Unload(false);
+			if (OnSkinChangedEvent != null) OnSkinChangedEvent();
+		}
+	
+		private void SetSkin(GameObject prefab, string modelName){
 			if (characterModel != null) {
 				GameObject.Destroy(characterModel);
 			}
-			GameObject prefab = www.assetBundle.LoadAsset(modelName) as GameObject;
 			characterModel = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
-			if (OnSkinChangedEvent != null) OnSkinChangedEvent();
+			// pause animations
+			Animator charAnimator = characterModel.GetComponent<Animator>();
+			charAnimator.speed = 0;
 		}
 
+
+		// Any animation on the model becomes a logical animation
+		private void UpdateKnownAnimations(Animator animator){
+			List<string> knownAnimations = AnimationNames();
+			RuntimeAnimatorController controller = animator.runtimeAnimatorController;
+			if (controller != null){
+				foreach(AnimationClip clip in controller.animationClips){
+					if (!knownAnimations.Contains(clip.name)) {
+						// New animation!
+						CharacterAnimation newAnim = new CharacterAnimation(clip.name, (int) (clip.length / Time.fixedDeltaTime));
+						character.animations.Add(newAnim);
+					}
+				}
+			}
+		}
+
+
+#region Handy getters
+
+		public List<string> AnimationNames(){
+			List<string> animNamesList = new List<string>(character.animations.Count);
+			foreach (CharacterAnimation anim in character.animations) {
+				animNamesList.Add(anim.name);
+			}
+			return animNamesList;
+		}
+	
+		public CharacterAnimation CurrentAnimation(){
+			if (character.animations.Count == 0) {
+				return null;
+			}
+			return character.animations[selectedAnimationId];
+		}
+
+#endregion
 
 
 	}

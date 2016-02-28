@@ -51,6 +51,7 @@ namespace RetroBread{
 			_removeButton.interactable = false;
 
 			SetupBundlesList();
+			SetupSkinsList();
 
 			// can only close popup if a character is already selected
 			_closeButton.interactable = CharacterEditor.Instance.character.viewModels.Count > 0;
@@ -78,7 +79,7 @@ namespace RetroBread{
 			prefabs = bundle.LoadAllAssets<GameObject>();
 			List<string> prefabNames = new List<string>(prefabs.Length);
 			foreach (GameObject prefab in prefabs){
-				if (prefab.GetComponent<Animator>() != null || prefab.GetComponent<Animation>() != null) {
+				if (prefab.GetComponent<Animator>() != null) {
 					prefabNames.Add(prefab.name);
 				}
 			}
@@ -87,7 +88,7 @@ namespace RetroBread{
 			if (prefabNames.Count == 0) {
 				_addButton.interactable = false;
 			}
-			www.assetBundle.Unload(true);
+			www.assetBundle.Unload(false);
 		}
 
 		private void SetupSkinsList(){
@@ -134,6 +135,12 @@ namespace RetroBread{
 
 		public void Close(){
 			this.gameObject.SetActive(false);
+
+			// Load skin
+			string[] pathItems = _skinsList.SelectedOption.Split(CharacterEditor.skinsDelimiter.ToCharArray());
+			if (pathItems != null && pathItems.Length > 1) {
+				CharacterEditor.Instance.SetSkin(pathItems[0], pathItems[1]);
+			}
 			CharacterEditor.Instance.SaveCharacter();
 		}
 

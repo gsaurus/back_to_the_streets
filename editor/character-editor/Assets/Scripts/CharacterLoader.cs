@@ -4,7 +4,7 @@ using System.Collections;
 public class CharacterLoader : MonoBehaviour {
 
 	// Use this for initialization
-	void Start () {
+	void UnusedTesting () {
 		Caching.CleanCache();
 		string url = "file://" + Application.streamingAssetsPath + "/aBundle"; //"/characters/rocha";
 		Debug.Log(url);
@@ -48,9 +48,5 @@ public class CharacterLoader : MonoBehaviour {
 		www.assetBundle.Unload(true);
 
 	}
-	
-	// Update is called once per frame
-	void Update() {
-	
-	}
+
 }

@@ -18,6 +18,9 @@ namespace RetroBread.Editor{
 		public CharacterAnimation(string name, int numFrames){
 			this.name = name;
 			this.numFrames = numFrames;
+			collisionBoxes = new List<CollisionBox>();
+			hitBoxes = new List<HitBox>();
+			events = new List<ConditionalEvent>();
 		}
 
 		public static CharacterAnimation LoadFromStorage(Storage.CharacterAnimation storageAnimation, Storage.Character storageCharacter){
@@ -26,21 +29,33 @@ namespace RetroBread.Editor{
 			CharacterAnimation anim = new CharacterAnimation(storageAnimation.name, storageAnimation.numFrames);
 
 			// Populate collision boxes
-			anim.collisionBoxes = new List<CollisionBox>(storageAnimation.collisionBoxes.Length);
-			foreach (Storage.CollisionBox box in storageAnimation.collisionBoxes){
-				anim.collisionBoxes.Add( CollisionBox.LoadFromStorage(box, storageCharacter) );
+			if (storageAnimation.collisionBoxes != null) {
+				anim.collisionBoxes = new List<CollisionBox>(storageAnimation.collisionBoxes.Length);
+				foreach (Storage.CollisionBox box in storageAnimation.collisionBoxes) {
+					anim.collisionBoxes.Add(CollisionBox.LoadFromStorage(box, storageCharacter));
+				}
+			} else {
+				anim.collisionBoxes = new List<CollisionBox>();
 			}
 
 			// Populate hit boxes
-			anim.hitBoxes = new List<HitBox>(storageAnimation.hitBoxes.Length);
-			foreach (Storage.HitBox box in storageAnimation.hitBoxes){
-				anim.hitBoxes.Add( HitBox.LoadFromStorage(box, storageCharacter) );
+			if (storageAnimation.hitBoxes != null) {
+				anim.hitBoxes = new List<HitBox>(storageAnimation.hitBoxes.Length);
+				foreach (Storage.HitBox box in storageAnimation.hitBoxes) {
+					anim.hitBoxes.Add(HitBox.LoadFromStorage(box, storageCharacter));
+				}
+			} else {
+				anim.hitBoxes = new List<HitBox>();
 			}
 
 			// Populate events
-			anim.events = new List<ConditionalEvent>(storageAnimation.events.Length);
-			foreach (Storage.CharacterEvent e in storageAnimation.events){
-				anim.events.Add( ConditionalEvent.LoadFromStorage(e, storageCharacter) );
+			if (storageAnimation.events != null) {
+				anim.events = new List<ConditionalEvent>(storageAnimation.events.Length);
+				foreach (Storage.CharacterEvent e in storageAnimation.events) {
+					anim.events.Add(ConditionalEvent.LoadFromStorage(e, storageCharacter));
+				}
+			} else {
+				anim.events = new List<ConditionalEvent>();
 			}
 
 			return anim;
