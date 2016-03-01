@@ -41,7 +41,7 @@ namespace RetroBread{
 		public int SelectedAnimationId {
 			get{ return selectedAnimationId; }
 			set{
-				if (selectedAnimationId == value) {
+				if (selectedAnimationId != value) {
 					selectedAnimationId = value;
 					if (OnAnimationChangedEvent != null) {
 						OnAnimationChangedEvent();
@@ -244,10 +244,12 @@ namespace RetroBread{
 
 		// Any animation on the model becomes a logical animation
 		private void UpdateKnownAnimations(Animator animator){
+			character.animations.Clear(); // TODO: remove this!!!
 			List<string> knownAnimations = AnimationNames();
 			RuntimeAnimatorController controller = animator.runtimeAnimatorController;
 			if (controller != null){
 				foreach(AnimationClip clip in controller.animationClips){
+					Debug.Log("len: " + clip.averageDuration + " / " + Time.fixedDeltaTime + " = " + (int) (clip.averageDuration / Time.fixedDeltaTime));
 					if (!knownAnimations.Contains(clip.name)) {
 						// New animation!
 						CharacterAnimation newAnim = new CharacterAnimation(clip.name, (int) (clip.length / Time.fixedDeltaTime));

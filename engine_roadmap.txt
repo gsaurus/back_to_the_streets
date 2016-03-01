@@ -118,7 +118,7 @@ Log
 22-02-16
 	- AssetBundles - Wasted 2:30h: Unity using old cached bundle instead of new one
 	- Asset bundles working between asset-packer and character-editor
-	- Layout for bundle-model (skin) selection
+	- Layout for bundle-model (skin) selectiono s
 23-02-16
 	- Layout for open/new character
 	- Layout to select anchor nodes
@@ -139,3 +139,6 @@ Log
 	- Coded skins selector panel
 	- Coded Character panel
 	- Coded Anchors panel
+29-02-16
+	- Added save / open buttons
+	- Added animations dropdown to navigate through animations

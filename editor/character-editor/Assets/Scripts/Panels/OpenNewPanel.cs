@@ -42,7 +42,7 @@ namespace RetroBread{
 
 
 		// Use this for initialization
-		void Start () {
+		void Awake() {
 			
 			// Get the scripts for buttons
 			_addCollisionButton 	= addCollisionButton.GetComponent<Button>();
@@ -63,14 +63,15 @@ namespace RetroBread{
 			_removeHitButton.interactable = false;
 			_createButton.interactable = false;
 
+		}
 
+
+		void OnEnable(){
 			SetupFilesList();
-
 			// can only close popup if a character is already selected
 			closeButton.GetComponent<Button>().interactable = CharacterEditor.Instance.character != null;
 			// can only open a character if any exists
 			openButton.GetComponent<Button>().interactable = _filesList.OptionsCount > 0;
-
 		}
 			
 

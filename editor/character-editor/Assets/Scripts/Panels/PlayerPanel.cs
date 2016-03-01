@@ -27,14 +27,11 @@ namespace RetroBread{
 		private bool internalChange;
 
 
-		void OnEnable(){
+		void Awake(){
 			_slider = slider.GetComponent<Slider>();
 			_frameInput = frameInput.GetComponent<InputField>();
 			_sizeInput = sizeInput.GetComponent<InputField>();
-		}
 
-
-		void Start () {
 			CharacterEditor.Instance.OnCharacterChangedEvent += OnCharacterChanged;
 			CharacterEditor.Instance.OnAnimationChangedEvent += OnAnimationChanged;
 			CharacterEditor.Instance.OnFrameChangedEvent += OnFrameChanged;
@@ -42,6 +39,11 @@ namespace RetroBread{
 			CharacterEditor.Instance.OnCollisionChangedEvent += OnCollisionChanged;
 			CharacterEditor.Instance.OnHitChangedEvent += OnHitChanged;
 		}
+
+
+//		void OnEnable () {
+//			
+//		}
 
 #region Event notifications
 
@@ -155,6 +157,9 @@ namespace RetroBread{
 
 
 		private void UpdateAnimation(Animator animator, string animationName, int frame){
+			if (!animator.GetCurrentAnimatorStateInfo(0).IsName(animationName)){
+				animator.Play(animationName);
+			}
 			float animLen = CurrentAnimationLenght(animator);
 			float newAnimationTime = frame / (animLen / Time.fixedDeltaTime);
 			animator.Play(animationName, 0, newAnimationTime);
