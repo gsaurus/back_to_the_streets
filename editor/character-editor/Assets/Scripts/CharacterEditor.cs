@@ -249,10 +249,10 @@ namespace RetroBread{
 			RuntimeAnimatorController controller = animator.runtimeAnimatorController;
 			if (controller != null){
 				foreach(AnimationClip clip in controller.animationClips){
-					Debug.Log("len: " + clip.averageDuration + " / " + Time.fixedDeltaTime + " = " + (int) (clip.averageDuration / Time.fixedDeltaTime));
+					//Debug.Log("len: " + clip.averageDuration + " / " + Time.fixedDeltaTime + " = " + (int) (clip.averageDuration / Time.fixedDeltaTime));
 					if (!knownAnimations.Contains(clip.name)) {
 						// New animation!
-						CharacterAnimation newAnim = new CharacterAnimation(clip.name, (int) (clip.length / Time.fixedDeltaTime));
+						CharacterAnimation newAnim = new CharacterAnimation(clip.name, (int) (clip.averageDuration / Time.fixedDeltaTime));
 						character.animations.Add(newAnim);
 					}
 				}

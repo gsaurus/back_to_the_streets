@@ -160,7 +160,7 @@ namespace RetroBread{
 			if (!animator.GetCurrentAnimatorStateInfo(0).IsName(animationName)){
 				animator.Play(animationName);
 			}
-			float animLen = CurrentAnimationLenght(animator);
+			float animLen = CurrentAnimationLength(animator);
 			float newAnimationTime = frame / (animLen / Time.fixedDeltaTime);
 			animator.Play(animationName, 0, newAnimationTime);
 		}
@@ -170,9 +170,8 @@ namespace RetroBread{
 			return CharacterEditor.Instance.CurrentAnimation().numFrames;
 		}
 
-		private float CurrentAnimationLenght(Animator animator){
-			float len = animator.GetCurrentAnimatorClipInfo(0)[0].clip.length;
-			return len;
+		private float CurrentAnimationLength(Animator animator){
+			return animator.GetCurrentAnimatorClipInfo(0)[0].clip.averageDuration;
 		}
 
 #endregion

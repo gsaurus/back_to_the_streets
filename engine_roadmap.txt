@@ -17,10 +17,10 @@ Then start with the editor..
 OK - study Unity UI stuff, do some experiments.. 2
 OK - implement list prefab in Unity 1
 OK - able to load in a 2D or 3D model, I have done a few work in the past, so 15% done.. 3
-4 - Create the basic UI layouts, and basic navigation 8
-5 - Associate the model to a stub character data 3
-6 - scroll between animations, playback features (play, pause, next frame, etc) 5
-7 - Code basic functionality such as load, save 3
+OK - Create the basic UI layouts, and basic navigation 8
+OK - Associate the model to a stub character data 3
+OK - scroll between animations, playback features (play, pause, next frame, etc) 5
+OK - Code basic functionality such as load, save 3
 8 - do some experiments with plugins.. the editor will need plugins to add functionality on the fly 2
 9 - Collision boxes 3
 10 - Hit boxes (basic stuff only) 3
@@ -142,3 +142,5 @@ Log
 29-02-16
 	- Added save / open buttons
 	- Added animations dropdown to navigate through animations
+01-03-16
+	- Fixed animation durations
