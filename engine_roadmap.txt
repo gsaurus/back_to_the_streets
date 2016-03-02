@@ -144,3 +144,5 @@ Log
 	- Added animations dropdown to navigate through animations
 01-03-16
 	- Fixed animation durations
+02-03-16
+	- Bugfixing (problems related with loading different chars, events order, etc)

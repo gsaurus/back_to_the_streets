@@ -24,6 +24,7 @@ namespace RetroBread{
 			_nameInputField = nameInputField.GetComponent<InputField>();
 			_animationDropdown = animationDropdown.GetComponent<Dropdown>();
 			CharacterEditor.Instance.OnCharacterChangedEvent += OnCharacterChanged;
+			CharacterEditor.Instance.OnAnimationChangedEvent += OnAnimationChanged;
 		}
 
 		// Use this for initialization
@@ -33,9 +34,10 @@ namespace RetroBread{
 
 
 		void SetupAnimationsDropdown(){
-			if (CharacterEditor.Instance.character == null) return;
 			_animationDropdown.ClearOptions();
+			if (CharacterEditor.Instance.character == null) return;
 			List<Editor.CharacterAnimation> animations = CharacterEditor.Instance.character.animations;
+			if (animations == null) return;
 			Dropdown.OptionData optionData;
 			foreach (Editor.CharacterAnimation anim in animations) {
 				optionData = new Dropdown.OptionData(anim.name);
@@ -74,6 +76,11 @@ namespace RetroBread{
 
 		public void OnAnimationChanged(int itemId){
 			CharacterEditor.Instance.SelectedAnimationId = itemId;
+		}
+
+		public void OnAnimationChanged(){
+			_animationDropdown.value = CharacterEditor.Instance.SelectedAnimationId;
+			_animationDropdown.RefreshShownValue();
 		}
 
 

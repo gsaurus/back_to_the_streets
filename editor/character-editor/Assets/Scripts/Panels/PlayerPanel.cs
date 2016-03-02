@@ -111,16 +111,16 @@ namespace RetroBread{
 
 		public void OnFrameFieldChanged(string newFrameString){
 			if (internalChange) return;
-			int newFrame = int.Parse(newFrameString);
-			if (newFrame >= 0 && newFrame < CurrentAnimationSize()) {
+			int newFrame;
+			if (int.TryParse(newFrameString, out newFrame) && newFrame >= 0 && newFrame < CurrentAnimationSize()) {
 				CharacterEditor.Instance.SelectedFrame = newFrame;
 			}
 		}
 
 		public void OnSizeFieldChanged(string newSizeString){
 			if (internalChange) return;
-			int newSize = int.Parse(newSizeString);
-			if (newSize > 0) {
+			int newSize;
+			if (int.TryParse(newSizeString, out newSize) && newSize > 0) {
 				CharacterEditor.Instance.CurrentAnimation().numFrames = newSize;
 				if (CharacterEditor.Instance.SelectedFrame >= CurrentAnimationSize()) {
 					CharacterEditor.Instance.SelectedFrame = CurrentAnimationSize() - 1;
@@ -147,6 +147,7 @@ namespace RetroBread{
 
 
 		private void UpdateModelAnimation(){
+			if (CharacterEditor.Instance.characterModel == null) return;
 			Animator animator = CharacterEditor.Instance.characterModel.GetComponent<Animator>();
 			UpdateAnimation(
 				animator,
@@ -167,7 +168,8 @@ namespace RetroBread{
 
 
 		private int CurrentAnimationSize(){
-			return CharacterEditor.Instance.CurrentAnimation().numFrames;
+			Editor.CharacterAnimation anim = CharacterEditor.Instance.CurrentAnimation();
+			return anim != null ? anim.numFrames : 0;
 		}
 
 		private float CurrentAnimationLength(Animator animator){

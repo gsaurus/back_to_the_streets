@@ -223,11 +223,15 @@ namespace RetroBread{
 
 			// Update known animations
 			Animator charAnimator = prefab.GetComponent<Animator>();
+			int beforeAnimsCount = character.animations.Count;
 			UpdateKnownAnimations(charAnimator);
 
 			// Set skin
 			SetSkin(prefab, modelName);
 			www.assetBundle.Unload(false);
+			if (beforeAnimsCount != character.animations.Count) {
+				if (OnCharacterChangedEvent != null) OnCharacterChangedEvent();
+			}
 			if (OnSkinChangedEvent != null) OnSkinChangedEvent();
 		}
 	
@@ -244,7 +248,6 @@ namespace RetroBread{
 
 		// Any animation on the model becomes a logical animation
 		private void UpdateKnownAnimations(Animator animator){
-			character.animations.Clear(); // TODO: remove this!!!
 			List<string> knownAnimations = AnimationNames();
 			RuntimeAnimatorController controller = animator.runtimeAnimatorController;
 			if (controller != null){
