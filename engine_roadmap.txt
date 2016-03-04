@@ -147,7 +147,8 @@ Log
 02-03-16
 	- Bugfixing (problems related with loading different chars, events order, etc)
 03-03-16
-	- coded Box sub panel
-	- started coding Collisions panel
+	- Coded Box sub panel
+	- Started coding Collisions panel
 04-03-16
-	-
+	- Collisions panel finished
+	- Copy box from one frame into others
