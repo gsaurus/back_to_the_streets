@@ -14,11 +14,14 @@ namespace RetroBread{
 		public GameObject removeButton;
 		public GameObject enabledToggle;
 		public GameObject boxPanel;
+		public GameObject copyButton;
+		public GameObject copyFramesPanel;
 
 		private SingleSelectionList _collisionsList;
 		private Button _removeButton;
 		private Toggle _enabledToggle;
 		private BoxSubPanel _boxPanel;
+		private Button _copyButton;
 
 		private bool refreshing;
 
@@ -27,6 +30,7 @@ namespace RetroBread{
 			_removeButton = removeButton.GetComponent<Button>();
 			_enabledToggle = enabledToggle.GetComponent<Toggle>();
 			_boxPanel = boxPanel.GetComponent<BoxSubPanel>();
+			_copyButton = copyButton.GetComponent<Button>();
 		}
 
 		void OnEnable(){
@@ -41,6 +45,7 @@ namespace RetroBread{
 			_boxPanel.SetInteractible(active);
 			_removeButton.interactable = active;
 			_enabledToggle.interactable = active;
+			_copyButton.interactable = active;
 		}
 
 		void Refresh(){
@@ -69,9 +74,9 @@ namespace RetroBread{
 			Editor.CharacterAnimation currentAnim = CharacterEditor.Instance.CurrentAnimation();
 			if (currentAnim == null || currentAnim.collisionBoxes.Count == 0){
 				_boxPanel.SetInteractible(false);
+				_copyButton.interactable = false;
 				return;
 			}
-			_boxPanel.SetInteractible(true);
 			Editor.CollisionBox currentCollision = currentAnim.collisionBoxes[_collisionsList.SelectedItem];
 			int frameId = CharacterEditor.Instance.SelectedFrame;
 			currentCollision.EnsureBoxExists(frameId);
@@ -83,6 +88,7 @@ namespace RetroBread{
 				_boxPanel.SetPoints(FixedVector3.Zero, FixedVector3.Zero);
 			}
 			_boxPanel.SetInteractible(_enabledToggle.isOn);
+			_copyButton.interactable = _enabledToggle.isOn;
 		}
 
 		public void OnCollisionSelected(int collisionId){
@@ -118,6 +124,16 @@ namespace RetroBread{
 		public void OnBoxChanged(){
 			Editor.CollisionBox currentCollision = CharacterEditor.Instance.GetCollisionBox(_collisionsList.SelectedItem);
 			currentCollision.boxesPerFrame[CharacterEditor.Instance.SelectedFrame] = new Editor.Box(_boxPanel.GetPoint1(), _boxPanel.GetPoint2());
+		}
+
+
+		public void OnCopyButton(){
+
+			Editor.CollisionBox currentCollision = CharacterEditor.Instance.GetCollisionBox(_collisionsList.SelectedItem);
+			Editor.Box originalBox = currentCollision.boxesPerFrame[CharacterEditor.Instance.SelectedFrame];
+
+			copyFramesPanel.GetComponent<CopyFramesPanel>().Setup(originalBox, _collisionsList.SelectedItem, false);
+			copyFramesPanel.SetActive(true);
 		}
 
 	}

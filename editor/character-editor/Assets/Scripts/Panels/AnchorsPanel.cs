@@ -66,7 +66,6 @@ namespace RetroBread{
 
 		public void Close(){
 			this.gameObject.SetActive(false);
-			CharacterEditor.Instance.SaveCharacter();
 		}
 
 
