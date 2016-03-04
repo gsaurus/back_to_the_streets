@@ -89,10 +89,10 @@ namespace RetroBread.Editor{
 
 		public void BuildStorage(List<Box> boxes, List<GenericParameter> genericParams){
 			foreach (CollisionBox box in collisionBoxes){
-				box.BuildStorage(boxes, genericParams);
+				box.BuildStorage(boxes, numFrames);
 			}
 			foreach (HitBox box in hitBoxes){
-				box.BuildStorage(boxes, genericParams);
+				box.BuildStorage(boxes, numFrames, genericParams);
 			}
 			foreach(ConditionalEvent e in events){
 				e.BuildStorage(boxes, genericParams);

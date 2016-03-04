@@ -280,6 +280,27 @@ namespace RetroBread{
 			return character.animations[selectedAnimationId];
 		}
 
+		public CollisionBox GetCollisionBox(int collisionId){
+			Editor.CharacterAnimation currentAnim = CurrentAnimation();
+			if (currentAnim == null){
+				return null;
+			}
+			Editor.CollisionBox currentCollision = currentAnim.collisionBoxes[collisionId];
+			currentCollision.EnsureBoxExists(selectedFrame);
+			return currentCollision;
+		}
+
+		public HitBox GetHitBox(int hitId){
+			Editor.CharacterAnimation currentAnim = CurrentAnimation();
+			if (currentAnim == null){
+				return null;
+			}
+			HitBox currentHit = currentAnim.hitBoxes[hitId];
+			currentHit.EnsureBoxExists(selectedFrame);
+			return currentHit;
+		}
+
+
 #endregion
 
 

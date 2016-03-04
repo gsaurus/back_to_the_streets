@@ -17,7 +17,16 @@ namespace RetroBread.Editor{
 
 
 		public CollisionBox(){
-			// Nothing to do here
+			boxesPerFrame = new List<Box>();
+			enabledFrames = new List<bool>(); 
+		}
+
+		// method to enforce number of boxes per frame
+		public void EnsureBoxExists(int boxId){
+			while (boxesPerFrame.Count < boxId + 1){
+				boxesPerFrame.Add(new Box());
+				enabledFrames.Add(false);
+			}
 		}
 
 
@@ -28,11 +37,14 @@ namespace RetroBread.Editor{
 			// Populate boxes
 			newBox.boxesPerFrame = new List<Box>(storageBox.boxIds.Length);
 			newBox.enabledFrames = new List<bool>(storageBox.boxIds.Length); 
-			Box addedBox;
 			foreach(int boxId in storageBox.boxIds){
-				addedBox = Box.LoadFromStorage(storageCharacter.boxes[boxId]);
-				newBox.boxesPerFrame.Add(addedBox);
-				newBox.enabledFrames.Add(addedBox != null);
+				if (boxId == Box.invalidBoxId) {
+					newBox.enabledFrames.Add(false);
+					newBox.boxesPerFrame.Add(new Box());
+				}else {
+					newBox.enabledFrames.Add(true);
+					newBox.boxesPerFrame.Add(Box.LoadFromStorage(storageCharacter.boxes[boxId]));
+				}
 			}
 
 			return newBox;
@@ -47,15 +59,15 @@ namespace RetroBread.Editor{
 		}
 
 
-		public void BuildStorage(List<Box> boxes, List<GenericParameter> genericParams){
+		public void BuildStorage(List<Box> boxes, int numFrames){
 			storageBox = new Storage.CollisionBox();
-			storageBox.boxIds = new int[boxesPerFrame.Count];
+			storageBox.boxIds = new int[numFrames];
 			Box searchBox;
 			int boxIndex;
-			for (int i = 0 ; i < boxesPerFrame.Count ; ++i){
-				searchBox = boxesPerFrame[i];
+			for (int i = 0 ; i < numFrames ; ++i){
+				searchBox = i < boxesPerFrame.Count ? boxesPerFrame[i] : null;
 				if (!enabledFrames[i] || searchBox == null) {
-					storageBox.boxIds[i] = -1;
+					storageBox.boxIds[i] = Box.invalidBoxId;
 				}else{
 					boxIndex = boxes.FindIndex(x => x.IsEqual(searchBox));
 					if (boxIndex < 0){

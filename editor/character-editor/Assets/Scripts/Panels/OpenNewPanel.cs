@@ -88,13 +88,13 @@ namespace RetroBread{
 		}
 
 		public void OnRemoveCollision(){
-			_collisionsList.RemoveOption(_collisionsList.SelectedItem);
+			_collisionsList.RemoveSelectedOption();
 			_removeCollisionButton.interactable = _collisionsList.OptionsCount > 0;
 			OnCollisionNameChanged(newCollisionName); // refresh add button
 		}
 
 		public void OnRemoveHit(){
-			_hitsList.RemoveOption(_hitsList.SelectedItem);
+			_hitsList.RemoveSelectedOption();
 			_removeHitButton.interactable = _hitsList.OptionsCount > 0;
 			OnHitNameChanged(newHitName); // refresh add button
 		}

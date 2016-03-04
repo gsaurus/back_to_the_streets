@@ -15,11 +15,15 @@ namespace RetroBread{
 		public GameObject playButton;
 		public GameObject frameInput;
 		public GameObject sizeInput;
+		public GameObject collisionsList;
+		public GameObject hitsList;
 
 		// Component items
 		private Slider _slider;
 		private InputField _frameInput;
-		private InputField _sizeInput; 
+		private InputField _sizeInput;
+		private SingleSelectionList _collisionsList;
+		private SingleSelectionList _hitsList; 
 
 		// Player variables
 		private bool isPlaying;
@@ -31,7 +35,12 @@ namespace RetroBread{
 			_slider = slider.GetComponent<Slider>();
 			_frameInput = frameInput.GetComponent<InputField>();
 			_sizeInput = sizeInput.GetComponent<InputField>();
+			_collisionsList = collisionsList.GetComponent<SingleSelectionList>();
+			_hitsList = collisionsList.GetComponent<SingleSelectionList>();
+		}
 
+
+		void OnEnable () {
 			CharacterEditor.Instance.OnCharacterChangedEvent += OnCharacterChanged;
 			CharacterEditor.Instance.OnAnimationChangedEvent += OnAnimationChanged;
 			CharacterEditor.Instance.OnFrameChangedEvent += OnFrameChanged;
@@ -39,11 +48,6 @@ namespace RetroBread{
 			CharacterEditor.Instance.OnCollisionChangedEvent += OnCollisionChanged;
 			CharacterEditor.Instance.OnHitChangedEvent += OnHitChanged;
 		}
-
-
-//		void OnEnable () {
-//			
-//		}
 
 #region Event notifications
 
@@ -177,6 +181,26 @@ namespace RetroBread{
 		}
 
 #endregion
+
+
+#region Boxes display
+
+		public void OnCollisionBoxChanged(){
+			Editor.CollisionBox collisionBox = CharacterEditor.Instance.GetCollisionBox(_collisionsList.SelectedItem);
+			bool isEnabled = collisionBox.enabledFrames[CharacterEditor.Instance.SelectedFrame];
+			Editor.Box box = collisionBox.boxesPerFrame[CharacterEditor.Instance.SelectedFrame];
+			// TODO: the visual stuff
+		}
+
+		public void OnHitBoxChanged(){
+			Editor.HitBox hitBox = CharacterEditor.Instance.GetHitBox(_hitsList.SelectedItem);
+			bool isEnabled = hitBox.enabledFrames[CharacterEditor.Instance.SelectedFrame];
+			Editor.Box box= hitBox.boxesPerFrame[CharacterEditor.Instance.SelectedFrame];
+			// TODO: the visual stuff
+		}
+
+#endregion
+
 
 	}
 

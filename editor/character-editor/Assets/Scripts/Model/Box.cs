@@ -7,6 +7,9 @@ using RetroBread;
 namespace RetroBread.Editor{
 
 	public class Box {
+
+		public static int invalidBoxId = -1;
+
 		public FixedVector3 pointOne;
 		public FixedVector3 pointTwo;
 
@@ -27,7 +30,7 @@ namespace RetroBread.Editor{
 		}
 
 		public static Box LoadFromStorage(Storage.Box storageBox){
-			if (storageBox == null) return null;
+			if (storageBox == null) return new Box(FixedVector3.Zero, FixedVector3.Zero);
 			return new Box(storageBox.pointOne, storageBox.pointTwo);
 		}
 

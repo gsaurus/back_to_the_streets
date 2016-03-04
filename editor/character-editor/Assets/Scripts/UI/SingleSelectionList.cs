@@ -53,6 +53,11 @@ public class SingleSelectionList : MonoBehaviour {
 		Refresh();
 	}
 
+	public void RemoveSelectedOption(){
+		_options.RemoveAt(selectedItem);
+		Refresh();
+	}
+
 
 	private void onItemSelected(int itemId, bool selected){
 		if (selected) {

@@ -25,6 +25,9 @@ namespace RetroBread.Editor{
 
 
 
+
+
+
 		public static ConditionalEvent LoadFromStorage(Storage.CharacterEvent storageEvent, Storage.Character storageCharacter){
 
 			ConditionalEvent newEvent = new ConditionalEvent();
