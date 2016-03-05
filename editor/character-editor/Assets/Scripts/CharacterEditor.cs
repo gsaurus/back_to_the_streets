@@ -6,6 +6,19 @@ using RetroBread.Editor;
 
 namespace RetroBread{
 
+	// Class to hold handy type conversions to/from unity
+	public static class UnityConversions{
+
+		public static UnityEngine.Vector3 AsVector3(this FixedVector3 src){
+			return new UnityEngine.Vector3((float)src.X, (float)src.Y, (float)src.Z);
+		}
+
+		public static FixedVector3 AsFixedVetor3(this UnityEngine.Vector3 src){
+			return new FixedVector3(src.x, src.y, src.z);
+		}
+
+	}
+
 	// Central class
 	// Other editor classes use it to access data and model, and set selections
 	public class CharacterEditor : SingletonMonoBehaviour<CharacterEditor> {
@@ -263,7 +276,7 @@ namespace RetroBread{
 		}
 
 
-#region Handy getters
+#region Handy getters/setters
 
 		public List<string> AnimationNames(){
 			List<string> animNamesList = new List<string>(character.animations.Count);
@@ -278,6 +291,14 @@ namespace RetroBread{
 				return null;
 			}
 			return character.animations[selectedAnimationId];
+		}
+
+		public CollisionBox CurrentCollision(){
+			CharacterAnimation currentAnim = CurrentAnimation();
+			if (currentAnim == null) {
+				return null;
+			}
+			return currentAnim.collisionBoxes[selectedCollisionId];
 		}
 
 		public CollisionBox GetCollisionBox(int collisionId){
@@ -298,6 +319,14 @@ namespace RetroBread{
 			HitBox currentHit = currentAnim.hitBoxes[hitId];
 			currentHit.EnsureBoxExists(selectedFrame);
 			return currentHit;
+		}
+
+		public void RefreshCollisions(){
+			OnCollisionChangedEvent();
+		}
+
+		public void RefreshHits(){
+			OnHitChangedEvent();
 		}
 
 

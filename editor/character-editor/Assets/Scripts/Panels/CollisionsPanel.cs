@@ -34,7 +34,6 @@ namespace RetroBread{
 		}
 
 		void OnEnable(){
-			CharacterEditor.Instance.OnCharacterChangedEvent += Refresh;
 			CharacterEditor.Instance.OnAnimationChangedEvent += Refresh;
 			CharacterEditor.Instance.OnFrameChangedEvent += OnFrameChanged;
 		}
@@ -66,6 +65,7 @@ namespace RetroBread{
 				_collisionsList.AddOption(boxName + " " + i);
 			}
 			_collisionsList.SelectedItem = selectedItem;
+			CharacterEditor.Instance.SelectedCollisionId = _collisionsList.SelectedItem;
 			OnFrameChanged();
 			refreshing = false;
 		}
@@ -77,7 +77,7 @@ namespace RetroBread{
 				_copyButton.interactable = false;
 				return;
 			}
-			Editor.CollisionBox currentCollision = currentAnim.collisionBoxes[_collisionsList.SelectedItem];
+			Editor.CollisionBox currentCollision = currentAnim.collisionBoxes[CharacterEditor.Instance.SelectedCollisionId];
 			int frameId = CharacterEditor.Instance.SelectedFrame;
 			currentCollision.EnsureBoxExists(frameId);
 			Editor.Box currentBox = currentCollision.boxesPerFrame[frameId];
@@ -92,13 +92,15 @@ namespace RetroBread{
 		}
 
 		public void OnCollisionSelected(int collisionId){
+			CharacterEditor.Instance.SelectedCollisionId = collisionId;
 			Refresh();
 		}
 
 		public void OnFrameEnabled(bool enabled){
-			Editor.CollisionBox currentCollision = CharacterEditor.Instance.GetCollisionBox(_collisionsList.SelectedItem);
+			Editor.CollisionBox currentCollision = CharacterEditor.Instance.CurrentCollision();
 			currentCollision.enabledFrames[CharacterEditor.Instance.SelectedFrame] = enabled;
 			OnFrameChanged();
+			CharacterEditor.Instance.RefreshCollisions();
 		}
 
 		public void OnAddButton(){
@@ -124,6 +126,7 @@ namespace RetroBread{
 		public void OnBoxChanged(){
 			Editor.CollisionBox currentCollision = CharacterEditor.Instance.GetCollisionBox(_collisionsList.SelectedItem);
 			currentCollision.boxesPerFrame[CharacterEditor.Instance.SelectedFrame] = new Editor.Box(_boxPanel.GetPoint1(), _boxPanel.GetPoint2());
+			CharacterEditor.Instance.RefreshCollisions();
 		}
 
 
