@@ -56,9 +56,8 @@ namespace RetroBread{
 			set{
 				if (selectedAnimationId != value) {
 					selectedAnimationId = value;
-					if (OnAnimationChangedEvent != null) {
-						OnAnimationChangedEvent();
-					}
+					if (OnAnimationChangedEvent != null) 	OnAnimationChangedEvent();
+					if (OnFrameChangedEvent		!= null)	OnFrameChangedEvent();
 				}
 			}
 		}
@@ -295,10 +294,18 @@ namespace RetroBread{
 
 		public CollisionBox CurrentCollision(){
 			CharacterAnimation currentAnim = CurrentAnimation();
-			if (currentAnim == null) {
+			if (currentAnim == null || currentAnim.collisionBoxes.Count == 0) {
 				return null;
 			}
 			return currentAnim.collisionBoxes[selectedCollisionId];
+		}
+
+		public HitBox CurrentHit(){
+			CharacterAnimation currentAnim = CurrentAnimation();
+			if (currentAnim == null || currentAnim.hitBoxes.Count == 0) {
+				return null;
+			}
+			return currentAnim.hitBoxes[selectedHitId];
 		}
 
 		public CollisionBox GetCollisionBox(int collisionId){

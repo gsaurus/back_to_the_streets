@@ -27,10 +27,10 @@ namespace RetroBread.Editor{
 
 		public GenericParameter(int type, int[] intsList, FixedFloat[] floatsList, string[] stringsList, bool[] boolsList){
 			this.type = type;
-			this.intsList = new List<int>(intsList);
-			this.floatsList = new List<FixedFloat>(floatsList);
-			this.stringsList = new List<string>(stringsList);
-			this.boolsList = new List<bool>(boolsList);
+			this.intsList = intsList != null ? new List<int>(intsList) : new List<int>();
+			this.floatsList = floatsList != null ? new List<FixedFloat>(floatsList) : new List<FixedFloat>();
+			this.stringsList = stringsList != null ? new List<string>(stringsList) : new List<string>();
+			this.boolsList = boolsList != null ? new List<bool>(boolsList) : new List<bool>();
 		}
 
 

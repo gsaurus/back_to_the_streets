@@ -8,17 +8,18 @@ using RetroBread.Editor;
 
 namespace RetroBread{
 
-	public class CollisionBoxesViewer : BoxesViewer {
+	public class HitBoxesViewer : BoxesViewer {
 
 
 		void OnEnable() {
 			CharacterEditor.Instance.OnFrameChangedEvent += Refresh;
-			CharacterEditor.Instance.OnCollisionChangedEvent += Refresh;
+			CharacterEditor.Instance.OnHitChangedEvent += Refresh;
 		}
 
+
 		void Awake() {
-			unselectedColor = new Color(0, 0, 1, 0.5f);
-			selectedColor = new Color(0, 1, 1, 0.5f);
+			unselectedColor = new Color(1, 0, 0, 0.5f);
+			selectedColor = new Color(1, 1, 0, 0.5f);
 			viewerMaterial = new Material(Shader.Find("Transparent/Diffuse"));
 		}
 
@@ -27,18 +28,17 @@ namespace RetroBread{
 			int numVisibleBoxes = 0;
 			int currentFrame = CharacterEditor.Instance.SelectedFrame;
 			CharacterAnimation currentAnim = CharacterEditor.Instance.CurrentAnimation();
-			CollisionBox currentCollision = CharacterEditor.Instance.CurrentCollision();
-			foreach (CollisionBox collision in currentAnim.collisionBoxes) {
-				if (collision.enabledFrames.Count >= currentFrame && collision.enabledFrames[currentFrame]) {
+			HitBox currentHit = CharacterEditor.Instance.CurrentHit();
+			foreach (HitBox hit in currentAnim.hitBoxes) {
+				if (hit.enabledFrames.Count >= currentFrame && hit.enabledFrames[currentFrame]) {
 					EnsureGameObject(numVisibleBoxes);
-					UpdateBox(numVisibleBoxes, collision.boxesPerFrame[currentFrame], collision == currentCollision);
+					UpdateBox(numVisibleBoxes, hit.boxesPerFrame[currentFrame], hit == currentHit);
 					++numVisibleBoxes;
 				}
 			}
 
 			DisableUnusedBoxes(numVisibleBoxes);
-
-			//
+		
 		}
 	}
 

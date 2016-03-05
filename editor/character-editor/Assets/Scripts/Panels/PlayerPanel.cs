@@ -21,9 +21,7 @@ namespace RetroBread{
 		// Component items
 		private Slider _slider;
 		private InputField _frameInput;
-		private InputField _sizeInput;
-		private SingleSelectionList _collisionsList;
-		private SingleSelectionList _hitsList; 
+		private InputField _sizeInput; 
 
 		// Player variables
 		private bool isPlaying;
@@ -35,8 +33,6 @@ namespace RetroBread{
 			_slider = slider.GetComponent<Slider>();
 			_frameInput = frameInput.GetComponent<InputField>();
 			_sizeInput = sizeInput.GetComponent<InputField>();
-			_collisionsList = collisionsList.GetComponent<SingleSelectionList>();
-			_hitsList = collisionsList.GetComponent<SingleSelectionList>();
 		}
 
 
@@ -178,25 +174,6 @@ namespace RetroBread{
 
 		private float CurrentAnimationLength(Animator animator){
 			return animator.GetCurrentAnimatorClipInfo(0)[0].clip.averageDuration;
-		}
-
-#endregion
-
-
-#region Boxes display
-
-		public void OnCollisionBoxChanged(){
-			Editor.CollisionBox collisionBox = CharacterEditor.Instance.GetCollisionBox(_collisionsList.SelectedItem);
-			bool isEnabled = collisionBox.enabledFrames[CharacterEditor.Instance.SelectedFrame];
-			Editor.Box box = collisionBox.boxesPerFrame[CharacterEditor.Instance.SelectedFrame];
-			// TODO: the visual stuff
-		}
-
-		public void OnHitBoxChanged(){
-			Editor.HitBox hitBox = CharacterEditor.Instance.GetHitBox(_hitsList.SelectedItem);
-			bool isEnabled = hitBox.enabledFrames[CharacterEditor.Instance.SelectedFrame];
-			Editor.Box box= hitBox.boxesPerFrame[CharacterEditor.Instance.SelectedFrame];
-			// TODO: the visual stuff
 		}
 
 #endregion

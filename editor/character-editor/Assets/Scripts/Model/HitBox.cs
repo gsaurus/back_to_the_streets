@@ -66,12 +66,12 @@ namespace RetroBread.Editor{
 
 			// Build boxes
 			storageBox = new Storage.HitBox();
-			storageBox.boxIds = new int[boxesPerFrame.Count];
+			storageBox.boxIds = new int[numFrames];
 			Box searchBox;
 			int boxIndex;
 			for (int i = 0 ; i < numFrames ; ++i){
 				searchBox = i < boxesPerFrame.Count ? boxesPerFrame[i] : null;
-				if (!enabledFrames[i] || searchBox == null) {
+				if (searchBox == null || !enabledFrames[i]) {
 					storageBox.boxIds[i] = Box.invalidBoxId;
 				}else{
 					boxIndex = boxes.FindIndex(x => x.IsEqual(searchBox));
