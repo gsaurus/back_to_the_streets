@@ -21,15 +21,17 @@ OK - Create the basic UI layouts, and basic navigation 8
 OK - Associate the model to a stub character data 3
 OK - scroll between animations, playback features (play, pause, next frame, etc) 5
 OK - Code basic functionality such as load, save 3
-8 - do some experiments with plugins.. the editor will need plugins to add functionality on the fly 2
-9 - Collision boxes 3
-10 - Hit boxes (basic stuff only) 3
-11 - Direct events (stub stuff only) 2
-12 - Conditional events (stub stuff only) 3
+-- - do some experiments with plugins.. the editor will need plugins to add functionality on the fly 2
+OK - Collision boxes 3
+OK - Hit boxes (basic stuff only) 3
+OK - Direct events (stub stuff only) 2
+OK - Conditional events (stub stuff only) 3
 
 - Automated script to create and copy AssetBundles into character-editor 1
 - Browse and load asset bundles from a folder near the editor executable file 2
 
+- check what's going on with some comboboxes not scrolling
+- Use tab/enter to move to next inputField
 
 TODO: support offline mode 2
 TODO: investigate double messages on single key event?.. 1
