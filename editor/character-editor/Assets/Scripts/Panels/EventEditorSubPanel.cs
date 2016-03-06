@@ -54,14 +54,14 @@ namespace RetroBread{
 			if (parameters == null || parameters.Count == 0 || _paramsList.SelectedItem >= parameters.Count) {
 				return;
 			}
-			string selectedItemName = _paramsList.SelectedOption;
-			string newItemName = parameterBuilder.ToString(parameters[_paramsList.SelectedItem]);
-			if (selectedItemName != newItemName) {
-				List<string> options = new List<string>();
-				foreach (GenericParameter param in parameters) {
-					options.Add(parameterBuilder.ToString(param));
+			List<string> options = _paramsList.Options;
+			for (int i = 0; i < _paramsList.OptionsCount && i < parameters.Count; ++i) {
+				string selectedItemName = options[i];
+				string newItemName = parameterBuilder.ToString(parameters[i]);
+				if (selectedItemName != newItemName) {
+					UpdateParamsList();
+					break;
 				}
-				_paramsList.Options = options;
 			}
 		}
 

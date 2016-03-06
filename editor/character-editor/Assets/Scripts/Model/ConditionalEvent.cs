@@ -6,6 +6,32 @@ using RetroBread;
 
 namespace RetroBread.Editor{
 
+
+	public class ConditionalEventComparer : IEqualityComparer<ConditionalEvent>{
+		public bool Equals (ConditionalEvent e1, ConditionalEvent e2){ 
+			if (e1.conditions.Count != e2.conditions.Count || e1.events.Count != e2.events.Count) {
+				return false;
+			}
+			for (int i = 0; i < e1.conditions.Count; ++i) {
+				if (!e1.conditions[i].IsEqual(e2.conditions[i])){
+					return false;
+				}
+			}
+			for (int i = 0; i < e1.events.Count; ++i) {
+				if (!e1.events[i].IsEqual(e2.events[i])){
+					return false;
+				}
+			}
+			return true;
+		}
+
+		public int GetHashCode(ConditionalEvent e){
+			return e.conditions.GetHashCode() + e.events.GetHashCode();
+		}
+	}
+
+
+
 	public class ConditionalEvent {
 
 		public List<GenericParameter> conditions;

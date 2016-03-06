@@ -23,8 +23,8 @@ namespace RetroBread{
 	// Other editor classes use it to access data and model, and set selections
 	public class CharacterEditor : SingletonMonoBehaviour<CharacterEditor> {
 
-		public static string charactersDataPath = Application.streamingAssetsPath + "/Characters/Data/";
-		public static string charactersModelsPath = Application.streamingAssetsPath + "/Characters/Models/";
+		public static string charactersDataPath;
+		public static string charactersModelsPath;
 
 		public static string dataExtension = ".bytes";
 
@@ -129,13 +129,13 @@ namespace RetroBread{
 			RetroBread.Debug.Instance = new UnityDebug();
 		}
 
-
-		void Start(){
-			
-			// Cache is unwanted on editor - everything changes
+		void Awake(){
+			if (charactersDataPath == null) charactersDataPath = Application.streamingAssetsPath + "/Characters/Data/";
+			if (charactersModelsPath == null) charactersModelsPath = Application.streamingAssetsPath + "/Characters/Models/";
+			// Cache is unwanted on editor - everything changes all the time
 			Caching.CleanCache();
 		}
-
+			
 
 		void Reset(){
 			
