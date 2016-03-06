@@ -20,13 +20,21 @@ namespace RetroBread{
 		private float maxValue;
 
 
+		// Handy static instantiation
+		public static void Instantiate(GameObject parent, GenericParameter parameter, int paramItemId, string description, float minValue = -1, float maxValue = -1){
+			GameObject paramObj = GameObject.Instantiate(CharacterEditor.Instance.floatInputFieldParam);
+			paramObj.GetComponent<FloatInputFieldParam>().Setup(parameter, paramItemId, description, minValue, maxValue);
+			paramObj.transform.SetParent(parent.transform);
+		}
+
+
 		void Awake(){
 			_label = label.GetComponent<Text>();
 			_field = field.GetComponent<InputField>();
 		}
 
 
-		public void Setup(GenericParameter parameter, int paramItemId, string description, float minValue = 0, float maxValue = -1){
+		public void Setup(GenericParameter parameter, int paramItemId, string description, float minValue = -1, float maxValue = -1){
 			this.parameter = parameter;
 			this.paramItemId = paramItemId;
 			parameter.EnsureFloatItem(paramItemId);
@@ -43,13 +51,17 @@ namespace RetroBread{
 		public void OnChange(string text){
 			float floatValue;
 			bool changed = false;
+			bool haveMinMax = minValue != maxValue || minValue != -1;
 			if (float.TryParse(text, out floatValue)) {
-				if (floatValue < minValue) {
-					floatValue = minValue;
-					changed = true;
-				} else if (maxValue > minValue && floatValue > maxValue) {
-					floatValue = maxValue;
-					changed = true;
+
+				if (haveMinMax) {
+					if (floatValue < minValue) {
+						floatValue = minValue;
+						changed = true;
+					} else if (maxValue > minValue && floatValue > maxValue) {
+						floatValue = maxValue;
+						changed = true;
+					}
 				}
 				parameter.floatsList[paramItemId] = floatValue;
 				if (changed) {

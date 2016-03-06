@@ -17,6 +17,7 @@ namespace RetroBread{
 		public GameObject copyButton;
 		public GameObject copyFramesPanel;
 		public GameObject typeDropdown;
+		public GameObject parameterContent;
 
 		private SingleSelectionList _hitsList;
 		private Button _removeButton;
@@ -36,9 +37,20 @@ namespace RetroBread{
 			_typeDropdown = typeDropdown.GetComponent<Dropdown>();
 		}
 
+
 		void OnEnable(){
+			SetupTypeOptions();
 			CharacterEditor.Instance.OnAnimationChangedEvent += Refresh;
 			CharacterEditor.Instance.OnFrameChangedEvent += OnFrameChanged;
+		}
+
+		void SetupTypeOptions(){
+			_typeDropdown.ClearOptions();
+			string[] types = HitParameterBuilder.Instance.TypesList();
+			foreach (string type in types) {
+				_typeDropdown.options.Add(new Dropdown.OptionData(type));
+			}
+			_typeDropdown.RefreshShownValue();
 		}
 
 
@@ -49,6 +61,7 @@ namespace RetroBread{
 			_enabledToggle.interactable = active;
 			_copyButton.interactable = active;
 			_typeDropdown.interactable = active;
+			UpdateParameter();
 		}
 
 		void Refresh(){
@@ -80,6 +93,7 @@ namespace RetroBread{
 				_boxPanel.SetInteractible(false);
 				_copyButton.interactable = false;
 				_typeDropdown.interactable = false;
+				UpdateParameter();
 				return;
 			}
 			Editor.HitBox currentHit = currentAnim.hitBoxes[CharacterEditor.Instance.SelectedHitId];
@@ -94,7 +108,8 @@ namespace RetroBread{
 			}
 			_boxPanel.SetInteractible(_enabledToggle.isOn);
 			_copyButton.interactable = _enabledToggle.isOn;
-			_typeDropdown.interactable = _enabledToggle.isOn;
+			_typeDropdown.interactable = true;
+			UpdateParameter();
 		}
 
 		public void OnHitSelected(int hitId){
@@ -147,7 +162,28 @@ namespace RetroBread{
 
 
 		public void OnTypeSelected(int type){
-			// TODO: parameter thing
+			Editor.HitBox currentHit = CharacterEditor.Instance.GetHitBox(_hitsList.SelectedItem);
+			currentHit.param.type = type;
+			if (!refreshing) {
+				UpdateParameter();
+			}
+		}
+
+		private void UpdateParameter(){
+			// Cleanup
+			foreach(Transform child in parameterContent.transform) {
+				GameObject.Destroy(child.gameObject);
+			}
+			// Setup if enabled
+			Editor.HitBox currentHit = CharacterEditor.Instance.GetHitBox(_hitsList.SelectedItem);
+			if (currentHit != null && _typeDropdown.interactable) {
+				if (currentHit.param.type >= _typeDropdown.options.Count || currentHit.param.type < 0) {
+					RetroBread.Debug.LogError("Unknown hit type " + currentHit.param.type + ", parameter data removed");
+					currentHit.param = new RetroBread.Editor.GenericParameter();
+				}
+				_typeDropdown.value = currentHit.param.type;
+				HitParameterBuilder.Instance.Build(parameterContent, currentHit.param);
+			}
 		}
 
 	}

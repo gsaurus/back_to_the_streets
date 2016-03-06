@@ -17,6 +17,13 @@ namespace RetroBread{
 		private GenericParameter parameter;
 		private int paramItemId;
 
+		// Handy static instantiation
+		public static void Instantiate(GameObject parent, GenericParameter parameter, int paramItemId, string description){
+			GameObject paramObj = GameObject.Instantiate(CharacterEditor.Instance.boolToggleParam);
+			paramObj.GetComponent<BoolToggleParam>().Setup(parameter, paramItemId, description);
+			paramObj.transform.SetParent(parent.transform);
+		}
+
 
 		void Awake(){
 			_label = label.GetComponent<Text>();

@@ -318,7 +318,7 @@ namespace RetroBread{
 
 		public CollisionBox GetCollisionBox(int collisionId){
 			Editor.CharacterAnimation currentAnim = CurrentAnimation();
-			if (currentAnim == null){
+			if (currentAnim == null || collisionId >= currentAnim.collisionBoxes.Count){
 				return null;
 			}
 			Editor.CollisionBox currentCollision = currentAnim.collisionBoxes[collisionId];
@@ -328,7 +328,7 @@ namespace RetroBread{
 
 		public HitBox GetHitBox(int hitId){
 			Editor.CharacterAnimation currentAnim = CurrentAnimation();
-			if (currentAnim == null){
+			if (currentAnim == null || hitId >= currentAnim.hitBoxes.Count){
 				return null;
 			}
 			HitBox currentHit = currentAnim.hitBoxes[hitId];

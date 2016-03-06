@@ -10,7 +10,7 @@ namespace RetroBread{
 		string[] TypesList();
 
 		// Build the components of the parameter panel (parent), for the given type
-		void Build(GameObject parent, GenericParameter parameter, int type);
+		void Build(GameObject parent, GenericParameter parameter);
 
 	}
 

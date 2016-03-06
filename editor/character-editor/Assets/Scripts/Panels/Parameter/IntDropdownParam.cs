@@ -18,6 +18,14 @@ namespace RetroBread{
 		private int paramItemId;
 
 
+		// Handy static instantiation
+		public static void Instantiate(GameObject parent, GenericParameter parameter, int paramItemId, string description, string[] options){
+			GameObject paramObj = GameObject.Instantiate(CharacterEditor.Instance.intDropdownParam);
+			paramObj.GetComponent<IntDropdownParam>().Setup(parameter, paramItemId, description, options);
+			paramObj.transform.SetParent(parent.transform);
+		}
+
+
 		void Awake(){
 			_label = label.GetComponent<Text>();
 			_dropdown = dropdown.GetComponent<Dropdown>();
