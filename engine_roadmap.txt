@@ -155,3 +155,7 @@ Log
 05-03-16
 	- Collision and Hit boxes visualisation
 	- Coded HitBoxes, except type & parameter
+06-03-16
+	- Created generic param UI prefabs
+	- Hits generic parameters fully functional
+	- Rearranged hit panel elements, more crowded but less confusing
