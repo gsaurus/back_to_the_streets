@@ -41,6 +41,7 @@ namespace RetroBread.Editor{
 			if ((floatsList == null) != (other.floatsList == null)) return false;
 			if ((stringsList == null) != (other.stringsList == null)) return false;
 			if ((boolsList == null) != (other.boolsList == null)) return false;
+
 			if (intsList != null){
 				if (intsList.Count != other.intsList.Count) return false;
 				for (int i = 0 ; i < intsList.Count ; ++i){
@@ -80,6 +81,27 @@ namespace RetroBread.Editor{
 			param.stringsList = stringsList.ToArray();
 			param.boolsList = boolsList.ToArray();
 			return param;
+		}
+
+		public void EnsureStringItem(int itemId){
+			while (stringsList.Count <= itemId) {
+				stringsList.Add("");
+			}
+		}
+		public void EnsureIntItem(int itemId){
+			while (intsList.Count <= itemId) {
+				intsList.Add(0);
+			}
+		}
+		public void EnsureFloatItem(int itemId){
+			while (floatsList.Count <= itemId) {
+				floatsList.Add(0);
+			}
+		}
+		public void EnsureBoolItem(int itemId){
+			while (boolsList.Count <= itemId) {
+				boolsList.Add(false);
+			}
 		}
 
 	}

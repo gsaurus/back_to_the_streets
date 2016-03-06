@@ -37,6 +37,14 @@ namespace RetroBread{
 		// The skin model visible in the editor
 		public GameObject characterModel { get; private set; }
 
+		// References to param UI prefabs
+		public GameObject boolToggleParam;
+		public GameObject floatInputFieldParam;
+		public GameObject intDropdownParam;
+		public GameObject intInputFieldParam;
+		public GameObject stringDropdownParam;
+		public GameObject stringInputFieldParam;
+
 
 		// Events when something changes
 		public delegate void OnSomethingChanged();

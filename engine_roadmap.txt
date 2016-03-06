@@ -152,3 +152,6 @@ Log
 04-03-16
 	- Collisions panel finished
 	- Copy box from one frame into others
+05-03-16
+	- Collision and Hit boxes visualisation
+	- Coded HitBoxes, except type & parameter
