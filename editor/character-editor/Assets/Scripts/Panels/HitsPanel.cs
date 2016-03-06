@@ -163,9 +163,11 @@ namespace RetroBread{
 
 		public void OnTypeSelected(int type){
 			Editor.HitBox currentHit = CharacterEditor.Instance.GetHitBox(_hitsList.SelectedItem);
-			currentHit.param.type = type;
-			if (!refreshing) {
-				UpdateParameter();
+			if (currentHit.param.type != type) {
+				currentHit.param = new RetroBread.Editor.GenericParameter(type);
+				if (!refreshing) {
+					UpdateParameter();
+				}
 			}
 		}
 

@@ -159,3 +159,8 @@ Log
 	- Created generic param UI prefabs
 	- Hits generic parameters fully functional
 	- Rearranged hit panel elements, more crowded but less confusing
+	- Coded Events Panel
+	- Coded Events Editor
+07-03-16
+	-
+	

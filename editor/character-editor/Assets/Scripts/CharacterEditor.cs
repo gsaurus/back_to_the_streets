@@ -316,6 +316,15 @@ namespace RetroBread{
 			return currentAnim.hitBoxes[selectedHitId];
 		}
 
+
+		public ConditionalEvent CurrentEvent(){
+			CharacterAnimation currentAnim = CurrentAnimation();
+			if (currentAnim == null || currentAnim.events.Count == 0) {
+				return null;
+			}
+			return currentAnim.events[selectedEventId];
+		}
+
 		public CollisionBox GetCollisionBox(int collisionId){
 			Editor.CharacterAnimation currentAnim = CurrentAnimation();
 			if (currentAnim == null || collisionId >= currentAnim.collisionBoxes.Count){
@@ -342,6 +351,10 @@ namespace RetroBread{
 
 		public void RefreshHits(){
 			OnHitChangedEvent();
+		}
+
+		public void RefreshEvents(){
+			OnEventChangedEvent();
 		}
 
 

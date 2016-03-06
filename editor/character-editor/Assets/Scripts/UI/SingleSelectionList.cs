@@ -36,7 +36,11 @@ public class SingleSelectionList : MonoBehaviour {
 
 	public int OptionsCount { get { return _options.Count; } }
 
-	public string SelectedOption { get { return _options.Count == 0 ? null : _options[selectedItem]; } }
+	public string SelectedOption {
+		get {
+			return _options.Count == 0 ? null : _options[selectedItem];
+		}
+	}
 
 
 	public Transform contentObject;

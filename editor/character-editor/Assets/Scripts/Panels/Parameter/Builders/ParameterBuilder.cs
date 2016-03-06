@@ -12,6 +12,9 @@ namespace RetroBread{
 		// Build the components of the parameter panel (parent), for the given type
 		void Build(GameObject parent, GenericParameter parameter);
 
+		// String representation accordingly to the builder interpretation
+		string ToString(GenericParameter parameter);
+
 	}
 
 

@@ -81,6 +81,26 @@ namespace RetroBread.Editor{
 			}
 		}
 
+		public override string ToString(){
+			string finalString = "";
+			if (conditions.Count > 0) {
+				for (int i = 0; i < conditions.Count - 1; ++i) {
+					finalString += ConditionParameterBuilder.Instance.ToString(conditions[i]) + " && ";
+				}
+				finalString += ConditionParameterBuilder.Instance.ToString(conditions[conditions.Count - 1]);
+			}
+			finalString += " --> ";
+			if (events.Count > 0) {
+				for (int i = 0; i < events.Count - 1; ++i) {
+					finalString += EventParameterBuilder.Instance.ToString(events[i]) + " && ";
+				}
+				finalString += EventParameterBuilder.Instance.ToString(events[events.Count - 1]);
+			} else {
+				finalString += "<no action>";
+			}
+			return finalString;
+		}
+
 			
 	}
 

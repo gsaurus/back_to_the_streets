@@ -4,25 +4,33 @@ using RetroBread.Editor;
 
 namespace RetroBread{
 	
-	public class HitParameterBuilder: ParameterBuilder {
+	public class ConditionParameterBuilder: ParameterBuilder {
 		private static ParameterBuilder instance;
 		public static ParameterBuilder Instance {
 			get{
 				if (instance == null) {
-					instance = new HitParameterBuilder();
+					instance = new ConditionParameterBuilder();
 				}
 				return instance;
 			}
 		}
 			
-		private string[] typesList = { "test 1", "test 2" };
+		private string[] typesList = { "Frame is", "Got Hit" };
 
 		public string[] TypesList(){
 			return typesList;
 		}
 
 		public string ToString(GenericParameter parameter){
-			return typesList[parameter.type];
+			switch (parameter.type) {
+			case 0:
+				parameter.EnsureIntItem(1);
+				return typesList[parameter.type] + " " + parameter.intsList[1];
+			case 1:
+				parameter.EnsureFloatItem(0);
+				return typesList[parameter.type] + " with damage: " + parameter.floatsList[0];
+			}
+			return "Unknown condition";
 		}
 
 
@@ -39,13 +47,6 @@ namespace RetroBread{
 
 
 		private void BuildTest1(GameObject parent, GenericParameter parameter){
-			StringDropdownParam.Instantiate(parent, parameter, 0, "Component:", new string[]{"head", "body", "feet"});
-			FloatInputFieldParam.Instantiate(parent, parameter, 1, "X Offset:");
-			FloatInputFieldParam.Instantiate(parent, parameter, 2, "Y Offset:");
-			BoolToggleParam.Instantiate(parent, parameter, 3, "Strong as hell");
-		}
-
-		private void BuildTest2(GameObject parent, GenericParameter parameter){
 			Character character = CharacterEditor.Instance.character;
 			List<string> animNames = new List<string>();
 			if (character != null) {
@@ -56,6 +57,14 @@ namespace RetroBread{
 			IntDropdownParam.Instantiate(parent, parameter, 0, "Animation:", animNames.ToArray());
 			IntInputFieldParam.Instantiate(parent, parameter, 1, "Frame: ", 0, character != null ? CharacterEditor.Instance.CurrentAnimation().numFrames : -1);
 		}
+
+		private void BuildTest2(GameObject parent, GenericParameter parameter){
+			StringDropdownParam.Instantiate(parent, parameter, 0, "Got hit at:", new string[]{"head", "body", "feet"});
+			FloatInputFieldParam.Instantiate(parent, parameter, 0, "X Offset:");
+			FloatInputFieldParam.Instantiate(parent, parameter, 1, "Y Offset:");
+			BoolToggleParam.Instantiate(parent, parameter, 0, "Is blocking");
+		}
+			
 
 	}
 
