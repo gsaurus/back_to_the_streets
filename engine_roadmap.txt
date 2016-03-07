@@ -30,11 +30,16 @@ OK - Conditional events (stub stuff only) 3
 - Automated script to create and copy AssetBundles into character-editor 1
 - Browse and load asset bundles from a folder near the editor executable file 2
 
-- check what's going on with some comboboxes not scrolling
+- check what's going on with some comboboxes not scrolling (temp solution: use keyboard up/down & space)
 - Use tab/enter to move to next inputField
 
 TODO: support offline mode 2
 TODO: investigate double messages on single key event?.. 1
+
+
+
+
+[[[[[[[[[
 
 Back to game:
 1 - load character data and model 1
@@ -74,7 +79,7 @@ Other plans:
 - do an actual beat'em up level
 
 
-
+]]]]]]]]]
 
 
 
@@ -163,6 +168,7 @@ Log
 	- Rearranged hit panel elements, more crowded but less confusing
 	- Coded Events Panel
 	- Coded Events Editor
+	- Started All Events panel
 07-03-16
-	-
+	- Completed All Events panel
 	

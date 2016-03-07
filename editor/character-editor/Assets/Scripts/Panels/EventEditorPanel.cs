@@ -9,7 +9,7 @@ namespace RetroBread{
 
 	public class EventEditorPanel : MonoBehaviour {
 
-
+		public static ConditionalEvent eventToEdit = null;
 
 		public void Close(){
 			gameObject.SetActive(false);

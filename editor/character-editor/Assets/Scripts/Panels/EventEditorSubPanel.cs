@@ -33,12 +33,18 @@ namespace RetroBread{
 
 
 		void OnEnable(){
+
+			ConditionalEvent conditionalEvent = EventEditorPanel.eventToEdit;
+			if (conditionalEvent == null) {
+				conditionalEvent = CharacterEditor.Instance.CurrentEvent();
+			}
+
 			if (isCondition) {
 				parameterBuilder = ConditionParameterBuilder.Instance;
-				parameters = CharacterEditor.Instance.CurrentEvent().conditions;
+				parameters = conditionalEvent.conditions;
 			} else {
 				parameterBuilder = EventParameterBuilder.Instance;
-				parameters = CharacterEditor.Instance.CurrentEvent().events;
+				parameters = conditionalEvent.events;
 			}
 			UpdateParamsList();
 			UpdateTypesDropdown();

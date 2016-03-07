@@ -24,6 +24,33 @@ namespace RetroBread.Editor{
 			this.boolsList = new List<bool>();
 		}
 
+		public GenericParameter Clone(){
+			return new GenericParameter(
+				type,
+				intsList.ToArray(),
+				floatsList.ToArray(),
+				stringsList.ToArray(),
+				boolsList.ToArray()
+			);
+		}
+
+		public int DeepHashCode(){
+			int hash = 7043;
+			foreach (int i in intsList) {
+				hash = hash * 547 + i.GetHashCode();
+			}
+			foreach (float f in floatsList) {
+				hash = hash * 3779 + f.GetHashCode();
+			}
+			foreach (string s in stringsList) {
+				hash = hash * 11939 + s.GetHashCode();
+			}
+			foreach (bool b in boolsList) {
+				hash = hash * 199933 + b.GetHashCode();
+			}
+			return hash;
+		}
+
 
 		public GenericParameter(int type, int[] intsList, FixedFloat[] floatsList, string[] stringsList, bool[] boolsList){
 			this.type = type;

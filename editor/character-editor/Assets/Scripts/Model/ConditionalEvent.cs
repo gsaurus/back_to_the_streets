@@ -26,7 +26,14 @@ namespace RetroBread.Editor{
 		}
 
 		public int GetHashCode(ConditionalEvent e){
-			return e.conditions.GetHashCode() + e.events.GetHashCode();
+			int hashCode = 4397;
+			foreach (GenericParameter param in e.conditions) {
+				hashCode = hashCode * 307 + param.DeepHashCode();
+			}
+			foreach (GenericParameter param in e.events) {
+				hashCode = hashCode * 17 + param.DeepHashCode();
+			}
+			return hashCode;
 		}
 	}
 
@@ -50,7 +57,18 @@ namespace RetroBread.Editor{
 		}
 
 
-
+		public ConditionalEvent Clone(){
+			ConditionalEvent clone = new ConditionalEvent();
+			clone.conditions = new List<GenericParameter>(conditions.Count);
+			clone.events = new List<GenericParameter>(events.Count);
+			foreach (GenericParameter param in conditions) {
+				clone.conditions.Add(param.Clone());
+			}
+			foreach (GenericParameter param in events) {
+				clone.events.Add(param.Clone());
+			}
+			return clone;
+		}
 
 
 

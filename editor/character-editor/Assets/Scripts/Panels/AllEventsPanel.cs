@@ -15,6 +15,7 @@ namespace RetroBread{
 		public GameObject editButton;
 		public GameObject addButton;
 		public GameObject removeButton;
+		public GameObject editPanel;
 
 		private SingleSelectionList _eventsList;
 		private SingleSelectionList _animationsList;
@@ -52,13 +53,20 @@ namespace RetroBread{
 
 
 		void OnEnable(){
-			CharacterEditor.Instance.OnEventChangedEvent += RefreshEventsList;
+			CharacterEditor.Instance.OnEventChangedEvent += RefreshPanel;
 			RefreshPanel();
 		}
 
 #region refresh UI items
 
 		void RefreshPanel(){
+
+			if (EventEditorPanel.eventToEdit != null) {
+				// an event was edited, apply it to all animations that are using it
+				ApplyEventModifications();
+				return; // will be refreshed later
+			}
+
 			RefreshAllEvents();
 			RefreshEventsList();
 			_addButton.interactable = allEvents.Count > 0;
@@ -96,7 +104,10 @@ namespace RetroBread{
 
 
 		void RefreshAnimationsList(){
-			if (allEventsSorted.Count == 0) return;
+			if (allEventsSorted.Count == 0) {
+				_removeButton.interactable = false;
+				return;
+			}
 			ConditionalEvent selectedEvent = allEventsSorted[_eventsList.SelectedItem];
 			List<string> newOptions = new List<string>();
 			List<CharacterAnimation> eventAnims = allEvents[selectedEvent];
@@ -104,6 +115,7 @@ namespace RetroBread{
 				newOptions.Add(anim.name);
 			}
 			_animationsList.Options = newOptions;
+			_removeButton.interactable = _animationsList.OptionsCount > 0;
 		}
 
 
@@ -119,6 +131,7 @@ namespace RetroBread{
 				}
 			}
 			_addButton.interactable = _animationsDropdown.options.Count > 0;
+			_animationsDropdown.RefreshShownValue();
 		}
 
 
@@ -128,37 +141,122 @@ namespace RetroBread{
 
 #region UI events
 
-		void OnEventSelected(int itemId){
+
+		public void OnEventSelected(int itemId){
 			RefreshAnimationsList();
-			_removeButton.interactable = _animationsList.OptionsCount > 0;
+			RefreshAnimationsDropdown();
 		}
 
-		void OnDropdownAnimationSelected(int itemId){
-		
+
+//		void OnDropdownAnimationSelected(int itemId){
+//		
+//		}
+
+//		void OnListAnimationSelected(int itemId){
+//		
+//		}
+
+
+
+		public void OnAddButton(){
+
+			// Find selected anim
+			CharacterAnimation selectedAnim = GetAnimationFromDropdown();
+			// Find selected event
+			ConditionalEvent selectedEvent = allEventsSorted[_eventsList.SelectedItem];
+			// Clone event and add to animation
+			selectedAnim.events.Add(selectedEvent.Clone());
+			allEvents[selectedEvent].Add(selectedAnim);
+
+			// Refresh UI
+			RefreshAnimationsList();
+			RefreshAnimationsDropdown();
+
 		}
 
-		void OnListAnimationSelected(int itemId){
-		
-		}
 
-		void OnAddButton(){
-		
-		}
 
-		void OnEditButton(){
-		
+		public void OnEditButton(){
+			// Ugly temporary static variable.. will do for now
+			EventEditorPanel.eventToEdit = allEventsSorted[_eventsList.SelectedItem].Clone();
+			editPanel.SetActive(true);
 		}
 			
-		void OnRemoveButton(){
-		
+
+
+		public void OnRemoveButton(){
+			
+			// Find selected anim
+			CharacterAnimation selectedAnim = GetAnimationFromList();
+			// Find selected event
+			ConditionalEvent selectedEvent = allEventsSorted[_eventsList.SelectedItem];
+			// Find the event on the anim and remove it
+			ConditionalEventComparer comparer = new ConditionalEventComparer();
+			for (int i = 0; i < selectedAnim.events.Count; ++i) {
+				if (comparer.Equals(selectedEvent, selectedAnim.events[i])) {
+					selectedAnim.events.RemoveAt(i);
+					break;
+				}
+			}
+
+			allEvents[selectedEvent].Remove(selectedAnim);
+
+			// Refresh UI
+			RefreshAnimationsList();
+			RefreshAnimationsDropdown();
+
 		}
 
 
-		void Close(){
+
+		public void Close(){
 			gameObject.SetActive(false);
+			CharacterEditor.Instance.RefreshEvents();
 		}
 
 #endregion
+
+
+		CharacterAnimation GetAnimationFromDropdown(){
+			// Find selected animation
+			string selectedAnimationName = _animationsDropdown.options[_animationsDropdown.value].text;
+			Character character = CharacterEditor.Instance.character;
+			foreach (CharacterAnimation anim in character.animations) {
+				if (anim.name == selectedAnimationName) {
+					return anim;
+				}
+			}
+			return null;
+		}
+
+		CharacterAnimation GetAnimationFromList(){
+			// Find selected animation
+			string selectedAnimationName = _animationsList.SelectedOption;
+			Character character = CharacterEditor.Instance.character;
+			foreach (CharacterAnimation anim in character.animations) {
+				if (anim.name == selectedAnimationName) {
+					return anim;
+				}
+			}
+			return null;
+		}
+
+
+		void ApplyEventModifications(){
+			// replace old event with new event on all animations containing it
+			ConditionalEvent oldEvent = allEventsSorted[_eventsList.SelectedItem];
+			ConditionalEventComparer comparer = new ConditionalEventComparer();
+			foreach (CharacterAnimation anim in allEvents[oldEvent]) {
+				for (int i = 0; i < anim.events.Count; ++i) {
+					if (comparer.Equals(oldEvent, anim.events[i])) {
+						anim.events[i] = EventEditorPanel.eventToEdit.Clone();
+						break;
+					}
+				}
+			}
+			EventEditorPanel.eventToEdit = null;
+			CharacterEditor.Instance.RefreshEvents();
+		}
 
 	}
 
