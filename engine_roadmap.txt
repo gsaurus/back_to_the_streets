@@ -179,3 +179,4 @@ Log
 09-03-16
 	- Coded good part of auto-import, then decided to take it off
 	- Simplified open panel, no more auto-import
+	- Decided to not include attachments on this phase (they won't be exported with the prefabs)
