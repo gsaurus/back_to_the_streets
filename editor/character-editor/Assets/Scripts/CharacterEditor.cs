@@ -7,7 +7,7 @@ using RetroBread.Editor;
 namespace RetroBread{
 
 	// Class to hold handy type conversions to/from unity
-	public static class UnityConversions{
+	public static class UnityExtensions{
 
 		public static UnityEngine.Vector3 AsVector3(this FixedVector3 src){
 			return new UnityEngine.Vector3((float)src.X, (float)src.Y, (float)src.Z);
@@ -15,6 +15,17 @@ namespace RetroBread{
 
 		public static FixedVector3 AsFixedVetor3(this UnityEngine.Vector3 src){
 			return new FixedVector3(src.x, src.y, src.z);
+		}
+
+		public static Transform FindDeepChild(this Transform aParent, string aName){
+			foreach(Transform child in aParent){
+				if(child.name == aName )
+					return child;
+				Transform result = child.FindDeepChild(aName);
+				if (result != null)
+					return result;
+			}
+			return null;
 		}
 
 	}
@@ -118,9 +129,10 @@ namespace RetroBread{
 			}
 		}
 
+		// NOTE: decided to take this feature off
 		// temporary import information, used once a skin is selected
-		private List<string> collisionImportList;
-		private List<string> hitImportList;
+//		private List<string> collisionImportList;
+//		private List<string> hitImportList;
 
 
 
@@ -172,32 +184,65 @@ namespace RetroBread{
 
 
 
-		public void CreateCharacter(string characterName, List<string> collisionImportList, List<string> hitImportList){
+		public void CreateCharacter(string characterName){ //, List<string> collisionImportList, List<string> hitImportList){ // NOTE: decided to take this feature off
 
 			// Fresh new character
 			character = new Character(characterName);
 			SaveCharacter();
 
-			// store import data temporarily
-			this.collisionImportList = collisionImportList;
-			this.hitImportList = hitImportList;
+			// NOTE: decided to take this feature off
+//			// store import data temporarily
+//			this.collisionImportList = collisionImportList;
+//			this.hitImportList = hitImportList;
 
 			Reset();
 		}
 
 
-		private void ImportCollisionAndHitData(){
-			if (characterModel == null || (collisionImportList == null && hitImportList == null)) {
-				// Nothing to import
-				UnityEngine.Debug.Log("No collision & attack data imported");
-			}
-			// TODO: find coordinates of each item in each "frame" of all animations
-			// do something with collisionImportList & hitImportList
-
-			// clear import lists
-			collisionImportList = null;
-			hitImportList = null;
-		}
+		// NOTE: Decided to take this feature out
+		// NOTE: This method is incomplete, in case I need to finish it
+//		private void ImportCollisionAndHitData(){
+//			if (characterModel == null || (collisionImportList == null && hitImportList == null)) {
+//				return
+//			}
+//
+//			// Find all the transforms to look at
+//			List<Transform> collisionTransforms = new List<Transform>(collisionImportList != null ? collisionImportList.Count : 0);
+//			List<Transform> hitTransforms = new List<Transform>(hitImportList != null ? hitImportList.Count : 0);
+//			Transform item;
+//
+//			foreach (string collisionName in collisionImportList) {
+//				item = characterModel.transform.FindDeepChild(collisionName);
+//				if (item != null) {
+//					collisionTransforms.Add(item);
+//				}
+//			}
+//			foreach (string hitName in hitImportList) {
+//				item = characterModel.transform.FindDeepChild(hitName);
+//				if (item != null) {
+//					hitTransforms.Add(item);
+//				}
+//			}
+//			List<List<Transform>> allItems = new List<List<Transform>>(2);
+//			allItems.Add(collisionTransforms);
+//			allItems.Add(hitTransforms);
+//
+//			// For each animation, find the data for each item in each frame!
+//			RuntimeAnimatorController controller = animator.runtimeAnimatorController;
+//			if (controller != null){
+//				foreach(AnimationClip clip in controller.animationClips){
+//					List<List<List<ImportedData>>> importedData;
+//					importedData = AutoImporter.ImportFromAnimationClip(characterModel, clip, allItems);
+//					if (importedData != null) {
+//						// convert to animation collisions / hits data
+//					}
+//				}
+//			}
+//
+//			// clear import lists
+//			collisionImportList = null;
+//			hitImportList = null;
+//		}
 
 
 
@@ -243,7 +288,7 @@ namespace RetroBread{
 
 			// Update known animations
 			Animator charAnimator = prefab.GetComponent<Animator>();
-			int beforeAnimsCount = character.animations.Count;
+			int beforeAnimsCount = character.animations == null ? 0 : character.animations.Count;
 			UpdateKnownAnimations(charAnimator);
 
 			// Set skin
@@ -260,6 +305,12 @@ namespace RetroBread{
 				GameObject.Destroy(characterModel);
 			}
 			characterModel = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
+
+
+			// NOTE: decided to take this feature off
+//			// Import data if import is pending
+//			ImportCollisionAndHitData();
+
 			// pause animations
 			Animator charAnimator = characterModel.GetComponent<Animator>();
 			charAnimator.speed = 0;
@@ -286,6 +337,8 @@ namespace RetroBread{
 #region Handy getters/setters
 
 		public List<string> AnimationNames(){
+			if (character.animations == null)
+				return new List<string>();
 			List<string> animNamesList = new List<string>(character.animations.Count);
 			foreach (CharacterAnimation anim in character.animations) {
 				animNamesList.Add(anim.name);
@@ -294,7 +347,7 @@ namespace RetroBread{
 		}
 	
 		public CharacterAnimation CurrentAnimation(){
-			if (character.animations.Count == 0) {
+			if (character == null || character.animations == null || character.animations.Count == 0) {
 				return null;
 			}
 			return character.animations[selectedAnimationId];

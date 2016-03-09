@@ -13,54 +13,55 @@ namespace RetroBread{
 
 		// References to relevant objects
 		public GameObject filesList;
-		public GameObject collisionsList;
-		public GameObject hitsList;
 		public GameObject openButton;
-		public GameObject addCollisionButton;
-		public GameObject removeCollisionButton;
-		public GameObject addHitButton;
-		public GameObject removeHitButton;
 		public GameObject createButton;
 		public GameObject closeButton;
 
+		// NOTE: decided to take this feature off
+//		public GameObject collisionsList;
+//		public GameObject hitsList;
+//		public GameObject addCollisionButton;
+//		public GameObject removeCollisionButton;
+//		public GameObject addHitButton;
+//		public GameObject removeHitButton;
+//		private SingleSelectionList _collisionsList;
+//		private SingleSelectionList _hitsList;
+//		private Button _addCollisionButton;
+//		private Button _removeHitButton;
+//		private Button _removeCollisionButton;
+//		private Button _addHitButton;
+//		private string newCollisionName;
+//		private string newHitName;
+
+
 		// Simplified references
 		private SingleSelectionList _filesList;
-		private SingleSelectionList _collisionsList;
-		private SingleSelectionList _hitsList;
 		// Buttons
-		private Button _addCollisionButton;
-		private Button _removeCollisionButton;
-		private Button _addHitButton;
-		private Button _removeHitButton;
 		private Button _createButton;
 
 		// Texts
 		private string newCharacterName;
-		private string newCollisionName;
-		private string newHitName;
 
 
 
 		// Use this for initialization
 		void Awake() {
 			
-			// Get the scripts for buttons
-			_addCollisionButton 	= addCollisionButton.GetComponent<Button>();
-			_removeCollisionButton 	= removeCollisionButton.GetComponent<Button>();
-			_addHitButton			= addHitButton.GetComponent<Button>();
-			_removeHitButton 		= removeHitButton.GetComponent<Button>();
-			_createButton 			= createButton.GetComponent<Button>();
+			// NOTE: decided to take this feature off
+//			_addCollisionButton 	= addCollisionButton.GetComponent<Button>();
+//			_removeCollisionButton 	= removeCollisionButton.GetComponent<Button>();
+//			_addHitButton			= addHitButton.GetComponent<Button>();
+//			_removeHitButton 		= removeHitButton.GetComponent<Button>();
+//			_collisionsList = collisionsList.GetComponent<SingleSelectionList>();
+//			_hitsList = hitsList.GetComponent<SingleSelectionList>();
+//			_addCollisionButton.interactable = false;
+//			_removeCollisionButton.interactable = false;
+//			_addHitButton.interactable = false;
+//			_removeHitButton.interactable = false;
 
-			// Get the scripts for lists
+
+			_createButton = createButton.GetComponent<Button>();
 			_filesList = filesList.GetComponent<SingleSelectionList>();
-			_collisionsList = collisionsList.GetComponent<SingleSelectionList>();
-			_hitsList = hitsList.GetComponent<SingleSelectionList>();
-
-			// most buttons are initially inactive due to empty lists and input fields
-			_addCollisionButton.interactable = false;
-			_removeCollisionButton.interactable = false;
-			_addHitButton.interactable = false;
-			_removeHitButton.interactable = false;
 			_createButton.interactable = false;
 
 		}
@@ -76,27 +77,31 @@ namespace RetroBread{
 			
 
 		public void OnAddCollision(){
-			_collisionsList.AddOption(newCollisionName);
-			_removeCollisionButton.interactable = _collisionsList.OptionsCount > 0;
-			_addCollisionButton.interactable = false; // would cause duplicate name
+			// NOTE: decided to take this feature off
+//			_collisionsList.AddOption(newCollisionName);
+//			_removeCollisionButton.interactable = _collisionsList.OptionsCount > 0;
+//			_addCollisionButton.interactable = false; // would cause duplicate name
 		}
 
 		public void OnAddHit(){
-			_hitsList.AddOption(newHitName);
-			_removeHitButton.interactable = _hitsList.OptionsCount > 0;
-			_addHitButton.interactable = false; // would cause duplicate name
+			// NOTE: decided to take this feature off
+//			_hitsList.AddOption(newHitName);
+//			_removeHitButton.interactable = _hitsList.OptionsCount > 0;
+//			_addHitButton.interactable = false; // would cause duplicate name
 		}
 
 		public void OnRemoveCollision(){
-			_collisionsList.RemoveSelectedOption();
-			_removeCollisionButton.interactable = _collisionsList.OptionsCount > 0;
-			OnCollisionNameChanged(newCollisionName); // refresh add button
+			// NOTE: decided to take this feature off
+//			_collisionsList.RemoveSelectedOption();
+//			_removeCollisionButton.interactable = _collisionsList.OptionsCount > 0;
+//			OnCollisionNameChanged(newCollisionName); // refresh add button
 		}
 
 		public void OnRemoveHit(){
-			_hitsList.RemoveSelectedOption();
-			_removeHitButton.interactable = _hitsList.OptionsCount > 0;
-			OnHitNameChanged(newHitName); // refresh add button
+			// NOTE: decided to take this feature off
+//			_hitsList.RemoveSelectedOption();
+//			_removeHitButton.interactable = _hitsList.OptionsCount > 0;
+//			OnHitNameChanged(newHitName); // refresh add button
 		}
 			
 
@@ -118,38 +123,40 @@ namespace RetroBread{
 		}
 
 		public void OnCollisionNameChanged(string text){
-			bool valid = false;
-			if (text.Length > 0) {
-				// check if it's a duplicate
-				valid = true;
-				List<string> options = _collisionsList.Options;
-				foreach (string option in options) {
-					if (option == text) {
-						valid = false;
-						break;
-					}
-				}
-			}
-			newCollisionName = text;
-			_addCollisionButton.interactable = valid;
+			// NOTE: decided to take this feature off
+//			bool valid = false;
+//			if (text.Length > 0) {
+//				// check if it's a duplicate
+//				valid = true;
+//				List<string> options = _collisionsList.Options;
+//				foreach (string option in options) {
+//					if (option == text) {
+//						valid = false;
+//						break;
+//					}
+//				}
+//			}
+//			newCollisionName = text;
+//			_addCollisionButton.interactable = valid;
 		}
 
 		public void OnHitNameChanged(string text){
-			bool valid = false;
-			if (text.Length > 0) {
-				// check if it's a duplicate
-				valid = true;
-				List<string> options = _hitsList.Options;
-				foreach (string option in options) {
-					if (option == text) {
-						valid = false;
-						break;
-					}
-				}
-			}
-
-			newHitName = text;
-			_addHitButton.interactable = valid;
+			// NOTE: decided to take this feature off
+//			bool valid = false;
+//			if (text.Length > 0) {
+//				// check if it's a duplicate
+//				valid = true;
+//				List<string> options = _hitsList.Options;
+//				foreach (string option in options) {
+//					if (option == text) {
+//						valid = false;
+//						break;
+//					}
+//				}
+//			}
+//
+//			newHitName = text;
+//			_addHitButton.interactable = valid;
 		}
 
 
@@ -174,7 +181,7 @@ namespace RetroBread{
 
 		public void OnCreateCharacter(){
 
-			CharacterEditor.Instance.CreateCharacter(newCharacterName, _collisionsList.Options, _hitsList.Options);
+			CharacterEditor.Instance.CreateCharacter(newCharacterName); //, _collisionsList.Options, _hitsList.Options); // NOTE: decided to take this feature off
 			ClosePanel();
 
 		}

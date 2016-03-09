@@ -27,6 +27,8 @@ namespace RetroBread{
 			int numVisibleBoxes = 0;
 			int currentFrame = CharacterEditor.Instance.SelectedFrame;
 			CharacterAnimation currentAnim = CharacterEditor.Instance.CurrentAnimation();
+			if (currentAnim == null)
+				return;
 			CollisionBox currentCollision = CharacterEditor.Instance.CurrentCollision();
 			foreach (CollisionBox collision in currentAnim.collisionBoxes) {
 				if (collision.enabledFrames.Count >= currentFrame && collision.enabledFrames[currentFrame]) {

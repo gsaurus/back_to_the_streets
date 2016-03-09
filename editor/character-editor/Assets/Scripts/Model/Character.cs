@@ -16,6 +16,7 @@ namespace RetroBread.Editor{
 
 		public Character(string name){
 			this.name = name;
+			animations = new List<CharacterAnimation>();
 			viewAnchors = new List<string>();
 			viewModels = new List<string>();
 		}

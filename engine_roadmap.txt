@@ -27,6 +27,9 @@ OK - Hit boxes (basic stuff only) 3
 OK - Direct events (stub stuff only) 2
 OK - Conditional events (stub stuff only) 3
 
+   - Import collision & hit boxes
+   - Define and visualize models over anchors (new panel most likely)
+
 - Automated script to create and copy AssetBundles into character-editor 1
 - Browse and load asset bundles from a folder near the editor executable file 2
 
@@ -171,4 +174,8 @@ Log
 	- Started All Events panel
 07-03-16
 	- Completed All Events panel
-	
+08-03-16
+	- Prepared model with boxes for auto-import
+09-03-16
+	- Coded good part of auto-import, then decided to take it off
+	- Simplified open panel, no more auto-import

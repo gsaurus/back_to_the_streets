@@ -28,6 +28,8 @@ namespace RetroBread{
 			int numVisibleBoxes = 0;
 			int currentFrame = CharacterEditor.Instance.SelectedFrame;
 			CharacterAnimation currentAnim = CharacterEditor.Instance.CurrentAnimation();
+			if (currentAnim == null)
+				return;
 			HitBox currentHit = CharacterEditor.Instance.CurrentHit();
 			foreach (HitBox hit in currentAnim.hitBoxes) {
 				if (hit.enabledFrames.Count >= currentFrame && hit.enabledFrames[currentFrame]) {
