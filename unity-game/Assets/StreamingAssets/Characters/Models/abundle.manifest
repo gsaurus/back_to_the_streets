@@ -1,0 +1,52 @@
+ManifestFileVersion: 0
+CRC: 328462987
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 9927a586bc165d1d8c56cfdc513cd646
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 3fc8afeb7b868a3caa09f6020fce8d9a
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Rocha/RochaJumpUp.FBX
+- Assets/Prefabs/prefab.prefab
+- Assets/Rocha/RochaController.controller
+- Assets/Rocha/RochaStanding.FBX
+- Assets/Rocha/RochaJab.FBX
+- Assets/Rocha/RochaTex.png
+- Assets/Rocha/RochaJumpRecov.FBX
+- Assets/Rocha/RochaStatic.FBX
+- Assets/Rocha/Materials/RochaTex.mat
+- Assets/Rocha/RochaJumpDown.FBX
+- Assets/Rocha/RochaJumpPrep.FBX
+- Assets/Rocha/RochaWalk.FBX
+- Assets/Prefabs/a_simple_sprite.prefab
+Dependencies: []

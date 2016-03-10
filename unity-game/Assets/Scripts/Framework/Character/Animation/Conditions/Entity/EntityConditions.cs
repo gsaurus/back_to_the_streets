@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace RetroBread{
 
 
-	// Check if there is any axis movement happening
+	// Condition over an entity model (rather than just animation)
 	public class EntityBoolCondition: AnimationTriggerCondition{
 
 		// Possible delegates
@@ -34,7 +34,7 @@ namespace RetroBread{
 
 
 
-	// Check if there is any axis movement happening
+	// Arithmetics over entity model
 	public class EntityArithmeticCondition<T>: ArithmeticCondition<T> where T:IComparable<T>{
 		
 		// Possible delegates

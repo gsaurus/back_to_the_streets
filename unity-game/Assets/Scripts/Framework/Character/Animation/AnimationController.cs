@@ -60,7 +60,7 @@ namespace RetroBread{
 			frameEvents.Add(e);
 		}
 
-		// Add transition
+		// Add general event
 		public void AddGeneralEvent(AnimationEvent e){
 			generalEvents.Add(e);
 		}

@@ -8,11 +8,11 @@ namespace RetroBread{
 
 
 	// Possible operators of arithmetic conditions
-	public enum ArithmeticConditionOperatorType{
-		equal,
-		notEqual,
-		less,
-		greater
+	public enum ArithmeticConditionOperatorType:int {
+		equal = 0,
+		notEqual = 1,
+		less = 2,
+		greater = 3
 	}
 
 
