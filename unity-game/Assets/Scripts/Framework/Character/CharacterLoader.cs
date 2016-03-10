@@ -16,6 +16,7 @@ namespace RetroBread{
 			
 			// TODO: create respective event based on parameter type
 			// TODO: call the plugin to create the event for the e.param with the given condition
+			keyframe = 0;
 			return null;
 		}
 
