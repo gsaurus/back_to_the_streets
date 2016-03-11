@@ -9,8 +9,6 @@ namespace RetroBread{
 		public static int invalidKeyframe = -1;
 		private static int negationParamId = 0;
 
-		private static int defaultBaseType = 90000;
-
 
 
 		// Condition builders indexed by type directly on array
@@ -55,15 +53,13 @@ namespace RetroBread{
 		private static AnimationTriggerCondition BuildFromParameter(Storage.GenericParameter parameter, out int keyFrame){
 			keyFrame = invalidKeyframe;
 			AnimationTriggerCondition condition;
-			if (parameter.type >= defaultBaseType) {
-				int callIndex = parameter.type - defaultBaseType;
-				if (callIndex < builderActions.Length) {
-					condition = builderActions[callIndex](parameter, out keyFrame);
-					if ( IsNegated(parameter) ) {
-						condition = new NegateCondition(condition);
-					}
-					return condition;
+			int callIndex = parameter.type;
+			if (callIndex < builderActions.Length) {
+				condition = builderActions[callIndex](parameter, out keyFrame);
+				if ( IsNegated(parameter) ) {
+					condition = new NegateCondition(condition);
 				}
+				return condition;
 			}
 			Debug.Log("ConditionsBuilder: Unknown condition type: " + parameter.type);
 			return null;

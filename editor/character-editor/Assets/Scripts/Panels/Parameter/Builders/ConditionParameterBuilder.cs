@@ -74,7 +74,7 @@ namespace RetroBread{
 
 		public string ToString(GenericParameter parameter){
 			if (parameter.type >= 0 && parameter.type < builders.Length) {
-				builders[parameter.type].ToString(parameter);
+				return builders[parameter.type].ToString(parameter);
 			}
 			return "Unknown condition";
 		}
@@ -86,25 +86,7 @@ namespace RetroBread{
 			}
 		}
 
-
-//		private void BuildTest1(GameObject parent, GenericParameter parameter){
-//			Character character = CharacterEditor.Instance.character;
-//			List<string> animNames = new List<string>();
-//			if (character != null) {
-//				foreach (CharacterAnimation anim in character.animations) {
-//					animNames.Add(anim.name);
-//				}
-//			}
-//			IntDropdownParam.Instantiate(parent, parameter, 0, "Animation:", animNames.ToArray());
-//			IntInputFieldParam.Instantiate(parent, parameter, 1, "Frame: ", 0, character != null ? CharacterEditor.Instance.CurrentAnimation().numFrames : -1);
-//		}
-//
-//		private void BuildTest2(GameObject parent, GenericParameter parameter){
-//			StringDropdownParam.Instantiate(parent, parameter, 0, "Got hit at:", new string[]{"head", "body", "feet"});
-//			FloatInputFieldParam.Instantiate(parent, parameter, 0, "X Offset:");
-//			FloatInputFieldParam.Instantiate(parent, parameter, 1, "Y Offset:");
-//			BoolToggleParam.Instantiate(parent, parameter, 0, "Is blocking");
-//		}
+#region helper methods
 
 
 		private static void InstantiateNegation(GameObject parent, GenericParameter parameter){
@@ -116,7 +98,7 @@ namespace RetroBread{
 		}
 
 		private static string SafeToString(string[] stringsArray, int type, string kind) {
-			if (type > 0 && type < stringsArray.Length) {
+			if (type >= 0 && type < stringsArray.Length) {
 				return stringsArray[type];
 			}
 			return "<invalid " + kind + ">";
@@ -125,6 +107,9 @@ namespace RetroBread{
 		private static string FilterNegationString(GenericParameter parameter, string conditionText){
 			return parameter.SafeBool(0) ? "!(" + conditionText + ")" : conditionText;
 		}
+
+
+#endregion
 
 
 
@@ -188,7 +173,7 @@ namespace RetroBread{
 			public override string ToString(GenericParameter parameter){
 				return "move_" + SafeToString(inputOrientationOptionsShort, parameter.SafeInt(0), "orientation")
 					+ " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
-					+ " " + parameter.SafeFloat(0)
+					+ " " + parameter.SafeFloatToString(0)
 				;
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
@@ -256,7 +241,7 @@ namespace RetroBread{
 			public override string ToString(GenericParameter parameter){
 				return "collide_" + SafeToString(collisionDirectionShort, parameter.SafeInt(0), "impact orientation")
 					+ " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
-					+ " " + parameter.SafeFloat(0)
+					+ " " + parameter.SafeFloatToString(0)
 				;
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){

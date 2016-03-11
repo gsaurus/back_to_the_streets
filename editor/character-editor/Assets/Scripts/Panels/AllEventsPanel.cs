@@ -110,11 +110,13 @@ namespace RetroBread{
 			}
 			ConditionalEvent selectedEvent = allEventsSorted[_eventsList.SelectedItem];
 			List<string> newOptions = new List<string>();
-			List<CharacterAnimation> eventAnims = allEvents[selectedEvent];
-			foreach (CharacterAnimation anim in eventAnims) {
-				newOptions.Add(anim.name);
+			List<CharacterAnimation> eventAnims;
+			if (allEvents.TryGetValue(selectedEvent, out eventAnims)) {
+				foreach (CharacterAnimation anim in eventAnims) {
+					newOptions.Add(anim.name);
+				}
+				_animationsList.Options = newOptions;
 			}
-			_animationsList.Options = newOptions;
 			_removeButton.interactable = _animationsList.OptionsCount > 0;
 		}
 

@@ -26,6 +26,16 @@ namespace RetroBread{
 			return parameter.boolsList[index];
 		}
 
+		public static string SafeFloatToString(this Editor.GenericParameter parameter, int index){
+			parameter.EnsureFloatItem(index);
+			return ((float)parameter.floatsList[index]).ToString("0.#");
+		}
+
+		public static string SafeBoolToString(this Editor.GenericParameter parameter, int index){
+			parameter.EnsureBoolItem(index);
+			return parameter.boolsList[index] ? "true" : "false";
+		}
+
 	}
 
 

@@ -7,21 +7,17 @@ namespace RetroBread{
 	public static class EventsBuilder {
 
 
-		private static int defaultBaseType = 90000;
-
-
-
 		// Event builders indexed by type directly on array
 		private delegate AnimationEvent BuilderAction(Storage.GenericParameter param);
 		private static BuilderAction[] builderActions = {
-			BuildSetAnimation,
-			BuildZeroAnimationVelocity,
-			BuildSetAnimationVelocity,
-			BuildZeroMaxInputVelocity,
-			BuildSetMaxInputVelocity,
-			BuildAddAnimationVerticalImpulse,
-			BuildFlip,
-			BuildAutoFlip
+			BuildSetAnimation,					// 0: 'walk'
+			BuildZeroAnimationVelocity,			// 1: vel(zero)
+			BuildSetAnimationVelocity,			// 2: vel(2.3, 1.5, 0.0)
+			BuildZeroMaxInputVelocity,			// 3: inputVel(zero)
+			BuildSetMaxInputVelocity,			// 4: inputVel(2.3, 1.5, 0.0)
+			BuildAddAnimationVerticalImpulse,	// 5: impulseV(1.5)
+			BuildFlip,							// 6: flip
+			BuildAutoFlip						// 7: autoFlip(false)
 		};
 
 
@@ -47,11 +43,9 @@ namespace RetroBread{
 
 		// Build a single condition
 		private static AnimationEvent BuildFromParameter(Storage.GenericParameter parameter){
-			if (parameter.type >= defaultBaseType) {
-				int callIndex = parameter.type - defaultBaseType;
-				if (callIndex < builderActions.Length) {
-					return builderActions[callIndex](parameter);
-				}
+			int callIndex = parameter.type;
+			if (callIndex < builderActions.Length) {
+				return builderActions[callIndex](parameter);
 			}
 			Debug.Log("EventsBuilder: Unknown event type: " + parameter.type);
 			return null;

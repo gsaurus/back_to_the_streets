@@ -23,6 +23,7 @@ namespace RetroBread{
 
 		private ParameterBuilder parameterBuilder;
 		private List<GenericParameter> parameters;
+		private bool isUpdating;
 
 
 		void Awake(){
@@ -111,6 +112,9 @@ namespace RetroBread{
 
 
 		private void UpdateParameter(){
+			// avoid unecessary iterations
+			if (isUpdating) return;
+			isUpdating = true;
 			// Cleanup
 			foreach(Transform child in parameterContent.transform) {
 				GameObject.Destroy(child.gameObject);
@@ -125,6 +129,7 @@ namespace RetroBread{
 				_typeDropdown.value = param.type;
 				parameterBuilder.Build(parameterContent, param);
 			}
+			isUpdating = false;
 		}
 
 
@@ -145,6 +150,7 @@ namespace RetroBread{
 			if (parameters[_paramsList.SelectedItem].type != type) {
 				parameters[_paramsList.SelectedItem] = new GenericParameter(type);
 				UpdateParameter();
+				UpdateParamsList();
 			}
 		}
 
