@@ -25,7 +25,7 @@ namespace RetroBread{
 		
 		
 		// Execute event trough the delegate
-		protected override void Execute(AnimationModel model){
+		public override void Execute(AnimationModel model){
 			GameEntityModel entityModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
 			if (entityModel == null) return;
 			eventExecutionDelegate(entityModel);
@@ -55,7 +55,7 @@ namespace RetroBread{
 		
 		
 		// Execute event trough the delegate
-		protected override void Execute(AnimationModel model){
+		public override void Execute(AnimationModel model){
 			GameEntityModel entityModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
 			if (entityModel == null) return;
 			eventExecutionDelegate(entityModel, param);
@@ -87,7 +87,7 @@ namespace RetroBread{
 		
 		
 		// Execute event trough the delegate
-		protected override void Execute(AnimationModel model){
+		public override void Execute(AnimationModel model){
 			GameEntityModel entityModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
 			if (entityModel == null) return;
 			eventExecutionDelegate(entityModel, param1, param2);

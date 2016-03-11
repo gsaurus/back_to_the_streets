@@ -183,3 +183,8 @@ Log
 10-03-16
 	- Studied UFE (Universal Fighting Engine)
 	- Started defining basic conditions and it's loading from the storage data
+11-03-16
+	- Game: All basic conditions and events
+	- Editor: All basic conditions
+12-03-16
+	- Editor: All basic events

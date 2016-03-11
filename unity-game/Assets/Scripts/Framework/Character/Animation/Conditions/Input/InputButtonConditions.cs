@@ -71,7 +71,7 @@ namespace RetroBread{
 		}
 		
 		
-		// Private constructor with two getter delegates
+		// Constructor with two getter delegates
 		public InputButtonCondition(
 			InputButtonConditionType type,
 			BoolConditionDelegate rightVariableDelegate,
@@ -82,7 +82,7 @@ namespace RetroBread{
 			SetupLeftDelegate(type);
 		}
 		
-		// Private constructor with left delegate and right const value
+		// Constructor with left delegate and right const value
 		public InputButtonCondition(
 			InputButtonConditionType type,
 			bool rightValue,

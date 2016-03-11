@@ -137,7 +137,7 @@ namespace RetroBread{
 			return pointModel.collisionInpact.X < 0;
 		}
 
-		public static bool IsHittingRighttWall(GameEntityModel model){
+		public static bool IsHittingRightWall(GameEntityModel model){
 			PhysicPointModel pointModel = GetPointModel(model);
 			if (pointModel == null) return false;
 			return pointModel.collisionInpact.X > 0;

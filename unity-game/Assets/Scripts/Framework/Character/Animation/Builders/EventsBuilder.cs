@@ -1,15 +1,143 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using System.Collections.Generic;
 
-public class EventsBuilder : MonoBehaviour {
+namespace RetroBread{
 
-	// Use this for initialization
-	void Start () {
-	
+
+	public static class EventsBuilder {
+
+
+		private static int defaultBaseType = 90000;
+
+
+
+		// Event builders indexed by type directly on array
+		private delegate AnimationEvent BuilderAction(Storage.GenericParameter param);
+		private static BuilderAction[] builderActions = {
+			BuildSetAnimation,
+			BuildZeroAnimationVelocity,
+			BuildSetAnimationVelocity,
+			BuildZeroMaxInputVelocity,
+			BuildSetMaxInputVelocity,
+			BuildAddAnimationVerticalImpulse,
+			BuildFlip,
+			BuildAutoFlip
+		};
+
+
+		// The public builder method
+		public static AnimationEvent Build(Storage.Character charData, int[] eventIds){
+			List<AnimationEvent> events = new List<AnimationEvent>(eventIds.Length);
+			AnimationEvent e;
+			foreach (int eventId in eventIds) {
+				e = BuildFromParameter(charData.genericParameters[eventId]);
+				if (e != null) {
+					events.Add(e);
+				}
+			}
+			if (events.Count > 0) {
+				if (events.Count == 1) {
+					return events[0];
+				}
+				return new EventsList(null, events);
+			}
+			return null;
+		}
+
+
+		// Build a single condition
+		private static AnimationEvent BuildFromParameter(Storage.GenericParameter parameter){
+			if (parameter.type >= defaultBaseType) {
+				int callIndex = parameter.type - defaultBaseType;
+				if (callIndex < builderActions.Length) {
+					return builderActions[callIndex](parameter);
+				}
+			}
+			Debug.Log("EventsBuilder: Unknown event type: " + parameter.type);
+			return null;
+		}
+
+
+
+
+
+		#region Events
+
+
+		// 'walk'
+		private static AnimationEvent BuildSetAnimation(Storage.GenericParameter parameter){
+			return new AnimationTransitionEvent(null, parameter.SafeString(0), (float) parameter.SafeFloat(0), (uint)parameter.SafeInt(0));
+		}
+
+		// vel(zero)
+		private static AnimationEvent BuildZeroAnimationVelocity(Storage.GenericParameter parameter){
+			return new SingleEntityAnimationEvent<FixedVector3>(
+				null,
+				GameEntityController.SetAnimationVelocity,
+				FixedVector3.Zero
+			);
+		}
+
+		// vel(2.3, 1.5, 0.0)
+		private static AnimationEvent BuildSetAnimationVelocity(Storage.GenericParameter parameter){
+			FixedFloat velx = parameter.SafeFloat(0);
+			FixedFloat vely = parameter.SafeFloat(1);
+			FixedFloat velz = parameter.SafeFloat(2);
+			return new SingleEntityAnimationEvent<FixedVector3>(
+				null,
+				GameEntityController.SetAnimationVelocity,
+				new FixedVector3(velx, vely, velz)
+			);
+		}
+
+
+		// inputVel(zero)
+		private static AnimationEvent BuildZeroMaxInputVelocity(Storage.GenericParameter parameter){
+			return new SingleEntityAnimationEvent<FixedVector3>(
+				null,
+				GameEntityController.SetMaxInputVelocity,
+				FixedVector3.Zero
+			);
+		}
+
+		// inputVel(2.3, 1.5, 0.0)
+		private static AnimationEvent BuildSetMaxInputVelocity(Storage.GenericParameter parameter){
+			FixedFloat velx = parameter.SafeFloat(0);
+			FixedFloat velz = parameter.SafeFloat(1);
+			return new SingleEntityAnimationEvent<FixedVector3>(
+				null,
+				GameEntityController.SetMaxInputVelocity,
+				new FixedVector3(velx, 0, velz)
+			);
+		}
+
+
+		// impulseV(1.5)
+		private static AnimationEvent BuildAddAnimationVerticalImpulse(Storage.GenericParameter parameter){
+			FixedFloat vely = parameter.SafeFloat(0);
+			return new SingleEntityAnimationEvent<FixedVector3>(
+				null,
+				GameEntityController.AddImpulse,
+				new FixedVector3(0, vely, 0)
+			);
+		}
+
+
+		// flip
+		private static AnimationEvent BuildFlip(Storage.GenericParameter parameter){
+			return new SimpleEntityAnimationEvent(null, GameEntityController.Flip);
+		}
+
+		// autoFlip(false)
+		private static AnimationEvent BuildAutoFlip(Storage.GenericParameter parameter){
+			return new SingleEntityAnimationEvent<bool>(null, GameEntityController.SetAutomaticFlip, parameter.SafeBool(0));
+		}
+
+
+
+		#endregion
+
+
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 }

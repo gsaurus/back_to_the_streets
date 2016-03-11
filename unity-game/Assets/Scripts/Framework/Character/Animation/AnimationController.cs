@@ -24,7 +24,7 @@ namespace RetroBread{
 		}
 
 		// To be implemented, execute the event
-		protected abstract void Execute(AnimationModel model);
+		public abstract void Execute(AnimationModel model);
 
 		// Check the condition and execute event if condition passes
 		public void Evaluate(AnimationModel model){

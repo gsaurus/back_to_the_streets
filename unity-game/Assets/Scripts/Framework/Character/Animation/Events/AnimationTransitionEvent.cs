@@ -27,7 +27,7 @@ namespace RetroBread{
 
 		
 		// Set model's next animation and inform view of transition timing
-		protected override void Execute(AnimationModel model){
+		public override void Execute(AnimationModel model){
 			model.SetNextAnimation(nextAnimation, initialFrame);
 			AnimationView view = model.View() as AnimationView;
 			if (view != null){

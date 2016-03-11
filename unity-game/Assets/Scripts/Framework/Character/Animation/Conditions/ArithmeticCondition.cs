@@ -12,7 +12,9 @@ namespace RetroBread{
 		equal = 0,
 		notEqual = 1,
 		less = 2,
-		greater = 3
+		lessOrEqual = 3,
+		greater = 4,
+		greaterOrEqual = 5
 	}
 
 
@@ -86,8 +88,14 @@ namespace RetroBread{
 				case ArithmeticConditionOperatorType.less:{
 					return result < 0;
 				}
+				case ArithmeticConditionOperatorType.lessOrEqual:{
+					return result <= 0;
+				}
 				case ArithmeticConditionOperatorType.greater:{
 					return result > 0;
+				}
+				case ArithmeticConditionOperatorType.greaterOrEqual:{
+					return result >= 0;
 				}
 			}
 			// won't reach here, but compiler complains, so..

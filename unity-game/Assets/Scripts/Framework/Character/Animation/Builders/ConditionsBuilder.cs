@@ -4,56 +4,29 @@ using System.Collections.Generic;
 namespace RetroBread{
 
 
-	public static class GenericParameterExtensions{
+	public static class ConditionsBuilder {
 
-		public static int SafeInt(this Storage.GenericParameter parameter, int index){
-			return index >= 0 && index < parameter.intsList.Length ? parameter.intsList[index] : 0; 
-		}
-
-		public static FixedFloat SafeFloat(this Storage.GenericParameter parameter, int index){
-			return index >= 0 && index < parameter.floatsList.Length ? parameter.floatsList[index] : 0; 
-		}
-
-		public static string SafeString(this Storage.GenericParameter parameter, int index){
-			return index >= 0 && index < parameter.stringsList.Length ? parameter.stringsList[index] : null; 
-		}
-
-		public static bool SafeBool(this Storage.GenericParameter parameter, int index){
-			return index >= 0 && index < parameter.boolsList.Length ? parameter.boolsList[index] : false; 
-		}
-
-	}
-
-
-	public class ConditionsBuilder {
-
-		private static int invalidKeyframe = -1;
+		public static int invalidKeyframe = -1;
 		private static int negationParamId = 0;
 
 		private static int defaultBaseType = 90000;
 
-//		private enum ConditionType:int {
-//			Frame = 0,
-//			FrameArithmetics = 1,
-//			InputAxisMoving = 2,
-//			InputButton = 3,
-//			EntityIsGrounded = 4,
-//			EntityIsFacingRight = 5,
-//			EntityHittingWall = 6,
-//			EntityCollisionForceArithmetics = 7
-//		};
+
 
 		// Condition builders indexed by type directly on array
 		private delegate AnimationTriggerCondition BuilderAction(Storage.GenericParameter param, out int keyFrame);
 		private static BuilderAction[] builderActions = {
-			BuildKeyFrame,
-			BuildFrameArithmetics,
-			BuildInputAxisMoving,
-			BuildInputButton,
-			BuildEntityIsGrounded,
-			BuildEntityIsFacingRight,
-			BuildEntityHittingWall,
-			BuildEntityCollisionForceArithmetics
+			BuildKeyFrame,							// 0: frame = 4
+			BuildFrameArithmetics,					// 1: frame >= 4
+			BuildInputAxisMoving,					// 2: moving
+			BuildInputAxisMovingDominance,          // 3: move left
+			BuildInputAxisComponentArithmetics,     // 4: move_H >= 5.2
+			BuildInputButton,						// 5: press D
+			BuildEntityIsGrounded,					// 6: grounded
+			BuildEntityIsFacingRight,				// 7: facing right
+			BuildEntityHittingWall,					// 8: collide left wall
+			BuildEntityCollisionForceArithmetics	// 9: collide_H >= 4.3
+			// TODO: everything else, including custom values List<int>, List<FixedFloat>, List<int> timers for combo counter etc
 		};
 			
 
@@ -63,7 +36,7 @@ namespace RetroBread{
 			AnimationTriggerCondition condition;
 			keyFrame = invalidKeyframe;
 			foreach (int conditionId in conditionIds) {
-				condition = BuildFromParameter(charData.genericParameters [conditionId], out keyFrame);
+				condition = BuildFromParameter(charData.genericParameters[conditionId], out keyFrame);
 				if (condition != null) {
 					conditions.Add(condition);
 				}
@@ -118,8 +91,8 @@ namespace RetroBread{
 		// frame >= 4
 		private static AnimationTriggerCondition BuildFrameArithmetics(Storage.GenericParameter parameter, out int keyFrame){
 			keyFrame = invalidKeyframe;
-			int frameIndex = parameter.SafeInt(0);
-			ArithmeticConditionOperatorType type = parameter.SafeInt(1);
+			uint frameIndex = (uint)parameter.SafeInt(0);
+			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType)parameter.SafeInt(1);
 			return new AnimationFrameCondition(type, frameIndex);
 		}
 
@@ -127,13 +100,44 @@ namespace RetroBread{
 		// moving
 		private static AnimationTriggerCondition BuildInputAxisMoving(Storage.GenericParameter parameter, out int keyFrame){
 			keyFrame = invalidKeyframe;
+			return new InputAxisMovingCondition();
+		}
+
+		// move left
+		private static AnimationTriggerCondition BuildInputAxisMovingDominance(Storage.GenericParameter parameter, out int keyFrame){
+			keyFrame = invalidKeyframe;
+			switch (parameter.SafeInt(0)) {
+                case 0: return new InputAxisUpDominanceCondition();         // 0: up
+                case 1: return new InputAxisDownDominanceCondition();       // 1: down
+                case 2: return new InputAxisBackwardDominanceCondition();   // 2: left
+                case 3: return new InputAxisForwardDominanceCondition();    // 3: right
+			}
 			return null;
 		}
 
 
-		// button D
+        // move_H >= 5.2
+        private static AnimationTriggerCondition BuildInputAxisComponentArithmetics(Storage.GenericParameter parameter, out int keyFrame){
+            keyFrame = invalidKeyframe;
+			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType) parameter.SafeInt(1);
+            FixedFloat value = parameter.SafeFloat(0);
+            switch (parameter.SafeInt(0)) {
+                case 0: return InputAxisComponentCondition.HorizontalAxisCondition(type, value);		// 0: horizontal
+                case 1: return InputAxisComponentCondition.VerticalAxisCondition(type, value);			// 1: vertical
+            }
+            return null;
+        }
+
+
+		// press D
 		private static AnimationTriggerCondition BuildInputButton(Storage.GenericParameter parameter, out int keyFrame){
 			keyFrame = invalidKeyframe;
+			uint buttonId = (uint) parameter.SafeInt(1);
+			switch (parameter.SafeInt(0)) {
+				case 0: return InputButtonCondition.ButtonPressedCondition(true, buttonId);	 // 0: press
+				case 1: return InputButtonCondition.ButtonHoldCondition(true, buttonId);	 // 1: hold
+				case 2: return InputButtonCondition.ButtonReleasedCondition(true, buttonId); // 2: release
+			}
 			return null;
 		}
 
@@ -141,27 +145,40 @@ namespace RetroBread{
 		// grounded
 		private static AnimationTriggerCondition BuildEntityIsGrounded(Storage.GenericParameter parameter, out int keyFrame){
 			keyFrame = invalidKeyframe;
-			return null;
+			return new EntityBoolCondition(GameEntityController.IsGrounded);
 		}
 
 
 		// facing right
 		private static AnimationTriggerCondition BuildEntityIsFacingRight(Storage.GenericParameter parameter, out int keyFrame){
 			keyFrame = invalidKeyframe;
-			return null;
+			return new EntityBoolCondition(GameEntityController.IsFacingRight);
 		}
 
 
 		// collide left wall
 		private static AnimationTriggerCondition BuildEntityHittingWall(Storage.GenericParameter parameter, out int keyFrame){
 			keyFrame = invalidKeyframe;
+			switch (parameter.SafeInt(0)) {
+				case 0: return new EntityBoolCondition(GameEntityController.IsHittingFarWall);	 // 0: far wall
+				case 1: return new EntityBoolCondition(GameEntityController.IsHittingNearWall);  // 1: near wall
+				case 2: return new EntityBoolCondition(GameEntityController.IsHittingLeftWall);	 // 2: left wall
+				case 3: return new EntityBoolCondition(GameEntityController.IsHittingRightWall); // 3: right wall
+			}
 			return null;
 		}
 
 
-		// collisionForceY >= 4
+		// collideH >= 4.3
 		private static AnimationTriggerCondition BuildEntityCollisionForceArithmetics(Storage.GenericParameter parameter, out int keyFrame){
 			keyFrame = invalidKeyframe;
+			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType) parameter.SafeInt(1);
+			FixedFloat value = parameter.SafeFloat(0);
+			switch (parameter.SafeInt(0)) {
+				case 0: return new EntityArithmeticCondition<FixedFloat>(type, GameEntityController.CollisionHorizontalForce, value);	 // 0: H
+				case 1: return new EntityArithmeticCondition<FixedFloat>(type, GameEntityController.CollisionVerticalForce, value); 	 // 1: V
+				case 2: return new EntityArithmeticCondition<FixedFloat>(type, GameEntityController.CollisionZForce, value);	 		 // 2: Z
+			}
 			return null;
 		}
 

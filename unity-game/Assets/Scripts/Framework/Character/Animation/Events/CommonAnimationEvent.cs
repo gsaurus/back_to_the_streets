@@ -25,7 +25,7 @@ namespace RetroBread{
 		
 		
 		// Execute event trough the delegate
-		protected override void Execute(AnimationModel model){
+		public override void Execute(AnimationModel model){
 			eventExecutionDelegate(model);
 		}
 	}
@@ -53,7 +53,7 @@ namespace RetroBread{
 		
 		
 		// Execute event trough the delegate
-		protected override void Execute(AnimationModel model){
+		public override void Execute(AnimationModel model){
 			eventExecutionDelegate(model, param);
 		}
 	}
@@ -83,7 +83,7 @@ namespace RetroBread{
 		
 		
 		// Execute event trough the delegate
-		protected override void Execute(AnimationModel model){
+		public override void Execute(AnimationModel model){
 			eventExecutionDelegate(model, param1, param2);
 		}
 	}
@@ -114,10 +114,26 @@ namespace RetroBread{
 		
 		
 		// Execute event trough the delegate
-		protected override void Execute(AnimationModel model){
+		public override void Execute(AnimationModel model){
 			eventExecutionDelegate(model, parameters);
 		}
 		
+	}
+
+
+	public class EventsList: AnimationEvent{
+		private List<AnimationEvent> events;
+
+		public EventsList(AnimationTriggerCondition condition, List<AnimationEvent> events):base(condition){
+			this.events = events;
+		}
+
+		public override void Execute(AnimationModel model){
+			foreach (AnimationEvent e in events) {
+				e.Execute(model);
+			}
+		}
+
 	}
 
 
