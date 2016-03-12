@@ -67,16 +67,17 @@ public class WorldController:Controller<WorldModel>{
 				Model inputModel = new PlayerInputModel(playerId);
 				FixedVector3 initialPosition = GetRandomSpawnPosition(model);
 				playerModel = new ShooterEntityModel(StateManager.state,
-													 "soldier", //playerId % 2 == 0 ? "Blaze" : "Rocha",
-				                                	 "soldierIdleRelaxed",
-				                                	 physicsModel,
-				                                	 inputModel,
-				                                     initialPosition,
-				                                	 new FixedVector3(0, 0.5, 0), // step tolerance
-				                                     ShooterEntityController.maxEnergy,
-				                                     ShooterEntityController.maxInvincibilityFrames,
-				                                     0
-				                                	);
+					"happy char",	//"soldier", //playerId % 2 == 0 ? "Blaze" : "Rocha",
+                	"Idle", 		//"soldierIdleRelaxed",
+					CharacterLoader.GetCharacterSkinName("happy char", playerId),
+                	physicsModel,
+                	inputModel,
+                    initialPosition,
+                	new FixedVector3(0, 0.5, 0), // step tolerance
+                    ShooterEntityController.maxEnergy,
+                    ShooterEntityController.maxInvincibilityFrames,
+                    0
+            	);
 				// Model initial state
 				ShooterEntityModel playerEntity = (ShooterEntityModel)playerModel;
 				playerEntity.isFacingRight = initialPosition.X < 0;
@@ -87,16 +88,9 @@ public class WorldController:Controller<WorldModel>{
 			// using the name as a hack around having a variable in a script to tell the object is "initialized"
 			// should be done in a better way.. but whatever, will do for the demo
 			if (obj != null && !obj.name.EndsWith("[initiated]")){
-				Transform t1 = obj.transform.Find("armorBody");
-				Transform t2 = obj.transform.Find("armorArms");
-				SkinnedMeshRenderer[] comps = new SkinnedMeshRenderer[2];
-				comps[0] = t1.gameObject.GetComponent<SkinnedMeshRenderer>();
-				comps[1] = t2.gameObject.GetComponent<SkinnedMeshRenderer>();
 
 				bool isOwnPlayer = playerId == NetworkCenter.Instance.GetPlayerNumber();
-				foreach (SkinnedMeshRenderer c in comps){
-					c.material.color = (isOwnPlayer ? Color.blue : Color.red);
-				}
+
 				if (isOwnPlayer){
 					// Add camera tracking to own player :)
 					obj.AddComponent<CameraTracker>();
@@ -108,6 +102,18 @@ public class WorldController:Controller<WorldModel>{
 					// and use the respective view to display the stats in the HUD
 				}
 				obj.name += "[initiated]";
+
+				Transform t1 = obj.transform.Find("armorBody");
+				Transform t2 = obj.transform.Find("armorArms");
+				if (t1 != null && t2 != null) {
+					SkinnedMeshRenderer[] comps = new SkinnedMeshRenderer[2];
+					comps[0] = t1.gameObject.GetComponent<SkinnedMeshRenderer>();
+					comps[1] = t2.gameObject.GetComponent<SkinnedMeshRenderer>();
+
+					foreach (SkinnedMeshRenderer c in comps) {
+						c.material.color = (isOwnPlayer ? Color.blue : Color.red);
+					}
+				}
 			}
 
 		}
@@ -231,255 +237,259 @@ public class WorldController:Controller<WorldModel>{
 	
 	
 	private static void SetupGameCharacters(){
-		// TODO: read from somewhere.. right now, this is hardcoded..
-		SetupCharacter("soldier");
+
+		CharacterLoader.LoadCharacter("happy char");
+
+		// hardcoded:
+		//SetupCharacter("soldier");
 	}
 
 
-	private static void SetupCharacter(string charName){
-		
-		AnimationController idle1Ctr = new AnimationController();
-		AnimationController walkCtr = new AnimationController();
-		AnimationController jumpCtr = new AnimationController();
-		AnimationController fallCtr = new AnimationController();
-		AnimationController fireCtr = new AnimationController();
-		AnimationController walkFireCtr = new AnimationController();
-		AnimationController hitCtr = new AnimationController();
-		AnimationController dieCtr = new AnimationController();
-		AnimationView idleView = new AnimationView();
-		AnimationsVCPool.Instance.RegisterController(charName, "soldierIdleRelaxed", idle1Ctr);
-		AnimationsVCPool.Instance.RegisterController(charName, "soldierSprint", walkCtr);
-		AnimationsVCPool.Instance.RegisterController(charName, "soldierJump", jumpCtr);
-		AnimationsVCPool.Instance.RegisterController(charName, "soldierFalling", fallCtr);
-		AnimationsVCPool.Instance.RegisterController(charName, "soldierIdle", fireCtr);
-		AnimationsVCPool.Instance.RegisterController(charName, "soldierRun", walkFireCtr);
-		AnimationsVCPool.Instance.RegisterController(charName, "soldierHitBack", hitCtr);
-		AnimationsVCPool.Instance.RegisterController(charName, "soldierDieBack", dieCtr);
-		AnimationsVCPool.Instance.SetDefaultView(charName, idleView);
-		
 
-		AnimationTriggerCondition condition;
-		List<AnimationTriggerCondition> conditions;
-		AnimationTransitionEvent transition;
-
-		// force walk move character against ground
-		SingleEntityAnimationEvent<FixedVector3> zeroVelEvent = new SingleEntityAnimationEvent<FixedVector3>(
-			null,
-			GameEntityController.SetAnimationVelocity,
-			FixedVector3.Zero
-		);
-		walkCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
-			null,
-			GameEntityController.SetAnimationVelocity,
-			new FixedVector3(0,-0.1, 0)
-			));
-		idle1Ctr.AddKeyframeEvent(0, zeroVelEvent);
-		jumpCtr.AddKeyframeEvent(0, zeroVelEvent);
-		fallCtr.AddKeyframeEvent(0, zeroVelEvent);
-		fireCtr.AddKeyframeEvent(0, zeroVelEvent);
-		walkFireCtr.AddKeyframeEvent(0, zeroVelEvent);
-		hitCtr.AddKeyframeEvent(0, zeroVelEvent);
-		dieCtr.AddKeyframeEvent(0, zeroVelEvent);
-
-		// input velocities
-		SingleEntityAnimationEvent<FixedVector3> zeroInputVel;
-		zeroInputVel = new SingleEntityAnimationEvent<FixedVector3>(
-			null,
-			GameEntityController.SetMaxInputVelocity,
-			FixedVector3.Zero
-		);
-		idle1Ctr.AddKeyframeEvent(0, zeroInputVel);
-		dieCtr.AddKeyframeEvent(0, zeroInputVel);
-		fireCtr.AddKeyframeEvent(0, zeroInputVel);
-		hitCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
-			null,
-			GameEntityController.SetMaxInputVelocity,
-			new FixedVector3(0.025f, 0, 0.0f)
-		));
-		walkCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
-			null,
-			GameEntityController.SetMaxInputVelocity,
-			new FixedVector3(0.1f, 0, 0.0f)
-		));
-		walkFireCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
-			null,
-			GameEntityController.SetMaxInputVelocity,
-			new FixedVector3(0.1f, 0, 0.0f)
-			));
-
-
-		
-		// idle to walk
-		condition = new InputAxisMovingCondition();
-		transition = new AnimationTransitionEvent(condition, "soldierSprint", 0.2f);
-		idle1Ctr.AddGeneralEvent(transition);
-		
-		// walk to iddle
-		condition = new NegateCondition(new InputAxisMovingCondition());
-		transition = new AnimationTransitionEvent(condition, "soldierIdleRelaxed", 0.125f);
-		walkCtr.AddGeneralEvent(transition);
-		// Events that allow the character to move
-		walkCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<bool>(null, GameEntityController.SetAutomaticFlip, true));
-
-
-		// iddle, walk to jump
-		condition = new InputButtonCondition(InputButtonConditionType.pressed, true, 1);
-		transition = new AnimationTransitionEvent(condition, "soldierJump", 0.3f);
-		idle1Ctr.AddGeneralEvent(transition);
-		walkCtr.AddGeneralEvent(transition);
-		// only jump after shoot bullet leaving
+//	private static void SetupCharacter(string charName){
+//		
+//		AnimationController idle1Ctr = new AnimationController();
+//		AnimationController walkCtr = new AnimationController();
+//		AnimationController jumpCtr = new AnimationController();
+//		AnimationController fallCtr = new AnimationController();
+//		AnimationController fireCtr = new AnimationController();
+//		AnimationController walkFireCtr = new AnimationController();
+//		AnimationController hitCtr = new AnimationController();
+//		AnimationController dieCtr = new AnimationController();
+//		AnimationView idleView = new AnimationView();
+//		AnimationsVCPool.Instance.RegisterController(charName, "soldierIdleRelaxed", idle1Ctr);
+//		AnimationsVCPool.Instance.RegisterController(charName, "soldierSprint", walkCtr);
+//		AnimationsVCPool.Instance.RegisterController(charName, "soldierJump", jumpCtr);
+//		AnimationsVCPool.Instance.RegisterController(charName, "soldierFalling", fallCtr);
+//		AnimationsVCPool.Instance.RegisterController(charName, "soldierIdle", fireCtr);
+//		AnimationsVCPool.Instance.RegisterController(charName, "soldierRun", walkFireCtr);
+//		AnimationsVCPool.Instance.RegisterController(charName, "soldierHitBack", hitCtr);
+//		AnimationsVCPool.Instance.RegisterController(charName, "soldierDieBack", dieCtr);
+//		AnimationsVCPool.Instance.SetDefaultView(charName, idleView);
+//		
+//
+//		AnimationTriggerCondition condition;
+//		List<AnimationTriggerCondition> conditions;
+//		AnimationTransitionEvent transition;
+//
+//		// force walk move character against ground
+//		SingleEntityAnimationEvent<FixedVector3> zeroVelEvent = new SingleEntityAnimationEvent<FixedVector3>(
+//			null,
+//			GameEntityController.SetAnimationVelocity,
+//			FixedVector3.Zero
+//		);
+//		walkCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+//			null,
+//			GameEntityController.SetAnimationVelocity,
+//			new FixedVector3(0,-0.1, 0)
+//			));
+//		idle1Ctr.AddKeyframeEvent(0, zeroVelEvent);
+//		jumpCtr.AddKeyframeEvent(0, zeroVelEvent);
+//		fallCtr.AddKeyframeEvent(0, zeroVelEvent);
+//		fireCtr.AddKeyframeEvent(0, zeroVelEvent);
+//		walkFireCtr.AddKeyframeEvent(0, zeroVelEvent);
+//		hitCtr.AddKeyframeEvent(0, zeroVelEvent);
+//		dieCtr.AddKeyframeEvent(0, zeroVelEvent);
+//
+//		// input velocities
+//		SingleEntityAnimationEvent<FixedVector3> zeroInputVel;
+//		zeroInputVel = new SingleEntityAnimationEvent<FixedVector3>(
+//			null,
+//			GameEntityController.SetMaxInputVelocity,
+//			FixedVector3.Zero
+//		);
+//		idle1Ctr.AddKeyframeEvent(0, zeroInputVel);
+//		dieCtr.AddKeyframeEvent(0, zeroInputVel);
+//		fireCtr.AddKeyframeEvent(0, zeroInputVel);
+//		hitCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+//			null,
+//			GameEntityController.SetMaxInputVelocity,
+//			new FixedVector3(0.025f, 0, 0.0f)
+//		));
+//		walkCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+//			null,
+//			GameEntityController.SetMaxInputVelocity,
+//			new FixedVector3(0.1f, 0, 0.0f)
+//		));
+//		walkFireCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+//			null,
+//			GameEntityController.SetMaxInputVelocity,
+//			new FixedVector3(0.1f, 0, 0.0f)
+//			));
+//
+//
+//		
+//		// idle to walk
+//		condition = new InputAxisMovingCondition();
+//		transition = new AnimationTransitionEvent(condition, "soldierSprint", 0.2f);
+//		idle1Ctr.AddGeneralEvent(transition);
+//		
+//		// walk to iddle
+//		condition = new NegateCondition(new InputAxisMovingCondition());
+//		transition = new AnimationTransitionEvent(condition, "soldierIdleRelaxed", 0.125f);
+//		walkCtr.AddGeneralEvent(transition);
+//		// Events that allow the character to move
+//		walkCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<bool>(null, GameEntityController.SetAutomaticFlip, true));
+//
+//
+//		// iddle, walk to jump
+//		condition = new InputButtonCondition(InputButtonConditionType.pressed, true, 1);
+//		transition = new AnimationTransitionEvent(condition, "soldierJump", 0.3f);
+//		idle1Ctr.AddGeneralEvent(transition);
+//		walkCtr.AddGeneralEvent(transition);
+//		// only jump after shoot bullet leaving
+////		conditions = new List<AnimationTriggerCondition>();
+////		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
+////		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 3));
+////		transition = new AnimationTransition("soldierJump", conditions, 0.3f);
+//		fireCtr.AddGeneralEvent(transition);
+//		walkFireCtr.AddGeneralEvent(transition);
+//		// Events to push the character up
+//		jumpCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+//			null,
+//			GameEntityController.SetMaxInputVelocity,
+//			new FixedVector3(0.025f, 0, 0.0f)
+//		));
+//		jumpCtr.AddKeyframeEvent(2, new SingleEntityAnimationEvent<FixedVector3>(
+//			null,
+//			GameEntityController.SetMaxInputVelocity,
+//			new FixedVector3(0.1f, 0, 0.0f)
+//		));
+//		jumpCtr.AddKeyframeEvent(2, new SingleEntityAnimationEvent<bool>(null, GameEntityController.SetAutomaticFlip, false));
+//		jumpCtr.AddKeyframeEvent(2, new SingleEntityAnimationEvent<FixedVector3>(
+//			null,
+//			GameEntityController.AddImpulse,
+//			new FixedVector3(0.0f, 0.2f, 0.0f)
+//		));
+//
+//		// iddle, walk to fall
+//		condition = new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded));
+//		transition = new AnimationTransitionEvent(condition, "soldierFalling", 0.2f);
+//		idle1Ctr.AddGeneralEvent(transition);
+//		walkCtr.AddGeneralEvent(transition);
+//		// Events that allow the character to move in air
+//		fallCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<bool>(null, GameEntityController.SetAutomaticFlip, true));
+//		fallCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
+//			null,
+//			GameEntityController.SetMaxInputVelocity,
+//			new FixedVector3(0.1f, 0, 0.0f)
+//		));
+//
+//		// fall to idle
+//		conditions = new List<AnimationTriggerCondition>();
+//		conditions.Add(new EntityBoolCondition(GameEntityController.IsGrounded));
+//		conditions.Add (new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 4));
+//		condition = new ConditionsList(conditions);
+//		transition = new AnimationTransitionEvent(condition, "soldierIdleRelaxed", 0.1f);
+//		fallCtr.AddGeneralEvent(transition);
+//		jumpCtr.AddGeneralEvent(transition);
+//
+//		// jump to fall (rough version on this demo, cose no really jump anim exists)
+//		condition = new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded));
+//		transition = new AnimationTransitionEvent(condition, "soldierFalling", 0.2f);
+//		jumpCtr.AddGeneralEvent(transition); // TODO: err.. supposed to be more complex than this, like moving down
+//
+//
+//		// Shoot!
 //		conditions = new List<AnimationTriggerCondition>();
 //		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
-//		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 3));
-//		transition = new AnimationTransition("soldierJump", conditions, 0.3f);
-		fireCtr.AddGeneralEvent(transition);
-		walkFireCtr.AddGeneralEvent(transition);
-		// Events to push the character up
-		jumpCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
-			null,
-			GameEntityController.SetMaxInputVelocity,
-			new FixedVector3(0.025f, 0, 0.0f)
-		));
-		jumpCtr.AddKeyframeEvent(2, new SingleEntityAnimationEvent<FixedVector3>(
-			null,
-			GameEntityController.SetMaxInputVelocity,
-			new FixedVector3(0.1f, 0, 0.0f)
-		));
-		jumpCtr.AddKeyframeEvent(2, new SingleEntityAnimationEvent<bool>(null, GameEntityController.SetAutomaticFlip, false));
-		jumpCtr.AddKeyframeEvent(2, new SingleEntityAnimationEvent<FixedVector3>(
-			null,
-			GameEntityController.AddImpulse,
-			new FixedVector3(0.0f, 0.2f, 0.0f)
-		));
-
-		// iddle, walk to fall
-		condition = new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded));
-		transition = new AnimationTransitionEvent(condition, "soldierFalling", 0.2f);
-		idle1Ctr.AddGeneralEvent(transition);
-		walkCtr.AddGeneralEvent(transition);
-		// Events that allow the character to move in air
-		fallCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<bool>(null, GameEntityController.SetAutomaticFlip, true));
-		fallCtr.AddKeyframeEvent(0, new SingleEntityAnimationEvent<FixedVector3>(
-			null,
-			GameEntityController.SetMaxInputVelocity,
-			new FixedVector3(0.1f, 0, 0.0f)
-		));
-
-		// fall to idle
-		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new EntityBoolCondition(GameEntityController.IsGrounded));
-		conditions.Add (new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 4));
-		condition = new ConditionsList(conditions);
-		transition = new AnimationTransitionEvent(condition, "soldierIdleRelaxed", 0.1f);
-		fallCtr.AddGeneralEvent(transition);
-		jumpCtr.AddGeneralEvent(transition);
-
-		// jump to fall (rough version on this demo, cose no really jump anim exists)
-		condition = new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded));
-		transition = new AnimationTransitionEvent(condition, "soldierFalling", 0.2f);
-		jumpCtr.AddGeneralEvent(transition); // TODO: err.. supposed to be more complex than this, like moving down
-
-
-		// Shoot!
-		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
-		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
-		condition = new ConditionsList(conditions);
-		transition = new AnimationTransitionEvent(condition, "soldierIdle", 0.05f);
-		idle1Ctr.AddGeneralEvent(transition);
-		transition = new AnimationTransitionEvent(condition, "soldierRun", 0.05f);
-		walkCtr.AddGeneralEvent(transition);
-		jumpCtr.AddGeneralEvent(transition);
-		fallCtr.AddGeneralEvent(transition);
-		// keep shooting!
-		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
-		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
-		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
-		conditions.Add(new NegateCondition(new InputAxisMovingCondition()));
-		conditions.Add(new EntityBoolCondition(GameEntityController.IsGrounded));
-		condition = new ConditionsList(conditions);
-		transition = new AnimationTransitionEvent(condition, "soldierIdle", 0.05f);
-		fireCtr.AddGeneralEvent(transition);
-		walkFireCtr.AddGeneralEvent(transition);
-		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
-		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
-		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
-		conditions.Add(new InputAxisMovingCondition());
-		condition = new ConditionsList(conditions);
-		transition = new AnimationTransitionEvent(condition, "soldierRun", 0.05f);
-		fireCtr.AddGeneralEvent(transition);
-		walkFireCtr.AddGeneralEvent(transition);
-		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
-		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
-		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
-		conditions.Add(new NegateCondition(new InputAxisMovingCondition()));
-		conditions.Add(new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded)));
-		condition = new ConditionsList(conditions);
-		transition = new AnimationTransitionEvent(condition, "soldierRun", 0.05f);
-		fireCtr.AddGeneralEvent(transition);
-		walkFireCtr.AddGeneralEvent(transition);
-
-		// fire event
-		fireCtr.AddKeyframeEvent(3, new SimpleEntityAnimationEvent(null, ShooterEntityController.Shoot));
-		walkFireCtr.AddKeyframeEvent(3, new SimpleEntityAnimationEvent(null, ShooterEntityController.Shoot));
-
-		// back to idle
-		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 18));
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 0));
-		condition = new ConditionsList(conditions);
-		transition = new AnimationTransitionEvent(condition, "soldierIdleRelaxed", 0.15f);
-		fireCtr.AddGeneralEvent(transition);
-		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 18));
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 0));
-		conditions.Add(new EntityBoolCondition(GameEntityController.IsGrounded));
-		condition = new ConditionsList(conditions);
-		transition = new AnimationTransitionEvent(condition, "soldierSprint", 0.15f);
-		walkFireCtr.AddGeneralEvent(transition);
-		conditions = new List<AnimationTriggerCondition>();
-		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
-		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 0));
-		conditions.Add(new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded)));
-		condition = new ConditionsList(conditions);
-		transition = new AnimationTransitionEvent(condition, "soldierFalling", 0.15f);
-		walkFireCtr.AddGeneralEvent(transition);
-
-		// hit trigger
-		condition = new EntityBoolCondition(ShooterEntityController.GotHit);
-		transition = new AnimationTransitionEvent(condition, "soldierHitBack", 0.1f);
-		idle1Ctr.AddGeneralEvent(transition);
-		walkCtr.AddGeneralEvent(transition);
-		jumpCtr.AddGeneralEvent(transition);
-		fallCtr.AddGeneralEvent(transition);
-		fireCtr.AddGeneralEvent(transition);
-		hitCtr.AddGeneralEvent(transition);
-		// hit event
-		condition = new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 6);
-		transition = new AnimationTransitionEvent(condition, "soldierIdleRelaxed", 0.15f);
-		hitCtr.AddGeneralEvent(transition);
-
-		// Die!!
-		condition = new EntityBoolCondition(ShooterEntityController.IsDead);
-		transition = new AnimationTransitionEvent(condition, "soldierDieBack", 0.01f);
-		hitCtr.AddGeneralEvent(transition);
-		// Forcing that headless bug to stop!...
-		idle1Ctr.AddGeneralEvent(transition);
-		walkCtr.AddGeneralEvent(transition);
-		jumpCtr.AddGeneralEvent(transition);
-		fireCtr.AddGeneralEvent(transition);
-		walkFireCtr.AddGeneralEvent(transition);
-		// once die animation finishes, respawn
-		dieCtr.AddKeyframeEvent(60, new SimpleEntityAnimationEvent(null, ShooterEntityController.KillAndRespawn));
-		condition = new AnimationFrameCondition(ArithmeticConditionOperatorType.equal, 60);
-		transition = new AnimationTransitionEvent(condition, "soldierIdleRelaxed", 0f);
-		dieCtr.AddGeneralEvent(transition);
-
-
-	}
+//		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
+//		condition = new ConditionsList(conditions);
+//		transition = new AnimationTransitionEvent(condition, "soldierIdle", 0.05f);
+//		idle1Ctr.AddGeneralEvent(transition);
+//		transition = new AnimationTransitionEvent(condition, "soldierRun", 0.05f);
+//		walkCtr.AddGeneralEvent(transition);
+//		jumpCtr.AddGeneralEvent(transition);
+//		fallCtr.AddGeneralEvent(transition);
+//		// keep shooting!
+//		conditions = new List<AnimationTriggerCondition>();
+//		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
+//		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
+//		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
+//		conditions.Add(new NegateCondition(new InputAxisMovingCondition()));
+//		conditions.Add(new EntityBoolCondition(GameEntityController.IsGrounded));
+//		condition = new ConditionsList(conditions);
+//		transition = new AnimationTransitionEvent(condition, "soldierIdle", 0.05f);
+//		fireCtr.AddGeneralEvent(transition);
+//		walkFireCtr.AddGeneralEvent(transition);
+//		conditions = new List<AnimationTriggerCondition>();
+//		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
+//		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
+//		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
+//		conditions.Add(new InputAxisMovingCondition());
+//		condition = new ConditionsList(conditions);
+//		transition = new AnimationTransitionEvent(condition, "soldierRun", 0.05f);
+//		fireCtr.AddGeneralEvent(transition);
+//		walkFireCtr.AddGeneralEvent(transition);
+//		conditions = new List<AnimationTriggerCondition>();
+//		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, true, 0));
+//		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
+//		conditions.Add(new EntityBoolCondition(ShooterEntityController.HasEnoughPowerToShoot));
+//		conditions.Add(new NegateCondition(new InputAxisMovingCondition()));
+//		conditions.Add(new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded)));
+//		condition = new ConditionsList(conditions);
+//		transition = new AnimationTransitionEvent(condition, "soldierRun", 0.05f);
+//		fireCtr.AddGeneralEvent(transition);
+//		walkFireCtr.AddGeneralEvent(transition);
+//
+//		// fire event
+//		fireCtr.AddKeyframeEvent(3, new SimpleEntityAnimationEvent(null, ShooterEntityController.Shoot));
+//		walkFireCtr.AddKeyframeEvent(3, new SimpleEntityAnimationEvent(null, ShooterEntityController.Shoot));
+//
+//		// back to idle
+//		conditions = new List<AnimationTriggerCondition>();
+//		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 18));
+//		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 0));
+//		condition = new ConditionsList(conditions);
+//		transition = new AnimationTransitionEvent(condition, "soldierIdleRelaxed", 0.15f);
+//		fireCtr.AddGeneralEvent(transition);
+//		conditions = new List<AnimationTriggerCondition>();
+//		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 18));
+//		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 0));
+//		conditions.Add(new EntityBoolCondition(GameEntityController.IsGrounded));
+//		condition = new ConditionsList(conditions);
+//		transition = new AnimationTransitionEvent(condition, "soldierSprint", 0.15f);
+//		walkFireCtr.AddGeneralEvent(transition);
+//		conditions = new List<AnimationTriggerCondition>();
+//		conditions.Add(new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 12));
+//		conditions.Add(new InputButtonCondition(InputButtonConditionType.pressed, false, 0));
+//		conditions.Add(new NegateCondition(new EntityBoolCondition(GameEntityController.IsGrounded)));
+//		condition = new ConditionsList(conditions);
+//		transition = new AnimationTransitionEvent(condition, "soldierFalling", 0.15f);
+//		walkFireCtr.AddGeneralEvent(transition);
+//
+//		// hit trigger
+//		condition = new EntityBoolCondition(ShooterEntityController.GotHit);
+//		transition = new AnimationTransitionEvent(condition, "soldierHitBack", 0.1f);
+//		idle1Ctr.AddGeneralEvent(transition);
+//		walkCtr.AddGeneralEvent(transition);
+//		jumpCtr.AddGeneralEvent(transition);
+//		fallCtr.AddGeneralEvent(transition);
+//		fireCtr.AddGeneralEvent(transition);
+//		hitCtr.AddGeneralEvent(transition);
+//		// hit event
+//		condition = new AnimationFrameCondition(ArithmeticConditionOperatorType.greater, 6);
+//		transition = new AnimationTransitionEvent(condition, "soldierIdleRelaxed", 0.15f);
+//		hitCtr.AddGeneralEvent(transition);
+//
+//		// Die!!
+//		condition = new EntityBoolCondition(ShooterEntityController.IsDead);
+//		transition = new AnimationTransitionEvent(condition, "soldierDieBack", 0.01f);
+//		hitCtr.AddGeneralEvent(transition);
+//		// Forcing that headless bug to stop!...
+//		idle1Ctr.AddGeneralEvent(transition);
+//		walkCtr.AddGeneralEvent(transition);
+//		jumpCtr.AddGeneralEvent(transition);
+//		fireCtr.AddGeneralEvent(transition);
+//		walkFireCtr.AddGeneralEvent(transition);
+//		// once die animation finishes, respawn
+//		dieCtr.AddKeyframeEvent(60, new SimpleEntityAnimationEvent(null, ShooterEntityController.KillAndRespawn));
+//		condition = new AnimationFrameCondition(ArithmeticConditionOperatorType.equal, 60);
+//		transition = new AnimationTransitionEvent(condition, "soldierIdleRelaxed", 0f);
+//		dieCtr.AddGeneralEvent(transition);
+//
+//
+//	}
 	
 
 	public bool CheckGameOver(WorldModel worldModel){

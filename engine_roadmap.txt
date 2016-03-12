@@ -188,4 +188,4 @@ Log
 	- Editor: All basic conditions
 	- Editor: All basic events
 12-03-16
-	- 
+	- Able to load character in game

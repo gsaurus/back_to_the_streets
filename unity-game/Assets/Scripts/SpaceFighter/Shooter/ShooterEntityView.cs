@@ -39,18 +39,22 @@ public class ShooterEntityView: GameEntityView {
 			// let game object look like a super blinking hero
 			Transform t1 = obj.transform.Find("armorBody");
 			Transform t2 = obj.transform.Find("armorArms");
-			SkinnedMeshRenderer[] comps = new SkinnedMeshRenderer[2];
-			comps[0] = t1.gameObject.GetComponent<SkinnedMeshRenderer>();
-			comps[1] = t2.gameObject.GetComponent<SkinnedMeshRenderer>();
-			float greenComponent = 0;
-			if (shooterModel.invincibilityFrames > 1){
-				greenComponent = (shooterModel.invincibilityFrames % invincibilityFramesCycle) / (float)invincibilityFramesCycle;
-				if ((shooterModel.invincibilityFrames / (invincibilityFramesCycle*0.5f)) % 2 == 0){
-					greenComponent = 1 - greenComponent;
+			if (t1 != null && t2 != null) {
+
+				float greenComponent = 0;
+				if (shooterModel.invincibilityFrames > 1){
+					greenComponent = (shooterModel.invincibilityFrames % invincibilityFramesCycle) / (float)invincibilityFramesCycle;
+					if ((shooterModel.invincibilityFrames / (invincibilityFramesCycle*0.5f)) % 2 == 0){
+						greenComponent = 1 - greenComponent;
+					}
 				}
-			}
-			foreach (SkinnedMeshRenderer c in comps){
-				c.material.color = new Color(c.material.color.r, greenComponent, c.material.color.b);
+
+				SkinnedMeshRenderer[] comps = new SkinnedMeshRenderer[2];
+				comps[0] = t1.gameObject.GetComponent<SkinnedMeshRenderer>();
+				comps[1] = t2.gameObject.GetComponent<SkinnedMeshRenderer>();
+				foreach (SkinnedMeshRenderer c in comps) {
+					c.material.color = new Color(c.material.color.r, greenComponent, c.material.color.b);
+				}
 			}
 		}
 

@@ -75,7 +75,10 @@ namespace RetroBread{
 			// Instantiate it far, far away
 			UnityEngine.Object prefab;
 			if (!prefabs.TryGetValue(prefabName, out prefab)){
-				prefab = Resources.Load(prefabName);
+				prefab = CharacterLoader.LoadViewModel(prefabName);
+				if (prefab == null) {
+					Debug.LogError("Failed to load prefab: " + prefabName);
+				}
 				prefabs.Add(prefabName, prefab);
 			}
 			obj = GameObject.Instantiate(prefab) as GameObject;
