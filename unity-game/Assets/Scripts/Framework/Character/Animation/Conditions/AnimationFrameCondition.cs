@@ -68,8 +68,14 @@ namespace RetroBread{
 				case ArithmeticConditionOperatorType.less:{
 					return result < 0;
 				}
+				case ArithmeticConditionOperatorType.lessOrEqual:{
+					return result <= 0;
+				}
 				case ArithmeticConditionOperatorType.greater:{
 					return result > 0;
+				}
+				case ArithmeticConditionOperatorType.greaterOrEqual:{
+					return result >= 0;
 				}
 			}
 			// won't reach here, but compiler complains, so..

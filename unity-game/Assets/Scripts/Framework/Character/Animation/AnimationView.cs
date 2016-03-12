@@ -76,6 +76,7 @@ namespace RetroBread{
 				if (isTimingSynchroizedWithModelFrames) {
 					int currentAnimationFrame = GetAnimationCurrentFrame(stateInfo);
 					if (currentAnimationFrame > 0 && Math.Abs(currentAnimationFrame - model.currentFrame) > 2) {
+						// TODO: this is not forcing the frame resync, check else code, may help here
 						float timeToFade = Mathf.Abs(currentAnimationFrame - model.currentFrame) * StateManager.Instance.UpdateRate;
 						timeToFade = Mathf.Min(timeToFade, interpolationTime);
 						animator.CrossFade(model.animationName, timeToFade);

@@ -99,6 +99,10 @@ namespace RetroBread{
 			
 			string charName = charData.name;
 
+			// Register animation view for this character
+			AnimationView view = new AnimationView();
+			AnimationsVCPool.Instance.SetDefaultView(charName, view);
+
 			// Setup each animation
 			AnimationController controller;
 			AnimationEvent animEvent;
