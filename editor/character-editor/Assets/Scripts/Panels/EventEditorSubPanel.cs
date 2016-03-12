@@ -74,11 +74,14 @@ namespace RetroBread{
 
 
 		private void UpdateParamsList(){
+			bool oldUpdatingValue = isUpdating;
+			isUpdating = true;
 			if (parameters == null || parameters.Count == 0) {
 				_paramsList.Options = new List<string>();
 				_typeDropdown.interactable = false;
 				_removeButton.interactable = false;
 				UpdateParameter();
+				isUpdating = oldUpdatingValue;
 				return;
 			}
 			List<string> options = new List<string>();
@@ -93,6 +96,7 @@ namespace RetroBread{
 			_paramsList.SelectedItem = previouslySelectedItem;
 			_typeDropdown.interactable = true;
 			_removeButton.interactable = true;
+			isUpdating = oldUpdatingValue;
 		}
 
 

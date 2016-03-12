@@ -142,8 +142,10 @@ namespace RetroBread{
 		}
 
 		void Awake(){
-			if (charactersDataPath == null) charactersDataPath = Application.streamingAssetsPath + "/Characters/Data/";
-			if (charactersModelsPath == null) charactersModelsPath = Application.streamingAssetsPath + "/Characters/Models/";
+			if (charactersDataPath == null) charactersDataPath = Directory.GetCurrentDirectory() + "/Data/Characters/Data/";
+			if (charactersModelsPath == null) charactersModelsPath = Directory.GetCurrentDirectory() + "/Data/Characters/Models/";
+//			if (charactersDataPath == null) charactersDataPath = Application.streamingAssetsPath + "/Characters/Data/";
+//			if (charactersModelsPath == null) charactersModelsPath = Application.streamingAssetsPath + "/Characters/Models/";
 			// Cache is unwanted on editor - everything changes all the time
 			Caching.CleanCache();
 		}
@@ -326,6 +328,7 @@ namespace RetroBread{
 					//Debug.Log("len: " + clip.averageDuration + " / " + Time.fixedDeltaTime + " = " + (int) (clip.averageDuration / Time.fixedDeltaTime));
 					if (!knownAnimations.Contains(clip.name)) {
 						// New animation!
+						// WARNING: currently clip.averageDuration is not accessible at runtime outside editor
 						CharacterAnimation newAnim = new CharacterAnimation(clip.name, (int) (clip.averageDuration / Time.fixedDeltaTime));
 						character.animations.Add(newAnim);
 					}

@@ -21,8 +21,10 @@ namespace RetroBread{
 
 
 		static CharacterLoader(){
-			charactersDataPath = Application.streamingAssetsPath + "/Characters/Data/";
-			charactersModelsPath = Application.streamingAssetsPath + "/Characters/Models/";
+			if (charactersDataPath == null) charactersDataPath = Directory.GetCurrentDirectory() + "/Data/Characters/Data/";
+			if (charactersModelsPath == null) charactersModelsPath = Directory.GetCurrentDirectory() + "/Data/Characters/Models/";
+//			if (charactersDataPath == null) charactersDataPath = Application.streamingAssetsPath + "/Characters/Data/";
+//			if (charactersModelsPath == null) charactersModelsPath = Application.streamingAssetsPath + "/Characters/Models/";
 			Caching.CleanCache();
 		}
 
@@ -84,9 +86,9 @@ namespace RetroBread{
 		}
 
 
-		private static AnimationEvent ReadEvent(Storage.Character charData, Storage.CharacterEvent storageEvent, out int keyFrame){
+		private static AnimationEvent ReadEvent(Storage.Character charData, Storage.CharacterEvent storageEvent, out int keyFrame, Storage.CharacterAnimation animation){
 			// Build event
-			AnimationTriggerCondition condition = ConditionsBuilder.Build(charData, storageEvent.conditionIds, out keyFrame);
+			AnimationTriggerCondition condition = ConditionsBuilder.Build(charData, storageEvent.conditionIds, out keyFrame, animation);
 			AnimationEvent e = EventsBuilder.Build(charData, storageEvent.eventIds);
 			e.condition = condition;
 			return e;
@@ -111,8 +113,8 @@ namespace RetroBread{
 				// Setup animation events
 				if (animation.events != null) {
 					foreach (Storage.CharacterEvent e in animation.events) {
-						animEvent = ReadEvent(charData, e, out keyFrame);
-						if (keyFrame == ConditionsBuilder.invalidKeyframe) {
+						animEvent = ReadEvent(charData, e, out keyFrame, animation);
+						if (keyFrame != ConditionsBuilder.invalidKeyframe) {
 							controller.AddKeyframeEvent((uint)keyFrame, animEvent);
 						} else {
 							controller.AddGeneralEvent(animEvent);

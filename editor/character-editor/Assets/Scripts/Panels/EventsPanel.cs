@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 using System.Collections.Generic;
 using RetroBread.Editor;
 
@@ -32,6 +33,14 @@ namespace RetroBread{
 		void OnEnable(){
 			CharacterEditor.Instance.OnAnimationChangedEvent += RefreshEventsList;
 			CharacterEditor.Instance.OnEventChangedEvent += RefreshEventsList;
+
+//			List<string> newOptions = new List<string>();
+//			newOptions.Add(Directory.GetCurrentDirectory());
+//			newOptions.Add(Application.dataPath);
+//			newOptions.Add(Application.persistentDataPath);
+//			newOptions.Add(Application.temporaryCachePath);
+//			newOptions.Add(Application.streamingAssetsPath);
+//			_eventsList.Options = newOptions;
 		}
 
 

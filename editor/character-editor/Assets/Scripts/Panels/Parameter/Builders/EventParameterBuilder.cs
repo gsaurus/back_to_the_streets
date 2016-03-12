@@ -34,7 +34,7 @@ namespace RetroBread{
 			new BuildZeroAnimationVelocity(),			// 1: vel(zero)
 			new BuildSetAnimationVelocity(),			// 2: vel(2.3, 1.5, 0.0)
 			new BuildZeroMaxInputVelocity(),			// 3: inputVel(zero)
-			new BuildSetMaxInputVelocity(),				// 4: inputVel(2.3, 1.5, 0.0)
+			new BuildSetMaxInputVelocity(),				// 4: inputVel(2.3, 1.5)
 			new BuildAddAnimationVerticalImpulse(),		// 5: impulseV(1.5)
 			new BuildFlip(),							// 6: flip
 			new BuildAutoFlip()							// 7: autoFlip(false)
@@ -131,14 +131,12 @@ namespace RetroBread{
 			public override string ToString(GenericParameter parameter){
 				return "inputVel(" + parameter.SafeFloatToString(0)
 					+ ", " + parameter.SafeFloatToString(1)
-					+ ", " + parameter.SafeFloatToString(2)
 					+ ")"
 				;
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
 				FloatInputFieldParam.Instantiate(parent, parameter, 0, "Max input vel X:");
-				FloatInputFieldParam.Instantiate(parent, parameter, 1, "Max input vel Y:");
-				FloatInputFieldParam.Instantiate(parent, parameter, 2, "Max input vel Z:");
+				FloatInputFieldParam.Instantiate(parent, parameter, 1, "Max input vel Z:");
 			}
 		}
 
@@ -146,7 +144,7 @@ namespace RetroBread{
 		private class BuildAddAnimationVerticalImpulse: InternEventBuilder{
 			public BuildAddAnimationVerticalImpulse():base("Add vertical impulse"){}
 			public override string ToString(GenericParameter parameter){
-				return "impulseV" + parameter.SafeFloatToString(0);
+				return "impulseV(" + parameter.SafeFloatToString(0) + ")";
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
 				FloatInputFieldParam.Instantiate(parent, parameter, 0, "Vertical Impulse:");

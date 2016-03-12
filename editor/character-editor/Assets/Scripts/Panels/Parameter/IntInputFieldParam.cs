@@ -37,13 +37,13 @@ namespace RetroBread{
 		public void Setup(GenericParameter parameter, int paramItemId, string description, int minValue = -1, int maxValue = -1){
 			this.parameter = parameter;
 			this.paramItemId = paramItemId;
+			this.minValue = minValue;
+			this.maxValue = maxValue;
 			parameter.EnsureIntItem(paramItemId);
 			if (_label == null) _label = label.GetComponent<Text>();
 			if (_field == null) _field = field.GetComponent<InputField>();
 			_label.text = description;
 			_field.text = "" + parameter.intsList[paramItemId];
-			this.minValue = minValue;
-			this.maxValue = maxValue;
 		}
 
 

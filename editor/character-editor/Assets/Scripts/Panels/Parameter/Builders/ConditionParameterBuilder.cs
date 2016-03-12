@@ -121,10 +121,16 @@ namespace RetroBread{
 		private class BuildKeyFrame: InternConditionBuilder{
 			public BuildKeyFrame():base("Frame #"){}
 			public override string ToString(GenericParameter parameter){
-				return "frame " + parameter.SafeInt(0);
+				int frameNum = parameter.SafeInt(0);
+				if (frameNum == 0) {
+					return "first frame";
+				} else if (frameNum > 0) {
+					return "frame " + frameNum;
+				}
+				return "last frame";
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
-				IntInputFieldParam.Instantiate(parent, parameter, 0, "At frame:", 0);
+				IntInputFieldParam.Instantiate(parent, parameter, 0, "At frame:");
 			}
 		}
 

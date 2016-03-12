@@ -67,8 +67,8 @@ public class WorldController:Controller<WorldModel>{
 				Model inputModel = new PlayerInputModel(playerId);
 				FixedVector3 initialPosition = GetRandomSpawnPosition(model);
 				playerModel = new ShooterEntityModel(StateManager.state,
-					"happy char",	//"soldier", //playerId % 2 == 0 ? "Blaze" : "Rocha",
-                	"Idle", 		//"soldierIdleRelaxed",
+					"happy char",		//"soldier", //playerId % 2 == 0 ? "Blaze" : "Rocha",
+                	"Standing", 		//"soldierIdleRelaxed",
 					CharacterLoader.GetCharacterSkinName("happy char", playerId),
                 	physicsModel,
                 	inputModel,

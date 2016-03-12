@@ -14,7 +14,7 @@ namespace RetroBread{
 			BuildZeroAnimationVelocity,			// 1: vel(zero)
 			BuildSetAnimationVelocity,			// 2: vel(2.3, 1.5, 0.0)
 			BuildZeroMaxInputVelocity,			// 3: inputVel(zero)
-			BuildSetMaxInputVelocity,			// 4: inputVel(2.3, 1.5, 0.0)
+			BuildSetMaxInputVelocity,			// 4: inputVel(2.3, 1.5)
 			BuildAddAnimationVerticalImpulse,	// 5: impulseV(1.5)
 			BuildFlip,							// 6: flip
 			BuildAutoFlip						// 7: autoFlip(false)
