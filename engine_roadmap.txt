@@ -45,20 +45,20 @@ TODO: investigate double messages on single key event?.. 1
 [[[[[[[[[
 
 Back to game:
-1 - load character data and model 1
-2 - construct character controller (basic stuff only) 2
+OK - load character data and model 1
+OK - construct character controller (basic stuff only) 2
 
 By now, all we can see in-game is character on idle animation.
 Next step: create some plugins that provide with basic functionality. Each functionality generates two plugins:
  - One for editor to show specific options and translate them into storage data
  - One for game to load specific options from storage data
 There are conditional plugins and event plugins. Plan is:
-1 - Create frame conditions (at frame x, do something) 2
-2 - Create animation transition events for editor (at frame x, move to animation y) 2
-3 - Load and play animation transitions in-game 2
+OK - Create frame conditions (at frame x, do something) 2
+OK - Create animation transition events for editor (at frame x, move to animation y) 2
+OK - Load and play animation transitions in-game 2
 If everything goes well until here, other plugins will be easy to create:
-4 - Input conditions, Velocity events, Velocity conditions, etc (check old GameEntityController) 5
-5 - Create a test character with simple movement: walk, jump, fall 3
+OK - Input conditions, Velocity events, Velocity conditions, etc (check old GameEntityController) 5
+OK - Create a test character with simple movement: walk, jump, fall 3
 
 By now, in-game character should be able to walk, jump, fall.
 Basic stuff is done.
@@ -189,3 +189,21 @@ Log
 	- Editor: All basic events
 12-03-16
 	- Able to load character in game
+	- All conditions and events working in-game
+13-03-16
+	- Fixed demo character to make sure there was no bugs with the events system
+14-03-16
+	- Checked old prototype to have an idea about hits
+	- Rough plan for the next works
+	
+1 - PointModel with flag to enable / disable physics calculations (to disable during hit pause)	1
+2 - Precompute collisions bounding boxes 1
+3 - Precompute hits bounding boxes 1
+4 - Define teams of entities (buckets), and their kind of interaction ([x]hit, [x]collision) to check collisions between relevant teams only 2
+5 - Hits detection: loop through the teams to detect hit VS collision (Debug.Log will do for now) 3
+6 - New type of conditional events: on hit - not tested every frame, triggered by hit detection (beware of conflict with frame based events) 2
+7 - Animation pause delay (built-in support) 1
+8 - General variable arrays (precomputed size), and automatic countdown counters array (to be used as energy, combo counter & timers, etc) 1
+9 - Conditions & events for general variables 3
+10 - Test character with simple combo and combo time cancel 2
+11 - Collision VS Collision physics 3
