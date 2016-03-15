@@ -146,7 +146,9 @@ namespace RetroBread{
 				}
 
 				// apply gravity
-				ApplyGravityToPoint(world, pointModel, pointController);
+				if (pointModel.isActive){
+					ApplyGravityToPoint(world, pointModel, pointController);
+				}
 				CheckCollisionsAgainstPlanes(world, pointModel, pointController, allPlanes);
 
 			}

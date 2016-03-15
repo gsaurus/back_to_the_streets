@@ -286,6 +286,9 @@ namespace RetroBread{
 		public void SetSkin(string bundleName, string modelName){
 			string url = "file://" + charactersModelsPath + bundleName;
 			WWW www = WWW.LoadFromCacheOrDownload(url, 1);
+			if (www.assetBundle == null) {
+				Debug.LogError("Couldn't load bundle at " + url);
+			}
 			GameObject prefab = www.assetBundle.LoadAsset(modelName) as GameObject;
 
 			// Update known animations

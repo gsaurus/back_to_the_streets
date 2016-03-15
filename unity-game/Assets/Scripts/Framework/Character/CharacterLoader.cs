@@ -50,6 +50,9 @@ namespace RetroBread{
 			if (pathItems != null && pathItems.Length > 1) {
 				string url = "file://" + charactersModelsPath + pathItems[0];
 				WWW www = WWW.LoadFromCacheOrDownload(url, 1);
+				if (www.assetBundle == null) {
+					Debug.LogError("Failed to load bundle at " + url);
+				}
 				GameObject prefab = www.assetBundle.LoadAsset(pathItems[1]) as GameObject;
 				www.assetBundle.Unload(false);
 				if (prefab != null) {

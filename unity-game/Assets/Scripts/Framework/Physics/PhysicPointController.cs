@@ -32,8 +32,10 @@ namespace RetroBread{
 			model.lastPosition = model.position;
 
 			// Apply all velocity factors to the model's position
-			foreach (FixedVector3 velocity in model.velocityAffectors.Values) {
-				model.position += velocity;
+			if (model.isActive){
+				foreach (FixedVector3 velocity in model.velocityAffectors.Values) {
+					model.position += velocity;
+				}
 			}
 
 			// Reset collision velocity affector, directly

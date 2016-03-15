@@ -57,6 +57,11 @@ namespace RetroBread{
 				newInputVel = new FixedVector3(axis.X*model.maxInputVelocity.X, axis.Y*model.maxInputVelocity.Y, axis.Z*model.maxInputVelocity.Z);
 			}
 			pointModel.velocityAffectors[inputVelocityAffector] = newInputVel;
+
+			// testing isActive (pause delay)
+			if (StateManager.state.Random.NextInt(0,60) == 4){
+				pointModel.isActive = !pointModel.isActive;
+			}
 		}
 
 

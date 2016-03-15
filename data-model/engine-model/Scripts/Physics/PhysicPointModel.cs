@@ -38,14 +38,19 @@ namespace RetroBread{
 		[ProtoMember(6)]
 		public uint framesSinceLastTimeGrounded;
 
+		// Forces applied to this point, identified by a string (force source)
+		[ProtoMember(7)]
+		public Dictionary<string,FixedVector3> velocityAffectors;
+
+		// If not active, point & world controllers skip it's physics update, except for moving planes!
+		[ProtoMember(8)]
+		public bool isActive;
+
+
 		// Velocity = difference between current and previous positions
 		public FixedVector3 GetVelocity(){
 			return position - lastPosition;
 		}
-
-		// Forces applied to this point, identified by a string (force source)
-		[ProtoMember(7)]
-		public Dictionary<string,FixedVector3> velocityAffectors;
 
 
 		#region Constructors
@@ -79,6 +84,7 @@ namespace RetroBread{
 			velocityAffectors = new Dictionary<string,FixedVector3>();
 			this.position = this.lastPosition = position;
 			this.stepTolerance = stepTolerance;
+			isActive = true;
 		}
 
 
@@ -98,6 +104,7 @@ namespace RetroBread{
 		):base(controllerFactoryId, viewFactoryId, updatingOrder){
 			this.ownerId = ownerId;
 			velocityAffectors = new Dictionary<string,FixedVector3>();
+			isActive = true;
 		}
 
 
