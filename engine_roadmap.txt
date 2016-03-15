@@ -195,8 +195,10 @@ Log
 14-03-16
 	- Checked old prototype to have an idea about hits
 	- Rough plan for the next works
+15-03-16
+	- PointModel with flag to enable / disable physics calculations
 	
-1 - PointModel with flag to enable / disable physics calculations (to disable during hit pause)	1
+OK - PointModel with flag to enable / disable physics calculations (to disable during hit pause)	1
 2 - Precompute collisions bounding boxes 1
 3 - Precompute hits bounding boxes 1
 4 - Define teams of entities (buckets), and their kind of interaction ([x]hit, [x]collision) to check collisions between relevant teams only 2
