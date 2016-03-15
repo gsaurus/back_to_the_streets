@@ -89,6 +89,14 @@ namespace RetroBread{
 		// On update we execute animation events 
 		protected override void Update(AnimationModel model){
 
+			GameEntityModel entityModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
+			if (entityModel != null){
+				PhysicPointModel pointModel = GameEntityController.GetPointModel(entityModel);
+				if (!pointModel.isActive){
+					return;
+				}
+			}
+
 			// reset animation & frame changed variables
 			model.ResetNextParameters();
 
@@ -104,6 +112,14 @@ namespace RetroBread{
 
 		// On post-update we move to next frame, if animation didn't change
 		protected override void PostUpdate(AnimationModel model){
+
+			GameEntityModel entityModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
+			if (entityModel != null){
+				PhysicPointModel pointModel = GameEntityController.GetPointModel(entityModel);
+				if (!pointModel.isActive){
+					return;
+				}
+			}
 
 			bool haveNewNextFrame = model.nextFrame != AnimationModel.invalidFrameId;
 			bool haveNewAnimation = model.nextAnimation != null && model.nextAnimation != model.animationName;

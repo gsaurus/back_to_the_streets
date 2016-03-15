@@ -146,7 +146,7 @@ namespace RetroBread{
 				}
 
 				// apply gravity
-				if (pointModel.isActive){
+				if (pointModel.isActive || PhysicPointController.IsGrounded(pointModel)){
 					ApplyGravityToPoint(world, pointModel, pointController);
 				}
 				CheckCollisionsAgainstPlanes(world, pointModel, pointController, allPlanes);

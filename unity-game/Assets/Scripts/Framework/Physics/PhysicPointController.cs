@@ -7,6 +7,8 @@ namespace RetroBread{
 
 	public class PhysicPointController: Controller<PhysicPointModel>{
 
+		public const uint groundFramesTolerance = 2;
+
 		// Key of collision reaction velocity affector
 		public static readonly string collisionVelocityAffectorName = "collisionVelocityAffectorName";
 
@@ -35,6 +37,15 @@ namespace RetroBread{
 			if (model.isActive){
 				foreach (FixedVector3 velocity in model.velocityAffectors.Values) {
 					model.position += velocity;
+				}
+			}else {
+				// Only apply non-animation affectors if grounded
+				if (IsGrounded(model)) {
+					foreach(KeyValuePair<string, FixedVector3> entry in model.velocityAffectors){
+						if (entry.Key != GameEntityController.animVelocityAffector && entry.Key != GameEntityController.inputVelocityAffector){
+							model.position += entry.Value;
+						}
+					}
 				}
 			}
 
@@ -78,11 +89,18 @@ namespace RetroBread{
 			}
 			newCollisionInpact = FixedVector3.Zero;
 
-			if (model.collisionInpact.Y == 0){
-				++model.framesSinceLastTimeGrounded;
-			}else{
-				model.framesSinceLastTimeGrounded = 0;
+			if (model.isActive){
+				if (model.collisionInpact.Y == 0){
+					++model.framesSinceLastTimeGrounded;
+				}else{
+					model.framesSinceLastTimeGrounded = 0;
+				}
 			}
+
+//			// testing isActive (pause delay)
+//			if (StateManager.state.Random.NextInt(0,60) == 4){
+//				model.isActive = !model.isActive;
+//			}
 
 		}
 
@@ -308,8 +326,12 @@ namespace RetroBread{
 		}
 
 
-	}
 
+		public static bool IsGrounded(PhysicPointModel pointModel){
+			return pointModel.collisionInpact.Y != 0 || pointModel.framesSinceLastTimeGrounded <= groundFramesTolerance;
+		}
+
+	}
 
 
 }

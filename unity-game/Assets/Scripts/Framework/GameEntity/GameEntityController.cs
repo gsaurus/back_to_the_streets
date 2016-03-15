@@ -8,8 +8,6 @@ namespace RetroBread{
 	// 
 	public class GameEntityController: Controller<GameEntityModel> {
 
-		public const uint groundFramesTolerance = 2;
-
 		// Animations can setup this velocity affector
 		public static readonly string animVelocityAffector = "anim_vel_affector";
 
@@ -57,11 +55,6 @@ namespace RetroBread{
 				newInputVel = new FixedVector3(axis.X*model.maxInputVelocity.X, axis.Y*model.maxInputVelocity.Y, axis.Z*model.maxInputVelocity.Z);
 			}
 			pointModel.velocityAffectors[inputVelocityAffector] = newInputVel;
-
-			// testing isActive (pause delay)
-			if (StateManager.state.Random.NextInt(0,60) == 4){
-				pointModel.isActive = !pointModel.isActive;
-			}
 		}
 
 
@@ -97,7 +90,9 @@ namespace RetroBread{
 			if (!model.isFacingRight){
 				impulse.X *= -1;
 			}
-			pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName] += impulse;
+//			FixedVector3 collisionVelocity;
+//			pointModel.velocityAffectors.TryGetValue(PhysicPointController.collisionVelocityAffectorName, out collisionVelocity);
+			pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName] += impulse; //collisionVelocity + impulse;
 		}
 
 		// Flip the character on the X axis
@@ -133,7 +128,7 @@ namespace RetroBread{
 		public static bool IsGrounded(GameEntityModel model){
 			PhysicPointModel pointModel = GetPointModel(model);
 			if (pointModel == null) return false;
-			return pointModel.collisionInpact.Y != 0 || pointModel.framesSinceLastTimeGrounded <= groundFramesTolerance;
+			return PhysicPointController.IsGrounded(pointModel);
 		}
 
 		public static bool IsHittingLeftWall(GameEntityModel model){
