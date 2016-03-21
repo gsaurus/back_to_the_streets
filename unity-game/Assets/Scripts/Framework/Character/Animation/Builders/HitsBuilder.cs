@@ -1,15 +1,43 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using System.Collections.Generic;
 
-public class HitsBuilder : MonoBehaviour {
+namespace RetroBread{
 
-	// Use this for initialization
-	void Start () {
-	
+
+	public static class HitsBuilder {
+
+		// Hits builders indexed by type directly on array
+		private delegate HitData BuilderAction(Storage.GenericParameter param);
+		private static BuilderAction[] builderActions = {
+			BuildSimpleHit
+			// TODO: everything else..
+		};
+			
+
+		// The public builder method
+		public static HitData Build(Storage.GenericParameter param){
+			int callIndex = param.type;
+			if (callIndex < builderActions.Length) {
+				return builderActions[callIndex](param);
+			}
+			Debug.Log("HitsBuilder: Unknown hit type: " + param.type);
+			return null;
+		}
+
+
+
+#region Conditions
+
+
+		// frame = 4
+		private static HitData BuildSimpleHit(Storage.GenericParameter parameter){
+			return new HitData();
+		}
+
+
+#endregion
+
+
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 }

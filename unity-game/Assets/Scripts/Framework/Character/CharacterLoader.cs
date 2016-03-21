@@ -15,7 +15,13 @@ namespace RetroBread{
 
 		public static string skinsDelimiter = ":";
 
+		private static int invalidBoxId = -1;
+
+		// Warning: TODO: keep a pool of Boxes, to use less memory
+
 		// store here a list of known characters
+		// WARNING: TODO: Doesn't have to keep this, just a bool telling loaded or not
+		// all info should go to a character controller
 		private static Dictionary<string, Storage.Character> loadedCharacters = new Dictionary<string, Storage.Character>();
 
 
@@ -130,17 +136,69 @@ namespace RetroBread{
 					}
 				}
 
+
+				// Setup frame data
+				FrameData[] framesData = new FrameData[animation.numFrames];
+				FrameData frameData;
+		
+				// Collisions
+				if (animation.collisionBoxes != null){
+					Storage.Box storageBox;
+					int boxIndex;
+					// For each box
+					foreach(Storage.CollisionBox storageCollisionBox in animation.collisionBoxes){
+						// for each frame of each box
+						for (int i = 0; i < storageCollisionBox.boxIds.Length ; ++i){
+							boxIndex = storageCollisionBox.boxIds[i];
+							if (boxIndex != invalidBoxId){
+								storageBox = charData.boxes[boxIndex];
+								frameData = GetFrameData(framesData, i);
+								frameData.colisions.Add(new Box(storageBox.pointOne, storageBox.pointTwo));
+							}
+						} // each frame
+					} // each storageCollisionBox
+				}
+
+				// Hits
+				if (animation.hitBoxes != null){
+					Storage.Box storageBox;
+					Storage.GenericParameter param;
+					HitData hitData;
+					int boxIndex;
+					// For each box
+					foreach(Storage.HitBox storageHitBox in animation.hitBoxes){
+						param = charData.genericParameters[storageHitBox.paramId];
+						hitData = HitsBuilder.Build(param);
+						if (hitData == null) continue;
+						// for each frame of each box
+						for (int i = 0; i < storageHitBox.boxIds.Length ; ++i){
+							boxIndex = storageHitBox.boxIds[i];
+							if (boxIndex != invalidBoxId){
+								storageBox = charData.boxes[boxIndex];
+								frameData = GetFrameData(framesData, i);
+								frameData.hits.Add(new HitBox(new Box(storageBox.pointOne, storageBox.pointTwo), hitData));
+							}
+						} // each frame
+					} // each storageHitBox
+				}
+
+				// Store frames data on animation
+				// controller.xxxx = framesData...
+
 			}
-
-			// TODO: collision boxes
-
-			// TODO: hit boxes
 
 			// TODO: what about view anchors ?
 
 			// Skins?..
 
 
+		}
+
+		private static FrameData GetFrameData(FrameData[] framesData, int index){
+			if (framesData[index] == null){
+				framesData[index] = new FrameData();
+			}
+			return framesData[index];
 		}
 			
 

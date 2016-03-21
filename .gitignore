@@ -17,3 +17,4 @@ editor/assets-packer/*.csproj
 editor/character-editor/*.csproj
 editor/assets-packer/bin/
 editor/character-editor/bin/
+**/win_Data/*

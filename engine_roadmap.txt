@@ -197,6 +197,10 @@ Log
 	- Rough plan for the next works
 15-03-16
 	- PointModel with flag to enable / disable physics calculations
+16..20-03-16
+	no work done
+21-03-16
+	- Load "frame data" from storage (collision and hits, not storing it on controller yet)
 	
 OK - PointModel with flag to enable / disable physics calculations (to disable during hit pause)	1
 2 - Precompute collisions bounding boxes 1
