@@ -48,7 +48,13 @@ public class WorldController:Controller<WorldModel>{
 			physicsController = physicsModel.Controller() as PhysicWorldController;
 		}
 
-		List<uint> allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers();
+		List<uint> allPlayers;
+		if (StateManager.Instance.IsNetworked) {
+			allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers();
+		} else {
+			allPlayers = new List<uint>();
+			allPlayers.Add(0);
+		}
 		Model playerModel;
 
 		// Remove characters for inactive players
@@ -89,7 +95,12 @@ public class WorldController:Controller<WorldModel>{
 			// should be done in a better way.. but whatever, will do for the demo
 			if (obj != null && !obj.name.EndsWith("[initiated]")){
 
-				bool isOwnPlayer = playerId == NetworkCenter.Instance.GetPlayerNumber();
+				bool isOwnPlayer;
+				if (StateManager.Instance.IsNetworked) {
+					isOwnPlayer = playerId == NetworkCenter.Instance.GetPlayerNumber();
+				} else {
+					isOwnPlayer = true; // warning: local multiplayer would be different, playerId == 0?, actually different camera
+				}
 
 				if (isOwnPlayer){
 					// Add camera tracking to own player :)

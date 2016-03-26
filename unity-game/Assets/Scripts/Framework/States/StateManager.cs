@@ -11,12 +11,14 @@ namespace RetroBread{
 		public Model initialModel;			// first model of the game
 		public float updateRate;			// logics update in frames per second
 		public uint saveStateFrequency;		// how often to save state, in frames
+		public bool isNetworked;
 		// TODO: other setup options?
 
-		public StateManagerSetup(Model initialModel){
+		public StateManagerSetup(Model initialModel, bool isNetworked = false){
 			this.initialModel = initialModel;
 			updateRate = 0.0166666667f;	// default: 60fps
 			saveStateFrequency = 5;	// default: clone every 5 frames
+			this.isNetworked = isNetworked;
 		}
 	}
 
@@ -61,6 +63,8 @@ namespace RetroBread{
 		// Control if controllers are updated, or only views
 		public bool IsPaused { get; private set; }
 
+		public bool IsNetworked { get ; private set; }
+
 
 		// Initialize with stuff
 		// TODO: what to setup here? Networked game or not, loggers, properties etc..
@@ -96,11 +100,17 @@ namespace RetroBread{
 			statesBuffer.SetState(currentState);
 			
 			// TODO: add listeners and pause only if on networked game
-			NetworkGame.Instance.onEventsAddedEvent += OnEventsAdded;
-			NetworkGame.Instance.onPauseEvent += OnPause;
-			NetworkGame.Instance.onResumeEvent += OnResume;
-			NetworkGame.Instance.stateCorrectionEvent += OnStateCorrection;
-			IsPaused = true; // wait for server order to resume
+			IsNetworked = setup.isNetworked;
+			if (IsNetworked) {
+				NetworkGame.Instance.onEventsAddedEvent += OnEventsAdded;
+				NetworkGame.Instance.onPauseEvent += OnPause;
+				NetworkGame.Instance.onResumeEvent += OnResume;
+				NetworkGame.Instance.stateCorrectionEvent += OnStateCorrection;
+				IsPaused = true; // wait for server order to resume
+			} else {
+				// No need to wait for resume (synch)
+				IsPaused = false;
+			}
 		}
 
 
@@ -111,7 +121,7 @@ namespace RetroBread{
 			// Setup events keyframe
 			newEvent.Keyframe = state.Keyframe;
 
-			if (NetworkGame.Instance.enabled){
+			if (IsNetworked){
 				// Network will take care of adding lag compensation
 				NetworkGame.Instance.AddEvent(newEvent);
 			}else{
@@ -156,10 +166,12 @@ namespace RetroBread{
 			// When server resumes the game we may notice a state jump
 			// TODO: improve it if necessary
 			IsPaused = paused;
-			NetworkSync.Instance.SetReady(!paused);
+			if (IsNetworked) {
+				NetworkSync.Instance.SetReady(!paused);
+			}
 		}
 
-		// Game pause requested from network
+		// Game pause requested from network for instance
 		private void OnPause(){
 			// For now we just pause and don't adjust the current state
 			// from the original pause momment, so we may notice a state jump on resume
@@ -286,8 +298,13 @@ namespace RetroBread{
 		// It also automatically corrects the state when older input is detected
 		public void Update(float deltaTime){
 
+			if (currentState == null) {
+				// Not yet initialized
+				return;
+			}
+
 			// Flush network events
-			if (NetworkGame.Instance.enabled){
+			if (IsNetworked){
 				NetworkGame.Instance.FlushEvents();
 			}
 

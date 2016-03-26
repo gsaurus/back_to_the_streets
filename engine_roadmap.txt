@@ -36,8 +36,9 @@ OK - Conditional events (stub stuff only) 3
 - check what's going on with some comboboxes not scrolling (temp solution: use keyboard up/down & space)
 - Use tab/enter to move to next inputField
 
-TODO: support offline mode 2
+OK support offline mode 2
 TODO: investigate double messages on single key event?.. 1
+TODO: investigate is not valid. Input position is { NaN, NaN, NaN }, think reason is something's wrong with the 3D model, perhaps the anchor points exporting
 
 
 
@@ -198,9 +199,15 @@ Log
 15-03-16
 	- PointModel with flag to enable / disable physics calculations
 16..20-03-16
-	no work done
+	:( no work done :(
 21-03-16
 	- Load "frame data" from storage (collision and hits, not storing it on controller yet)
+22..24-03-16
+	:( no work done :(
+25-03-16
+	- Support offline mode
+	
+	
 	
 OK - PointModel with flag to enable / disable physics calculations (to disable during hit pause)	1
 2 - Precompute collisions bounding boxes 1

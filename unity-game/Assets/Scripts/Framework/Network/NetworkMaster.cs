@@ -80,10 +80,10 @@ namespace RetroBread{
 			}
 			
 			
-			public void CreateServer(int maxPlayers, string password = null){
+			public NetworkConnectionError CreateServer(int maxPlayers, string password = null){
 				UnityEngine.Network.incomingPassword = password;
 				bool useNat = !UnityEngine.Network.HavePublicAddress();
-				UnityEngine.Network.InitializeServer(maxPlayers-1, port, useNat);
+				return UnityEngine.Network.InitializeServer(maxPlayers-1, port, useNat);
 			}
 			
 			public void CancelServer(){
