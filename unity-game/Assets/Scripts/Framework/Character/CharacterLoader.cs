@@ -138,6 +138,7 @@ namespace RetroBread{
 
 
 				// Setup frame data
+				// WARNING TODO: pool of boxes and pool of HitData
 				FrameData[] framesData = new FrameData[animation.numFrames];
 				FrameData frameData;
 		
@@ -153,7 +154,7 @@ namespace RetroBread{
 							if (boxIndex != invalidBoxId){
 								storageBox = charData.boxes[boxIndex];
 								frameData = GetFrameData(framesData, i);
-								frameData.colisions.Add(new Box(storageBox.pointOne, storageBox.pointTwo));
+								frameData.collisions.Add(new Box(storageBox.pointOne, storageBox.pointTwo));
 							}
 						} // each frame
 					} // each storageCollisionBox
@@ -182,8 +183,12 @@ namespace RetroBread{
 					} // each storageHitBox
 				}
 
-				// Store frames data on animation
-				// controller.xxxx = framesData...
+				// Precompute bounding boxes
+				foreach (FrameData finalFramedata in framesData) {
+					finalFramedata.ComputeBoundingBoxes();
+				}
+				// Store frames data on animation controller
+				controller.SetFramesData(framesData);
 
 			}
 

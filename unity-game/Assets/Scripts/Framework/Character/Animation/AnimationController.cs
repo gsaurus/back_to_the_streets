@@ -45,6 +45,11 @@ namespace RetroBread{
 		// General events, evaluated every frame
 		private List<AnimationEvent> generalEvents;
 
+
+		// Collision and hits information
+		private FrameData[] framesData;
+
+
 		public AnimationController(){
 			keyframeEvents = new Dictionary<uint, List<AnimationEvent>>();
 			generalEvents = new List<AnimationEvent>();
@@ -64,6 +69,32 @@ namespace RetroBread{
 		public void AddGeneralEvent(AnimationEvent e){
 			generalEvents.Add(e);
 		}
+
+		// Setup frames data
+		public void SetFramesData(FrameData[] framesData){
+			this.framesData = framesData;
+		}
+
+
+		// Collision check against other controller & model
+		public bool CollisionCollisionCheck(AnimationModel model, AnimationModel otherModel){
+			AnimationController otherController = otherModel.Controller() as AnimationController;
+			// Avoid extra checks for speed, enable only if strictly necessary
+			//if (model.currentFrame < 0 || model.currentFrame >= framesData.Length) return false;
+			//if (otherModel.currentFrame < 0 || otherModel.currentFrame >= otherController.framesData.Length) return false;
+			return framesData[model.currentFrame].CollisionCollisionCheck(otherController.framesData[otherModel.currentFrame]);
+		}
+
+
+		// Hit check against other controller & model
+		public HitData HitCollisionCheck(AnimationModel model, AnimationModel otherModel){
+			AnimationController otherController = otherModel.Controller() as AnimationController;
+			// Avoid extra checks for speed, enable only if strictly necessary
+			//if (model.currentFrame < 0 || model.currentFrame >= framesData.Length) return false;
+			//if (otherModel.currentFrame < 0 || otherModel.currentFrame >= otherController.framesData.Length) return false;
+			return framesData[model.currentFrame].HitCollisionCheck(otherController.framesData[otherModel.currentFrame]);
+		}
+
 
 
 		// Process any events for this keyframe

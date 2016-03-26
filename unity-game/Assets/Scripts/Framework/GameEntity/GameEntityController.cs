@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 
 namespace RetroBread{
@@ -14,6 +14,16 @@ namespace RetroBread{
 		// Input axis is automatically traduced to input depending on then inputVelocityFactor of the model
 		public static readonly string inputVelocityAffector = "input_vel_affector";
 
+
+		// Information carried during the update
+		// Hits and hurts information
+		private List<HitData> lastHits = new List<HitData>();
+		private List<HitData> lastHurts = new List<HitData>();
+		private List<ModelReference> lastHittenEntitiesIds = new List<ModelReference>();
+		private List<ModelReference> lastHitterEntitiesIds = new List<ModelReference>();
+		// For collision we won't need information about everyone
+		// To simplify, one can only collide with only other entity at the same time
+		private ModelReference lastCollisionEntityId;
 
 
 		// Get PhysicPointModel
@@ -32,12 +42,59 @@ namespace RetroBread{
 		}
 
 
+		// Check collision against other entity
+		public bool CollisionCollisionCheck(GameEntityModel model, GameEntityModel otherModel){
+			AnimationModel animModel = GetAnimationModel(model);
+			AnimationModel otherAnimModel = GetAnimationModel(otherModel);
+			AnimationController animController = animModel.Controller() as AnimationController;
+			if (animController.CollisionCollisionCheck(animModel, otherAnimModel)) {
+				// Both entities get knowing they hit each other
+				GameEntityController otherController = otherModel.Controller() as GameEntityController;
+				otherController.lastCollisionEntityId = model.Index;
+				lastCollisionEntityId = otherModel.Index;
+				return true;
+			}
+			return false;
+		}
+
+
+		// Check Hit against other entity
+		public void HitCollisionCheck(GameEntityModel model, GameEntityModel otherModel){
+			AnimationModel animModel = GetAnimationModel(model);
+			AnimationModel otherAnimModel = GetAnimationModel(otherModel);
+			AnimationController animController = animModel.Controller() as AnimationController;
+			HitData hitData = animController.HitCollisionCheck(animModel, otherAnimModel);
+			if (hitData != null) {
+				// Both entities get knowing one hit the other
+				GameEntityController otherController = otherModel.Controller() as GameEntityController;
+				otherController.lastHurts.Add(hitData);
+				lastHits.Add(hitData);
+			}
+		}
+
+
+		// Clear temporary information
+		public void ClearHitsInformation(){
+			lastHits.Clear();
+			lastHurts.Clear();
+			lastHittenEntitiesIds.Clear();
+			lastHitterEntitiesIds.Clear();
+			lastCollisionEntityId = new ModelReference(ModelReference.InvalidModelIndex);
+		}
+
+
 		// Update automated stuff
 		protected override void Update(GameEntityModel model){
+			
+			// Clear hits & collision information
+			ClearHitsInformation();
+
 			// first update the input velocity
 			UpdateInputVelocityAffector(model);
+
 			// if input velocity goes against current direction, flip
 			CheckAutomaticFlip(model);
+
 		}
 
 
@@ -172,6 +229,27 @@ namespace RetroBread{
 			if (pointModel == null) return FixedFloat.Zero;
 			return pointModel.collisionInpact.Z;
 		}
+
+
+
+		#region Hits / Collisions
+
+			public static bool IsCollidingWithOthers(GameEntityModel model){
+				GameEntityController controller = model.Controller() as GameEntityController;
+				return controller.lastCollisionEntityId != ModelReference.InvalidModelIndex;
+			}
+
+			public static int HitTargetsCount(GameEntityModel model){
+				GameEntityController controller = model.Controller() as GameEntityController;
+				return controller.lastHits.Count; 
+			}
+			
+			public static int HurtSourcesCount(GameEntityModel model){
+				GameEntityController controller = model.Controller() as GameEntityController;
+				return controller.lastHurts.Count; 
+			}
+
+		#endregion
 
 
 
