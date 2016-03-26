@@ -9,14 +9,14 @@ namespace RetroBread{
 	public class TeamsManagerController: Controller<TeamsManagerModel> {
 
 		// Collisions matrix
-		private static bool[][] teamsCollisionMatrix;
+		private static bool[,] teamsCollisionMatrix;
 
 		// Hits matrix
-		private static bool[][] teamsHitsMatrix;
+		private static bool[,] teamsHitsMatrix;
 
 
 		// Setup collisions matrix, should not be modified during gameplay
-		public static void SetupCollisionMatrixes(bool[][] teamsCollisionMatrix, bool[][] teamsHitsMatrix){
+		public static void SetupCollisionMatrixes(bool[,] teamsCollisionMatrix, bool[,] teamsHitsMatrix){
 			TeamsManagerController.teamsCollisionMatrix = teamsCollisionMatrix;
 			TeamsManagerController.teamsHitsMatrix = teamsHitsMatrix;
 		}
@@ -36,7 +36,7 @@ namespace RetroBread{
 					if (entity1Controller != null) {
 						foreach (ModelReference team2EntityRef in team2Refs) {
 							entity2 = gameState.GetModel(team2EntityRef) as GameEntityModel;
-							if (entity2 != null && entity1Controller.CollisionCollisionCheck(entity1, entity2)){
+							if (entity2 != null && entity2 != entity1 && entity1Controller.CollisionCollisionCheck(entity1, entity2)){
 								// collision detected for this entity, no need for further checks
 								break;
 							} // if collision check
@@ -61,7 +61,7 @@ namespace RetroBread{
 					if (entity1Controller != null) {
 						foreach (ModelReference team2EntityRef in team2Refs) {
 							entity2 = gameState.GetModel(team2EntityRef) as GameEntityModel;
-							if (entity2 != null){
+							if (entity2 != null && entity2 != entity1){
 								entity1Controller.HitCollisionCheck(entity1, entity2);
 							} // if entity2 != null
 						} // foreach team2 entity
@@ -96,11 +96,11 @@ namespace RetroBread{
 			for (int i = 0; i < model.teams.Length; ++i) {
 				for (int j = i; j < model.teams.Length; ++j) {
 					// check collisions
-					if (teamsCollisionMatrix[i][j]) {
+					if (teamsCollisionMatrix[i, j]) {
 						CheckCollisions(model.teams[i].entities, model.teams[j].entities);
 					}
 					// check hits
-					if (teamsHitsMatrix[i][j]) {
+					if (teamsHitsMatrix[i, j]) {
 						CheckHits(model.teams[i].entities, model.teams[j].entities);
 					}
 				}

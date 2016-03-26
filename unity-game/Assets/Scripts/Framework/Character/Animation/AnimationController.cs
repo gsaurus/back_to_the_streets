@@ -77,22 +77,28 @@ namespace RetroBread{
 
 
 		// Collision check against other controller & model
-		public bool CollisionCollisionCheck(AnimationModel model, AnimationModel otherModel){
+		public bool CollisionCollisionCheck(
+			AnimationModel model, FixedVector3 offset, bool facingRight,
+			AnimationModel otherModel, FixedVector3 otherOffset, bool otherFacingRight
+		){
 			AnimationController otherController = otherModel.Controller() as AnimationController;
-			// Avoid extra checks for speed, enable only if strictly necessary
-			//if (model.currentFrame < 0 || model.currentFrame >= framesData.Length) return false;
-			//if (otherModel.currentFrame < 0 || otherModel.currentFrame >= otherController.framesData.Length) return false;
-			return framesData[model.currentFrame].CollisionCollisionCheck(otherController.framesData[otherModel.currentFrame]);
+			FrameData data = framesData[model.currentFrame % framesData.Length];
+			FrameData otherData = otherController.framesData[otherModel.currentFrame % otherController.framesData.Length];
+			if (data == null || otherData == null) return false;
+			return data.CollisionCollisionCheck(offset, facingRight, otherData, otherOffset, otherFacingRight);
 		}
 
 
 		// Hit check against other controller & model
-		public HitData HitCollisionCheck(AnimationModel model, AnimationModel otherModel){
+		public HitData HitCollisionCheck(
+			AnimationModel model, FixedVector3 offset, bool facingRight,
+			AnimationModel otherModel, FixedVector3 otherOffset, bool otherFacingRight
+		){
 			AnimationController otherController = otherModel.Controller() as AnimationController;
-			// Avoid extra checks for speed, enable only if strictly necessary
-			//if (model.currentFrame < 0 || model.currentFrame >= framesData.Length) return false;
-			//if (otherModel.currentFrame < 0 || otherModel.currentFrame >= otherController.framesData.Length) return false;
-			return framesData[model.currentFrame].HitCollisionCheck(otherController.framesData[otherModel.currentFrame]);
+			FrameData data = framesData[model.currentFrame % framesData.Length];
+			FrameData otherData = otherController.framesData[otherModel.currentFrame % otherController.framesData.Length];
+			if (data == null || otherData == null) return null;
+			return data.HitCollisionCheck(offset, facingRight, otherData, otherOffset, otherFacingRight);
 		}
 
 

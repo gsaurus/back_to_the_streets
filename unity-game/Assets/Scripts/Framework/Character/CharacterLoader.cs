@@ -185,7 +185,9 @@ namespace RetroBread{
 
 				// Precompute bounding boxes
 				foreach (FrameData finalFramedata in framesData) {
-					finalFramedata.ComputeBoundingBoxes();
+					if (finalFramedata != null) {
+						finalFramedata.ComputeBoundingBoxes();
+					}
 				}
 				// Store frames data on animation controller
 				controller.SetFramesData(framesData);

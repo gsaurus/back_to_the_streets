@@ -84,7 +84,11 @@ namespace RetroBread{
 			physicsModelId = state.AddModel(new PhysicPointModel(this.Index, position, stepTolerance));
 			worldModel.pointModels.Add(physicsModelId);
 			animationModelId = state.AddModel(new AnimationModel(this.Index, characterName, animationName, viewModelName));
-			inputModelId = state.AddModel(inputModel);
+			if (inputModel != null) { 
+				inputModelId = state.AddModel(inputModel);
+			} else {
+				inputModelId = new ModelReference(ModelReference.InvalidModelIndex);
+			}
 		}
 
 		// TODO: other constructors receiving pre-made sub-models, etc?

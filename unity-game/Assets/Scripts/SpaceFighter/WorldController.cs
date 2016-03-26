@@ -11,9 +11,25 @@ public class WorldController:Controller<WorldModel>{
 
 	public const uint totalGameFrames = 7200; // 2 minutes
 
+
+	private static bool[,] teamsCollisionMatrix = new bool[,]
+		{
+			{ true, true  },
+			{ true,  true }
+		};
+
+	private static bool[,] teamsHitMatrix = new bool[,]
+		{
+			{ false, true  },
+			{ true,  false }
+		};
+
 	static WorldController(){
 		// Setup character animations
 		SetupGameCharacters();
+
+		// Setup teams hit/collision matrixes
+		TeamsManagerController.SetupCollisionMatrixes(teamsCollisionMatrix, teamsHitMatrix);
 	}
 
 
@@ -35,6 +51,9 @@ public class WorldController:Controller<WorldModel>{
 		// Get physics model. If doesn't exist, create it
 		PhysicWorldModel physicsModel;
 		PhysicWorldController physicsController;
+		TeamsManagerModel teamsManagerModel;
+		Model playerModel;
+
 		if (model.physicsModelId == ModelReference.InvalidModelIndex){
 			// create world with map name and gravity
 			physicsModel = new PhysicWorldModel("map 1", new FixedVector3(0,gravityY,0));
@@ -48,6 +67,38 @@ public class WorldController:Controller<WorldModel>{
 			physicsController = physicsModel.Controller() as PhysicWorldController;
 		}
 
+
+
+		// Teams manager
+		if (model.teamsModelId == ModelReference.InvalidModelIndex) {
+			teamsManagerModel = new TeamsManagerModel(2);
+			model.teamsModelId = StateManager.state.AddModel(teamsManagerModel);
+
+
+			// Create some dummy enemy
+			FixedVector3 initialPosition = GetRandomSpawnPosition(model);
+			playerModel = new ShooterEntityModel(StateManager.state,
+				"happy char",
+				"Standing",
+				CharacterLoader.GetCharacterSkinName("happy char", 0),
+				physicsModel,
+				null, // no input
+				initialPosition,
+				new FixedVector3(0, 0.5, 0), // step tolerance
+				ShooterEntityController.maxEnergy,
+				ShooterEntityController.maxInvincibilityFrames,
+				0
+			);
+			// Model initial state
+			ShooterEntityModel playerEntity = (ShooterEntityModel)playerModel;
+			playerEntity.isFacingRight = initialPosition.X < 0;
+			teamsManagerModel.teams[1].entities.Add(StateManager.state.AddModel(playerModel));
+
+		} else {
+			teamsManagerModel = StateManager.state.GetModel(model.teamsModelId) as TeamsManagerModel;
+		}
+
+
 		List<uint> allPlayers;
 		if (StateManager.Instance.IsNetworked) {
 			allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers();
@@ -55,7 +106,6 @@ public class WorldController:Controller<WorldModel>{
 			allPlayers = new List<uint>();
 			allPlayers.Add(0);
 		}
-		Model playerModel;
 
 		// Remove characters for inactive players
 		foreach (KeyValuePair<uint, ModelReference> pair in model.players){
@@ -88,6 +138,8 @@ public class WorldController:Controller<WorldModel>{
 				ShooterEntityModel playerEntity = (ShooterEntityModel)playerModel;
 				playerEntity.isFacingRight = initialPosition.X < 0;
 				model.players[playerId] = StateManager.state.AddModel(playerModel);
+				teamsManagerModel.teams[0].entities.Add(model.players[playerId]);
+
 			}
 
 			GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.players[playerId]);
@@ -149,6 +201,10 @@ public class WorldController:Controller<WorldModel>{
 			}
 		}
 		mainModel.players.Remove(key);
+
+		// Remove from the team
+		TeamsManagerModel teamsManagerModel = StateManager.state.GetModel(mainModel.teamsModelId) as TeamsManagerModel;
+		teamsManagerModel.teams[0].entities.Remove(model.Index);
 	}
 
 

@@ -13,6 +13,7 @@ namespace RetroBread{
 			RegisterPlayerInputVCFactories();
 			RegisterGameEntityVCFactories();
 			RegisterAnimationVCFactories();
+			RegisterTeamsManagerVCFactories();
 		}
 
 

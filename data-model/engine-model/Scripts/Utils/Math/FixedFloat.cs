@@ -24,6 +24,8 @@ namespace RetroBread{
 		public static readonly FixedFloat DegreesToRadiansConversionRatio = PI / 180;
 		public static readonly FixedFloat RadiansToDegreesConversionRatio = 180 / PI;
 		#endregion
+		public static readonly FixedFloat MaxValue = FixedFloat.Create(long.MaxValue, false);
+		public static readonly FixedFloat MinValue = FixedFloat.Create(long.MinValue, false);
 		
 		#region Constructors
 		public static FixedFloat Create( long StartingRawValue, bool UseMultiple )

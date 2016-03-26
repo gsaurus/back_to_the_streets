@@ -221,4 +221,5 @@ OK - Define teams of entities (buckets), and their kind of interaction ([x]hit, 
 10 - Test character with simple combo and combo time cancel 2
 11 - Collision VS Collision physics 3
 
-TODO: which collision box (ID) was I hit?
+TODO: which collision box (ID) was I hit at?
+TODO: one hit per animation (no multihit, thank you)

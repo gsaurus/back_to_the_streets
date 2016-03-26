@@ -31,7 +31,7 @@ namespace RetroBread{
 				return;
 			CollisionBox currentCollision = CharacterEditor.Instance.CurrentCollision();
 			foreach (CollisionBox collision in currentAnim.collisionBoxes) {
-				if (collision.enabledFrames.Count >= currentFrame && collision.enabledFrames[currentFrame]) {
+				if (collision.enabledFrames.Count > currentFrame && collision.enabledFrames[currentFrame]) {
 					EnsureGameObject(numVisibleBoxes);
 					UpdateBox(numVisibleBoxes, collision.boxesPerFrame[currentFrame], collision == currentCollision);
 					++numVisibleBoxes;

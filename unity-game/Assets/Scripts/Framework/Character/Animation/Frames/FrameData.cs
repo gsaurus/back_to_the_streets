@@ -53,8 +53,8 @@ namespace RetroBread{
 
 		public void ComputeBoundingBoxes(){
 			if (collisions.Count > 0) { 
-				FixedVector3 pointOne = new FixedVector3(float.MaxValue, float.MaxValue, float.MaxValue);
-				FixedVector3 pointTwo = new FixedVector3(float.MinValue, float.MinValue, float.MinValue);
+				FixedVector3 pointOne = new FixedVector3(FixedFloat.MaxValue, FixedFloat.MaxValue, FixedFloat.MaxValue);
+				FixedVector3 pointTwo = new FixedVector3(FixedFloat.MinValue, FixedFloat.MinValue, FixedFloat.MinValue);
 				foreach (Box box in collisions) {
 					if (pointOne.X > box.pointOne.X) pointOne.X = box.pointOne.X;
 					if (pointOne.Y > box.pointOne.Y) pointOne.Y = box.pointOne.Y;
@@ -68,8 +68,8 @@ namespace RetroBread{
 				collisionBoundingBox = null;
 			}
 			if (hits.Count > 0) { 
-				FixedVector3 pointOne = new FixedVector3(float.MaxValue, float.MaxValue, float.MaxValue);
-				FixedVector3 pointTwo = new FixedVector3(float.MinValue, float.MinValue, float.MinValue);
+				FixedVector3 pointOne = new FixedVector3(FixedFloat.MaxValue, FixedFloat.MaxValue, FixedFloat.MaxValue);
+				FixedVector3 pointTwo = new FixedVector3(FixedFloat.MinValue, FixedFloat.MinValue, FixedFloat.MinValue);
 				Box box;
 				foreach (HitBox hitBox in hits) {
 					box = hitBox.box;
@@ -87,14 +87,34 @@ namespace RetroBread{
 		}
 
 
-		public bool CollisionCollisionCheck(FrameData other){
+		private Box OffsettedBox(Box box, FixedVector3 offset, bool facingRight){
+			FixedVector3 newPos1 = box.pointOne;
+			FixedVector3 newPos2 = box.pointTwo;
+			if (!facingRight) {
+				// swap and make symetric
+				FixedFloat tmp = -newPos1.X;
+				newPos1.X = -newPos2.X;
+				newPos2.X = tmp;
+			}
+			return new Box(offset + newPos1, offset + newPos2);
+		}
+
+
+		public bool CollisionCollisionCheck(FixedVector3 offset, bool facingRight, FrameData other, FixedVector3 otherOffset, bool otherFacingRight){
 			if (collisions.Count == 0 || other.collisions.Count == 0) return false;
-			if (collisionBoundingBox.Intersects(other.collisionBoundingBox)) {
+
+			Box offsettedBox = OffsettedBox(collisionBoundingBox, offset, facingRight);
+			Box otherOffsettedBox = OffsettedBox(other.collisionBoundingBox, otherOffset, otherFacingRight);
+
+			if (offsettedBox.Intersects(otherOffsettedBox)) {
 				if (collisions.Count == 1 && other.collisions.Count == 1) return true;
 
+
 				foreach (Box box in collisions) {
+					offsettedBox = OffsettedBox(box, offset, facingRight);
 					foreach (Box otherBox in other.collisions) {
-						if (box.Intersects(otherBox)){
+						otherOffsettedBox = OffsettedBox(otherBox, otherOffset, otherFacingRight);
+						if (offsettedBox.Intersects(otherOffsettedBox)){
 							return true;
 						}
 					}
@@ -104,15 +124,20 @@ namespace RetroBread{
 		}
 
 
-		public HitData HitCollisionCheck(FrameData other){
+		public HitData HitCollisionCheck(FixedVector3 offset, bool facingRight, FrameData other, FixedVector3 otherOffset, bool otherFacingRight){
 			if (hits.Count == 0 || other.collisions.Count == 0) return null;
 
-			if (hitBoundingBox.Intersects(other.collisionBoundingBox)) {
+			Box offsettedBox = OffsettedBox(hitBoundingBox, offset, facingRight);
+			Box otherOffsettedBox = OffsettedBox(other.collisionBoundingBox, otherOffset, otherFacingRight);
+
+			if (offsettedBox.Intersects(otherOffsettedBox)) {
 				if (hits.Count == 1 && other.collisions.Count == 1) return hits[0].hitData;
 
 				foreach (HitBox hitBox in hits) {
+					offsettedBox = OffsettedBox(hitBox.box, offset, facingRight);
 					foreach (Box otherBox in other.collisions) {
-						if (hitBox.box.Intersects(otherBox)){
+						otherOffsettedBox = OffsettedBox(otherBox, otherOffset, otherFacingRight);
+						if (offsettedBox.Intersects(otherOffsettedBox)){
 							return hitBox.hitData;
 						}
 					}

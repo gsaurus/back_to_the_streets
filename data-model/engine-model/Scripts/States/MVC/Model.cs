@@ -15,6 +15,7 @@ namespace RetroBread{
 	[ProtoInclude(13, typeof(PhysicPointModel))]
 	[ProtoInclude(14, typeof(PhysicPlaneModel))]
 	[ProtoInclude(15, typeof(PhysicWorldModel))]
+	[ProtoInclude(16, typeof(TeamsManagerModel))]
 	public abstract class Model{
 
 		// Unique model index in the StateManager

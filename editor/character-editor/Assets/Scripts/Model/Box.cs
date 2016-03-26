@@ -35,7 +35,9 @@ namespace RetroBread.Editor{
 		}
 
 		public Storage.Box SaveToStorage(){
-			return new Storage.Box(pointOne, pointTwo);
+			FixedVector3 newPointOne = FixedVector3.Min(pointOne, pointTwo);
+			FixedVector3 newPointTwo = FixedVector3.Max(pointOne, pointTwo);
+			return new Storage.Box(newPointOne, newPointTwo);
 		}
 
 	}

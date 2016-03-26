@@ -50,11 +50,14 @@ namespace RetroBread{
 			AnimationModel animModel = GetAnimationModel(model);
 			AnimationModel otherAnimModel = GetAnimationModel(otherModel);
 			AnimationController animController = animModel.Controller() as AnimationController;
-			if (animController.CollisionCollisionCheck(animModel, otherAnimModel)) {
+			PhysicPointModel pointModel = GetPointModel(model);
+			PhysicPointModel otherPointModel = GetPointModel(otherModel);
+			if (animController.CollisionCollisionCheck(animModel, pointModel.position, model.isFacingRight, otherAnimModel, otherPointModel.position, otherModel.isFacingRight)) {
 				// Both entities get knowing they hit each other
 				GameEntityController otherController = otherModel.Controller() as GameEntityController;
 				otherController.lastCollisionEntityId = model.Index;
 				lastCollisionEntityId = otherModel.Index;
+				Debug.Log("Collision detected");
 				return true;
 			}
 			return false;
@@ -66,12 +69,15 @@ namespace RetroBread{
 			AnimationModel animModel = GetAnimationModel(model);
 			AnimationModel otherAnimModel = GetAnimationModel(otherModel);
 			AnimationController animController = animModel.Controller() as AnimationController;
-			HitData hitData = animController.HitCollisionCheck(animModel, otherAnimModel);
+			PhysicPointModel pointModel = GetPointModel(model);
+			PhysicPointModel otherPointModel = GetPointModel(otherModel);
+			HitData hitData = animController.HitCollisionCheck(animModel, pointModel.position, model.isFacingRight, otherAnimModel, otherPointModel.position, otherModel.isFacingRight);
 			if (hitData != null) {
 				// Both entities get knowing one hit the other
 				GameEntityController otherController = otherModel.Controller() as GameEntityController;
 				otherController.lastHurts.Add(hitData);
 				lastHits.Add(hitData);
+				Debug.Log("HIT detected");
 			}
 		}
 
