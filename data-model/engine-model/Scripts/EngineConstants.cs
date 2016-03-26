@@ -5,27 +5,31 @@ namespace RetroBread{
 	public class DefaultUpdateOrder{
 
 		// 1st: input
-		// 2nd: animations
-		// 3rd: physic components (points, planes)
-		// 4th: collision detection (world update)
-		// 5th: game entities
+		// 2nd: teams (hit detection)
+		// 3rd: animations
+		// 4th: physic components (points, planes)
+		// 5th: collision detection (world update)
+		// 6th: game entities
 
 
 		// Input
-		public const int InputUpdateOrder		= -875;
+		public const int InputUpdateOrder			= -876;
+		// Teams Manager (hits detection)
+		public const int TeamsManagerUpdateOrder	= -875;
 		// Animations
-		public const int AnimationsUpdateOrder 	= -874;
+		public const int AnimationsUpdateOrder 		= -874;
 		// Point & planes updates (apply forces over points and planes)
-		public const int PhysicsUpdateOrder 	= -873;
+		public const int PhysicsUpdateOrder 		= -873;
 		// World updates (collisions, consolidations, etc)
-		public const int WorldUpdateOrder 		= -872;
+		public const int WorldUpdateOrder 			= -872;
 		// Entities
-		public const int EntitiesUpdateOrder	= -871;
+		public const int EntitiesUpdateOrder		= -871;
 	}
 
 
 	public class DefaultVCFactoryIds{
-		
+
+		public const string TeamsManagerControllerFactoryId		= "_rb_tmc";
 		public const string PhysicPointControllerFactoryId		= "_rb_ppc";
 		public const string PhysicPointViewFactoryId			= "_rb_ppv";
 		public const string PhysicWorldControllerFactoryId		= "_rb_pwc";

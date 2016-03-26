@@ -59,6 +59,7 @@
     <Compile Include="Scripts\StandardInputEvents.cs" />
     <Compile Include="Scripts\NetworkPlayerData.cs" />
     <Compile Include="Scripts\Utils\Debug.cs" />
+    <Compile Include="Scripts\TeamsManagerModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

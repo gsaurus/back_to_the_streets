@@ -23,11 +23,11 @@ namespace RetroBread{
 
 		// Need to store action coolers to recognize
 		// button presses and releasees during a few frames
-		[ProtoMember(3)]
+		[ProtoMember(3, OverwriteList=true)]
 		public uint[] actionPressedCoolers;
-		[ProtoMember(4)]
+		[ProtoMember(4, OverwriteList=true)]
 		public uint[] actionReleasedCoolers;
-		[ProtoMember(5)]
+		[ProtoMember(5, OverwriteList=true)]
 		public bool[] actionsHold;
 
 

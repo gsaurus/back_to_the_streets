@@ -62,6 +62,13 @@ namespace GameSerializer
 				Console.WriteLine("deep cloned Dictionary<string, uint>");
 			}
 
+			if (model.CanSerialize(typeof(TeamsManagerModel))) {
+				TeamsManagerModel data = new TeamsManagerModel(2);
+				data.teams[0].entities.Add(new ModelReference());
+				model.DeepClone(data);
+				Console.WriteLine ("deep cloned TeamsManagerModel");
+			}
+
 			if (model.CanSerialize(typeof(AxisInputEvent))){
 				Event e = new AxisInputEvent();
 				model.DeepClone(e);

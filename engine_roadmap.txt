@@ -210,9 +210,9 @@ Log
 	
 	
 OK - PointModel with flag to enable / disable physics calculations (to disable during hit pause)	1
-2 - Precompute collisions bounding boxes 1
-3 - Precompute hits bounding boxes 1
-4 - Define teams of entities (buckets), and their kind of interaction ([x]hit, [x]collision) to check collisions between relevant teams only 2
+OK - Precompute collisions bounding boxes 1
+OK - Precompute hits bounding boxes 1
+OK - Define teams of entities (buckets), and their kind of interaction ([x]hit, [x]collision) to check collisions between relevant teams only 2
 5 - Hits detection: loop through the teams to detect hit VS collision (Debug.Log will do for now) 3
 6 - New type of conditional events: on hit - not tested every frame, triggered by hit detection (beware of conflict with frame based events) 2
 7 - Animation pause delay (built-in support) 1
@@ -220,3 +220,5 @@ OK - PointModel with flag to enable / disable physics calculations (to disable d
 9 - Conditions & events for general variables 3
 10 - Test character with simple combo and combo time cancel 2
 11 - Collision VS Collision physics 3
+
+TODO: which collision box (ID) was I hit?

@@ -33,6 +33,18 @@ namespace RetroBread{
 			);
 		}
 
+
+		// Teams Manager
+		private static void RegisterTeamsManagerVCFactories(){
+			VCFactoriesManager.Instance.RegisterControllerFactory<TeamsManagerModel>(
+				DefaultVCFactoryIds.TeamsManagerControllerFactoryId,
+				delegate(TeamsManagerModel model){
+					return new TeamsManagerController();
+				}
+			);
+		}
+
+
 		// World
 		private static void RegisterPhysicWorldVCFactories(){
 			VCFactoriesManager.Instance.RegisterControllerFactory<PhysicWorldModel>(

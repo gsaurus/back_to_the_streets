@@ -17,6 +17,9 @@ namespace RetroBread{
 
 		// Information carried during the update
 		// Hits and hurts information
+		// This information is updated through the teams manager and is consulted later by animations execution (conditions)
+		// So the game entity controller doesn't directly manage them.
+		// Hits & collisions are handled before physics and animations, to be consulted at that time
 		private List<HitData> lastHits = new List<HitData>();
 		private List<HitData> lastHurts = new List<HitData>();
 		private List<ModelReference> lastHittenEntitiesIds = new List<ModelReference>();
@@ -74,6 +77,7 @@ namespace RetroBread{
 
 
 		// Clear temporary information
+		// Called from teams manager before any hit/collision checks
 		public void ClearHitsInformation(){
 			lastHits.Clear();
 			lastHurts.Clear();
@@ -85,9 +89,6 @@ namespace RetroBread{
 
 		// Update automated stuff
 		protected override void Update(GameEntityModel model){
-			
-			// Clear hits & collision information
-			ClearHitsInformation();
 
 			// first update the input velocity
 			UpdateInputVelocityAffector(model);

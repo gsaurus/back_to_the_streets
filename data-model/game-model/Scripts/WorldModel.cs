@@ -21,6 +21,9 @@ public class WorldModel:Model<WorldModel>{
 	[ProtoMember(3)]
 	public bool lastSpawnWasLeft;
 
+	[ProtoMember(4)]
+	public ModelReference teamsModelId = new ModelReference();
+
 
 	// Constructor
 	public WorldModel():base(WorldControllerFactoryId){
