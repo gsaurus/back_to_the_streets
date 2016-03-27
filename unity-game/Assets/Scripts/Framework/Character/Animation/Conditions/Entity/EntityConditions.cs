@@ -8,6 +8,7 @@ namespace RetroBread{
 
 
 	// Condition over an entity model (rather than just animation)
+	// parameterless
 	public class EntityBoolCondition: AnimationTriggerCondition{
 
 		// Possible delegates
@@ -26,6 +27,33 @@ namespace RetroBread{
 			GameEntityModel entityModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
 			if (entityModel != null){
 				return eventExecutionDelegate(entityModel);
+			}
+			return false;
+		}
+
+	}
+
+
+	public class SingleEntityBoolCondition<T>: AnimationTriggerCondition{
+
+		// Possible delegates
+		public delegate bool ConditionExecutionDelegate(GameEntityModel model, T param);
+
+		private ConditionExecutionDelegate eventExecutionDelegate;
+		private T param;
+
+
+		public SingleEntityBoolCondition(ConditionExecutionDelegate del, T param){
+			eventExecutionDelegate = del;
+			this.param = param;
+		}
+
+
+		public bool Evaluate(AnimationModel model){
+
+			GameEntityModel entityModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
+			if (entityModel != null){
+				return eventExecutionDelegate(entityModel, param);
 			}
 			return false;
 		}

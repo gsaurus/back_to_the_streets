@@ -60,7 +60,12 @@ namespace RetroBread{
 			}
 
 			// don't animate if paused
-			animator.enabled = !StateManager.Instance.IsPaused;
+			GameEntityModel entityModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
+			bool entityPaused = false;
+			if (entityModel != null) {
+				entityPaused = entityModel.pauseTimer > 0;
+			}
+			animator.enabled = !(StateManager.Instance.IsPaused || entityPaused);
 			if (!animator.enabled) return;
 
 			// Get current animation (if transiting we consider next as current)

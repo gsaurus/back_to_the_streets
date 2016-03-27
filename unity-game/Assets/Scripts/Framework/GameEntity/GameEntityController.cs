@@ -57,6 +57,7 @@ namespace RetroBread{
 				GameEntityController otherController = otherModel.Controller() as GameEntityController;
 				otherController.lastCollisionEntityId = model.Index;
 				lastCollisionEntityId = otherModel.Index;
+//				Debug.Log("Collision detected");
 				return true;
 			}
 			return false;
@@ -79,7 +80,7 @@ namespace RetroBread{
 				GameEntityController otherController = otherModel.Controller() as GameEntityController;
 				otherController.lastHurts.Add(hitInformation.HitWithEntity(model.Index));
 				lastHits.Add(hitInformation.HitWithEntity(otherModel.Index));
-				Debug.Log("HIT detected");
+				//Debug.Log("HIT detected");
 			}
 		}
 
@@ -101,6 +102,16 @@ namespace RetroBread{
 
 			// if input velocity goes against current direction, flip
 			CheckAutomaticFlip(model);
+
+			// Buil't in pause timer
+			PhysicPointModel pointModel = GetPointModel(model);
+			if (pointModel != null && !pointModel.isActive) {
+				if (--model.pauseTimer < 1) {
+					pointModel.isActive = true;
+				}
+			}
+
+			// TODO: Update custom timers
 
 		}
 
@@ -175,6 +186,49 @@ namespace RetroBread{
 		}
 
 
+		// Pause for a given number of frames (used for attack pause delay effect)
+		public static void PausePhysics(GameEntityModel model, int numFrames){
+			PhysicPointModel pointModel = GetPointModel(model);
+			if (pointModel == null) return;
+			pointModel.isActive = false;
+			model.pauseTimer = numFrames;
+		}
+
+
+		// Face to hitter's location
+		public static void FaceToHitterLocation(GameEntityModel model, bool oppositeFacing){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			PhysicPointModel pointModel = GameEntityController.GetPointModel(model);
+			if (pointModel != null && controller.lastHurts.Count > 0) {
+				HitInformation info = controller.lastHurts[0];
+				GameEntityModel hitter = StateManager.state.GetModel(info.entityId) as GameEntityModel;
+				if (hitter != null) {
+					PhysicPointModel hitterPoint = GameEntityController.GetPointModel(hitter);
+					if (hitterPoint != null) {
+						model.isFacingRight = pointModel.position.X < hitterPoint.position.X;
+						if (oppositeFacing) {
+							model.isFacingRight = !model.isFacingRight;
+						}
+					}
+				}
+			}
+		}
+
+		// Face to same direction as hitter is facing
+		public static void FaceToHitterDirection(GameEntityModel model, bool oppositeFacing){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			PhysicPointModel pointModel = GameEntityController.GetPointModel(model);
+			if (pointModel != null && controller.lastHurts.Count > 0) {
+				HitInformation info = controller.lastHurts[0];
+				GameEntityModel hitter = StateManager.state.GetModel(info.entityId) as GameEntityModel;
+				model.isFacingRight = hitter.isFacingRight;
+				if (oppositeFacing) {
+					model.isFacingRight = !model.isFacingRight;
+				}
+			}
+		}
+
+
 	#endregion
 
 
@@ -236,24 +290,37 @@ namespace RetroBread{
 			if (pointModel == null) return FixedFloat.Zero;
 			return pointModel.collisionInpact.Z;
 		}
-
-
+			
 
 		#region Hits / Collisions
 
+			// Generic entity-entity collision
 			public static bool IsCollidingWithOthers(GameEntityModel model){
 				GameEntityController controller = model.Controller() as GameEntityController;
 				return controller.lastCollisionEntityId != ModelReference.InvalidModelIndex;
 			}
 
+			// Successful hits count
 			public static int HitTargetsCount(GameEntityModel model){
 				GameEntityController controller = model.Controller() as GameEntityController;
 				return controller.lastHits.Count; 
 			}
 			
+			// Hitters count
 			public static int HurtSourcesCount(GameEntityModel model){
 				GameEntityController controller = model.Controller() as GameEntityController;
 				return controller.lastHurts.Count; 
+			}
+
+			// Hurt at a certain collisionID
+			public static bool HurtsContainCollisionId(GameEntityModel model, int collisionId){
+				GameEntityController controller = model.Controller() as GameEntityController;
+				foreach (HitInformation hitInformation in controller.lastHurts) {
+					if (hitInformation.collisionId == collisionId) {
+						return true;
+					}
+				}
+				return false;
 			}
 
 		#endregion

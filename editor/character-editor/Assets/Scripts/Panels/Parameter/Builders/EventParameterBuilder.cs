@@ -37,7 +37,8 @@ namespace RetroBread{
 			new BuildSetMaxInputVelocity(),				// 4: inputVel(2.3, 1.5)
 			new BuildAddAnimationVerticalImpulse(),		// 5: impulseV(1.5)
 			new BuildFlip(),							// 6: flip
-			new BuildAutoFlip()							// 7: autoFlip(false)
+			new BuildAutoFlip(),						// 7: autoFlip(false)
+			new BuildDelay()							// 8: pause(3)
 		};
 
 
@@ -170,6 +171,17 @@ namespace RetroBread{
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
 				BoolToggleParam.Instantiate(parent, parameter, 0, "Automatic flip:");
+			}
+		}
+
+
+		private class BuildDelay: InternEventBuilder{
+			public BuildDelay():base("Pause physics"){}
+			public override string ToString(GenericParameter parameter){
+				return "pause(" + parameter.SafeInt(0) + ")";
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				IntInputFieldParam.Instantiate(parent, parameter, 0, "Delay:");
 			}
 		}
 

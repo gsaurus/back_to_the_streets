@@ -58,7 +58,12 @@ namespace RetroBread{
 			new BuildEntityIsGrounded(),				// 6: grounded
 			new BuildEntityIsFacingRight(),				// 7: facing right
 			new BuildEntityHittingWall(),				// 8: collide left wall
-			new BuildEntityCollisionForceArithmetics()	// 9: collide_H >= 4.3
+			new BuildEntityCollisionForceArithmetics(),	// 9: collide_H >= 4.3
+			new BuildEntityCollision(),					// 10: entity collision
+			new BuildEntityHit(),						// 11: hit
+			new BuildEntityHurt(),						// 12: hurt
+			new BuildEntitySpecificHurt()				// 13: hurt(3)
+
 			// TODO: everything else, including custom values List<int>, List<FixedFloat>, List<int> timers for combo counter etc
 		};
 
@@ -254,6 +259,57 @@ namespace RetroBread{
 				IntDropdownParam.Instantiate(parent, parameter, 0, "Orientation:", collisionDirection);
 				InstantiateArithmeticField(parent, parameter, 1);
 				FloatInputFieldParam.Instantiate(parent, parameter, 0, "impact velocity:");
+			}
+		}
+
+
+
+		// entity collision
+		private class BuildEntityCollision: InternConditionBuilder{
+			public BuildEntityCollision():base("Collision with other entity"){}
+			public override string ToString(GenericParameter parameter){
+				return FilterNegationString(parameter, "entity collision");
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				InstantiateNegation(parent, parameter);
+			}
+		}
+
+
+
+		// hit
+		private class BuildEntityHit: InternConditionBuilder{
+			public BuildEntityHit():base("Hit"){}
+			public override string ToString(GenericParameter parameter){
+				return FilterNegationString(parameter, "hit");
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				InstantiateNegation(parent, parameter);
+			}
+		}
+
+
+		// hurt
+		private class BuildEntityHurt: InternConditionBuilder{
+			public BuildEntityHurt():base("Hurt"){}
+			public override string ToString(GenericParameter parameter){
+				return FilterNegationString(parameter, "hurt");
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				InstantiateNegation(parent, parameter);
+			}
+		}
+
+
+		// hurt(3)
+		private class BuildEntitySpecificHurt: InternConditionBuilder{
+			public BuildEntitySpecificHurt():base("Specific Hurt"){}
+			public override string ToString(GenericParameter parameter){
+				return FilterNegationString(parameter, "hurt(" + parameter.SafeInt(0) + ")");
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				InstantiateNegation(parent, parameter);
+				IntInputFieldParam.Instantiate(parent, parameter, 0, "collision ID:", 0);
 			}
 		}
 

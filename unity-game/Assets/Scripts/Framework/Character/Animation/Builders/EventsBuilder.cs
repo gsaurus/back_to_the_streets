@@ -17,7 +17,8 @@ namespace RetroBread{
 			BuildSetMaxInputVelocity,			// 4: inputVel(2.3, 1.5)
 			BuildAddAnimationVerticalImpulse,	// 5: impulseV(1.5)
 			BuildFlip,							// 6: flip
-			BuildAutoFlip						// 7: autoFlip(false)
+			BuildAutoFlip,						// 7: autoFlip(false)
+			BuildPause							// 8: pause(10)
 		};
 
 
@@ -125,6 +126,11 @@ namespace RetroBread{
 		// autoFlip(false)
 		private static AnimationEvent BuildAutoFlip(Storage.GenericParameter parameter){
 			return new SingleEntityAnimationEvent<bool>(null, GameEntityController.SetAutomaticFlip, parameter.SafeBool(0));
+		}
+
+		// pause(10)
+		private static AnimationEvent BuildPause(Storage.GenericParameter parameter){
+			return new SingleEntityAnimationEvent<int>(null, GameEntityController.PausePhysics, parameter.SafeInt(0));
 		}
 
 

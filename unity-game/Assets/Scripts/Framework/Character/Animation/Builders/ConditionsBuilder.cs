@@ -23,7 +23,11 @@ namespace RetroBread{
 			BuildEntityIsGrounded,					// 6: grounded
 			BuildEntityIsFacingRight,				// 7: facing right
 			BuildEntityHittingWall,					// 8: collide left wall
-			BuildEntityCollisionForceArithmetics	// 9: collide_H >= 4.3
+			BuildEntityCollisionForceArithmetics,	// 9: collide_H >= 4.3
+			BuildEntityEntityCollisionCheck,		// 10: entity collision
+			BuildOnHit,								// 11: on hit
+			BuildOnHurt,							// 12: on hurt
+			BuildOnSpecificHurt						// 13: on hurt(1)
 			// TODO: everything else, including custom values List<int>, List<FixedFloat>, List<int> timers for combo counter etc
 		};
 			
@@ -178,6 +182,35 @@ namespace RetroBread{
 			}
 			return null;
 		}
+
+		// entity collision
+		private static AnimationTriggerCondition BuildEntityEntityCollisionCheck(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+			keyFrame = invalidKeyframe;
+			return new EntityBoolCondition(GameEntityController.IsCollidingWithOthers);
+		}
+
+
+		// on hit
+		private static AnimationTriggerCondition BuildOnHit(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+			keyFrame = invalidKeyframe;
+			return new EntityArithmeticCondition<int>(ArithmeticConditionOperatorType.greater, GameEntityController.HitTargetsCount, 0);
+		}
+
+										
+		// on hurt
+		private static AnimationTriggerCondition BuildOnHurt(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+			keyFrame = invalidKeyframe;
+			return new EntityArithmeticCondition<int>(ArithmeticConditionOperatorType.greater, GameEntityController.HurtSourcesCount, 0);
+		}
+
+		// on hurt(3)
+		private static AnimationTriggerCondition BuildOnSpecificHurt(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+			keyFrame = invalidKeyframe;
+			int collisionId = (int)parameter.SafeInt(0);
+			return new SingleEntityBoolCondition<int>(GameEntityController.HurtsContainCollisionId, collisionId);
+		}
+
+										
 
 
 #endregion

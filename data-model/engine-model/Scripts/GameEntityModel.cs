@@ -1,5 +1,6 @@
 ﻿using System;
 using ProtoBuf;
+using System.Collections.Generic;
 
 
 namespace RetroBread{
@@ -33,6 +34,25 @@ namespace RetroBread{
 		[ProtoMember(6)]
 		public FixedVector3 maxInputVelocity;
 
+		// Pause timer (built in pause support)
+		[ProtoMember(7)]
+		public int pauseTimer;
+
+		// For now, have combos built in to simplify
+		[ProtoMember(8)]
+		public int comboCounter;
+
+		[ProtoMember(9)]
+		public int comboTimer;
+
+		// TODO: not sure about custom variables & timers yet
+//		// Custom int variables
+//		[ProtoMember(8, OverwriteList=true)]
+//		public List<int> customVariables;
+//
+//		// Custom automatic timers (they decrement on each frame)
+//		[ProtoMember(9, OverwriteList=true)]
+//		public List<int> customTimers;
 
 
 		#region Constructors
@@ -96,6 +116,36 @@ namespace RetroBread{
 
 
 		#endregion
+
+		// TODO: Not sure about custom variables and timers yet 
+//		private void EnsureListIndex(ref List<int> list, int index){
+//			if (list == null) {
+//				list = new List<int>();
+//			}
+//			while (list.Count <= index) {
+//				list.Add(0);
+//			}
+//		}
+//
+//		public int GetVariable(int variableIndex){
+//			EnsureListIndex(customVariables, variableIndex);
+//			return customVariables[variableIndex];
+//		}
+//
+//		public void SetVariable(int variableIndex, int value){
+//			EnsureListIndex(customVariables, variableIndex);
+//			customVariables[variableIndex] = value;
+//		}
+//
+//		public int GetTimer(int timerIndex){
+//			EnsureListIndex(customTimers, timerIndex);
+//			return customTimers[timerIndex];
+//		}
+//
+//		public void SetTimer(int timerIndex, int value){
+//			EnsureListIndex(customTimers, timerIndex);
+//			customTimers[timerIndex] = value;
+//		}
 
 
 		
