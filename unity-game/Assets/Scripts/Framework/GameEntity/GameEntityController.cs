@@ -20,10 +20,10 @@ namespace RetroBread{
 		// This information is updated through the teams manager and is consulted later by animations execution (conditions)
 		// So the game entity controller doesn't directly manage them.
 		// Hits & collisions are handled before physics and animations, to be consulted at that time
-		private List<HitData> lastHits = new List<HitData>();
-		private List<HitData> lastHurts = new List<HitData>();
-		private List<ModelReference> lastHittenEntitiesIds = new List<ModelReference>();
-		private List<ModelReference> lastHitterEntitiesIds = new List<ModelReference>();
+		// -----------
+		// Hit/Hurt information is used by animation controllers to react to hits
+		private List<HitInformation> lastHits = new List<HitInformation>();
+		private List<HitInformation> lastHurts = new List<HitInformation>();
 		// For collision we won't need information about everyone
 		// To simplify, one can only collide with only other entity at the same time
 		private ModelReference lastCollisionEntityId;
@@ -57,7 +57,6 @@ namespace RetroBread{
 				GameEntityController otherController = otherModel.Controller() as GameEntityController;
 				otherController.lastCollisionEntityId = model.Index;
 				lastCollisionEntityId = otherModel.Index;
-				Debug.Log("Collision detected");
 				return true;
 			}
 			return false;
@@ -71,12 +70,15 @@ namespace RetroBread{
 			AnimationController animController = animModel.Controller() as AnimationController;
 			PhysicPointModel pointModel = GetPointModel(model);
 			PhysicPointModel otherPointModel = GetPointModel(otherModel);
-			HitData hitData = animController.HitCollisionCheck(animModel, pointModel.position, model.isFacingRight, otherAnimModel, otherPointModel.position, otherModel.isFacingRight);
-			if (hitData != null) {
+			HitInformation hitInformation = animController.HitCollisionCheck(
+				animModel, pointModel.position, model.isFacingRight,
+				otherAnimModel, otherPointModel.position, otherModel.isFacingRight
+			);
+			if (hitInformation != null) {
 				// Both entities get knowing one hit the other
 				GameEntityController otherController = otherModel.Controller() as GameEntityController;
-				otherController.lastHurts.Add(hitData);
-				lastHits.Add(hitData);
+				otherController.lastHurts.Add(hitInformation.HitWithEntity(model.Index));
+				lastHits.Add(hitInformation.HitWithEntity(otherModel.Index));
 				Debug.Log("HIT detected");
 			}
 		}
@@ -87,8 +89,6 @@ namespace RetroBread{
 		public void ClearHitsInformation(){
 			lastHits.Clear();
 			lastHurts.Clear();
-			lastHittenEntitiesIds.Clear();
-			lastHitterEntitiesIds.Clear();
 			lastCollisionEntityId = new ModelReference(ModelReference.InvalidModelIndex);
 		}
 

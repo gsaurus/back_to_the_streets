@@ -6,14 +6,17 @@ namespace RetroBread{
 
 	// Simple box information
 	public class Box{
+		
 		public FixedVector3 pointOne;
 		public FixedVector3 pointTwo;
 
+		// Constructor given two points
 		public Box(FixedVector3 pointOne, FixedVector3 pointTwo){
 			this.pointOne = pointOne;
 			this.pointTwo = pointTwo;
 		}
 
+		// Check if intersects with other box
 		public bool Intersects(Box otherBox){
 			return pointTwo.Z > otherBox.pointOne.Z
 			    && pointOne.Z < otherBox.pointTwo.Z
@@ -23,7 +26,25 @@ namespace RetroBread{
 			    && pointOne.Y < otherBox.pointTwo.Y
 			;
 		}
+
+		// Center, may be useful to find the center of an intersection
+		public FixedVector3 Center(){
+			return pointOne + (pointTwo - pointOne) * 0.5f;
+		}
 	}
+
+
+	// Collision box, have the box and collision ID
+	public class CollisionBox{
+		public Box box;
+		public int collisionId;
+
+		public CollisionBox(Box box, int collisionId){
+			this.box = box;
+			this.collisionId = collisionId;
+		}
+	}
+
 
 	// Base class for a hitbox
 	public class HitBox{
@@ -42,9 +63,46 @@ namespace RetroBread{
 	}
 
 
+	// Hit happening information: intersection area and hit data
+	public class HitInformation{
+		// Hit information
+		public HitData hitData { get; private set; }
+		// Intersection between hit and collision
+		public Box intersection { get; private set; }
+		// The collision box id it hit
+		public int collisionId { get ; private set; }
+		// Who we hit, or who was hit
+		public ModelReference entityId { get; private set; }
+
+		// Constructor based on hit-collision intersection
+		public HitInformation(HitData data, Box hitBox, int collisionId, Box collisionBox){
+			this.hitData = data;
+			this.collisionId = collisionId;
+			intersection = new Box(
+				FixedVector3.Max (hitBox.pointOne, collisionBox.pointOne),
+				FixedVector3.Min (hitBox.pointTwo, collisionBox.pointTwo)
+			);
+		}
+
+		// Constructor based on hit-collision intersection
+		private HitInformation(HitInformation info, ModelReference entityId){
+			this.hitData = info.hitData;
+			this.intersection = info.intersection;
+			this.collisionId = info.collisionId;
+			this.entityId = entityId;
+		}
+
+		// Create a copy adding the entity information (used for hitter and hitten entity) 
+		public HitInformation HitWithEntity(ModelReference entityId){
+			return new HitInformation(this, entityId);
+		}
+
+	}
+
+
 	// Contains collision and hits information
 	public class FrameData {
-		public List<Box> collisions = new List<Box>();
+		public List<CollisionBox> collisions = new List<CollisionBox>();
 		public List<HitBox> hits = new List<HitBox>();
 
 		private Box collisionBoundingBox;
@@ -52,10 +110,13 @@ namespace RetroBread{
 
 
 		public void ComputeBoundingBoxes(){
+			// Collisions
 			if (collisions.Count > 0) { 
 				FixedVector3 pointOne = new FixedVector3(FixedFloat.MaxValue, FixedFloat.MaxValue, FixedFloat.MaxValue);
 				FixedVector3 pointTwo = new FixedVector3(FixedFloat.MinValue, FixedFloat.MinValue, FixedFloat.MinValue);
-				foreach (Box box in collisions) {
+				Box box;
+				foreach (CollisionBox collisionBox in collisions) {
+					box = collisionBox.box;
 					if (pointOne.X > box.pointOne.X) pointOne.X = box.pointOne.X;
 					if (pointOne.Y > box.pointOne.Y) pointOne.Y = box.pointOne.Y;
 					if (pointOne.Z > box.pointOne.Z) pointOne.Z = box.pointOne.Z;
@@ -67,6 +128,7 @@ namespace RetroBread{
 			}else {
 				collisionBoundingBox = null;
 			}
+			// Hits
 			if (hits.Count > 0) { 
 				FixedVector3 pointOne = new FixedVector3(FixedFloat.MaxValue, FixedFloat.MaxValue, FixedFloat.MaxValue);
 				FixedVector3 pointTwo = new FixedVector3(FixedFloat.MinValue, FixedFloat.MinValue, FixedFloat.MinValue);
@@ -86,7 +148,7 @@ namespace RetroBread{
 			}
 		}
 
-
+		// Offsets a box, used to apply world coordinates of the entity, and it's orientation
 		private Box OffsettedBox(Box box, FixedVector3 offset, bool facingRight){
 			FixedVector3 newPos1 = box.pointOne;
 			FixedVector3 newPos2 = box.pointTwo;
@@ -109,11 +171,10 @@ namespace RetroBread{
 			if (offsettedBox.Intersects(otherOffsettedBox)) {
 				if (collisions.Count == 1 && other.collisions.Count == 1) return true;
 
-
-				foreach (Box box in collisions) {
-					offsettedBox = OffsettedBox(box, offset, facingRight);
-					foreach (Box otherBox in other.collisions) {
-						otherOffsettedBox = OffsettedBox(otherBox, otherOffset, otherFacingRight);
+				foreach (CollisionBox collisionBox in collisions) {
+					offsettedBox = OffsettedBox(collisionBox.box, offset, facingRight);
+					foreach (CollisionBox otherCollisionBox in other.collisions) {
+						otherOffsettedBox = OffsettedBox(otherCollisionBox.box, otherOffset, otherFacingRight);
 						if (offsettedBox.Intersects(otherOffsettedBox)){
 							return true;
 						}
@@ -124,21 +185,22 @@ namespace RetroBread{
 		}
 
 
-		public HitData HitCollisionCheck(FixedVector3 offset, bool facingRight, FrameData other, FixedVector3 otherOffset, bool otherFacingRight){
+		public HitInformation HitCollisionCheck(FixedVector3 offset, bool facingRight, FrameData other, FixedVector3 otherOffset, bool otherFacingRight){
 			if (hits.Count == 0 || other.collisions.Count == 0) return null;
 
 			Box offsettedBox = OffsettedBox(hitBoundingBox, offset, facingRight);
 			Box otherOffsettedBox = OffsettedBox(other.collisionBoundingBox, otherOffset, otherFacingRight);
 
 			if (offsettedBox.Intersects(otherOffsettedBox)) {
-				if (hits.Count == 1 && other.collisions.Count == 1) return hits[0].hitData;
-
+				if (hits.Count == 1 && other.collisions.Count == 1) {
+					return new HitInformation(hits[0].hitData, offsettedBox, other.collisions[0].collisionId, otherOffsettedBox);
+				}
 				foreach (HitBox hitBox in hits) {
 					offsettedBox = OffsettedBox(hitBox.box, offset, facingRight);
-					foreach (Box otherBox in other.collisions) {
-						otherOffsettedBox = OffsettedBox(otherBox, otherOffset, otherFacingRight);
+					foreach (CollisionBox collisionBox in other.collisions) {
+						otherOffsettedBox = OffsettedBox(collisionBox.box, otherOffset, otherFacingRight);
 						if (offsettedBox.Intersects(otherOffsettedBox)){
-							return hitBox.hitData;
+							return new HitInformation(hitBox.hitData, offsettedBox, collisionBox.collisionId, otherOffsettedBox);
 						}
 					}
 				}

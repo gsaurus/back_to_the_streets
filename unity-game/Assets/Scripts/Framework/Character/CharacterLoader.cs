@@ -147,14 +147,16 @@ namespace RetroBread{
 					Storage.Box storageBox;
 					int boxIndex;
 					// For each box
-					foreach(Storage.CollisionBox storageCollisionBox in animation.collisionBoxes){
+					Storage.CollisionBox storageCollisionBox;
+					for(int collisionId = 0 ; collisionId < animation.collisionBoxes.Length ; ++collisionId){
+						storageCollisionBox = animation.collisionBoxes[collisionId];
 						// for each frame of each box
-						for (int i = 0; i < storageCollisionBox.boxIds.Length ; ++i){
-							boxIndex = storageCollisionBox.boxIds[i];
+						for (int frame = 0; frame < storageCollisionBox.boxIds.Length ; ++frame){
+							boxIndex = storageCollisionBox.boxIds[frame];
 							if (boxIndex != invalidBoxId){
 								storageBox = charData.boxes[boxIndex];
-								frameData = GetFrameData(framesData, i);
-								frameData.collisions.Add(new Box(storageBox.pointOne, storageBox.pointTwo));
+								frameData = GetFrameData(framesData, frame);
+								frameData.collisions.Add(new CollisionBox(new Box(storageBox.pointOne, storageBox.pointTwo), collisionId));
 							}
 						} // each frame
 					} // each storageCollisionBox

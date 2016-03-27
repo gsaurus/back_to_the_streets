@@ -77,6 +77,7 @@ namespace RetroBread{
 
 
 		// Collision check against other controller & model
+		// Params: animation models of both entities, offsets and orientation of both entities
 		public bool CollisionCollisionCheck(
 			AnimationModel model, FixedVector3 offset, bool facingRight,
 			AnimationModel otherModel, FixedVector3 otherOffset, bool otherFacingRight
@@ -90,7 +91,8 @@ namespace RetroBread{
 
 
 		// Hit check against other controller & model
-		public HitData HitCollisionCheck(
+		// Params: animation models of both entities, offsets and orientation of both entities
+		public HitInformation HitCollisionCheck(
 			AnimationModel model, FixedVector3 offset, bool facingRight,
 			AnimationModel otherModel, FixedVector3 otherOffset, bool otherFacingRight
 		){
