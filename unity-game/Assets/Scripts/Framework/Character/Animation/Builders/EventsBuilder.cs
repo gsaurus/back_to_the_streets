@@ -18,7 +18,9 @@ namespace RetroBread{
 			BuildAddAnimationVerticalImpulse,	// 5: impulseV(1.5)
 			BuildFlip,							// 6: flip
 			BuildAutoFlip,						// 7: autoFlip(false)
-			BuildPause							// 8: pause(10)
+			BuildPause,							// 8: pause(10)
+			BuildIncrementCombo,				// 9: ++combo
+			BuildResetCombo						// 10: reset(combo)
 		};
 
 
@@ -132,6 +134,17 @@ namespace RetroBread{
 		private static AnimationEvent BuildPause(Storage.GenericParameter parameter){
 			return new SingleEntityAnimationEvent<int>(null, GameEntityController.PausePhysics, parameter.SafeInt(0));
 		}
+
+		// ++combo
+		private static AnimationEvent BuildIncrementCombo(Storage.GenericParameter parameter){
+			return new SingleEntityAnimationEvent<int>(null, GameEntityController.IncrementCombo, parameter.SafeInt(0));
+		}
+
+		// reset(combo)
+		private static AnimationEvent BuildResetCombo(Storage.GenericParameter parameter){
+			return new SimpleEntityAnimationEvent(null, GameEntityController.ResetCombo);
+		}
+
 
 
 

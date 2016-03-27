@@ -103,7 +103,7 @@ namespace RetroBread{
 			// if input velocity goes against current direction, flip
 			CheckAutomaticFlip(model);
 
-			// Buil't in pause timer
+			// Built in pause timer
 			PhysicPointModel pointModel = GetPointModel(model);
 			if (pointModel != null && !pointModel.isActive) {
 				if (--model.pauseTimer < 1) {
@@ -111,7 +111,15 @@ namespace RetroBread{
 				}
 			}
 
-			// TODO: Update custom timers
+			// Built in combo timer
+			// If times up, combo counter is reset automatically
+			if (model.comboTimer > 0) {
+				if (--model.comboTimer == 0) {
+					model.comboCounter = 0;
+				}
+			}
+
+			// TODO: Update custom timers??
 
 		}
 
@@ -228,6 +236,18 @@ namespace RetroBread{
 			}
 		}
 
+		// Add 1 to combo counter
+		public static void IncrementCombo(GameEntityModel model, int comboTimer){
+			++model.comboCounter;
+			model.comboTimer = comboTimer;
+		}
+
+		// Reset combo counter
+		public static void ResetCombo(GameEntityModel model){
+			model.comboCounter = 0;
+			model.comboTimer = 0;
+		}
+
 
 	#endregion
 
@@ -292,38 +312,51 @@ namespace RetroBread{
 		}
 			
 
-		#region Hits / Collisions
+		// ----------------------
+		// Hits / Hurts
 
-			// Generic entity-entity collision
-			public static bool IsCollidingWithOthers(GameEntityModel model){
-				GameEntityController controller = model.Controller() as GameEntityController;
-				return controller.lastCollisionEntityId != ModelReference.InvalidModelIndex;
-			}
+		// Generic entity-entity collision
+		public static bool IsCollidingWithOthers(GameEntityModel model){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			return controller.lastCollisionEntityId != ModelReference.InvalidModelIndex;
+		}
 
-			// Successful hits count
-			public static int HitTargetsCount(GameEntityModel model){
-				GameEntityController controller = model.Controller() as GameEntityController;
-				return controller.lastHits.Count; 
-			}
-			
-			// Hitters count
-			public static int HurtSourcesCount(GameEntityModel model){
-				GameEntityController controller = model.Controller() as GameEntityController;
-				return controller.lastHurts.Count; 
-			}
+		// Successful hits count
+		public static int HitTargetsCount(GameEntityModel model){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			return controller.lastHits.Count; 
+		}
+		
+		// Hitters count
+		public static int HurtSourcesCount(GameEntityModel model){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			return controller.lastHurts.Count; 
+		}
 
-			// Hurt at a certain collisionID
-			public static bool HurtsContainCollisionId(GameEntityModel model, int collisionId){
-				GameEntityController controller = model.Controller() as GameEntityController;
-				foreach (HitInformation hitInformation in controller.lastHurts) {
-					if (hitInformation.collisionId == collisionId) {
-						return true;
-					}
+		// Hurt at a certain collisionID
+		public static bool HurtsContainCollisionId(GameEntityModel model, int collisionId){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			foreach (HitInformation hitInformation in controller.lastHurts) {
+				if (hitInformation.collisionId == collisionId) {
+					return true;
 				}
-				return false;
 			}
+			return false;
+		}
 
-		#endregion
+
+		// ----------------------
+		// Combo counter & timer
+
+		// Combo counter value
+		public static int ComboCounter(GameEntityModel model){
+			return model.comboCounter;
+		}
+
+		// Combo timer
+		public static int ComboTimer(GameEntityModel model){
+			return model.comboTimer;
+		}
 
 
 

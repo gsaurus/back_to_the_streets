@@ -38,7 +38,9 @@ namespace RetroBread{
 			new BuildAddAnimationVerticalImpulse(),		// 5: impulseV(1.5)
 			new BuildFlip(),							// 6: flip
 			new BuildAutoFlip(),						// 7: autoFlip(false)
-			new BuildDelay()							// 8: pause(3)
+			new BuildDelay(),							// 8: pause(3)
+			new BuildComboIncrement(),					// 9: ++combo
+			new BuildComboReset()						// 10: reset(combo)
 		};
 
 
@@ -182,6 +184,28 @@ namespace RetroBread{
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
 				IntInputFieldParam.Instantiate(parent, parameter, 0, "Delay:");
+			}
+		}
+
+
+		private class BuildComboIncrement: InternEventBuilder{
+			public BuildComboIncrement():base("Combo increment"){}
+			public override string ToString(GenericParameter parameter){
+				return "++combo";
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				IntInputFieldParam.Instantiate(parent, parameter, 0, "Frames to reset:");
+			}
+		}
+
+
+		private class BuildComboReset: InternEventBuilder{
+			public BuildComboReset():base("Combo reset"){}
+			public override string ToString(GenericParameter parameter){
+				return "reset(combo)";
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				// Nothing
 			}
 		}
 

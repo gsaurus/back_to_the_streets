@@ -221,11 +221,11 @@ OK - Animation pause delay (built-in support) 1
 10 - Test character with simple combo and combo time cancel 2
 11 - Collision VS Collision physics 3
 
-TODO: which collision box (ID) was I hit at?
-TODO: one hit per animation (no multihit, thank you)
+OK - Which collision box (ID) was I hit at?
+OK - One hit per animation (no multihit, thank you)
 
 
 TODO: Editor: add txt "guides", for variable "names" etc
 
 TODO: animation time multiplier: in the same update run more than one frame, it's conditions and events
-TODO: store hitten entity in variable
+TODO: check collision with team on demand (e.g. pick weapon/food)

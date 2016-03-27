@@ -62,7 +62,9 @@ namespace RetroBread{
 			new BuildEntityCollision(),					// 10: entity collision
 			new BuildEntityHit(),						// 11: hit
 			new BuildEntityHurt(),						// 12: hurt
-			new BuildEntitySpecificHurt()				// 13: hurt(3)
+			new BuildEntitySpecificHurt(),				// 13: hurt(3)
+			new BuildComboCounter(),					// 14: combo >= 3
+			new BuildComboTimer()						// 15: combo timer <= 10
 
 			// TODO: everything else, including custom values List<int>, List<FixedFloat>, List<int> timers for combo counter etc
 		};
@@ -310,6 +312,32 @@ namespace RetroBread{
 			public override void Build(GameObject parent, GenericParameter parameter){
 				InstantiateNegation(parent, parameter);
 				IntInputFieldParam.Instantiate(parent, parameter, 0, "collision ID:", 0);
+			}
+		}
+
+
+		// combo >= 4
+		private class BuildComboCounter: InternConditionBuilder{
+			public BuildComboCounter():base("Combo counter"){}
+			public override string ToString(GenericParameter parameter){
+				return "combo " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator") + " " + parameter.SafeInt(0);
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				InstantiateArithmeticField(parent, parameter, 1);
+				IntInputFieldParam.Instantiate(parent, parameter, 0, "Combo value:", 0);
+			}
+		}
+
+
+		// combo timer >= 4
+		private class BuildComboTimer: InternConditionBuilder{
+			public BuildComboTimer():base("Combo timer"){}
+			public override string ToString(GenericParameter parameter){
+				return "combo timer " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator") + " " + parameter.SafeInt(0);
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				InstantiateArithmeticField(parent, parameter, 1);
+				IntInputFieldParam.Instantiate(parent, parameter, 0, "Timer value:", 0);
 			}
 		}
 

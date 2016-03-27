@@ -27,7 +27,9 @@ namespace RetroBread{
 			BuildEntityEntityCollisionCheck,		// 10: entity collision
 			BuildOnHit,								// 11: on hit
 			BuildOnHurt,							// 12: on hurt
-			BuildOnSpecificHurt						// 13: on hurt(1)
+			BuildOnSpecificHurt,					// 13: on hurt(1)
+			BuildComboCounter,						// 14: combo >= 2
+			BuildComboTimer							// 15: combo timer < 10
 			// TODO: everything else, including custom values List<int>, List<FixedFloat>, List<int> timers for combo counter etc
 		};
 			
@@ -208,6 +210,22 @@ namespace RetroBread{
 			keyFrame = invalidKeyframe;
 			int collisionId = (int)parameter.SafeInt(0);
 			return new SingleEntityBoolCondition<int>(GameEntityController.HurtsContainCollisionId, collisionId);
+		}
+
+		// combo <= 3
+		private static AnimationTriggerCondition BuildComboCounter(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+			keyFrame = invalidKeyframe;
+			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType) parameter.SafeInt(1);
+			int value = parameter.SafeInt(0);
+			return new EntityArithmeticCondition<int>(type, GameEntityController.ComboCounter, value);
+		}
+
+		// combo timer <= 10
+		private static AnimationTriggerCondition BuildComboTimer(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+			keyFrame = invalidKeyframe;
+			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType) parameter.SafeInt(1);
+			int value = parameter.SafeInt(0);
+			return new EntityArithmeticCondition<int>(type, GameEntityController.ComboTimer, value);
 		}
 
 										
