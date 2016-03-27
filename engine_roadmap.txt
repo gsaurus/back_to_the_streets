@@ -218,7 +218,7 @@ OK - Basic hit/hurt conditions 1
 OK - Animation pause delay (built-in support) 1
 -- - General variable arrays (precomputed size), and automatic countdown counters array (to be used as energy, combo counter & timers, etc) 1
 -- - Conditions & events for general variables 3
-10 - Test character with simple combo and combo time cancel 2
+OK - Test character with simple combo and combo time cancel 2
 11 - Collision VS Collision physics 3
 
 OK - Which collision box (ID) was I hit at?
