@@ -100,7 +100,26 @@ namespace RetroBread{
 			FrameData data = framesData[model.currentFrame % framesData.Length];
 			FrameData otherData = otherController.framesData[otherModel.currentFrame % otherController.framesData.Length];
 			if (data == null || otherData == null) return null;
-			return data.HitCollisionCheck(offset, facingRight, otherData, otherOffset, otherFacingRight);
+			HitInformation hitInformation = data.HitCollisionCheck(offset, facingRight, otherData, otherOffset, otherFacingRight, model.hittenEntitiesByHitId, otherModel.ownerId);
+			if (hitInformation != null) {
+				// store hitten so that it doesn't get hit again by this hit
+				EnsureHittenData(model, hitInformation.hitData.hitboxID);
+				model.hittenEntitiesByHitId[hitInformation.hitData.hitboxID].entities.Add(otherModel.ownerId);
+			}
+			return hitInformation;
+		}
+
+
+		private void EnsureHittenData(AnimationModel model, int hitboxId){
+			if (model.hittenEntitiesByHitId == null) {
+				model.hittenEntitiesByHitId = new List<AnimationHittenEntities>();
+			}
+			AnimationHittenEntities hittenEntities;
+			while (model.hittenEntitiesByHitId.Count <= hitboxId) {
+				hittenEntities = new AnimationHittenEntities();
+				hittenEntities.entities = new List<ModelReference>();
+				model.hittenEntitiesByHitId.Add(hittenEntities);
+			}
 		}
 
 
@@ -169,6 +188,8 @@ namespace RetroBread{
 
 			if (haveNewAnimation) {
 				model.animationName = model.nextAnimation;
+				// clear hitten entities
+				model.hittenEntitiesByHitId = null;
 				model.InvalidateVC();
 			}
 

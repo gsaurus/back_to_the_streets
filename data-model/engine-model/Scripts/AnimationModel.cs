@@ -1,8 +1,22 @@
 using System;
 using ProtoBuf;
+using System.Collections.Generic;
 
 
 namespace RetroBread{
+
+
+	// Wrapper for list of entities hit
+	[ProtoContract]
+	public class AnimationHittenEntities{
+		// Team members
+		[ProtoMember(1, OverwriteList=true)]
+		public List<ModelReference> entities;
+
+		public AnimationHittenEntities(){
+			// Nothing to do
+		}
+	}
 
 
 	// Animation model keeps the name of the animation and it's current frame
@@ -18,7 +32,14 @@ namespace RetroBread{
 		// This variable tells which one to use
 		[ProtoMember(5)] public string viewModelName;
 
+		// What entities were hit during this animation
+		// Used to prevent multihit from the same hitId
+		[ProtoMember(6, OverwriteList=true)]
+		public List<AnimationHittenEntities> hittenEntitiesByHitId;
+
+
 		// This variables are used during each frame update only
+		// Stored here because same controller may be used for multiple animation models
 		public string nextAnimation {get; private set; }
 		public int nextFrame { get; private set; }
 

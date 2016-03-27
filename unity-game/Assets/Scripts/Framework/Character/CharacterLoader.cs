@@ -169,10 +169,13 @@ namespace RetroBread{
 					HitData hitData;
 					int boxIndex;
 					// For each box
-					foreach(Storage.HitBox storageHitBox in animation.hitBoxes){
+					Storage.HitBox storageHitBox;
+					for(int hitId = 0 ; hitId < animation.hitBoxes.Length ; ++hitId){
+						storageHitBox = animation.hitBoxes[hitId];
 						param = charData.genericParameters[storageHitBox.paramId];
 						hitData = HitsBuilder.Build(param);
 						if (hitData == null) continue;
+						hitData.hitboxID = hitId;
 						// for each frame of each box
 						for (int i = 0; i < storageHitBox.boxIds.Length ; ++i){
 							boxIndex = storageHitBox.boxIds[i];

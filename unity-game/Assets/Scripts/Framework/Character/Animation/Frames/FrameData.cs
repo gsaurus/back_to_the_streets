@@ -36,8 +36,8 @@ namespace RetroBread{
 
 	// Collision box, have the box and collision ID
 	public class CollisionBox{
-		public Box box;
-		public int collisionId;
+		public Box box { get; private set; }
+		public int collisionId { get; private set; }
 
 		public CollisionBox(Box box, int collisionId){
 			this.box = box;
@@ -48,8 +48,8 @@ namespace RetroBread{
 
 	// Base class for a hitbox
 	public class HitBox{
-		public Box box;
-		public HitData hitData;
+		public Box box { get; private set; }
+		public HitData hitData { get; private set; }
 
 		public HitBox(Box box, HitData hitData){
 			this.box = box;
@@ -59,7 +59,7 @@ namespace RetroBread{
 
 	// Base class for a hitbox specific data
 	public class HitData{
-		// Nothing by default..
+		public int hitboxID;
 	}
 
 
@@ -185,8 +185,21 @@ namespace RetroBread{
 		}
 
 
-		public HitInformation HitCollisionCheck(FixedVector3 offset, bool facingRight, FrameData other, FixedVector3 otherOffset, bool otherFacingRight){
+		public HitInformation HitCollisionCheck(
+			FixedVector3 offset, bool facingRight,
+			FrameData other, FixedVector3 otherOffset, bool otherFacingRight,
+			List<AnimationHittenEntities> hittenEntities,
+			ModelReference targetEntityId
+		){
 			if (hits.Count == 0 || other.collisions.Count == 0) return null;
+			if (hits.Count == 1
+				&& hittenEntities != null
+				&& hittenEntities.Count > hits[0].hitData.hitboxID
+				&& hittenEntities[hits[0].hitData.hitboxID].entities.Find(x => x == targetEntityId) != null
+			) {
+				// already hit this entity
+				return null;
+			}
 
 			Box offsettedBox = OffsettedBox(hitBoundingBox, offset, facingRight);
 			Box otherOffsettedBox = OffsettedBox(other.collisionBoundingBox, otherOffset, otherFacingRight);
@@ -196,6 +209,17 @@ namespace RetroBread{
 					return new HitInformation(hits[0].hitData, offsettedBox, other.collisions[0].collisionId, otherOffsettedBox);
 				}
 				foreach (HitBox hitBox in hits) {
+
+					// Check if this hit already hit this entity
+					if (hittenEntities != null
+						&& hittenEntities.Count > hitBox.hitData.hitboxID
+						&& hittenEntities[hitBox.hitData.hitboxID].entities.Find(x => x == targetEntityId) != null
+					) {
+						// already hit this entity
+						continue;
+					}
+
+					// Check collisions against each collision box of the entity
 					offsettedBox = OffsettedBox(hitBox.box, offset, facingRight);
 					foreach (CollisionBox collisionBox in other.collisions) {
 						otherOffsettedBox = OffsettedBox(collisionBox.box, otherOffset, otherFacingRight);
