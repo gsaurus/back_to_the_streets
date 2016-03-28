@@ -41,9 +41,16 @@ namespace RetroBread{
 		// For now, have combos built in to simplify
 		[ProtoMember(8)]
 		public int comboCounter;
-
 		[ProtoMember(9)]
 		public int comboTimer;
+
+		// Entities anchored to it
+		[ProtoMember(10, OverwriteList=true)]
+		public List<ModelReference> anchoredEntities;
+
+		// If anchored, to what entity is it anchored to
+		[ProtoMember(11)]
+		public ModelReference parentEntity;
 
 		// TODO: not sure about custom variables & timers yet
 //		// Custom int variables
@@ -109,6 +116,7 @@ namespace RetroBread{
 			} else {
 				inputModelId = new ModelReference(ModelReference.InvalidModelIndex);
 			}
+			anchoredEntities = new List<ModelReference>();
 		}
 
 		// TODO: other constructors receiving pre-made sub-models, etc?

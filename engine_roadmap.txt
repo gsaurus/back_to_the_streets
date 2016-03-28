@@ -88,6 +88,20 @@ Other plans:
 
 
 
+OK - PointModel with flag to enable / disable physics calculations (to disable during hit pause)	1
+OK - Precompute collisions bounding boxes 1
+OK - Precompute hits bounding boxes 1
+OK - Define teams of entities (buckets), and their kind of interaction ([x]hit, [x]collision) to check collisions between relevant teams only 2
+OK - Hits detection: loop through the teams to detect hit VS collision (Debug.Log will do for now) 3
+OK - Basic hit/hurt conditions 1
+OK - Animation pause delay (built-in support) 1
+-- - General variable arrays (precomputed size), and automatic countdown counters array (to be used as energy, combo counter & timers, etc) 1
+-- - Conditions & events for general variables 3
+OK - Test character with simple combo and combo time cancel 2
+11 - Collision VS Collision physics 3
+
+OK - Which collision box (ID) was I hit at?
+OK - One hit per animation (no multihit, thank you)
 
 
 
@@ -206,23 +220,19 @@ Log
 	:( no work done :(
 25-03-16
 	- Support offline mode
+26-03-16
+	- Hit/Collision detection
+27-03-16
+	- Hit once per animation
+	- Hit/Hurt conditions/events
+	- Combo counter & timer
+28-03-16
+	- Initial code for anchoring (grab, release, manipulation), not working yet
 	
 	
-	
-OK - PointModel with flag to enable / disable physics calculations (to disable during hit pause)	1
-OK - Precompute collisions bounding boxes 1
-OK - Precompute hits bounding boxes 1
-OK - Define teams of entities (buckets), and their kind of interaction ([x]hit, [x]collision) to check collisions between relevant teams only 2
-OK - Hits detection: loop through the teams to detect hit VS collision (Debug.Log will do for now) 3
-OK - Basic hit/hurt conditions 1
-OK - Animation pause delay (built-in support) 1
--- - General variable arrays (precomputed size), and automatic countdown counters array (to be used as energy, combo counter & timers, etc) 1
--- - Conditions & events for general variables 3
-OK - Test character with simple combo and combo time cancel 2
-11 - Collision VS Collision physics 3
 
-OK - Which collision box (ID) was I hit at?
-OK - One hit per animation (no multihit, thank you)
+
+WIP - Grab / Release anchored entities
 
 
 TODO: Editor: add txt "guides", for variable "names" etc

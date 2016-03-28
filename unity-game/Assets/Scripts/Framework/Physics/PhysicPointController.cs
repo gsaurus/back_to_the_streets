@@ -12,6 +12,9 @@ namespace RetroBread{
 		// Key of collision reaction velocity affector
 		public static readonly string collisionVelocityAffectorName = "collisionVelocityAffectorName";
 
+		// Key of controlled position movement (set position with world physics restrictions)
+		public static readonly string setPositionffectorName = "collisionVelosetPositionffectorNamecityAffectorName";
+
 		// Temporary changes to take place on post-update
 		private Dictionary<string,FixedVector3> affectorsChanged = new Dictionary<string,FixedVector3>();
 		private Dictionary<string,FixedVector3> affectorsIncremented = new Dictionary<string,FixedVector3>();
@@ -51,6 +54,8 @@ namespace RetroBread{
 
 			// Reset collision velocity affector, directly
 			model.velocityAffectors[collisionVelocityAffectorName] = FixedVector3.Zero;
+			// Reset setPosition affector directly
+			model.velocityAffectors[setPositionffectorName] = FixedVector3.Zero;
 		}
 		
 		// Post update used to consolidate direct modifications

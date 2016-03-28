@@ -200,8 +200,8 @@ namespace RetroBread{
 			}
 
 			// TODO: what about view anchors ?
-
 			// Skins?..
+			// TODO: store that in a static view service to be consulted by views
 
 
 		}

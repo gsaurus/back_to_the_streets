@@ -104,10 +104,12 @@ namespace RetroBread{
 			CheckAutomaticFlip(model);
 
 			// Built in pause timer
-			PhysicPointModel pointModel = GetPointModel(model);
-			if (pointModel != null && !pointModel.isActive) {
-				if (--model.pauseTimer < 1) {
-					pointModel.isActive = true;
+			if (model.pauseTimer > 0){
+				PhysicPointModel pointModel = GetPointModel(model);
+				if (pointModel != null) {
+					if (--model.pauseTimer == 0 && model.parentEntity == null) {
+						pointModel.isActive = true;
+					}
 				}
 			}
 
@@ -248,6 +250,83 @@ namespace RetroBread{
 			model.comboTimer = 0;
 		}
 
+		// Anchor a model to it
+		public static void AnchorEntity(GameEntityModel model, GameEntityModel modelToBeAnchored, int anchorId){
+			if (IsAnchored(modelToBeAnchored)){
+				Debug.LogWarning("Trying to anchor an entity that is already anchored");
+				return;
+			}
+			while (model.anchoredEntities.Count <= anchorId) {
+				model.anchoredEntities.Add(null);
+			}
+			if (model.anchoredEntities[anchorId] != null){
+				Debug.LogWarning("Trying to anchor an entity to a busy anchor");
+				return;
+			}
+			model.anchoredEntities[anchorId] = modelToBeAnchored.Index;
+			modelToBeAnchored.parentEntity = model.Index;
+			PhysicPointModel pointModel = GetPointModel(modelToBeAnchored);
+			if (pointModel != null){
+				pointModel.isActive = false;
+			}
+		}
+
+		// Release event may be accompained by a set animation event
+		// TODO: no need to receive release position if using original relative position, can be setted before release
+		public static void ReleaseAnchoredEntity(GameEntityModel model, int anchorId, FixedVector3 releasePosition){
+			if (model.anchoredEntities.Count <= anchorId) return;
+			GameEntityModel anchoredEntityModel = StateManager.state.GetModel(model.anchoredEntities[anchorId]) as GameEntityModel;
+			if (anchoredEntityModel != null){
+				anchoredEntityModel.parentEntity = null;
+				PhysicPointModel pointModel = GetPointModel(anchoredEntityModel);
+				if (pointModel != null){
+					pointModel.isActive = true;
+					PhysicPointModel parentPointModel = GetPointModel(model);
+					PhysicPointController pointController = pointModel.Controller() as PhysicPointController;
+					if (pointController != null && parentPointModel != null){
+						// Set position directly
+						pointModel.position = parentPointModel.position;
+						if (!model.isFacingRight) releasePosition.X *= -1;
+						pointController.SetVelocityAffector(pointModel, PhysicPointController.setPositionffectorName, releasePosition);
+					}
+				}
+			}
+			model.anchoredEntities[anchorId] = null;
+		}
+
+
+		// Safelly set position relative to self (e.g. vault), taking physics collisions in consideration
+		public static void MoveEntity(GameEntityModel model, FixedVector3 relativePosition){
+			if (!model.isFacingRight) relativePosition.X *= -1;
+			PhysicPointModel pointModel = GetPointModel(model);
+			if (pointModel != null){
+				PhysicPointController pointController = pointModel.Controller() as PhysicPointController;
+				if (pointController != null){
+					pointController.SetVelocityAffector(pointModel, PhysicPointController.setPositionffectorName, relativePosition);
+				}
+			}
+		}
+
+
+		// Force anchored entity's position (e.g. for an attack move while grabbed, or to accompain while walking)
+		public static void SetAnchoredEntityPosition(GameEntityModel model, int anchorId, FixedVector3 relativePosition){
+			////TODO: hold it as an offset and apply on update, so no need to set every frame
+//			if (model.anchoredEntities.Count <= anchorId) return;
+//			GameEntityModel anchoredEntityModel = StateManager.state.GetModel(model.anchoredEntities[anchorId]) as GameEntityModel;
+//			if (anchoredEntityModel != null){
+//				PhysicPointModel pointModel = GetPointModel(anchoredEntityModel);
+//				PhysicPointModel parentPointModel = GetPointModel(model);
+//				if (pointModel != null && parentPointModel != null){
+//					if (!model.isFacingRight) relativePosition.X *= -1;
+//					pointModel.position = parentPointModel.position + relativePosition;
+//				}
+//			}
+		}
+
+		// TODO: probably better as new class like public class AnimationTransitionEvent: AnimationEvent{,
+		// TODO: warning.. what happens if two animationTransitionEvents happen at once?.. maybe setAnchored thing should force it
+		//public static void SetAnchoredEntityAnimation(GameEntityModel model, int anchorId, ...){
+
 
 	#endregion
 
@@ -358,6 +437,35 @@ namespace RetroBread{
 			return model.comboTimer;
 		}
 
+		// Parent name (who's anchoring the entity)
+		public static string ParentEntityName(GameEntityModel model){
+			GameEntityModel parentEntityModel = StateManager.state.GetModel(model.parentEntity) as GameEntityModel;
+			if (parentEntityModel == null) return null;
+			AnimationModel animModel = GetAnimationModel(parentEntityModel);
+			if (animModel == null) return null;
+			return animModel.characterName;
+		}
+
+		// Anchored name
+		public static string AnchoredEntityName(GameEntityModel model, int anchorId){
+			if (model.anchoredEntities.Count <= anchorId || model.anchoredEntities[anchorId] == null) return null;
+			GameEntityModel anchoredEntityModel = StateManager.state.GetModel(model.anchoredEntities[anchorId]) as GameEntityModel;
+			if (anchoredEntityModel == null) return null;
+			AnimationModel animModel = GetAnimationModel(anchoredEntityModel);
+			if (animModel == null) return null;
+			return animModel.characterName;
+		}
+
+		// Is anchored
+		public static bool IsAnchored(GameEntityModel model){
+			return model.parentEntity != null && model.parentEntity.index != ModelReference.InvalidModelIndex;
+		}
+
+		// Is anchoring something
+		public static bool IsAnchoring(GameEntityModel model, int anchorId){
+			if (model.anchoredEntities.Count <= anchorId) return false;
+			return model.anchoredEntities[anchorId] != null;
+		}
 
 
 	#endregion
