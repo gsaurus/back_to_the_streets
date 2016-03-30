@@ -512,6 +512,16 @@ namespace RetroBread{
 			return animModel.characterName;
 		}
 
+		// Anchored animation name
+		public static string AnchoredEntityAnimation(GameEntityModel model, int anchorId){
+			if (model.anchoredEntities.Count <= anchorId || model.anchoredEntities[anchorId] == null) return null;
+			GameEntityModel anchoredEntityModel = StateManager.state.GetModel(model.anchoredEntities[anchorId]) as GameEntityModel;
+			if (anchoredEntityModel == null) return null;
+			AnimationModel animModel = GetAnimationModel(anchoredEntityModel);
+			if (animModel == null) return null;
+			return animModel.animationName;
+		}
+
 		// Is anchored
 		public static bool IsAnchored(GameEntityModel model){
 			return model.parentEntity != null && model.parentEntity.index != ModelReference.InvalidModelIndex;
