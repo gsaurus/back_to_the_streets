@@ -52,6 +52,11 @@ namespace RetroBread{
 		[ProtoMember(11)]
 		public ModelReference parentEntity;
 
+		// Keep hooked to parent entity at a relative position
+		// Only used if parent entity is != null.
+		[ProtoMember(12)]
+		public FixedVector3 positionRelativeToParent;
+
 		// TODO: not sure about custom variables & timers yet
 //		// Custom int variables
 //		[ProtoMember(8, OverwriteList=true)]

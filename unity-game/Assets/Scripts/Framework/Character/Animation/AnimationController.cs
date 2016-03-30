@@ -194,6 +194,15 @@ namespace RetroBread{
 		}
 
 
+		// Force an animation to play, e.g. in grab circumstances. Should be avoided
+		public void ForceAnimation(AnimationModel model, string animationName){
+			model.currentFrame = 0;
+			model.animationName = animationName;
+			model.SetNextAnimation(animationName, 0);
+			model.InvalidateVC();
+		}
+
+
 		public override bool IsCompatible(AnimationModel originalModel, AnimationModel newModel){
 			return originalModel.characterName == newModel.characterName
 				&& originalModel.animationName == newModel.animationName

@@ -27,11 +27,11 @@ OK - Hit boxes (basic stuff only) 3
 OK - Direct events (stub stuff only) 2
 OK - Conditional events (stub stuff only) 3
 
-   - Import collision & hit boxes
-   - Define and visualize models over anchors (new panel most likely)
+-- - Import collision & hit boxes
+-- - Define and visualize models over anchors (new panel most likely)
 
 - Automated script to create and copy AssetBundles into character-editor 1
-- Browse and load asset bundles from a folder near the editor executable file 2
+- Browse and load asset bundles from a folder near the editor executable file 2 --> err, no executable due to Unity limitation
 
 - check what's going on with some comboboxes not scrolling (temp solution: use keyboard up/down & space)
 - Use tab/enter to move to next inputField
@@ -41,28 +41,20 @@ TODO: investigate double messages on single key event?.. 1
 TODO: investigate is not valid. Input position is { NaN, NaN, NaN }, think reason is something's wrong with the 3D model, perhaps the anchor points exporting
 
 
-
-
-[[[[[[[[[
-
 Back to game:
 OK - load character data and model 1
 OK - construct character controller (basic stuff only) 2
 
 By now, all we can see in-game is character on idle animation.
-Next step: create some plugins that provide with basic functionality. Each functionality generates two plugins:
- - One for editor to show specific options and translate them into storage data
- - One for game to load specific options from storage data
-There are conditional plugins and event plugins. Plan is:
 OK - Create frame conditions (at frame x, do something) 2
 OK - Create animation transition events for editor (at frame x, move to animation y) 2
 OK - Load and play animation transitions in-game 2
-If everything goes well until here, other plugins will be easy to create:
 OK - Input conditions, Velocity events, Velocity conditions, etc (check old GameEntityController) 5
 OK - Create a test character with simple movement: walk, jump, fall 3
-
 By now, in-game character should be able to walk, jump, fall.
 Basic stuff is done.
+
+[[[[[[[[[
 
 TODO: need to detail next things:
 
@@ -228,9 +220,15 @@ Log
 	- Combo counter & timer
 28-03-16
 	- Initial code for anchoring (grab, release, manipulation), not working yet
+29-03-16
+	:( no work done :(
+30-03-16
+	- Anchored entity's relative position to parent
+	- Use anchored relative position for hits/collision checks
+	- Force anchored entity animation
 	
 	
-
+TODO: separate Entity conditions / events by static classes for each concept
 
 WIP - Grab / Release anchored entities
 
