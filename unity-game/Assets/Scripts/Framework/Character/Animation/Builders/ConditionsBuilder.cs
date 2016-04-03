@@ -29,8 +29,10 @@ namespace RetroBread{
 			BuildOnHurt,							// 12: on hurt
 			BuildOnSpecificHurt,					// 13: on hurt(1)
 			BuildComboCounter,						// 14: combo >= 2
-			BuildComboTimer							// 15: combo timer < 10
-			// TODO: everything else, including custom values List<int>, List<FixedFloat>, List<int> timers for combo counter etc
+			BuildComboTimer,						// 15: combo timer < 10
+			BuildIsAnchored,						// 16: grabbed
+			BuildIsAnchoring						// 17: grabbing(2)
+
 		};
 			
 
@@ -148,14 +150,14 @@ namespace RetroBread{
 		// grounded
 		private static AnimationTriggerCondition BuildEntityIsGrounded(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
-			return new EntityBoolCondition(GameEntityController.IsGrounded);
+			return new EntityBoolCondition(GameEntityPhysicsOperations.IsGrounded);
 		}
 
 
 		// facing right
 		private static AnimationTriggerCondition BuildEntityIsFacingRight(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
-			return new EntityBoolCondition(GameEntityController.IsFacingRight);
+			return new EntityBoolCondition(GameEntityPhysicsOperations.IsFacingRight);
 		}
 
 
@@ -163,10 +165,10 @@ namespace RetroBread{
 		private static AnimationTriggerCondition BuildEntityHittingWall(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			switch (parameter.SafeInt(0)) {
-				case 0: return new EntityBoolCondition(GameEntityController.IsHittingFarWall);	 // 0: far wall
-				case 1: return new EntityBoolCondition(GameEntityController.IsHittingNearWall);  // 1: near wall
-				case 2: return new EntityBoolCondition(GameEntityController.IsHittingLeftWall);	 // 2: left wall
-				case 3: return new EntityBoolCondition(GameEntityController.IsHittingRightWall); // 3: right wall
+				case 0: return new EntityBoolCondition(GameEntityPhysicsOperations.IsHittingFarWall);	 // 0: far wall
+				case 1: return new EntityBoolCondition(GameEntityPhysicsOperations.IsHittingNearWall);  // 1: near wall
+				case 2: return new EntityBoolCondition(GameEntityPhysicsOperations.IsHittingLeftWall);	 // 2: left wall
+				case 3: return new EntityBoolCondition(GameEntityPhysicsOperations.IsHittingRightWall); // 3: right wall
 			}
 			return null;
 		}
@@ -178,9 +180,9 @@ namespace RetroBread{
 			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType) parameter.SafeInt(1);
 			FixedFloat value = parameter.SafeFloat(0);
 			switch (parameter.SafeInt(0)) {
-				case 0: return new EntityArithmeticCondition<FixedFloat>(type, GameEntityController.CollisionHorizontalForce, value);	 // 0: H
-				case 1: return new EntityArithmeticCondition<FixedFloat>(type, GameEntityController.CollisionVerticalForce, value); 	 // 1: V
-				case 2: return new EntityArithmeticCondition<FixedFloat>(type, GameEntityController.CollisionZForce, value);	 		 // 2: Z
+				case 0: return new EntityArithmeticCondition<FixedFloat>(type, GameEntityPhysicsOperations.CollisionHorizontalForce, value);	 // 0: H
+				case 1: return new EntityArithmeticCondition<FixedFloat>(type, GameEntityPhysicsOperations.CollisionVerticalForce, value); 	 // 1: V
+				case 2: return new EntityArithmeticCondition<FixedFloat>(type, GameEntityPhysicsOperations.CollisionZForce, value);	 		 // 2: Z
 			}
 			return null;
 		}
@@ -228,7 +230,19 @@ namespace RetroBread{
 			return new EntityArithmeticCondition<int>(type, GameEntityController.ComboTimer, value);
 		}
 
-										
+
+		// grabbed
+		private static AnimationTriggerCondition BuildIsAnchored(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+			keyFrame = invalidKeyframe;
+			return new EntityBoolCondition(GameEntityAnchoringOperations.IsAnchored);
+		}
+
+		// grabbing(3)
+		private static AnimationTriggerCondition BuildIsAnchoring(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+			keyFrame = invalidKeyframe;
+			return new SingleEntityBoolCondition<int>(GameEntityAnchoringOperations.IsAnchoring, parameter.SafeInt(0));
+		}
+
 
 
 #endregion

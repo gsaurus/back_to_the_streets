@@ -226,6 +226,12 @@ Log
 	- Anchored entity's relative position to parent
 	- Use anchored relative position for hits/collision checks
 	- Force anchored entity animation
+31-03..01-04-16
+	:( no work done :(
+02-04-16
+	- Conditions for anchoring system
+03-04-16
+	- Split entity controller into more files (roughly)
 	
 	
 TODO: separate Entity conditions / events by static classes for each concept
