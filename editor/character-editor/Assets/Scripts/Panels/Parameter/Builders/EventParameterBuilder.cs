@@ -40,11 +40,22 @@ namespace RetroBread{
 			new BuildAutoFlip(),						// 7: autoFlip(false)
 			new BuildDelay(),							// 8: pause(3)
 			new BuildComboIncrement(),					// 9: ++combo
-			new BuildComboReset()						// 10: reset(combo)
+			new BuildComboReset(),						// 10: reset(combo)
+			new BuildInstantMove(),						// 11: instantMove(2.1, 4.2, 5.3)
+			new BuildAnchorWithMove(),					// 12: grab(hitten, 2, (2.1, 4.2, 5.3))
+			new BuildAnchor(),							// 13: grab(hitten, 2)
+			new BuildReleaseAll(),						// 14: release(all)
+			new BuildRelease(),							// 15: release(2)
+			new BuildSetAnchoredPos(),					// 16: grabbedPos(2, (2.1, 4.2, 5.3))
+			new BuildSetAnchoredAnim()					// 17: grabbedAnim(2, jump)
 		};
 
 
-		public string[] TypesList(){
+		// Types of entity references
+		private static string[] entityReferenceType = {"anchored", "parent", "colliding", "hitten", "hitter"};
+	
+
+		public override string[] TypesList(){
 			string[] types = new string[builders.Length];
 			for (int i = 0 ; i < builders.Length ; ++i) {
 				types[i] = builders[i].typeName;
@@ -52,7 +63,7 @@ namespace RetroBread{
 			return types;
 		}
 
-		public string ToString(GenericParameter parameter){
+		public override string ToString(GenericParameter parameter){
 			if (parameter.type >= 0 && parameter.type < builders.Length) {
 				return builders[parameter.type].ToString(parameter);
 			}
@@ -60,7 +71,7 @@ namespace RetroBread{
 		}
 
 
-		public void Build(GameObject parent, GenericParameter parameter){
+		public override void Build(GameObject parent, GenericParameter parameter){
 			if (parameter.type >= 0 && parameter.type < builders.Length) {
 				builders[parameter.type].Build(parent, parameter);
 			}
@@ -77,14 +88,7 @@ namespace RetroBread{
 				return "'" + parameter.SafeString(0) + "'"; 
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
-				Character character = CharacterEditor.Instance.character;
-				List<string> animNames = new List<string>();
-				if (character != null) {
-					foreach (CharacterAnimation anim in character.animations) {
-						animNames.Add(anim.name);
-					}
-				}
-				StringDropdownParam.Instantiate(parent, parameter, 0, "Animation:", animNames.ToArray());
+				StringDropdownParam.Instantiate(parent, parameter, 0, "Animation:", GetAnimationsNames());
 				FloatInputFieldParam.Instantiate(parent, parameter, 0, "Transition time:", 0);
 			}
 		}
@@ -208,6 +212,140 @@ namespace RetroBread{
 				// Nothing
 			}
 		}
+
+
+	#region Anchoring
+
+
+
+		// instantMove(2.1, 4.2, 5.3)
+		private class BuildInstantMove: InternEventBuilder{
+			public BuildInstantMove():base("Instant move"){}
+			public override string ToString(GenericParameter parameter){
+				return "move(" + parameter.SafeFloatToString(0)
+					+ ", " + parameter.SafeFloatToString(1)
+					+ ", " + parameter.SafeFloatToString(2)
+					+ ")"
+				;
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				FloatInputFieldParam.Instantiate(parent, parameter, 0, "delta pos X:");
+				FloatInputFieldParam.Instantiate(parent, parameter, 1, "delta pos Y:");
+				FloatInputFieldParam.Instantiate(parent, parameter, 2, "delta pos Z:");
+			}
+		}
+
+
+		// grab(hitten, 2, (2.1, 4.2, 5.3)), position relative to entity being grabbed
+		private class BuildAnchorWithMove: InternEventBuilder{
+			public BuildAnchorWithMove():base("Grab & adjust position"){}
+			public override string ToString(GenericParameter parameter){
+				return "grab("
+					+ SafeToString(entityReferenceType, parameter.SafeInt(0), "entityRef")
+					+ ", " + parameter.SafeInt(2)
+					+ ", ("+ parameter.SafeFloatToString(0)
+					+ ", " + parameter.SafeFloatToString(1)
+					+ ", " + parameter.SafeFloatToString(2)
+					+ "))"
+				;
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Entity Reference:", entityReferenceType);
+				// TODO: dynamic content based on the dropdown!..
+				IntInputFieldParam.Instantiate(parent, parameter, 1, "Ref param (**):");
+				IntDropdownParam.Instantiate(parent, parameter, 2, "Grabbing Anchor:", GetAnchorsNames());
+				FloatInputFieldParam.Instantiate(parent, parameter, 0, "delta pos X:");
+				FloatInputFieldParam.Instantiate(parent, parameter, 1, "delta pos Y:");
+				FloatInputFieldParam.Instantiate(parent, parameter, 2, "delta pos Z:");
+			}
+		}
+
+
+		// grab(hitten, 2)
+		private class BuildAnchor: InternEventBuilder{
+			public BuildAnchor():base("Grab"){}
+			public override string ToString(GenericParameter parameter){
+				return "grab("
+					+ SafeToString(entityReferenceType, parameter.SafeInt(0), "entityRef")
+					+ ", " + parameter.SafeInt(2)
+					+ ")"
+					;
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Entity Reference:", entityReferenceType);
+				// TODO: dynamic content based on the dropdown!..
+				IntInputFieldParam.Instantiate(parent, parameter, 1, "Ref param (**):");
+				IntDropdownParam.Instantiate(parent, parameter, 2, "Grabbing Anchor:", GetAnchorsNames());
+			}
+		}
+
+
+		// release(all)
+		private class BuildReleaseAll: InternEventBuilder{
+			public BuildReleaseAll():base("Release all grabs"){}
+			public override string ToString(GenericParameter parameter){
+				return "release(all)";
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				// Nothing
+			}
+		}
+
+
+		// release(2)
+		private class BuildRelease: InternEventBuilder{
+			public BuildRelease():base("Release specific grab"){}
+			public override string ToString(GenericParameter parameter){
+				return "release("
+					+ parameter.SafeInt(0)
+					+ ")"
+				;
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Grabbing Anchor:", GetAnchorsNames());
+			}
+		}
+
+
+		// grabbedPos(2, (2.1, 4.2, 5.3)), relative to main entity
+		private class BuildSetAnchoredPos: InternEventBuilder{
+			public BuildSetAnchoredPos():base("Set grabbed position"){}
+			public override string ToString(GenericParameter parameter){
+				return "grabbedPos("
+					+ parameter.SafeInt(0)
+					+ ", ("+ parameter.SafeFloatToString(0)
+					+ ", " + parameter.SafeFloatToString(1)
+					+ ", " + parameter.SafeFloatToString(2)
+					+ "))"
+				;
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Grabbing Anchor:", GetAnchorsNames());
+				FloatInputFieldParam.Instantiate(parent, parameter, 0, "delta pos X:");
+				FloatInputFieldParam.Instantiate(parent, parameter, 1, "delta pos Y:");
+				FloatInputFieldParam.Instantiate(parent, parameter, 2, "delta pos Z:");
+			}
+		}
+
+
+		// grabbedAnim(2, jump)
+		private class BuildSetAnchoredAnim: InternEventBuilder{
+			public BuildSetAnchoredAnim():base("Set grabbed animation"){}
+			public override string ToString(GenericParameter parameter){
+				return "grabbedAnim(" +
+					+ parameter.SafeInt(0)
+					+ ", " + parameter.SafeString(0)
+					+ ")"
+				;
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Grabbing Anchor:", GetAnchorsNames());
+				StringDropdownParam.Instantiate(parent, parameter, 0, "Animation:", GetAnimationsNames());
+			}
+		}
+
+
+	#endregion
 
 
 #endregion

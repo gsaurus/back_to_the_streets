@@ -229,12 +229,13 @@ Log
 31-03..01-04-16
 	:( no work done :(
 02-04-16
-	- Conditions for anchoring system
+	- Conditions for anchoring system (game)
 03-04-16
 	- Split entity controller into more files (roughly)
+	- Anchored conditions & events (editor & game)
 	
-	
-TODO: separate Entity conditions / events by static classes for each concept
+TODO: add a button in editor to set anchored position to curr anchor pos at curr frame
+OK - separate Entity conditions / events by static classes for each concept
 
 WIP - Grab / Release anchored entities
 

@@ -60,7 +60,7 @@ namespace RetroBread{
 
 		// Get Position used in collision checks
 		public static FixedVector3 GetRealPosition(GameEntityModel model){
-			if (model.parentEntity == null){
+			if (model.parentEntity == null || model.parentEntity == ModelReference.InvalidModelIndex){
 				// Normal position
 				PhysicPointModel pointModel = StateManager.state.GetModel(model.physicsModelId) as PhysicPointModel;
 				return pointModel.position;
@@ -136,7 +136,7 @@ namespace RetroBread{
 			if (model.pauseTimer > 0){
 				PhysicPointModel pointModel = GetPointModel(model);
 				if (pointModel != null) {
-					if (--model.pauseTimer == 0 && model.parentEntity == null) {
+					if (--model.pauseTimer == 0 && (model.parentEntity == null || model.parentEntity == ModelReference.InvalidModelIndex)) {
 						pointModel.isActive = true;
 					}
 				}

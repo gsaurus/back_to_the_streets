@@ -21,6 +21,19 @@ namespace RetroBread{
 			}else {
 				obj.transform.localScale = new Vector3(Mathf.Abs(obj.transform.localScale.x) * (model.isFacingRight ? 1 : -1), obj.transform.localScale.y, obj.transform.localScale.z);
 			}
+
+//			// Grab / ungrab
+//			if (model.parentEntity != null && model.parentEntity != ModelReference.InvalidModelIndex){
+//				GameEntityModel parentModel
+//				GameObject parentObj = UnityObjectsPool.Instance.GetGameObject(model.parentEntity);
+//				if (parentObj != null){
+//					Transform anchorTransform = parentObj.transform.FindChild(
+//					obj.transform.SetParent(parentObj);
+//				}
+//			}
+//			else if (obj.transform.parent != null){
+//				obj.transform.SetParent(null);
+//			}
 			
 		}
 		

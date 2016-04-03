@@ -110,24 +110,24 @@ namespace RetroBread.Editor{
 			return param;
 		}
 
-		public void EnsureStringItem(int itemId){
+		public void EnsureStringItem(int itemId, string defaultValue = ""){
 			while (stringsList.Count <= itemId) {
-				stringsList.Add("");
+				stringsList.Add(defaultValue);
 			}
 		}
-		public void EnsureIntItem(int itemId){
+		public void EnsureIntItem(int itemId, int defaultValue = 0){
 			while (intsList.Count <= itemId) {
-				intsList.Add(0);
+				intsList.Add(defaultValue);
 			}
 		}
-		public void EnsureFloatItem(int itemId){
+		public void EnsureFloatItem(int itemId, float defaultValue = 0){
 			while (floatsList.Count <= itemId) {
-				floatsList.Add(0);
+				floatsList.Add(defaultValue);
 			}
 		}
-		public void EnsureBoolItem(int itemId){
+		public void EnsureBoolItem(int itemId, bool defaultValue = false){
 			while (boolsList.Count <= itemId) {
-				boolsList.Add(false);
+				boolsList.Add(defaultValue);
 			}
 		}
 

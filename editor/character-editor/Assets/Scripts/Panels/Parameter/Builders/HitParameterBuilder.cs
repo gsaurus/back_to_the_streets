@@ -17,16 +17,16 @@ namespace RetroBread{
 			
 		private string[] typesList = { "test 1", "test 2" };
 
-		public string[] TypesList(){
+		public override string[] TypesList(){
 			return typesList;
 		}
 
-		public string ToString(GenericParameter parameter){
+		public override string ToString(GenericParameter parameter){
 			return typesList[parameter.type];
 		}
 
 
-		public void Build(GameObject parent, GenericParameter parameter){
+		public override void Build(GameObject parent, GenericParameter parameter){
 			switch (parameter.type) {
 				case 0:
 					BuildTest1(parent, parameter);

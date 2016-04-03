@@ -64,14 +64,16 @@ namespace RetroBread{
 			new BuildEntityHurt(),						// 12: hurt
 			new BuildEntitySpecificHurt(),				// 13: hurt(3)
 			new BuildComboCounter(),					// 14: combo >= 3
-			new BuildComboTimer()						// 15: combo timer <= 10
+			new BuildComboTimer(),						// 15: combo timer <= 10
+			new BuildGrabbed(),							// 16: grabbed
+			new BuildGrabbing()							// 17: grabbing(2)
 
 			// TODO: everything else, including custom values List<int>, List<FixedFloat>, List<int> timers for combo counter etc
 		};
 
 
 
-		public string[] TypesList(){
+		public override string[] TypesList(){
 			string[] types = new string[builders.Length];
 			for (int i = 0 ; i < builders.Length ; ++i) {
 				types[i] = builders[i].typeName;
@@ -79,7 +81,7 @@ namespace RetroBread{
 			return types;
 		}
 
-		public string ToString(GenericParameter parameter){
+		public override string ToString(GenericParameter parameter){
 			if (parameter.type >= 0 && parameter.type < builders.Length) {
 				return builders[parameter.type].ToString(parameter);
 			}
@@ -87,7 +89,7 @@ namespace RetroBread{
 		}
 
 
-		public void Build(GameObject parent, GenericParameter parameter){
+		public override void Build(GameObject parent, GenericParameter parameter){
 			if (parameter.type >= 0 && parameter.type < builders.Length) {
 				builders[parameter.type].Build(parent, parameter);
 			}
@@ -103,13 +105,7 @@ namespace RetroBread{
 		private static void InstantiateArithmeticField(GameObject parent, GenericParameter parameter, int paramId){
 			IntDropdownParam.Instantiate(parent, parameter, paramId, "Operator:", arithmeticOptions);
 		}
-
-		private static string SafeToString(string[] stringsArray, int type, string kind) {
-			if (type >= 0 && type < stringsArray.Length) {
-				return stringsArray[type];
-			}
-			return "<invalid " + kind + ">";
-		}
+			
 
 		private static string FilterNegationString(GenericParameter parameter, string conditionText){
 			return parameter.SafeBool(0) ? "!(" + conditionText + ")" : conditionText;
@@ -338,6 +334,31 @@ namespace RetroBread{
 			public override void Build(GameObject parent, GenericParameter parameter){
 				InstantiateArithmeticField(parent, parameter, 1);
 				IntInputFieldParam.Instantiate(parent, parameter, 0, "Timer value:", 0);
+			}
+		}
+
+
+		// grabbed
+		private class BuildGrabbed: InternConditionBuilder{
+			public BuildGrabbed():base("Being grabbed"){}
+			public override string ToString(GenericParameter parameter){
+				return "grabbed";
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				InstantiateNegation(parent, parameter);
+			}
+		}
+			
+
+		// grabbing(3)
+		private class BuildGrabbing: InternConditionBuilder{
+			public BuildGrabbing():base("Grabbing entity"){}
+			public override string ToString(GenericParameter parameter){
+				return FilterNegationString(parameter, "grabbing(" + parameter.SafeInt(0) + ")");
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				InstantiateNegation(parent, parameter);
+				IntInputFieldParam.Instantiate(parent, parameter, 0, "AnchorID:", 0);
 			}
 		}
 

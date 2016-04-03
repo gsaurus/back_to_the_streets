@@ -41,6 +41,10 @@ namespace RetroBread{
 
 			GameObject obj = UnityObjectsPool.Instance.GetGameObject(model.ownerId);
 			if (obj == null) return; // can't work without a game object
+			if (obj.transform.parent != null){
+				// not a root object, parent will update it
+				return;
+			}
 
 			UpdateGameObjectPosition(obj, model, deltaTime);
 

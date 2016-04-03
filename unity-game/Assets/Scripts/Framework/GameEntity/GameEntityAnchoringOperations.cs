@@ -57,7 +57,7 @@ namespace RetroBread{
 			while (model.anchoredEntities.Count <= anchorId) {
 				model.anchoredEntities.Add(null);
 			}
-			if (model.anchoredEntities[anchorId] != null){
+			if (model.anchoredEntities[anchorId] != null && model.anchoredEntities[anchorId] != ModelReference.InvalidModelIndex){
 				Debug.LogWarning("Trying to anchor an entity to a busy anchor");
 				return;
 			}
@@ -85,7 +85,7 @@ namespace RetroBread{
 			if (model.anchoredEntities.Count <= anchorId) return;
 			GameEntityModel anchoredEntityModel = StateManager.state.GetModel(model.anchoredEntities[anchorId]) as GameEntityModel;
 			if (anchoredEntityModel != null){
-				anchoredEntityModel.parentEntity = null;
+				anchoredEntityModel.parentEntity = new ModelReference();
 				PhysicPointModel pointModel = GameEntityController.GetPointModel(anchoredEntityModel);
 				if (pointModel != null){
 					pointModel.isActive = true;
@@ -100,7 +100,7 @@ namespace RetroBread{
 					}
 				}
 			}
-			model.anchoredEntities[anchorId] = null;
+			model.anchoredEntities[anchorId] = new ModelReference();
 		}
 
 
