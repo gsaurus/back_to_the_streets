@@ -233,6 +233,9 @@ Log
 03-04-16
 	- Split entity controller into more files (roughly)
 	- Anchored conditions & events (editor & game)
+	- Grab/release working in-game (no views yet)
+	
+TODO: Store anchor obj references at the objects pool
 	
 TODO: add a button in editor to set anchored position to curr anchor pos at curr frame
 OK - separate Entity conditions / events by static classes for each concept
