@@ -24,7 +24,7 @@ namespace RetroBread{
 		}
 
 		public ModelReference GetEntityReference(GameEntityModel model){
-			if (model.anchoredEntities.Count <= anchorId) return null;
+			if (model.anchoredEntities == null || model.anchoredEntities.Count <= anchorId) return null;
 			return model.anchoredEntities[anchorId];
 		}
 

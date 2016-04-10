@@ -68,6 +68,10 @@ namespace RetroBread{
 				// Anchored, use parent position
 				GameEntityModel parentModel = StateManager.state.GetModel(model.parentEntity) as GameEntityModel;
 				FixedVector3 parentPosition = GetRealPosition(parentModel);
+//				Debug.Log("Model old position: " + (StateManager.state.GetModel(model.physicsModelId) as PhysicPointModel).position
+//					+ "\nModel parent position: " + parentPosition
+//					+ "\nModel new position: " + parentPosition + " + " + model.positionRelativeToParent + " = " + (parentPosition + model.positionRelativeToParent)
+//				);
 				return parentPosition + model.positionRelativeToParent;
 			}
 
@@ -109,7 +113,7 @@ namespace RetroBread{
 				GameEntityController otherController = otherModel.Controller() as GameEntityController;
 				otherController.lastHurts.Add(hitInformation.HitWithEntity(model.Index));
 				lastHits.Add(hitInformation.HitWithEntity(otherModel.Index));
-				//Debug.Log("HIT detected");
+				// Debug.Log(model.Index + " hit " + otherModel.Index);
 			}
 		}
 

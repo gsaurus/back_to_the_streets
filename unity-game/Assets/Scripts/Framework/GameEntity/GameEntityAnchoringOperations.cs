@@ -54,6 +54,7 @@ namespace RetroBread{
 				Debug.LogWarning("Cyclic anchoring attempt");
 				return;
 			}
+			if (model.anchoredEntities == null) model.anchoredEntities = new List<ModelReference>(anchorId);
 			while (model.anchoredEntities.Count <= anchorId) {
 				model.anchoredEntities.Add(null);
 			}
@@ -73,6 +74,7 @@ namespace RetroBread{
 
 		// Release all anchored entities
 		public static void ReleaseAllAnchoredEntities(GameEntityModel model){
+			if (model.anchoredEntities == null) return;
 			for (int i = 0 ; i < model.anchoredEntities.Count ; ++i){
 				ReleaseAnchoredEntity(model, i);
 			}
@@ -82,7 +84,7 @@ namespace RetroBread{
 		// Release event may be accompained by a set animation event and set anchored position.
 		// It safely releases at the relative position to parent, taking physics in consideration
 		public static void ReleaseAnchoredEntity(GameEntityModel model, int anchorId){
-			if (model.anchoredEntities.Count <= anchorId) return;
+			if (model.anchoredEntities == null || model.anchoredEntities.Count <= anchorId) return;
 			GameEntityModel anchoredEntityModel = StateManager.state.GetModel(model.anchoredEntities[anchorId]) as GameEntityModel;
 			if (anchoredEntityModel != null){
 				anchoredEntityModel.parentEntity = new ModelReference();
@@ -106,7 +108,7 @@ namespace RetroBread{
 
 		// Set anchored entity position relatively to it's parent
 		public static void SetAnchoredEntityRelativePosition(GameEntityModel model, int anchorId, FixedVector3 relativePosition){
-			if (model.anchoredEntities.Count <= anchorId) return;
+			if (model.anchoredEntities == null || model.anchoredEntities.Count <= anchorId) return;
 			GameEntityModel anchoredEntityModel = StateManager.state.GetModel(model.anchoredEntities[anchorId]) as GameEntityModel;
 			if (anchoredEntityModel != null){
 				anchoredEntityModel.positionRelativeToParent = relativePosition;
@@ -117,7 +119,7 @@ namespace RetroBread{
 
 		// Forces the animation of an anchored entity, so that it can't be messed with it's current animation events
 		public static void SetAnchoredEntityAnimation(GameEntityModel model, int anchorId, string animationName){
-			if (model.anchoredEntities.Count <= anchorId) return;
+			if (model.anchoredEntities == null || model.anchoredEntities.Count <= anchorId) return;
 			GameEntityModel anchoredEntityModel = StateManager.state.GetModel(model.anchoredEntities[anchorId]) as GameEntityModel;
 			if (anchoredEntityModel != null){
 				AnimationModel anchoredAnimationModel = GameEntityController.GetAnimationModel(anchoredEntityModel);
@@ -149,7 +151,7 @@ namespace RetroBread{
 
 		// Anchored name
 		public static string AnchoredEntityName(GameEntityModel model, int anchorId){
-			if (model.anchoredEntities.Count <= anchorId || model.anchoredEntities[anchorId] == null) return null;
+			if (model.anchoredEntities == null || model.anchoredEntities.Count <= anchorId || model.anchoredEntities[anchorId] == null) return null;
 			GameEntityModel anchoredEntityModel = StateManager.state.GetModel(model.anchoredEntities[anchorId]) as GameEntityModel;
 			if (anchoredEntityModel == null) return null;
 			AnimationModel animModel = GameEntityController.GetAnimationModel(anchoredEntityModel);
@@ -159,7 +161,7 @@ namespace RetroBread{
 
 		// Anchored animation name
 		public static string AnchoredEntityAnimation(GameEntityModel model, int anchorId){
-			if (model.anchoredEntities.Count <= anchorId || model.anchoredEntities[anchorId] == null) return null;
+			if (model.anchoredEntities == null || model.anchoredEntities.Count <= anchorId || model.anchoredEntities[anchorId] == null) return null;
 			GameEntityModel anchoredEntityModel = StateManager.state.GetModel(model.anchoredEntities[anchorId]) as GameEntityModel;
 			if (anchoredEntityModel == null) return null;
 			AnimationModel animModel = GameEntityController.GetAnimationModel(anchoredEntityModel);
@@ -174,7 +176,7 @@ namespace RetroBread{
 
 		// Is anchoring something
 		public static bool IsAnchoring(GameEntityModel model, int anchorId){
-			if (model.anchoredEntities.Count <= anchorId) return false;
+			if (model.anchoredEntities == null || model.anchoredEntities.Count <= anchorId) return false;
 			return model.anchoredEntities[anchorId] != null;
 		}
 

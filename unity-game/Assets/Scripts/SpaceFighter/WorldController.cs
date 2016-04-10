@@ -20,8 +20,8 @@ public class WorldController:Controller<WorldModel>{
 
 	private static bool[,] teamsHitMatrix = new bool[,]
 		{
-			{ false, true  },
-			{ true,  false }
+			{ true, true  },
+			{ true,  true }
 		};
 
 	static WorldController(){
@@ -138,7 +138,7 @@ public class WorldController:Controller<WorldModel>{
 				ShooterEntityModel playerEntity = (ShooterEntityModel)playerModel;
 				playerEntity.isFacingRight = initialPosition.X < 0;
 				model.players[playerId] = StateManager.state.AddModel(playerModel);
-				teamsManagerModel.teams[0].entities.Add(model.players[playerId]);
+				teamsManagerModel.teams[playerId % 2].entities.Add(model.players[playerId]);
 
 			}
 

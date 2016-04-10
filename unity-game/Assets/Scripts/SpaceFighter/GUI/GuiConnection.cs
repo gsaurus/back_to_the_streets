@@ -65,6 +65,7 @@ public class GuiConnection : MonoBehaviour
 					SetupGame(true);
 					NetworkMaster.Instance.ConnectToServer(host);
 					infoText.text = "Connected.\nWaiting for more players...";
+					UnityEngine.Debug.Log(infoText.text);
 					return true;
 				}
 			}
@@ -78,7 +79,7 @@ public class GuiConnection : MonoBehaviour
 			yield return new WaitForSeconds(1.0f);
 			if (TryToConnectToAvailableServer()) {
 				// success
-				yield return null;
+				yield break;
 			}
 		}
 		CreateNewServer();

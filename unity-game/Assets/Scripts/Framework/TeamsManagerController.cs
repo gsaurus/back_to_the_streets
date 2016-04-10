@@ -95,13 +95,15 @@ namespace RetroBread{
 			// Check hit/collisions between teams
 			for (int i = 0; i < model.teams.Length; ++i) {
 				for (int j = i; j < model.teams.Length; ++j) {
-					// check collisions
+					// check collisions between each other
 					if (teamsCollisionMatrix[i, j]) {
 						CheckCollisions(model.teams[i].entities, model.teams[j].entities);
+						CheckCollisions(model.teams[j].entities, model.teams[i].entities);
 					}
-					// check hits
+					// check hits between each other
 					if (teamsHitsMatrix[i, j]) {
 						CheckHits(model.teams[i].entities, model.teams[j].entities);
+						CheckHits(model.teams[j].entities, model.teams[i].entities);
 					}
 				}
 			}

@@ -216,7 +216,11 @@ Log
 	:( no work done :(
 09-04-16
 	- Plan next steps
-	
+10-04-16
+	- Fixed network connection issues
+	- Turned off events anti-hacking on Debug to allow to test in same machine
+	- Fixed null pointers on model's anchoredEntities list
+	- Set hits matrix all VS all to better test with current teams distribution
 
 
 
@@ -236,6 +240,7 @@ OK - Which collision box (ID) was I hit at?
 OK - One hit per animation (no multihit, thank you)
 13 - Hit with projection (velocity) data
 14 - Apply projection (velocity) on hurt
+15 - Hits matrix as numbers, for % of damage (support for friendly damage causing less damage)
 
 
 
@@ -308,6 +313,9 @@ OK - One hit per animation (no multihit, thank you)
 2 - Event to take camera control into an anchor (release anchor releases the camera)
 3 - Event to set animation and physics multiplier to all other entities of a team
 4 - Experiments
+
+*** Network ***
+TODO: what's wrong sometimes opponent not created?...
 	
 TODO: add a button in editor to set anchored position to curr anchor pos at curr frame
 OK - separate Entity conditions / events by static classes for each concept

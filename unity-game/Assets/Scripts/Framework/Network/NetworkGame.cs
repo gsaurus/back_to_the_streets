@@ -181,6 +181,7 @@ namespace RetroBread{
 			// Set all events to be owned by current player number
 			private void ApplyNetworkPlayerOnEvent(Event e){
 				int playerNumber = NetworkCenter.Instance.GetPlayerNumber();
+				Debug.Log("Adding event for player " + playerNumber);
 				if (playerNumber >= 0) {
 					e.PlayerId = (uint)playerNumber;
 				}
@@ -215,7 +216,9 @@ namespace RetroBread{
 						foreach (Event playerEvent in events){
 							if (playerEvent.PlayerId != (uint)senderId){
 								Debug.LogWarning("Player #" + senderId + " trying to register events for player #" + playerEvent.PlayerId);
+								#if !DEBUG
 								return;
+								#endif
 							}
 						}
 						onEventsAddedEvent(events);
