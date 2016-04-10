@@ -1,7 +1,7 @@
 Engine documentation:
 https://docs.google.com/document/d/1YAtgp1-7RQTSQqmVyXsWawJDXM8KLNKdgQm-GsvNzPs/
 
-massive work ahead, the storage format for the characters is one, the format in the editor is other, and the in-game format is other, and I have to:
+*** Storage Entity Data Format ***
 OK - define storage format 1
 OK - code storage format 1
 OK - refactor projects names 0.5
@@ -13,7 +13,7 @@ OK - define editor character format 1
 OK - editor read/write from/to storage format 2
 
 
-Then start with the editor..
+*** Editor Basics ***
 OK - study Unity UI stuff, do some experiments.. 2
 OK - implement list prefab in Unity 1
 OK - able to load in a 2D or 3D model, I have done a few work in the past, so 15% done.. 3
@@ -36,16 +36,14 @@ OK - Conditional events (stub stuff only) 3
 - check what's going on with some comboboxes not scrolling (temp solution: use keyboard up/down & space)
 - Use tab/enter to move to next inputField
 
-OK support offline mode 2
+OK - support offline mode 2
 TODO: investigate double messages on single key event?.. 1
 TODO: investigate is not valid. Input position is { NaN, NaN, NaN }, think reason is something's wrong with the 3D model, perhaps the anchor points exporting
 
 
-Back to game:
+*** Game Entity Setup Basics ***
 OK - load character data and model 1
 OK - construct character controller (basic stuff only) 2
-
-By now, all we can see in-game is character on idle animation.
 OK - Create frame conditions (at frame x, do something) 2
 OK - Create animation transition events for editor (at frame x, move to animation y) 2
 OK - Load and play animation transitions in-game 2
@@ -76,26 +74,6 @@ Other plans:
 
 
 ]]]]]]]]]
-
-
-
-
-OK - PointModel with flag to enable / disable physics calculations (to disable during hit pause)	1
-OK - Precompute collisions bounding boxes 1
-OK - Precompute hits bounding boxes 1
-OK - Define teams of entities (buckets), and their kind of interaction ([x]hit, [x]collision) to check collisions between relevant teams only 2
-OK - Hits detection: loop through the teams to detect hit VS collision (Debug.Log will do for now) 3
-OK - Basic hit/hurt conditions 1
-OK - Animation pause delay (built-in support) 1
--- - General variable arrays (precomputed size), and automatic countdown counters array (to be used as energy, combo counter & timers, etc) 1
--- - Conditions & events for general variables 3
-OK - Test character with simple combo and combo time cancel 2
-11 - Collision VS Collision physics 3
-
-OK - Which collision box (ID) was I hit at?
-OK - One hit per animation (no multihit, thank you)
-
-
 
 
 
@@ -234,16 +212,107 @@ Log
 	- Split entity controller into more files (roughly)
 	- Anchored conditions & events (editor & game)
 	- Grab/release working in-game (no views yet)
+04..08-04-16
+	:( no work done :(
+09-04-16
+	- Plan next steps
 	
-TODO: Store anchor obj references at the objects pool
+
+
+
+
+*** Hits / Collisions ***
+OK - PointModel with flag to enable / disable physics calculations (to disable during hit pause)	1
+OK - Precompute collisions bounding boxes 1
+OK - Precompute hits bounding boxes 1
+OK - Define teams of entities (buckets), and their kind of interaction ([x]hit, [x]collision) to check collisions between relevant teams only 2
+OK - Hits detection: loop through the teams to detect hit VS collision (Debug.Log will do for now) 3
+OK - Basic hit/hurt conditions 1
+OK - Animation pause delay (built-in support) 1
+-- - General variable arrays (precomputed size), and automatic countdown counters array (to be used as energy, combo counter & timers, etc) 1
+-- - Conditions & events for general variables 3
+OK - Test character with simple combo and combo time cancel 2
+OK - Which collision box (ID) was I hit at?
+OK - One hit per animation (no multihit, thank you)
+13 - Hit with projection (velocity) data
+14 - Apply projection (velocity) on hurt
+
+
+
+*** Grabs ***	
+1 - Store anchor obj references at the objects pool
+2 - Entity View as child of parent's anchor
+3 - Improve position interpolation when dragging to a close position
+4 - Apply impulse to grabbed entity
+
+
+*** Discriminating objects (e.g. pipe, knife different weapons) ***
+1 - Condition to get entity name (hitten entity, grabbed entity, etc)
+
+
+*** Proximity Queries (e.g. to pick weapon from the floor) ***
+1 - Method to find closest entity of certain team, meeting certain conditions (e.g. landed, dangerous, anyState..)
+2 - Buffer latest proximity queries for next X frames
+3 - Include closest entity on conditions / events
+4 - Condition: closest entity distance (negative if from behind)
+(Note for game: only check for proximity if switching direction, so if moving forward do not start moving backwards)
+
+*** Energy, Death ***
+1 - Entity energy data (counter?)
+2 - Hits damage
+3 - Apply damage on hurt
+4 - Apply sporadic damage (Event) (e.g. using special damage(x))
+5 - Condition: energy checker
+6 - Kill entity
+
+(Note: rage meter and such should be custom counters in entity!)
+
+*** HUD support ***
+(Note: only variables that are traversal to levels, not coupled to entity instances)
+1 - HUD Model (player center, whatever) with counters (score, lives?, cop calls..)
+2 - Entities with a ref to HUD ModelID, HUD Model with ref to entity, and grabbed/hitten/closest entity?
+3 - HUD Controller with methods to add/subtract counters
+4 - Simple experimental view
+
+*** Fighting elements ***
+1 - Face to entity event (such as face to closest enemy)
+2 - Add mass to entity, for collision VS collision who push who
+3 - Collision VS Collision physics 3
+4 - Collision VS Collision events
+
+*** Main Menu ***
+1 - Add intro placeholder
+2 - Add main-menu placeholder with Versus Mode
+3 - Add Character select placeholder, by selecting Versus, include a game password option
+4 - Add an offline mode placeholder
+5 - Add a challenger entry placeholder
+6 - Start versus mode placeholder from offline
+7 - Spawn each player in different teams and different positions
+
+*** Main Polish ***
+1 - Add final intro
+2 - Animate menus and their transitions
+3 - Animate character select
+4 - Compound offline train mode (background)
+5 - Create offline train stub entity (barrels?, bags?)
+6 - Compound Versus background and physics
+7 - Animate challenger (offline to versus transition)
+8 - Versus mode camera
+9 - Train mode camera
+10 - Versus mode HUD
+11 - Train mode HUD	
+
+
+*** Camera Controll events ***
+1 - Event to set all other entities of a team at a certain animation
+2 - Event to take camera control into an anchor (release anchor releases the camera)
+3 - Event to set animation and physics multiplier to all other entities of a team
+4 - Experiments
 	
 TODO: add a button in editor to set anchored position to curr anchor pos at curr frame
 OK - separate Entity conditions / events by static classes for each concept
 
-WIP - Grab / Release anchored entities
-
-
 TODO: Editor: add txt "guides", for variable "names" etc
 
 TODO: animation time multiplier: in the same update run more than one frame, it's conditions and events
-TODO: check collision with team on demand (e.g. pick weapon/food)
+TODO: physics multiplier
