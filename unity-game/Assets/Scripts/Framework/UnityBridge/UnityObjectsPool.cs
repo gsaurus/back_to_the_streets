@@ -6,7 +6,7 @@ namespace RetroBread{
 
 
 	// Class to hold handy type conversions to/from unity
-	public static class UnityConversions{
+	public static class UnityExtensions{
 		
 		public static UnityEngine.Vector3 AsVector3(this FixedVector3 src){
 			return new UnityEngine.Vector3((float)src.X, (float)src.Y, (float)src.Z);
@@ -15,8 +15,21 @@ namespace RetroBread{
 		public static FixedVector3 AsFixedVetor3(this UnityEngine.Vector3 src){
 			return new FixedVector3(src.x, src.y, src.z);
 		}
+
+		//Depth-first search
+	     public static Transform FindDeepChild(this Transform aParent, string aName){
+	         foreach(Transform child in aParent){
+	             if(child.name == aName )
+	                 return child;
+	             var result = child.FindDeepChild(aName);
+	             if (result != null)
+	                 return result;
+	         }
+	         return null;
+	     }
 	
 	}
+
 
 
 	// Holds the GameObjects used by views
@@ -24,17 +37,43 @@ namespace RetroBread{
 	// Owner models are responsible for releasing the object from the pool on destruction
 	public class UnityObjectsPool: Singleton<UnityObjectsPool>{
 
+		// Class to hold GameObject, and cache it's internal anchor objects
+		private class GameObjectData{
+			public GameObject obj;
+			public List<GameObject> anchors;
+
+			// Constructor given an object and list of anchor names.
+			// Try to find anchors by child name in the given obj, and cache them
+			public GameObjectData(GameObject obj, List<string> anchorNames){
+				this.obj = obj;
+				anchors = new List<GameObject>(anchorNames != null ? anchorNames.Count : 0);
+				Transform childsTransform;
+				GameObject childsGameObject;
+				if (anchorNames != null){
+					foreach (string anchorName in anchorNames){
+						childsTransform = obj.transform.FindDeepChild(anchorName);
+						childsGameObject = childsTransform != null ? childsTransform.gameObject : null;
+						anchors.Add(childsGameObject);
+					}
+				}
+			}
+
+		}
+
+
+
 		// GameObjects per owner id
-		private Dictionary<uint, GameObject> gameObjects;
+		private Dictionary<uint, GameObjectData> gameObjects;
 
 		private Dictionary<uint, string> prefabNamesByOwner;
 
 		// Cache of loaded prefabs
 		private Dictionary<string, UnityEngine.Object> prefabs;
+
 		
 		// Constructor
 		public UnityObjectsPool(){
-			gameObjects = new Dictionary<uint, GameObject>();
+			gameObjects = new Dictionary<uint, GameObjectData>();
 			prefabNamesByOwner = new Dictionary<uint, string>();
 			prefabs = new Dictionary<string, UnityEngine.Object>();
 		}
@@ -44,9 +83,11 @@ namespace RetroBread{
 
 			// "guess" character name if necessary
 			GameEntityModel ownerModel = StateManager.state.GetModel(modelId) as GameEntityModel;
+			AnimationModel animModel = null;
+			if (ownerModel != null){
+				animModel = StateManager.state.GetModel(ownerModel.animationModelId) as AnimationModel;
+			}
 			if (prefabName == null){
-				if (ownerModel == null) return null;
-				AnimationModel animModel = StateManager.state.GetModel(ownerModel.animationModelId) as AnimationModel;
 				if (animModel == null) return null;
 				if (animModel.viewModelName != null){
 					prefabName = animModel.viewModelName;
@@ -61,13 +102,13 @@ namespace RetroBread{
 			}
 
 			// Try get from the pool
-			GameObject obj;
+			GameObjectData objData;
 			string originalPrefabName;
-			if (gameObjects.TryGetValue(modelId, out obj)
+			if (gameObjects.TryGetValue(modelId, out objData)
 			    && prefabNamesByOwner.TryGetValue(modelId, out originalPrefabName)
 			    && originalPrefabName == prefabName
 			){
-				return obj;
+				return objData.obj;
 			}
 
 			// Doesn't exist yet
@@ -81,9 +122,13 @@ namespace RetroBread{
 				}
 				prefabs.Add(prefabName, prefab);
 			}
-			obj = GameObject.Instantiate(prefab) as GameObject;
+			GameObject obj = GameObject.Instantiate(prefab) as GameObject;
 			obj.transform.position = new Vector3(float.MinValue,float.MaxValue, float.MinValue);
-			gameObjects[modelId] = obj;
+			if (animModel != null){
+				gameObjects[modelId] = new GameObjectData(obj, CharacterLoader.GetCharacterAnchorNames(animModel.characterName));
+			}else{
+				gameObjects[modelId] = new GameObjectData(obj, null);
+			}
 			prefabNamesByOwner[modelId] = prefabName;
 			if (parent != null){
 				obj.transform.SetParent(parent);
@@ -100,13 +145,24 @@ namespace RetroBread{
 			return obj;
 		}
 
+
+		public GameObject GetAnchorObject(uint modelId, int anchorId){
+			GameObjectData objData;
+			if (gameObjects.TryGetValue(modelId, out objData)){
+				if (objData != null && objData.anchors != null && anchorId < objData.anchors.Count){
+					return objData.anchors[anchorId];
+				}
+			}
+			return null;
+		}
+
 		public void ReleaseGameObject(uint modelId){
 			// Destroy it if it exists on the pool
-			GameObject obj;
-			if (gameObjects.TryGetValue(modelId, out obj)){
+			GameObjectData objData;
+			if (gameObjects.TryGetValue(modelId, out objData)){
 				gameObjects.Remove(modelId);
 				prefabNamesByOwner.Remove(modelId);
-				GameObject.Destroy(obj);
+				GameObject.Destroy(objData.obj);
 			}
 		}
 	
@@ -114,6 +170,7 @@ namespace RetroBread{
 		public void ReleaseUnusedResources(){
 			Dictionary<string, UnityEngine.Object> newPrefabsDict = new Dictionary<string, UnityEngine.Object>();
 			UnityEngine.Object obj;
+			List<string> anchorNames;
 			foreach(string prefabName in prefabNamesByOwner.Values){
 				if (prefabs.TryGetValue(prefabName, out obj)){
 					newPrefabsDict.Add(prefabName, obj);
@@ -124,13 +181,12 @@ namespace RetroBread{
 		}
 
 		public void ReleaseAll(){
-			foreach(GameObject obj in gameObjects.Values){
-				GameObject.Destroy(obj);
+			foreach(GameObjectData objData in gameObjects.Values){
+				GameObject.Destroy(objData.obj);
 			}
 			gameObjects.Clear();
 			prefabNamesByOwner.Clear();
 			prefabs.Clear();
-			Resources.UnloadUnusedAssets();
 		}
 
 	}

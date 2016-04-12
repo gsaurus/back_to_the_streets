@@ -50,6 +50,17 @@ namespace RetroBread{
 			return null;
 		}
 
+		// Get all anchor names for a character
+		public static List<string> GetCharacterAnchorNames(string characterName){
+			Storage.Character storageCharacter;
+			if (loadedCharacters.TryGetValue(characterName, out storageCharacter)) {
+				if (storageCharacter.viewAnchors != null){
+					return new List<string>(storageCharacter.viewAnchors);
+				}
+			}
+			return null;
+		}
+
 
 		// Load Character view model
 		public static GameObject LoadViewModel(string prefabName){
@@ -199,10 +210,10 @@ namespace RetroBread{
 
 			}
 
-			// TODO: what about view anchors ?
-			// Skins?..
-			// TODO: store that in a static view service to be consulted by views
-
+			// Note: for now storage character data is stored locally,
+			// Skins and anchor names accessed through storage data
+			// TODO: Perhaps store skins and anchor names separatedly, maybe somewhere else,
+			// instead of keeping storage data in memory..
 
 		}
 

@@ -221,6 +221,11 @@ Log
 	- Turned off events anti-hacking on Debug to allow to test in same machine
 	- Fixed null pointers on model's anchoredEntities list
 	- Set hits matrix all VS all to better test with current teams distribution
+11-04-16
+	:( no work done :(
+12-04-16
+	- Store anchor obj references at the objects pool
+	- Entity View as child of parent's anchor
 
 
 
@@ -245,10 +250,11 @@ OK - One hit per animation (no multihit, thank you)
 
 
 *** Grabs ***	
-1 - Store anchor obj references at the objects pool
-2 - Entity View as child of parent's anchor
+OK - Store anchor obj references at the objects pool
+OK - Entity View as child of parent's anchor
 3 - Improve position interpolation when dragging to a close position
 4 - Apply impulse to grabbed entity
+5 - Test release position off the walls
 
 
 *** Discriminating objects (e.g. pipe, knife different weapons) ***
