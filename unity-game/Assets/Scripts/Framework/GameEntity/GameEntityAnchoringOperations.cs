@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace RetroBread{
 
 
-	// Basic entity operations (velocity, impulse, flip
+	// Anchoring operations
 	public static class GameEntityAnchoringOperations{
 
 

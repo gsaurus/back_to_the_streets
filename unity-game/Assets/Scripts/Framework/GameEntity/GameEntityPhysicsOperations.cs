@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace RetroBread{
 
 
-	// Basic entity operations (velocity, impulse..)
+	// Entity physics operations (velocity, impulse..)
 	public static class GameEntityPhysicsOperations{
 
 
@@ -31,6 +31,27 @@ namespace RetroBread{
 			//			FixedVector3 collisionVelocity;
 			//			pointModel.velocityAffectors.TryGetValue(PhysicPointController.collisionVelocityAffectorName, out collisionVelocity);
 			pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName] += impulse; //collisionVelocity + impulse;
+		}
+
+
+		// Reset X and Z force components on the physics velocity affector
+		public static void ResetPlanarImpulse(GameEntityModel model){
+			PhysicPointModel pointModel = GameEntityController.GetPointModel(model);
+			if (pointModel == null) return;
+			pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName] =
+				new FixedVector3(0, pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName].Y, 0)
+			;
+		}
+
+
+		// Apply a force on the physics velocity affector of a referenced entity
+		// Note: there could be generic templated methods receiving delegate methods... 
+		public static void AddImpulse(GameEntityModel model, GameEntityReferenceDelegator refDelegator, FixedVector3 impulse){
+			if (!model.isFacingRight) impulse.X *= -1;
+			GameEntityModel refModel = GameEntityController.GetEntityFromDelegator(refDelegator, model);
+			if (refModel != null){
+				AddImpulse(refModel, impulse);
+			}
 		}
 
 

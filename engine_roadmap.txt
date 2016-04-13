@@ -226,6 +226,10 @@ Log
 12-04-16
 	- Store anchor obj references at the objects pool
 	- Entity View as child of parent's anchor
+13-04-16
+	- Test release position off the walls
+	- Apply impulse to referenced entity
+	- Reset X/Z impulse
 
 
 
@@ -253,8 +257,10 @@ OK - One hit per animation (no multihit, thank you)
 OK - Store anchor obj references at the objects pool
 OK - Entity View as child of parent's anchor
 3 - Improve position interpolation when dragging to a close position
-4 - Apply impulse to grabbed entity
-5 - Test release position off the walls
+OK - Apply impulse to grabbed entity
+OK - Reset X,Z impulse
+OK - Test release position off the walls
+7 - Editor: select an anchor ID to force position from model view anchor transform 
 
 
 *** Discriminating objects (e.g. pipe, knife different weapons) ***

@@ -28,7 +28,8 @@ namespace RetroBread{
 			BuildRelease,						// 15: release(2)
 			BuildSetAnchoredPos,				// 16: grabbedPos(2, (2.1, 4.2, 5.3))
 			BuildSetAnchoredAnim,				// 17: grabbedAnim(2, jump)
-
+			BuildAddRefImpulse,					// 18: impulse(grabbed, 0, (2.1, 4.2, 5.3))
+			BuildResetImpulse					// 19: reset(impulse)
 
 		};
 
@@ -79,7 +80,7 @@ namespace RetroBread{
 			EntityDelegatorType delegatorType = (EntityDelegatorType)parameter.SafeInt(startIntIndex);
 			switch (delegatorType){
 				case EntityDelegatorType.anchor:{
-						return new AnchoredEntityDelegator(parameter.SafeInt(startIntIndex + 1));
+					return new AnchoredEntityDelegator(parameter.SafeInt(startIntIndex + 1));
 				}
 				case EntityDelegatorType.parent:{
 					return new ParentEntityDelegator();
@@ -238,6 +239,7 @@ namespace RetroBread{
 			);
 		}
 
+
 		// grabbedAnim(2, jump)
 		private static AnimationEvent BuildSetAnchoredAnim(Storage.GenericParameter parameter){
 			int anchorId = parameter.SafeInt(0);
@@ -248,7 +250,26 @@ namespace RetroBread{
 			);
 		}
 
+
 	#endregion
+
+
+		// impulse(grabbed, (2.1, 4.2, 5.3))
+		private static AnimationEvent BuildAddRefImpulse(Storage.GenericParameter parameter){
+			GameEntityReferenceDelegator delegator = BuildEntityDelegator(parameter);
+			FixedVector3 impulse = BuildFixedVector3(parameter);
+			return new DoubleEntityAnimationEvent<GameEntityReferenceDelegator, FixedVector3>(
+				null, GameEntityPhysicsOperations.AddImpulse,
+				delegator, impulse
+			);
+		}
+
+		// reset(impulse)
+		private static AnimationEvent BuildResetImpulse(Storage.GenericParameter parameter){
+			return new SimpleEntityAnimationEvent(
+				null, GameEntityPhysicsOperations.ResetPlanarImpulse
+			);
+		}
 
 
 #endregion

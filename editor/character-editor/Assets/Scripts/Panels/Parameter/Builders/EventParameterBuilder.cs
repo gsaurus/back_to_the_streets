@@ -47,7 +47,9 @@ namespace RetroBread{
 			new BuildReleaseAll(),						// 14: release(all)
 			new BuildRelease(),							// 15: release(2)
 			new BuildSetAnchoredPos(),					// 16: grabbedPos(2, (2.1, 4.2, 5.3))
-			new BuildSetAnchoredAnim()					// 17: grabbedAnim(2, jump)
+			new BuildSetAnchoredAnim(),					// 17: grabbedAnim(2, jump)
+			new BuildRefImpulse(),						// 18: impulse(hitten, (2.1, 4.2, 5.3))
+			new BuildResetImpulse()						// 19: reset(impulse)
 		};
 
 
@@ -347,6 +349,40 @@ namespace RetroBread{
 
 	#endregion
 
+
+		// impulse(hitten, (2.1, 4.2, 5.3))
+		private class BuildRefImpulse: InternEventBuilder{
+			public BuildRefImpulse():base("Impulse Other"){}
+			public override string ToString(GenericParameter parameter){
+				return "impulse("
+					+ SafeToString(entityReferenceType, parameter.SafeInt(0), "entityRef")
+					+ ", ("+ parameter.SafeFloatToString(0)
+					+ ", " + parameter.SafeFloatToString(1)
+					+ ", " + parameter.SafeFloatToString(2)
+					+ "))"
+				;
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Entity Reference:", entityReferenceType);
+				// TODO: dynamic content based on the dropdown!..
+				IntInputFieldParam.Instantiate(parent, parameter, 1, "Ref param (**):");
+				FloatInputFieldParam.Instantiate(parent, parameter, 0, "delta pos X:");
+				FloatInputFieldParam.Instantiate(parent, parameter, 1, "delta pos Y:");
+				FloatInputFieldParam.Instantiate(parent, parameter, 2, "delta pos Z:");
+			}
+		}
+
+
+		// reset(impulse)
+		private class BuildResetImpulse: InternEventBuilder{
+			public BuildResetImpulse():base("Reset XZ Impulse"){}
+			public override string ToString(GenericParameter parameter){
+				return "reset(impulse)";
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				// Nothing
+			}
+		}
 
 #endregion
 
