@@ -230,7 +230,10 @@ Log
 	- Test release position off the walls
 	- Apply impulse to referenced entity
 	- Reset X/Z impulse
-
+14..17-04-16
+	:( no work done :(
+18-04-16
+	- Import and cleanup Axel sprites from older prototype
 
 
 
