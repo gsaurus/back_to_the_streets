@@ -31,7 +31,8 @@ namespace RetroBread{
 			BuildComboCounter,						// 14: combo >= 2
 			BuildComboTimer,						// 15: combo timer < 10
 			BuildIsAnchored,						// 16: grabbed
-			BuildIsAnchoring						// 17: grabbing(2)
+			BuildIsAnchoring,						// 17: grabbing(2)
+			BuildCompareVerticalImpulse,			// 18: impulseV(1.5)
 
 		};
 			
@@ -243,6 +244,14 @@ namespace RetroBread{
 			return new SingleEntityBoolCondition<int>(GameEntityAnchoringOperations.IsAnchoring, parameter.SafeInt(0));
 		}
 
+
+		// impulseV(1.5)
+		private static AnimationTriggerCondition BuildCompareVerticalImpulse(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+			keyFrame = invalidKeyframe;
+			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType) parameter.SafeInt(0);
+			FixedFloat value = parameter.SafeFloat(0);
+			return new EntityArithmeticCondition<FixedFloat>(type, GameEntityPhysicsOperations.GetVerticalImpulse, value);
+		}
 
 
 #endregion

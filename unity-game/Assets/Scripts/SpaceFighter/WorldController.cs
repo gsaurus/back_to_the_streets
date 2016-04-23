@@ -7,7 +7,7 @@ using RetroBread.Network;
 
 public class WorldController:Controller<WorldModel>{
 
-	public const float gravityY = -0.009f;
+	public const float gravityY = -0.012f;
 
 	public const uint totalGameFrames = 7200; // 2 minutes
 
@@ -78,9 +78,12 @@ public class WorldController:Controller<WorldModel>{
 			// Create some dummy enemy
 			FixedVector3 initialPosition = GetRandomSpawnPosition(model);
 			playerModel = new ShooterEntityModel(StateManager.state,
-				"happy char",
-				"Standing",
-				CharacterLoader.GetCharacterSkinName("happy char", 0),
+//				"happy char",
+//				"Standing",
+//				CharacterLoader.GetCharacterSkinName("happy char", 0),
+				"Axel_HD",		//"soldier", //playerId % 2 == 0 ? "Blaze" : "Rocha",
+				"idle", 		//"soldierIdleRelaxed",
+				CharacterLoader.GetCharacterSkinName("Axel_HD", 0),
 				physicsModel,
 				null, // no input
 				initialPosition,
@@ -123,9 +126,9 @@ public class WorldController:Controller<WorldModel>{
 				Model inputModel = new PlayerInputModel(playerId);
 				FixedVector3 initialPosition = GetRandomSpawnPosition(model);
 				playerModel = new ShooterEntityModel(StateManager.state,
-					"happy char",		//"soldier", //playerId % 2 == 0 ? "Blaze" : "Rocha",
-                	"Standing", 		//"soldierIdleRelaxed",
-					CharacterLoader.GetCharacterSkinName("happy char", playerId),
+					"Axel_HD",		//"soldier", //playerId % 2 == 0 ? "Blaze" : "Rocha",
+                	"idle", 		//"soldierIdleRelaxed",
+					CharacterLoader.GetCharacterSkinName("Axel_HD", playerId),
                 	physicsModel,
                 	inputModel,
                     initialPosition,
@@ -305,7 +308,9 @@ public class WorldController:Controller<WorldModel>{
 	
 	private static void SetupGameCharacters(){
 
+		CharacterLoader.LoadCharacter("Axel_HD");
 		CharacterLoader.LoadCharacter("happy char");
+		CharacterLoader.LoadCharacter("Axel_px");
 
 		// hardcoded:
 		//SetupCharacter("soldier");

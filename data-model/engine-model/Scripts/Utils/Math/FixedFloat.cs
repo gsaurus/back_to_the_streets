@@ -307,7 +307,7 @@ namespace RetroBread{
 
 		// Implement IComparable CompareTo to provide default sort order.
 		public int CompareTo(FixedFloat otherFloat){
-			return RawValue.CompareTo(otherFloat);
+			return RawValue.CompareTo(otherFloat.RawValue);
 		}
 
 

@@ -172,7 +172,9 @@ namespace RetroBread{
 			if (character.viewModels != null && character.viewModels.Count > 0) {
 				string[] pathItems = character.viewModels[0].Split(skinsDelimiter.ToCharArray());
 				if (pathItems != null && pathItems.Length > 1) {
-					SetSkin(pathItems[0], pathItems[1]); // TODO: OnSkinChanged event is called inside, potentially dangerous
+					if (!SetSkin(pathItems[0], pathItems[1])){ // TODO: OnSkinChanged event is called inside, potentially dangerous
+						character.viewModels.Clear();
+					}
 				}
 			}
 
@@ -284,13 +286,19 @@ namespace RetroBread{
 
 
 		// Select a skin (2D or 3D model)
-		public void SetSkin(string bundleName, string modelName){
+		public bool SetSkin(string bundleName, string modelName){
 			string url = "file://" + charactersModelsPath + bundleName;
 			WWW www = WWW.LoadFromCacheOrDownload(url, 1);
 			if (www.assetBundle == null) {
 				Debug.LogError("Couldn't load bundle at " + url);
+				return false;
 			}
 			GameObject prefab = www.assetBundle.LoadAsset(modelName) as GameObject;
+
+			if (prefab == null) {
+				www.assetBundle.Unload(false);
+				return false;
+			}
 
 			// Update known animations
 			Animator charAnimator = prefab.GetComponent<Animator>();
@@ -304,6 +312,7 @@ namespace RetroBread{
 				if (OnCharacterChangedEvent != null) OnCharacterChangedEvent();
 			}
 			if (OnSkinChangedEvent != null) OnSkinChangedEvent();
+			return true;
 		}
 	
 		private void SetSkin(GameObject prefab, string modelName){
@@ -333,7 +342,7 @@ namespace RetroBread{
 					if (!knownAnimations.Contains(clip.name)) {
 						// New animation!
 						// WARNING: currently clip.averageDuration is not accessible at runtime outside editor
-						CharacterAnimation newAnim = new CharacterAnimation(clip.name, (int) (clip.averageDuration / Time.fixedDeltaTime));
+						CharacterAnimation newAnim = new CharacterAnimation(clip.name, Mathf.CeilToInt(clip.averageDuration / Time.fixedDeltaTime));
 						character.animations.Add(newAnim);
 					}
 				}

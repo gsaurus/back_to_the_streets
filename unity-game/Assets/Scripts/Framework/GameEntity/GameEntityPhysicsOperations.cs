@@ -137,6 +137,14 @@ namespace RetroBread{
 			return pointModel.collisionInpact.Z;
 		}
 
+
+		// Apply a force on the physics velocity affector
+		public static FixedFloat GetVerticalImpulse(GameEntityModel model){
+			PhysicPointModel pointModel = GameEntityController.GetPointModel(model);
+			if (pointModel == null) return FixedFloat.Zero;
+			return pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName].Y;
+		}
+
 	
 
 		#endregion

@@ -29,7 +29,8 @@ namespace RetroBread{
 			BuildSetAnchoredPos,				// 16: grabbedPos(2, (2.1, 4.2, 5.3))
 			BuildSetAnchoredAnim,				// 17: grabbedAnim(2, jump)
 			BuildAddRefImpulse,					// 18: impulse(grabbed, 0, (2.1, 4.2, 5.3))
-			BuildResetImpulse					// 19: reset(impulse)
+			BuildResetImpulse,					// 19: reset(impulse)
+			BuildConsuleInput					// 20: consumeInput(A)
 
 		};
 
@@ -269,6 +270,17 @@ namespace RetroBread{
 			return new SimpleEntityAnimationEvent(
 				null, GameEntityPhysicsOperations.ResetPlanarImpulse
 			);
+		}
+
+		// consumeInput(A)
+		private static AnimationEvent BuildConsuleInput(Storage.GenericParameter parameter){
+			bool isRelease = parameter.SafeBool(0);
+			uint buttonId = (uint) parameter.SafeInt(0);
+			if (isRelease){
+				return new SingleAnimationEvent<uint>(null, InputButtonOperations.ConsumeRelease, buttonId);
+			}else{
+				return new SingleAnimationEvent<uint>(null, InputButtonOperations.ConsumePress, buttonId);
+			}
 		}
 
 

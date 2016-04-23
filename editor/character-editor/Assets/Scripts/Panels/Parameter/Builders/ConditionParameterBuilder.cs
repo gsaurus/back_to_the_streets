@@ -66,8 +66,8 @@ namespace RetroBread{
 			new BuildComboCounter(),					// 14: combo >= 3
 			new BuildComboTimer(),						// 15: combo timer <= 10
 			new BuildGrabbed(),							// 16: grabbed
-			new BuildGrabbing()							// 17: grabbing(2)
-
+			new BuildGrabbing(),						// 17: grabbing(2)
+			new BuildVerticalImpulse()					// 18: impulseV <= 2
 			// TODO: everything else, including custom values List<int>, List<FixedFloat>, List<int> timers for combo counter etc
 		};
 
@@ -359,6 +359,17 @@ namespace RetroBread{
 			public override void Build(GameObject parent, GenericParameter parameter){
 				InstantiateNegation(parent, parameter);
 				IntInputFieldParam.Instantiate(parent, parameter, 0, "AnchorID:", 0);
+			}
+		}
+
+		private class BuildVerticalImpulse: InternConditionBuilder{
+			public BuildVerticalImpulse():base("Vertical Impulse"){}
+			public override string ToString(GenericParameter parameter){
+				return "impulseV " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(0), "operator") + " " + parameter.SafeFloat(0);
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				InstantiateArithmeticField(parent, parameter, 0);
+				FloatInputFieldParam.Instantiate(parent, parameter, 0, "Compare with impulse:", 0);
 			}
 		}
 

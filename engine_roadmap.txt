@@ -234,7 +234,16 @@ Log
 	:( no work done :(
 18-04-16
 	- Import and cleanup Axel sprites from older prototype
+19..22-04-16
+	:( no work done :(
+23-04-16
+	- Added Axel art from Rui Luís
+	- Added vertical impulse condition
+	- Added Input clear events
 
+
+*** Entity View ***
+01 - Fix sometimes animations not playing
 
 
 *** Hits / Collisions ***

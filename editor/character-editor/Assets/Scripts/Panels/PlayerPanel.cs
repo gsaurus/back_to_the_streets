@@ -174,7 +174,8 @@ namespace RetroBread{
 
 		private float CurrentAnimationLength(Animator animator){
 			// WARNING: currently clip.averageDuration is not accessible at runtime outside editor
-			return animator.GetCurrentAnimatorClipInfo(0)[0].clip.averageDuration;
+			AnimatorClipInfo[] clipsInfo = animator.GetCurrentAnimatorClipInfo(0);
+			return clipsInfo[0].clip.averageDuration;
 		}
 
 #endregion

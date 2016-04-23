@@ -42,6 +42,21 @@ namespace RetroBread{
 			return playerModel.actionPressedCoolers[buttonId] > 0;
 		}
 
+
+
+
+		public void ConsumePress(Model model, uint buttonId){
+			PlayerInputModel playerModel = model as PlayerInputModel;
+			if (playerModel == null) return;
+			playerModel.actionPressedCoolers[buttonId] = 0;
+		}
+
+		public void ConsumeRelease(Model model, uint buttonId){
+			PlayerInputModel playerModel = model as PlayerInputModel;
+			if (playerModel == null) return;
+			playerModel.actionReleasedCoolers[buttonId] = 0;
+		}
+
 		
 
 		// Update coolers and input state based on input events
@@ -85,6 +100,7 @@ namespace RetroBread{
 			} // playerEvents != null
 
 		} // Update
+
 
 
 	} // PlayerInputController

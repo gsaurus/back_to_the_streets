@@ -17,6 +17,10 @@ namespace RetroBread{
 
 		bool IsButtonReleased(Model model, uint buttonId);
 
+		void ConsumePress(Model model, uint buttonId);
+
+		void ConsumeRelease(Model model, uint buttonId);
+
 	}
 
 

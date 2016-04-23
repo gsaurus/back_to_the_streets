@@ -49,12 +49,15 @@ namespace RetroBread{
 			new BuildSetAnchoredPos(),					// 16: grabbedPos(2, (2.1, 4.2, 5.3))
 			new BuildSetAnchoredAnim(),					// 17: grabbedAnim(2, jump)
 			new BuildRefImpulse(),						// 18: impulse(hitten, (2.1, 4.2, 5.3))
-			new BuildResetImpulse()						// 19: reset(impulse)
+			new BuildResetImpulse(),					// 19: reset(impulse)
+			new BuildConsumeInput()						// 20: consumeInput(B)
 		};
 
 
 		// Types of entity references
 		private static string[] entityReferenceType = {"anchored", "parent", "colliding", "hitten", "hitter"};
+
+		private static string[] inputButtonOptions = {"A", "B", "C", "D", "E", "F", "G"};
 	
 
 		public override string[] TypesList(){
@@ -381,6 +384,19 @@ namespace RetroBread{
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
 				// Nothing
+			}
+		}
+
+
+		// consumeInput(B)
+		private class BuildConsumeInput: InternEventBuilder{
+			public BuildConsumeInput():base("Consume Input"){}
+			public override string ToString(GenericParameter parameter){
+				return "consumeInput(" + SafeToString(inputButtonOptions, parameter.SafeInt(0), "entityRef")  + ")";
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Button:", inputButtonOptions);
+				BoolToggleParam.Instantiate(parent, parameter, 0, "Consume Release Event");
 			}
 		}
 

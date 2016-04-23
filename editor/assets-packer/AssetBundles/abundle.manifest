@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2423108247
+CRC: 2172888314
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f2921a787a9b1935f5a6c4bfd83cc8ff
+    Hash: 48b87c467996d69e9dd9bf717fd69f45
   TypeTreeHash:
     serializedVersion: 2
     Hash: 3fc8afeb7b868a3caa09f6020fce8d9a
@@ -36,17 +36,7 @@ ClassTypes:
 - Class: 213
   Script: {instanceID: 0}
 Assets:
-- Assets/Rocha/RochaJumpUp.FBX
-- Assets/Prefabs/prefab.prefab
-- Assets/Rocha/RochaController.controller
-- Assets/Prefabs/Axel.prefab
-- Assets/Rocha/RochaStanding.FBX
-- Assets/Rocha/RochaJab.FBX
-- Assets/Rocha/RochaTex.png
-- Assets/Rocha/RochaJumpRecov.FBX
-- Assets/Rocha/RochaStatic.FBX
-- Assets/Rocha/Materials/RochaTex.mat
-- Assets/Rocha/RochaJumpDown.FBX
-- Assets/Rocha/RochaJumpPrep.FBX
-- Assets/Rocha/RochaWalk.FBX
+- Assets/Prefabs/hd_axel.prefab
+- Assets/Prefabs/3d_rocha.prefab
+- Assets/Prefabs/pixel_axel.prefab
 Dependencies: []
