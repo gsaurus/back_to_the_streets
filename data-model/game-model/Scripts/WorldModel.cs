@@ -8,6 +8,7 @@ public class WorldModel:Model<WorldModel>{
 
 	public const string WorldControllerFactoryId = "my_worldc";
 
+	
 	// Reference to player models
 	// Key: player number; value: player model
 	[ProtoMember(1)]
@@ -17,10 +18,7 @@ public class WorldModel:Model<WorldModel>{
 	[ProtoMember(2)]
 	public ModelReference physicsModelId = new ModelReference();
 
-	// used to decide where to spawn next player
-	[ProtoMember(3)]
-	public bool lastSpawnWasLeft;
-
+	// TeamsManagerModel: Information about teams
 	[ProtoMember(4)]
 	public ModelReference teamsModelId = new ModelReference();
 

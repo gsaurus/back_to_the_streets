@@ -124,7 +124,31 @@ namespace RetroBread{
 			anchoredEntities = new List<ModelReference>();
 		}
 
-		// TODO: other constructors receiving pre-made sub-models, etc?
+
+
+		public GameEntityModel(
+			State state,
+			PhysicWorldModel worldModel,
+			PhysicPointModel physicsModel,
+			AnimationModel animationModel,
+			Model inputModel,
+			string controllerFactoryId,
+			string viewFactoryId,
+			int updatingOrder
+		):base(controllerFactoryId, viewFactoryId, updatingOrder){
+			animationModel.ownerId = this.Index;
+			physicsModel.ownerId = this.Index;
+			physicsModelId = state.AddModel(physicsModel);
+			worldModel.pointModels.Add(physicsModelId);
+			animationModelId = state.AddModel(animationModel);
+			if (inputModel != null) { 
+				inputModelId = state.AddModel(inputModel);
+			} else {
+				inputModelId = new ModelReference(ModelReference.InvalidModelIndex);
+			}
+			anchoredEntities = new List<ModelReference>();
+		}
+
 		// TODO: simplify arguments with a builder object?
 
 

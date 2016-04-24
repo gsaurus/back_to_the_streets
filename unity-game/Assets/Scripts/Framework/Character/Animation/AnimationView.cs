@@ -25,7 +25,7 @@ namespace RetroBread{
 
 		protected int GetAnimationCurrentFrame(AnimatorStateInfo stateInfo){
 			//float currentTime = (stateInfo.normalizedTime - (int)stateInfo.normalizedTime)*stateInfo.length;
-			float currentTime = stateInfo.normalizedTime*stateInfo.length;
+			float currentTime = stateInfo.normalizedTime * stateInfo.length;
 			return (int)(currentTime / StateManager.Instance.UpdateRate);
 		}
 
@@ -80,13 +80,8 @@ namespace RetroBread{
 				// if time is not in sync, resync it
 				if (isTimingSynchroizedWithModelFrames) {
 					int currentAnimationFrame = GetAnimationCurrentFrame(stateInfo);
-					if (currentAnimationFrame > 0 && Math.Abs(currentAnimationFrame - model.currentFrame) > 2) {
-						// TODO: this is not forcing the frame resync, check else code, may help here
-						float timeToFade = Mathf.Abs(currentAnimationFrame - model.currentFrame) * StateManager.Instance.UpdateRate;
-						timeToFade = Mathf.Min(timeToFade, interpolationTime);
-						animator.CrossFade(model.animationName, timeToFade);
-						//Debug.Log("fade time not in sync: " + currentAnimationFrame + ", " + model.currentFrame + "; time: " + timeToFade);
-						//Debug.Log("fade time not in sync");
+					if (Math.Abs(currentAnimationFrame - model.currentFrame) > 2) {
+						animator.Play(model.animationName, 0, (model.currentFrame * StateManager.Instance.UpdateRate) / stateInfo.length);
 					}
 				}
 			}else {

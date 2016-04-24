@@ -39,9 +39,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Scripts\BulletPointModel.cs" />
-    <Compile Include="Scripts\MovingPlaneModel.cs" />
-    <Compile Include="Scripts\ShooterEntityModel.cs" />
     <Compile Include="Scripts\WorldModel.cs" />
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>

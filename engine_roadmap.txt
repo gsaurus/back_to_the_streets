@@ -242,6 +242,37 @@ Log
 	- Added Input clear events
 
 
+
+************************
+**** Next days plan ****
+************************
+
+
+01 - Add background, and hardcoded scene planes
+02 - Rotate views (see prototype to have an idea on the angle)
+03 - Decent 2D Camera control
+04 - Simple character select menu: checkboxes group + start button
+05 - Fetch servers in "background", join one or create new
+06 - Basic transition into game: fade black in, placeholder text, fade black out
+07 - Start button start transition and set player ready
+08 - Start offline mode while waiting for matchmaking
+08 - Someone joined: basic transition, start game; if midle transition, smooth it
+09 - 
+
+
+TODO:
+ - Deal with server death while not ready: try to connect to other server
+ - Deal with client / server death while in-game: victory?..
+TODO: Polish:
+ - WorldView for quakes, etc
+
+
+*** Pipeline ***
+01 - no longer streaming assets on the game end
+02 - scripts to copy bundles around
+
+
+
 *** Entity View ***
 01 - Fix sometimes animations not playing
 
@@ -279,13 +310,6 @@ OK - Test release position off the walls
 1 - Condition to get entity name (hitten entity, grabbed entity, etc)
 
 
-*** Proximity Queries (e.g. to pick weapon from the floor) ***
-1 - Method to find closest entity of certain team, meeting certain conditions (e.g. landed, dangerous, anyState..)
-2 - Buffer latest proximity queries for next X frames
-3 - Include closest entity on conditions / events
-4 - Condition: closest entity distance (negative if from behind)
-(Note for game: only check for proximity if switching direction, so if moving forward do not start moving backwards)
-
 *** Energy, Death ***
 1 - Entity energy data (counter?)
 2 - Hits damage
@@ -303,11 +327,14 @@ OK - Test release position off the walls
 3 - HUD Controller with methods to add/subtract counters
 4 - Simple experimental view
 
-*** Fighting elements ***
-1 - Face to entity event (such as face to closest enemy)
-2 - Add mass to entity, for collision VS collision who push who
-3 - Collision VS Collision physics 3
-4 - Collision VS Collision events
+
+*** Proximity Queries (e.g. to pick weapon from the floor) ***
+1 - Method to find closest entity of certain team, meeting certain conditions (e.g. landed, dangerous, anyState..)
+2 - Buffer latest proximity queries for next X frames
+3 - Include closest entity on conditions / events
+4 - Condition: closest entity distance (negative if from behind)
+(Note for game: only check for proximity if switching direction, so if moving forward do not start moving backwards)
+
 
 *** Main Menu ***
 1 - Add intro placeholder
@@ -317,6 +344,14 @@ OK - Test release position off the walls
 5 - Add a challenger entry placeholder
 6 - Start versus mode placeholder from offline
 7 - Spawn each player in different teams and different positions
+
+
+*** Fighting elements ***
+1 - Face to entity event (such as face to closest enemy)
+2 - Add mass to entity, for collision VS collision who push who
+3 - Collision VS Collision physics 3
+4 - Collision VS Collision events
+
 
 *** Main Polish ***
 1 - Add final intro
@@ -341,7 +376,6 @@ OK - Test release position off the walls
 *** Network ***
 TODO: what's wrong sometimes opponent not created?...
 	
-TODO: add a button in editor to set anchored position to curr anchor pos at curr frame
 OK - separate Entity conditions / events by static classes for each concept
 
 TODO: Editor: add txt "guides", for variable "names" etc
