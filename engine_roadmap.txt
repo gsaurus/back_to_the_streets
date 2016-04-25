@@ -245,9 +245,12 @@ Log
 	- Entity & Point 2D views
 	- Added background
 25-04-16
-	- TODO: planes from quads
-	- TODO: camera tracking 
-	- TODO: decently refactor WorldController (or plan refactor)
+	- Planes from quads
+	- Small tweaks on Physics (beware of coordinates > 300 or < -300)
+
+
+- TODO: camera tracking 
+- TODO: decently refactor WorldController (or plan refactor)
 
 ************************
 **** Next days plan ****
@@ -388,3 +391,8 @@ TODO: Editor: add txt "guides", for variable "names" etc
 
 TODO: animation time multiplier: in the same update run more than one frame, it's conditions and events
 TODO: physics multiplier
+
+
+********** BEAT'EM UP **********
+
+TODO: "Reset" coordinates on each scene area, to avoid physics errors with coordinates > 300
