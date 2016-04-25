@@ -4,8 +4,7 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - planes
-  - soldier
+  - quad
   layers:
   - Default
   - TransparentFX

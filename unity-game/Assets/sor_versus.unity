@@ -189,7 +189,7 @@ GameObject:
   - 23: {fileID: 202676766}
   m_Layer: 0
   m_Name: right_quad
-  m_TagString: planes
+  m_TagString: quad
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -202,7 +202,7 @@ Transform:
   m_GameObject: {fileID: 202676764}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
   m_LocalPosition: {x: 19.664999, y: 0, z: 0}
-  m_LocalScale: {x: 45, y: 45, z: 45}
+  m_LocalScale: {x: 45, y: 45, z: 1}
   m_Children: []
   m_Father: {fileID: 44045194}
   m_RootOrder: 0
@@ -251,7 +251,7 @@ GameObject:
   - 23: {fileID: 234868519}
   m_Layer: 0
   m_Name: far_quad
-  m_TagString: planes
+  m_TagString: quad
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -264,7 +264,7 @@ Transform:
   m_GameObject: {fileID: 234868517}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 5.085}
-  m_LocalScale: {x: 45, y: 45, z: 45}
+  m_LocalScale: {x: 45, y: 45, z: 1}
   m_Children: []
   m_Father: {fileID: 44045194}
   m_RootOrder: 2
@@ -1099,7 +1099,7 @@ GameObject:
   - 23: {fileID: 1422813787}
   m_Layer: 0
   m_Name: left_diagonal_quad
-  m_TagString: planes
+  m_TagString: quad
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1112,7 +1112,7 @@ Transform:
   m_GameObject: {fileID: 1422813785}
   m_LocalRotation: {x: 0, y: -0.17364822, z: 0, w: 0.9848078}
   m_LocalPosition: {x: -17.406, y: 0, z: 3.465}
-  m_LocalScale: {x: 45, y: 45, z: 45}
+  m_LocalScale: {x: 45, y: 45, z: 1}
   m_Children: []
   m_Father: {fileID: 44045194}
   m_RootOrder: 4
@@ -1161,7 +1161,7 @@ GameObject:
   - 23: {fileID: 1444563314}
   m_Layer: 0
   m_Name: near_quad
-  m_TagString: planes
+  m_TagString: quad
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1174,7 +1174,7 @@ Transform:
   m_GameObject: {fileID: 1444563312}
   m_LocalRotation: {x: 1, y: 0, z: 0, w: -0.00000016292068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 45, y: 45, z: 45}
+  m_LocalScale: {x: 45, y: 45, z: 1}
   m_Children: []
   m_Father: {fileID: 44045194}
   m_RootOrder: 5
@@ -1388,7 +1388,7 @@ GameObject:
   - 23: {fileID: 1554999289}
   m_Layer: 0
   m_Name: left_quad
-  m_TagString: planes
+  m_TagString: quad
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1401,7 +1401,7 @@ Transform:
   m_GameObject: {fileID: 1554999287}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071067}
   m_LocalPosition: {x: -19.6605, y: 0, z: 0}
-  m_LocalScale: {x: 45, y: 45, z: 45}
+  m_LocalScale: {x: 45, y: 45, z: 1}
   m_Children: []
   m_Father: {fileID: 44045194}
   m_RootOrder: 3
@@ -1538,7 +1538,7 @@ GameObject:
   - 23: {fileID: 1654281423}
   m_Layer: 0
   m_Name: right_diagonal_quad
-  m_TagString: planes
+  m_TagString: quad
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1551,7 +1551,7 @@ Transform:
   m_GameObject: {fileID: 1654281421}
   m_LocalRotation: {x: 0, y: 0.17364822, z: 0, w: 0.9848078}
   m_LocalPosition: {x: 17.811, y: 0, z: 4.5765}
-  m_LocalScale: {x: 45, y: 45, z: 45}
+  m_LocalScale: {x: 45, y: 45, z: 1}
   m_Children: []
   m_Father: {fileID: 44045194}
   m_RootOrder: 6
@@ -1841,7 +1841,7 @@ GameObject:
   - 23: {fileID: 1958138966}
   m_Layer: 0
   m_Name: bottom_quad
-  m_TagString: planes
+  m_TagString: quad
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1853,8 +1853,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1958138962}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: 0, z: -2.25}
-  m_LocalScale: {x: 45, y: 45, z: 45}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 45, y: 45, z: 1}
   m_Children: []
   m_Father: {fileID: 44045194}
   m_RootOrder: 1
