@@ -190,7 +190,7 @@ namespace RetroBread{
 		// Note: objects over elevators may behave in a weird way if gravity isn't enough to keep them grounded
 		// with increased gravity or slower elevators everything seems smoother
 		protected void KillGravityEffectAgainstPlane(PhysicWorldModel world, PhysicPointModel pointModel, PhysicPlaneModel planeModel){
-			FixedVector3 normal = planeModel.Normal;
+			FixedVector3 normal = planeModel.normal;
 			FixedVector3 defaultVel = pointModel.GetDefaultVelocityAffector();
 			//FixedVector3 velToAdd = FixedVector3.Zero;
 			if ((world.gravity.X < 0 && defaultVel.X < world.gravity.X && normal.X > 0) || (world.gravity.X > 0 && defaultVel.X > world.gravity.X && normal.X < 0)){
@@ -224,7 +224,7 @@ namespace RetroBread{
 			if (pointModel.position != intersection){
 
 				// Project remaining velocity against the plane
-				FixedVector3 normal = planeModel.Normal;
+				FixedVector3 normal = planeModel.normal;
 				FixedVector3 pos1 = pointModel.position;
 				FixedVector3 pos2 = pointModel.position + FixedVector3.Up;
 				FixedVector3 pointDeltaPos = pos2 - pos1;
@@ -258,7 +258,7 @@ namespace RetroBread{
 			if (pointModel.position != intersection){
 
 				// Project remaining velocity against the plane
-				FixedVector3 normal = planeModel.Normal;
+				FixedVector3 normal = planeModel.normal;
 				FixedVector3 pos1 = pointModel.position;
 				FixedVector3 pos2 = pointModel.position + normal;
 				FixedVector3 pointDeltaPos = pos2 - pos1;
@@ -292,14 +292,14 @@ namespace RetroBread{
 	//		}
 
 			// Pick one of two methods depending on the plane's normal angle against up vector
-			FixedFloat planeAngle = FixedVector3.Angle(planeModel.Normal, FixedVector3.Up);
+			FixedFloat planeAngle = FixedVector3.Angle(planeModel.normal, FixedVector3.Up);
 
 			// If it's too much inclined, use natural reaction
 			if (planeAngle > FixedFloat.PI * 0.4) {
 
 				// check direction against 4 walls
 				FixedFloat maxDelta = FixedFloat.PI * 0.4;
-				planeAngle = FixedVector3.Angle(planeModel.Normal, FixedVector3.Left);
+				planeAngle = FixedVector3.Angle(planeModel.normal, FixedVector3.Left);
 				if (planeAngle <= maxDelta || planeAngle >= FixedFloat.PI - maxDelta){
 					// collision in the X axis
 					FixedFloat inpactX = pointModel.GetVelocity().X - planeModel.GetVelocity().X;
@@ -307,7 +307,7 @@ namespace RetroBread{
 						newCollisionInpact.X = inpactX;
 					}
 				}
-				planeAngle = FixedVector3.Angle(planeModel.Normal, FixedVector3.Forward);
+				planeAngle = FixedVector3.Angle(planeModel.normal, FixedVector3.Forward);
 				if (planeAngle <= maxDelta || planeAngle >= FixedFloat.PI - maxDelta){
 					// collision in the Z axis
 					FixedFloat inpactZ = pointModel.GetVelocity().Z - planeModel.GetVelocity().Z;

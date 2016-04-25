@@ -240,8 +240,14 @@ Log
 	- Added Axel art from Rui Luís
 	- Added vertical impulse condition
 	- Added Input clear events
-
-
+24-04-16
+	- Removed shooter stuff
+	- Entity & Point 2D views
+	- Added background
+25-04-16
+	- TODO: planes from quads
+	- TODO: camera tracking 
+	- TODO: decently refactor WorldController (or plan refactor)
 
 ************************
 **** Next days plan ****
@@ -249,7 +255,7 @@ Log
 
 
 01 - Add background, and hardcoded scene planes
-02 - Rotate views (see prototype to have an idea on the angle)
+OK - Rotate views (see prototype to have an idea on the angle)
 03 - Decent 2D Camera control
 04 - Simple character select menu: checkboxes group + start button
 05 - Fetch servers in "background", join one or create new

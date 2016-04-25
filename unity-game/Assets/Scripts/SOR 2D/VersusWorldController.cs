@@ -39,7 +39,7 @@ public class VersusWorldController:Controller<WorldModel>{
 
 
 	public FixedVector3 GetRandomSpawnPosition(WorldModel model){
-		return FixedVector3.Zero;
+		return new FixedVector3(0, 0.0001, 0.001);
 //		FixedVector3 res = new FixedVector3((40 + StateManager.state.Random.NextFloat(-4f, 4f)) * (model.lastSpawnWasLeft ? 1 : -1),9,0);
 //		model.lastSpawnWasLeft = !model.lastSpawnWasLeft;
 //		return res;
@@ -76,34 +76,34 @@ public class VersusWorldController:Controller<WorldModel>{
 			model.teamsModelId = StateManager.state.AddModel(teamsManagerModel);
 
 
-			// Create some dummy enemy
-			FixedVector3 initialPosition = GetRandomSpawnPosition(model);
-			playerModel = new GameEntityModel(
-				StateManager.state,
-				physicsModel,
-				new PhysicPointModel(
-					null,
-					initialPosition,
-					new FixedVector3(0, 0.5, 0),
-					DefaultVCFactoryIds.PhysicPointControllerFactoryId,
-					SorVCFactories.Point2DViewFactoryId,
-					DefaultUpdateOrder.PhysicsUpdateOrder
-				),
-				new AnimationModel(
-					null,
-					"Axel_HD",
-					"idle",
-					CharacterLoader.GetCharacterSkinName("Axel_HD", 0)
-				),
-				null, // no input
-				DefaultVCFactoryIds.GameEntityControllerFactoryId,
-				SorVCFactories.Entity2DViewFactoryId,
-				DefaultUpdateOrder.EntitiesUpdateOrder
-			);
-			// Model initial state
-			GameEntityModel playerEntity = (GameEntityModel)playerModel;
-			playerEntity.isFacingRight = initialPosition.X < 0;
-			teamsManagerModel.teams[1].entities.Add(StateManager.state.AddModel(playerModel));
+//			// Create some dummy enemy
+//			FixedVector3 initialPosition = GetRandomSpawnPosition(model);
+//			playerModel = new GameEntityModel(
+//				StateManager.state,
+//				physicsModel,
+//				new PhysicPointModel(
+//					null,
+//					initialPosition,
+//					new FixedVector3(0, 0.5, 0),
+//					DefaultVCFactoryIds.PhysicPointControllerFactoryId,
+//					SorVCFactories.Point2DViewFactoryId,
+//					DefaultUpdateOrder.PhysicsUpdateOrder
+//				),
+//				new AnimationModel(
+//					null,
+//					"Axel_HD",
+//					"idle",
+//					CharacterLoader.GetCharacterSkinName("Axel_HD", 0)
+//				),
+//				null, // no input
+//				DefaultVCFactoryIds.GameEntityControllerFactoryId,
+//				SorVCFactories.Entity2DViewFactoryId,
+//				DefaultUpdateOrder.EntitiesUpdateOrder
+//			);
+//			// Model initial state
+//			GameEntityModel playerEntity = (GameEntityModel)playerModel;
+//			playerEntity.isFacingRight = initialPosition.X < 0;
+//			teamsManagerModel.teams[1].entities.Add(StateManager.state.AddModel(playerModel));
 
 		} else {
 			teamsManagerModel = StateManager.state.GetModel(model.teamsModelId) as TeamsManagerModel;
@@ -141,7 +141,7 @@ public class VersusWorldController:Controller<WorldModel>{
 						initialPosition,
 						new FixedVector3(0, 0.5, 0),
 						DefaultVCFactoryIds.PhysicPointControllerFactoryId,
-						SorVCFactories.Point2DViewFactoryId,
+						SorVCFactories.Point2DViewFactoryId, // DefaultVCFactoryIds.PhysicPointViewFactoryId,
 						DefaultUpdateOrder.PhysicsUpdateOrder
 					),
 					new AnimationModel(
@@ -152,7 +152,7 @@ public class VersusWorldController:Controller<WorldModel>{
 					),
 					inputModel,
 					DefaultVCFactoryIds.GameEntityControllerFactoryId,
-					SorVCFactories.Entity2DViewFactoryId,
+					SorVCFactories.Entity2DViewFactoryId, //DefaultVCFactoryIds.GameEntityViewFactoryId,
 					DefaultUpdateOrder.EntitiesUpdateOrder
             	);
 				// Model initial state
@@ -230,19 +230,43 @@ public class VersusWorldController:Controller<WorldModel>{
 
 
 
+
+
+	private void ProducePlaneFromQuad(PhysicWorldModel physicsModel, PhysicWorldController physicsController, GameObject quadObj){
+		MeshFilter meshFilter = quadObj.GetComponent<MeshFilter>();
+		if (meshFilter == null) return;
+		Vector3[] vertices = meshFilter.mesh.vertices;
+		if (vertices.Length < 4) return;
+
+		PhysicPlaneModel plane = new PhysicPlaneModel(
+//			null, "debug_planes",
+			quadObj.transform.TransformPoint(vertices[0]).AsFixedVetor3(),
+			quadObj.transform.TransformPoint(vertices[3]).AsFixedVetor3(),
+			quadObj.transform.TransformPoint(vertices[1]).AsFixedVetor3(),
+			quadObj.transform.TransformPoint(vertices[2]).AsFixedVetor3()
+		);
+		physicsController.AddPlane(physicsModel, plane);
+	}
+
+
 	private void PopulatePhysicsWorld(PhysicWorldModel physicsModel, PhysicWorldController physicsController){
 		// TODO: read from somewhere.. right now it's ardcoded
-		PhysicPlaneModel plane;
 
-		// Static planes
-		plane = new PhysicPlaneModel(new FixedVector3(-100,0,-100),
-		                             new FixedVector3(-100,0,100),
-		                             new FixedVector3(100,0,100),
-		                             new FixedVector3(100,0,-100)
-		                             );
-		physicsController.AddPlane(physicsModel, plane);
-		
-		
+//		PhysicPlaneModel plane;
+//		plane = new PhysicPlaneModel(new FixedVector3(-100,0,-100),
+//		                             new FixedVector3(-100,0,100),
+//		                             new FixedVector3(100,0,100),
+//		                             new FixedVector3(100,0,-100)
+//		                             );
+//		physicsController.AddPlane(physicsModel, plane);
+
+
+		// TODO: do it in assets packer, load from file
+		GameObject[] quadObjects = GameObject.FindGameObjectsWithTag("quad");
+		foreach (GameObject quadObj in quadObjects){
+			ProducePlaneFromQuad(physicsModel, physicsController, quadObj);
+		}
+
 	}
 	
 	

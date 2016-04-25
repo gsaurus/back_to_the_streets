@@ -109,10 +109,11 @@ namespace RetroBread{
 
 					FixedFloat scale;
 					if (Magnitude < 1000) {
-						scale = FixedFloat.One / Magnitude;
+						scale = (FixedFloat.One / Magnitude) * 1.001;
 						return new FixedVector3(x*scale, y*scale, z*scale);
 					}else {
 						scale = 10000 / Magnitude;
+						scale *= 1.001;
 						return new FixedVector3((x*scale) / 10000, (y*scale) / 10000, (z*scale) / 10000);
 					}
 				}

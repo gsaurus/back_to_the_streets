@@ -14,6 +14,9 @@ namespace RetroBread{
 			RegisterGameEntityVCFactories();
 			RegisterAnimationVCFactories();
 			RegisterTeamsManagerVCFactories();
+
+			// Debug planes
+			RegisterPlaneVCFactories();
 		}
 
 
@@ -98,6 +101,18 @@ namespace RetroBread{
 				DefaultVCFactoryIds.AnimationViewFactoryId,
 				delegate(AnimationModel model){
 					return AnimationsVCPool.Instance.GetView(model.characterName, model.animationName);
+				}
+			);
+		}
+
+
+		// Plane
+		private static void RegisterPlaneVCFactories(){
+			
+			VCFactoriesManager.Instance.RegisterViewFactory<PhysicPlaneModel>(
+				"debug_planes" ,
+				delegate(PhysicPlaneModel model){
+					return new DebugPhysicPlaneView(model);
 				}
 			);
 		}

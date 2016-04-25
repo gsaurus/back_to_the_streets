@@ -11,7 +11,9 @@ namespace RetroBread{
 		[ProtoMember(1)]
 		public long RawValue;
 		public const int SHIFT_AMOUNT = 14; //12 is 4096, 14 is 16384, 16 is 65536
-		public static readonly int PRECISION_LIMIT = (int)Math.Pow(2,SHIFT_AMOUNT);
+		public static readonly long DECIMAL_PRECISION_LIMIT = (long) Math.Pow(2, SHIFT_AMOUNT);
+		public static readonly long INTEGER_PRECISION_LIMIT = (long) Math.Pow(2, 64 - SHIFT_AMOUNT);
+		public static readonly long MAX_SAFE_INTEGER = (long) Math.Sqrt(INTEGER_PRECISION_LIMIT);
 		
 		public const long OneL = 1 << SHIFT_AMOUNT;
 		public const int OneI = 1 << SHIFT_AMOUNT;
@@ -28,7 +30,7 @@ namespace RetroBread{
 		public static readonly FixedFloat MinValue = FixedFloat.Create(long.MinValue, false);
 		
 		#region Constructors
-		public static FixedFloat Create( long StartingRawValue, bool UseMultiple )
+		public static FixedFloat Create(long StartingRawValue, bool UseMultiple)
 		{
 			FixedFloat theFloat;
 			theFloat.RawValue = StartingRawValue;
@@ -39,8 +41,8 @@ namespace RetroBread{
 		public static FixedFloat Create(float floatValue)
 		{
 			FixedFloat theFloat;
-			floatValue *= (float)OneL;
-			theFloat.RawValue = (long)Math.Round(floatValue);
+			double doubleValue = (double)floatValue * (double)OneL;
+			theFloat.RawValue = (long)Math.Round(doubleValue);
 			return theFloat;
 		}
 		public static FixedFloat Create(double DoubleValue)
@@ -55,12 +57,12 @@ namespace RetroBread{
 		
 		public int IntValue
 		{
-			get { return (int)( this.RawValue >> SHIFT_AMOUNT ); }
+			get { return (int)(this.RawValue >> SHIFT_AMOUNT); }
 		}
 		
 		public int ToInt()
 		{
-			return (int)( this.RawValue >> SHIFT_AMOUNT );
+			return (int)(this.RawValue >> SHIFT_AMOUNT);
 		}
 		
 		public double ToDouble()
@@ -70,7 +72,7 @@ namespace RetroBread{
 
 		public float ToFloat()
 		{
-			return (float)this.RawValue / (float)OneL;
+			return (float)(this.RawValue / (double)OneL);
 		}
 		
 		public FixedFloat Inverse
@@ -100,7 +102,7 @@ namespace RetroBread{
 		public static FixedFloat operator *( FixedFloat one, FixedFloat other )
 		{
 			FixedFloat theFloat;
-			theFloat.RawValue = ( one.RawValue * other.RawValue ) >> SHIFT_AMOUNT;
+			theFloat.RawValue = (one.RawValue * other.RawValue) >> SHIFT_AMOUNT;
 			return theFloat;
 		}
 		
@@ -119,7 +121,7 @@ namespace RetroBread{
 		public static FixedFloat operator /( FixedFloat one, FixedFloat other )
 		{
 			FixedFloat theFloat;
-			theFloat.RawValue = ( one.RawValue << SHIFT_AMOUNT ) / ( other.RawValue );
+			theFloat.RawValue = (one.RawValue << SHIFT_AMOUNT) / (other.RawValue);
 			return theFloat;
 		}
 		

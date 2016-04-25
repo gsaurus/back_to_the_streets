@@ -16,6 +16,8 @@ namespace RetroBread{
 
 	public class PhysicWorldController: Controller<PhysicWorldModel>{
 			
+		private const int collisionIterationsCount = 2;
+
 		// world static planes, serializable because it can be read from a file
 		private List<PhysicPlaneModel> staticPlanes = null;
 
@@ -83,15 +85,18 @@ namespace RetroBread{
 
 			// Do a few iterations until collisions get stable, or we reach a limit on iterations
 			bool collisionsAreStable = false;
-			for (int i = 0 ; i < 2 && !collisionsAreStable ; ++i){
+			for (int i = 0 ; i < collisionIterationsCount && !collisionsAreStable ; ++i){
 				collisionsAreStable = true;
+				int numCollisions = 0;
 				foreach(PhysicPlaneModel planeModel in planes){
-					if (planeModel.CheckIntersection(pointModel, out intersection)){
+					if (PhysicPlaneController.CheckIntersection(planeModel, pointModel, out intersection)){
+						++numCollisions;
 						collisionsAreStable &= pointController.OnCollision(world, pointModel, planeModel, intersection);
 						planeController = planeModel.Controller() as PhysicPlaneController;
 						collisionsAreStable &= planeController == null || planeController.OnCollision(world, pointModel, planeModel, intersection);
 					}
 				}
+				Debug.Log("Collisions: " + numCollisions);
 			}
 		}
 
