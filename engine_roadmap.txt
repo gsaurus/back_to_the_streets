@@ -247,19 +247,20 @@ Log
 25-04-16
 	- Planes from quads
 	- Small tweaks on Physics (beware of coordinates > 300 or < -300)
+26-04-16
+	- Hardcoded camera tracking (will do until beat'em up camera support)
 
 
-- TODO: camera tracking 
-- TODO: decently refactor WorldController (or plan refactor)
+
 
 ************************
 **** Next days plan ****
 ************************
 
 
-01 - Add background, and hardcoded scene planes
+OK - Add background, and hardcoded scene planes
 OK - Rotate views (see prototype to have an idea on the angle)
-03 - Decent 2D Camera control
+OK - Decent 2D Camera control
 04 - Simple character select menu: checkboxes group + start button
 05 - Fetch servers in "background", join one or create new
 06 - Basic transition into game: fade black in, placeholder text, fade black out
@@ -268,6 +269,8 @@ OK - Rotate views (see prototype to have an idea on the angle)
 08 - Someone joined: basic transition, start game; if midle transition, smooth it
 09 - 
 
+
+TODO: decently refactor WorldController (or plan refactor)
 
 TODO:
  - Deal with server death while not ready: try to connect to other server
