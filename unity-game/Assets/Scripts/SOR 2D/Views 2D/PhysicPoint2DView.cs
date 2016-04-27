@@ -45,7 +45,9 @@ namespace RetroBread{
 				if (interpolationFactor < minInterpolationFactor) interpolationFactor = minInterpolationFactor;
 				finalTarget = Vector2.Lerp(currentPos, targetPos, interpolationFactor);
 			}
-			obj.transform.position = new Vector3(finalTarget.x, pos3D.z, finalTarget.y);
+			// handy tricks to avoid entities overlapping
+			float forcedZ = ((int)(pos3D.z * 100)) / 100.0f;
+			obj.transform.position = new Vector3(finalTarget.x, -100 * forcedZ + model.Index * 0.05f, finalTarget.y);
 		}
 
 

@@ -96,7 +96,7 @@ namespace RetroBread{
 						collisionsAreStable &= planeController == null || planeController.OnCollision(world, pointModel, planeModel, intersection);
 					}
 				}
-				Debug.Log("Collisions: " + numCollisions);
+				//Debug.Log("Collisions: " + numCollisions);
 			}
 		}
 

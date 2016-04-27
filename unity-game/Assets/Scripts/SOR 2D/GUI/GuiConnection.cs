@@ -21,7 +21,7 @@ public class GuiConnection : MonoBehaviour
 		goButton.GetComponent<Button>().interactable = false;
 
 		int randomId = Random.Range(0,int.MaxValue);
-		NetworkCenter.Instance.SetPlayerData(new NetworkPlayerData(SystemInfo.deviceUniqueIdentifier + randomId, "guest_" + randomId));
+		NetworkCenter.Instance.SetPlayerData(new NetworkSorPlayerData(SystemInfo.deviceUniqueIdentifier + randomId, "guest_" + randomId, Random.Range(1,4)));
 	
 		infoText.text = "Looking for Servers...";
 

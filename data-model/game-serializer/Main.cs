@@ -15,6 +15,8 @@ namespace GameSerializer
 			// Add new derived models
 			Console.WriteLine("1");
 			model[typeof(Model)].AddSubType(100, typeof(WorldModel));
+			Console.WriteLine("2");
+			model[typeof(NetworkPlayerData)].AddSubType(100, typeof(NetworkSorPlayerData));
 
 			// There seems to be a bug in protobuf-net,
 			// if I don't do those deepclones they doesn't get registered...

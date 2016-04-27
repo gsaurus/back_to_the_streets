@@ -11,17 +11,21 @@ public class VersusWorldController:Controller<WorldModel>{
 
 	public const uint totalGameFrames = 7200; // 2 minutes
 
-
+	// Team 0: weapons, world objects, etc
+	// Team 1: gang 1
+	// Team 2: gamg 2
 	private static bool[,] teamsCollisionMatrix = new bool[,]
 		{
-			{ true, true  },
-			{ true,  true }
+			{ false, false, false },
+			{ false, false, false },
+			{ false, false, false }
 		};
 
 	private static bool[,] teamsHitMatrix = new bool[,]
 		{
-			{ true, true  },
-			{ true,  true }
+			{ false, false, false },
+			{ false, false, true  },
+			{ false, true,  false }
 		};
 
 	static VersusWorldController(){
@@ -72,7 +76,7 @@ public class VersusWorldController:Controller<WorldModel>{
 
 		// Teams manager
 		if (model.teamsModelId == ModelReference.InvalidModelIndex) {
-			teamsManagerModel = new TeamsManagerModel(2);
+			teamsManagerModel = new TeamsManagerModel(3);
 			model.teamsModelId = StateManager.state.AddModel(teamsManagerModel);
 
 
@@ -129,8 +133,20 @@ public class VersusWorldController:Controller<WorldModel>{
 		}
 
 		// Create characters for new players
+		NetworkSorPlayerData playerData;
 		foreach(uint playerId in allPlayers){
 			if (!model.players.ContainsKey(playerId)){
+
+				if (StateManager.Instance.IsNetworked){
+					playerData = NetworkCenter.Instance.GetPlayerData<NetworkSorPlayerData>(playerId);
+				}else{
+					playerData = NetworkCenter.Instance.GetPlayerData<NetworkSorPlayerData>();
+				}
+				if (playerData == null){
+					RetroBread.Debug.LogWarning("Player " + playerId + " have invalid player data!");
+					continue;
+				}
+				RetroBread.Debug.Log("Player " + playerId + " have character " + playerData.selectedCharacter);
 				Model inputModel = new PlayerInputModel(playerId);
 				FixedVector3 initialPosition = GetRandomSpawnPosition(model);
 				playerModel = new GameEntityModel(
@@ -159,7 +175,7 @@ public class VersusWorldController:Controller<WorldModel>{
 				GameEntityModel playerEntity = (GameEntityModel)playerModel;
 				playerEntity.isFacingRight = initialPosition.X < 0;
 				model.players[playerId] = StateManager.state.AddModel(playerModel);
-				teamsManagerModel.teams[playerId % 2].entities.Add(model.players[playerId]);
+				teamsManagerModel.teams[1 + playerId % 2].entities.Add(model.players[playerId]);
 
 			}
 
@@ -186,18 +202,6 @@ public class VersusWorldController:Controller<WorldModel>{
 					// and use the respective view to display the stats in the HUD
 				}
 				obj.name += "[initiated]";
-
-				Transform t1 = obj.transform.Find("armorBody");
-				Transform t2 = obj.transform.Find("armorArms");
-				if (t1 != null && t2 != null) {
-					SkinnedMeshRenderer[] comps = new SkinnedMeshRenderer[2];
-					comps[0] = t1.gameObject.GetComponent<SkinnedMeshRenderer>();
-					comps[1] = t2.gameObject.GetComponent<SkinnedMeshRenderer>();
-
-					foreach (SkinnedMeshRenderer c in comps) {
-						c.material.color = (isOwnPlayer ? Color.blue : Color.red);
-					}
-				}
 			}
 
 		}
@@ -251,17 +255,7 @@ public class VersusWorldController:Controller<WorldModel>{
 
 	private void PopulatePhysicsWorld(PhysicWorldModel physicsModel, PhysicWorldController physicsController){
 		// TODO: read from somewhere.. right now it's ardcoded
-
-//		PhysicPlaneModel plane;
-//		plane = new PhysicPlaneModel(new FixedVector3(-100,0,-100),
-//		                             new FixedVector3(-100,0,100),
-//		                             new FixedVector3(100,0,100),
-//		                             new FixedVector3(100,0,-100)
-//		                             );
-//		physicsController.AddPlane(physicsModel, plane);
-
-
-		// TODO: do it in assets packer, load from file
+		// TODO: do it in assets packer, then load from file
 		GameObject[] quadObjects = GameObject.FindGameObjectsWithTag("quad");
 		foreach (GameObject quadObj in quadObjects){
 			ProducePlaneFromQuad(physicsModel, physicsController, quadObj);
@@ -274,12 +268,11 @@ public class VersusWorldController:Controller<WorldModel>{
 	
 	private static void SetupGameCharacters(){
 
+		// TODO: setup based on players added
 		CharacterLoader.LoadCharacter("Axel_HD");
 		CharacterLoader.LoadCharacter("happy char");
 		CharacterLoader.LoadCharacter("Axel_px");
 
-		// hardcoded:
-		//SetupCharacter("soldier");
 	}
 
 

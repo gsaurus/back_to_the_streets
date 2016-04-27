@@ -80,12 +80,14 @@ namespace RetroBread{
 			GameEntityController entityController;
 			State gameState = StateManager.state;
 			foreach (TeamData teamData in model.teams) {
-				foreach (ModelReference modelRef in teamData.entities) {
-					entity = gameState.GetModel(modelRef) as GameEntityModel;
-					if (entity != null) {
-						entityController = entity.Controller() as GameEntityController;
-						if (entityController != null) {
-							entityController.ClearHitsInformation();
+				if (teamData != null && teamData.entities != null){
+					foreach (ModelReference modelRef in teamData.entities) {
+						entity = gameState.GetModel(modelRef) as GameEntityModel;
+						if (entity != null) {
+							entityController = entity.Controller() as GameEntityController;
+							if (entityController != null) {
+								entityController.ClearHitsInformation();
+							}
 						}
 					}
 				}

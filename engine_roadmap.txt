@@ -249,7 +249,9 @@ Log
 	- Small tweaks on Physics (beware of coordinates > 300 or < -300)
 26-04-16
 	- Hardcoded camera tracking (will do until beat'em up camera support)
-
+27-04-16
+	- Network player data containing selected character
+	- Z order in discrete "layers" to avoid character layers overlapping
 
 
 

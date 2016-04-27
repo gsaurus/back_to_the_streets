@@ -59,6 +59,16 @@ namespace RetroBread{
 				return data as T;
 			}
 
+			// Get a player's data
+			public T GetPlayerData<T>(uint playerId) where T:NetworkPlayerData{
+				return GetPlayerData(playerId) as T;
+			}
+
+			// Get a player's data
+			public T GetPlayerData<T>(string guid) where T:NetworkPlayerData{
+				return GetPlayerData(guid) as T;
+			}
+
 			// Get our own player data
 			public T GetPlayerData<T>() where T:NetworkPlayerData{
 				return GetPlayerData<T>(UnityEngine.Network.player);
