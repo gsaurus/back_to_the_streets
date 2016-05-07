@@ -54,6 +54,13 @@ public class GuiMenus : MonoBehaviour
 	void OnEnable(){
 		AudioListener.volume = 0;
 		NetworkMaster.Instance.RefreshServersList();
+		NetworkGame.Instance.onResumeEvent += OnGameResume;
+	}
+
+
+	private void SetupPlayerData(){
+		NetworkPlayerData playerData = new NetworkPlayerData(SystemInfo.deviceUniqueIdentifier + "::" + UnityEngine.Random.Range(0, int.MaxValue), nickname);
+		NetworkCenter.Instance.SetPlayerData(playerData);
 	}
 
 	public void StartMatchmaking(){
@@ -61,8 +68,7 @@ public class GuiMenus : MonoBehaviour
 		if (string.IsNullOrEmpty(nickname)) {
 			nickname = defaultNickname + UnityEngine.Random.Range(0, int.MaxValue);
 		}
-		NetworkPlayerData playerData = new NetworkPlayerData(SystemInfo.deviceUniqueIdentifier + "::" + UnityEngine.Random.Range(0, int.MaxValue), nickname);
-		NetworkCenter.Instance.SetPlayerData(playerData);
+		SetupPlayerData();
 
 		this.enabled = true;
 		FadeToState(MenuState.matchmaking);
@@ -86,13 +92,6 @@ public class GuiMenus : MonoBehaviour
 
 
 	void PostStartMatchmaking(bool connected){
-
-		// Setup player data
-		if (string.IsNullOrEmpty(nickname)) {
-			nickname = defaultNickname + UnityEngine.Random.Range(0, int.MaxValue);
-		}
-		NetworkPlayerData playerData = new NetworkPlayerData(SystemInfo.deviceUniqueIdentifier, nickname);
-		NetworkCenter.Instance.SetPlayerData(playerData);
 
 		// Try to connect to a server, or to create a new server
 		// Setup game with connection status
@@ -312,8 +311,18 @@ public class GuiMenus : MonoBehaviour
 			RetroBread.Debug.Log(infoText);
 		}
 
+		NetworkGame.Instance.onResumeEvent -= OnGameResume;
+
 	}
 
+
+
+
+	private void OnGameResume(State newState, State oldestState, float timeToStart){
+		// game starting
+		FadeToState(MenuState.inGame);
+		StartCoroutine(DelayedEnable(false, canvasFadeTime));
+	}
 
 //	void OnPlayerConnectionConfirmed(string guid) {
 //		Debug.Log("On Player Connection Confirmed");

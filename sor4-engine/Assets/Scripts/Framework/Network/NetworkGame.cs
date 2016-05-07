@@ -215,7 +215,9 @@ namespace RetroBread{
 						foreach (Event playerEvent in events){
 							if (playerEvent.PlayerId != (uint)senderId){
 								Debug.LogWarning("Player #" + senderId + " trying to register events for player #" + playerEvent.PlayerId);
+							#if !DEBUG
 								return;
+							#endif
 							}
 						}
 						onEventsAddedEvent(events);
