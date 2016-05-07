@@ -88,9 +88,13 @@ namespace RetroBread{
 
 			
 			public void CancelServer(){
-				MasterServer.UnregisterHost();
-				IsAnouncingServer = false;
-				enabled = true;
+				if (IsAnouncingServer) {
+					MasterServer.UnregisterHost();
+					IsAnouncingServer = false;
+					enabled = true;
+					NetworkCenter.Instance.Disconnect();
+					Debug.Log("Server Canceled, disconnecting..");
+				}
 			}
 			
 			
@@ -102,8 +106,8 @@ namespace RetroBread{
 			}
 			
 			
-			public void ConnectToServer(HostData host, string password = null) {
-				UnityEngine.Network.Connect(host, password);
+			public NetworkConnectionError ConnectToServer(HostData host, string password = null) {
+				return UnityEngine.Network.Connect(host, password);
 			}
 			
 			void OnConnectedToServer() {

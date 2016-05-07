@@ -209,6 +209,8 @@ namespace RetroBread{
 					return;
 				}
 
+				Debug.Log("Received player " + playerData.uniqueId);
+
 				// Then see if we have room for this user
 				uint playerNumber = FindSlotForPlayer(playerData);
 				if (playerNumber > UnityEngine.Network.maxConnections) {
@@ -227,6 +229,8 @@ namespace RetroBread{
 
 				// and notify all players about the newcomer as well
 				GetComponent<NetworkView>().RPC("AddPlayerData", RPCMode.All, (int)playerNumber, data, info.sender);
+
+				Debug.Log("Client connected from" + info.sender.externalIP);
 			}
 
 
@@ -252,8 +256,11 @@ namespace RetroBread{
 					// filter those in use only
 					slotsInUse = new List<uint>(players.Count);
 					uint val;
+					Debug.Log("All players so far: ");
 					foreach (NetworkPlayerData otherPlayerData in players.Values){
+						Debug.Log(otherPlayerData.uniqueId);
 						if (playerNumbers.TryGetValue(otherPlayerData.uniqueId, out val)){
+							Debug.Log("which is using slot: " + val);
 							slotsInUse.Add(val);
 						}
 					}
@@ -303,7 +310,7 @@ namespace RetroBread{
 					Debug.LogWarning("Invalid player data from " + sender.ipAddress);
 					return;
 				}
-
+				Debug.Log("Player " + playerNumber + " added: " + playerData.uniqueId);
 				playerNumbers[playerData.uniqueId] = (uint)playerNumber;
 				players[sender.guid] = playerData;
 
@@ -343,7 +350,7 @@ namespace RetroBread{
 				if (playerData == null) {
 					// Wops, we can't play without data
 					Debug.LogWarning("No Player Data to anounce to server");
-					UnityEngine.Network.Disconnect();
+					Disconnect();
 					return;
 				}
 				byte[] data = serializer.Serialize(playerData);
@@ -357,8 +364,10 @@ namespace RetroBread{
 			IEnumerator WaitForServerData(){
 				yield return new WaitForSeconds(connectingPlayerTimeout);
 				if (GetNumPlayersOnline() <= 1) {
-					UnityEngine.Network.Disconnect();
+					Debug.LogWarning("Connecting timeout reached, disconnecting..");
+					Disconnect();
 				}
+				Debug.Log("Connected to server");
 			}
 
 			

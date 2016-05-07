@@ -23,3 +23,5 @@ sor4-engine/playback.txt
 **/obj/Debug/*
 Backups
 *.app
+*/webplayer/*
+*.apk
