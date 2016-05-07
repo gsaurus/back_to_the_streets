@@ -147,7 +147,7 @@ public class WorldObjects{
 	static FixedFloat minDistanceAhead = 80;
 	// every 50 units, resort the list
 	static FixedFloat controlRange = 1.0f;
-	static FixedFloat maxDifficultyDistance = 750;
+	static FixedFloat maxDifficultyDistance = 500;
 
 	static List<int> yList = new List<int>(100);
 	static Dictionary<int, List<WorldObject>> objectsByY = new Dictionary<int, List<WorldObject>>(100);
@@ -321,7 +321,8 @@ public class WorldObjects{
 		FixedFloat nextY;
 		int latestIntY = (int)maxKnownY;
 		bool nextObjectIsFlag;
-		FixedFloat limitForObjects = nextTargetY < -maxDifficultyDistance ? 1.5f : 1.5f + (1-(-nextTargetY / maxDifficultyDistance)) * 30.0f;
+		FixedFloat minYForGeneration = 0.5f;
+		FixedFloat limitForObjects = nextTargetY < -maxDifficultyDistance ? minYForGeneration : minYForGeneration + (1-(-nextTargetY / maxDifficultyDistance)) * 2.0f;
 		for (nextY = maxKnownY - 0.0001f ; nextY > nextTargetY ; ){
 			nextY -= rnd.NextFloat(0.0001f, limitForObjects);
 			nextObjectIsFlag = nextY < nextFlagDistance;
@@ -355,7 +356,7 @@ public class WorldObjects{
 				nextFlagIsRight = !nextFlagIsRight;
 				flags.Add(flagObj);
 			}else {
-				randomX = GetRandomXAroundCenter(centerX);
+				randomX = GetRandomXAroundCenter(centerX, nextY);
 				newObjects.Add(new WorldObject(rnd.NextInt(0, 4), randomX, nextY, randomX > centerX));
 			}
 
@@ -373,10 +374,17 @@ public class WorldObjects{
 		FixedFloat t = (y-lastY) / (newY - lastY);
 		return lastX + t * (newX - lastX);
 	}
-	
-	static FixedFloat GetRandomXAroundCenter(FixedFloat center) {
+
+	static FixedFloat GetRandomXAroundCenter(FixedFloat center, FixedFloat nextY) {
 		FixedFloat randomT = rnd.NextFloat(0, 1);
-		randomT = randomT * randomT * randomT;
+
+		FixedFloat tripleProbability = nextY < -maxDifficultyDistance ? 0.0f : 1.0f - (-nextY / maxDifficultyDistance);
+
+		randomT = randomT * randomT;
+		if (tripleProbability > 0 && rnd.NextFloat(0, 1) > tripleProbability) {
+			randomT *= randomT;
+		}
+
 		randomT = 1.05f - randomT;
 		if (rnd.NextInt(0,1) == 0) {
 			randomT *= -1;
