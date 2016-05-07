@@ -276,7 +276,8 @@ public class WorldObjects{
 	public static void UpdateTrack(WorldModel world, FixedFloat minY, FixedFloat maxY) {
 
 		if (rnd == null){
-			rnd = new SimpleRandomGenerator(StateManager.state.Random.NextUnsignedInt());
+			uint seed = StateManager.state.Random.NextUnsignedInt();
+			rnd = new SimpleRandomGenerator(seed);
 			nextFlagIsRight = rnd.NextUnsignedInt() % 2 == 0;
 			nextFlagDistance = GetNextFlagY();
 		}

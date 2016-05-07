@@ -52,7 +52,7 @@ public class GuiMenus : MonoBehaviour
 
 
 	void OnEnable(){
-		AudioListener.volume = 0;
+//		AudioListener.volume = 0;
 		NetworkMaster.Instance.RefreshServersList();
 		NetworkGame.Instance.onResumeEvent += OnGameResume;
 	}

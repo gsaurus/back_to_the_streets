@@ -18,6 +18,8 @@ namespace RetroBread{
 		private float latestAxis = 0.0f;
 		private bool isCoroutineRunning = false;
 
+		private float previousAxis;
+
 
 		public void Awake(){
 			// nothing to do
@@ -53,10 +55,10 @@ namespace RetroBread{
 
 
 		public void Update(){
-			if (Network.NetworkCenter.Instance.IsConnected()) {
-				float axis = Input.GetAxis("Horizontal");
-				SendAxis(axis);
-			}
+			float axis = Input.GetAxis("Horizontal");
+			float newAxis = Mathf.Lerp(previousAxis, axis, 0.5f);
+			previousAxis = axis;
+			SendAxis(newAxis);
 		}
 
 	#endif

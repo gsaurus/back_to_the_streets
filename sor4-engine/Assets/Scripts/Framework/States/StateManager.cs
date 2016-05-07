@@ -85,7 +85,7 @@ namespace RetroBread{
 				currentState.Destroy();
 			}
 			DefaultVCFactories.RegisterFactories();
-			this.currentState = new InternalState(setup.initialModel, 0);
+			this.currentState = new InternalState(setup.initialModel, (long) new System.Random().Next(1, int.MaxValue));
 
 			UpdateRate = setup.updateRate;
 			this.latestUpdateDeltatimeRemainder = 0;
@@ -118,6 +118,9 @@ namespace RetroBread{
 
 		// Add an event to the game
 		public void AddEvent(Event newEvent){
+			if (state == null || IsPaused) {
+				return;
+			}
 			// Setup events keyframe
 			newEvent.Keyframe = state.Keyframe;
 

@@ -109,7 +109,13 @@ public class DebugWorldView:View<WorldModel>{
 			// update creation or destruction
 			SkierModel skierModel = model.skiers[i];
 			if (skierModel != null && skierViews[i] == null) {
-				skierViews[i] = CreateSkier(NetworkCenter.Instance.GetPlayerNumber() == i);
+				bool own = false;
+				if (StateManager.Instance.IsNetworked) {
+					own = NetworkCenter.Instance.GetPlayerNumber () == i;
+				} else {
+					own = i == 0;
+				}
+				skierViews[i] = CreateSkier(own);
 
 				float targetAngle = skierModel.targetVelY == 0 ? -Mathf.PI * 0.5f : (float)Mathf.Atan2((float)skierModel.targetVelX, (float)skierModel.targetVelY);
 				targetAngle = targetAngle * Mathf.Rad2Deg;
