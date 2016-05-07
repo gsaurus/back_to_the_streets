@@ -27,18 +27,27 @@ public class GuiConnection : MonoBehaviour
 			StartCoroutine(RetryToConnectToAvailableServer());
 		}
 	}
+
+
+	void SetupGame(bool networked){
+		WorldModel world = new WorldModel();
+
+		StateManagerSetup setup = new StateManagerSetup(world, networked);
+		StateManager.Instance.Setup(setup);	
+	}
 	
 
 	void CreateNewServer(){
-		// Setup game state
-		WorldModel world = new WorldModel();
-		
-		StateManagerSetup setup = new StateManagerSetup(world);
-		StateManager.Instance.Setup(setup);
-		
-		NetworkMaster.Instance.CreateServer(6);
 
-		infoText.text = "Created New Server.\nWaiting for players";
+		// Setup game state
+		SetupGame(true);
+
+		NetworkConnectionError error = NetworkMaster.Instance.CreateServer(6);
+		if (error == NetworkConnectionError.NoError){
+			infoText.text = "Created New Server.\nWaiting for players";
+		} else {
+			infoText.text = "Couldn't create new server, error: " + error;
+		}
 	}
 
 
@@ -47,6 +56,7 @@ public class GuiConnection : MonoBehaviour
 		if (hosts != null){
 			foreach (HostData host in hosts) {
 				if (NetworkMaster.IsServerAvailable(host)){
+					SetupGame(true);
 					NetworkMaster.Instance.ConnectToServer(host);
 					infoText.text = "Connected.\nWaiting for more players...";
 					return true;

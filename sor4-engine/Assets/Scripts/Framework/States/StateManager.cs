@@ -11,12 +11,14 @@ namespace RetroBread{
 		public Model initialModel;			// first model of the game
 		public float updateRate;			// logics update in frames per second
 		public uint saveStateFrequency;		// how often to save state, in frames
+		public bool isNetworked;
 		// TODO: other setup options?
 
-		public StateManagerSetup(Model initialModel){
+		public StateManagerSetup(Model initialModel, bool isNetworked = false){
 			this.initialModel = initialModel;
 			updateRate = 0.0166666667f;	// default: 60fps
 			saveStateFrequency = 5;	// default: clone every 5 frames
+			this.isNetworked = isNetworked;
 		}
 	}
 
@@ -25,12 +27,12 @@ namespace RetroBread{
 	// entities that interact with it - such as network, states history, input and event loggers
 	public sealed class StateManager{
 
-	#region Singleton
+		#region Singleton
 		private static readonly StateManager instance = new StateManager();
 		public static StateManager Instance { get{ return instance; } }
 		public static State state { get{ return instance.currentState; } }
 		private StateManager(){}
-	#endregion
+		#endregion
 
 		// If received input keyframe differs this number of frames from current keyframe, sync time
 		private const int clockSinkToleranceFrames = 2; 
@@ -61,11 +63,13 @@ namespace RetroBread{
 		// Control if controllers are updated, or only views
 		public bool IsPaused { get; private set; }
 
+		public bool IsNetworked { get ; private set; }
+
 
 		// Initialize with stuff
 		// TODO: what to setup here? Networked game or not, loggers, properties etc..
 		public void Setup(StateManagerSetup setup){
-		
+
 			if (currentState != null && currentState.IsUpdating){
 				// can't stop at the middle of an update
 				delayedSetup = setup;
@@ -75,17 +79,17 @@ namespace RetroBread{
 		}
 
 		private void LateSetup(StateManagerSetup setup){
-			
+
 			// TODO: init state with proper seed, either random or agreed with network
 			if (this.currentState != null){
 				currentState.Destroy();
 			}
 			DefaultVCFactories.RegisterFactories();
 			this.currentState = new InternalState(setup.initialModel, 0);
-			
+
 			UpdateRate = setup.updateRate;
 			this.latestUpdateDeltatimeRemainder = 0;
-			
+
 			// TODO: only create this if necessary, else set it to null
 			this.statesBuffer = new StatesBufferBySerializing();
 			//this.statesBuffer = new StatesBufferByCloning();
@@ -94,24 +98,30 @@ namespace RetroBread{
 			latestKeyframeBuffered = 0;
 			// buffer state zero imediately
 			statesBuffer.SetState(currentState);
-			
+
 			// TODO: add listeners and pause only if on networked game
-			NetworkGame.Instance.onEventsAddedEvent += OnEventsAdded;
-			NetworkGame.Instance.onPauseEvent += OnPause;
-			NetworkGame.Instance.onResumeEvent += OnResume;
-			NetworkGame.Instance.stateCorrectionEvent += OnStateCorrection;
-			IsPaused = true; // wait for server order to resume
+			IsNetworked = setup.isNetworked;
+			if (IsNetworked) {
+				NetworkGame.Instance.onEventsAddedEvent += OnEventsAdded;
+				NetworkGame.Instance.onPauseEvent += OnPause;
+				NetworkGame.Instance.onResumeEvent += OnResume;
+				NetworkGame.Instance.stateCorrectionEvent += OnStateCorrection;
+				IsPaused = true; // wait for server order to resume
+			} else {
+				// No need to wait for resume (synch)
+				IsPaused = false;
+			}
 		}
 
 
-	#region Game Events
+		#region Game Events
 
 		// Add an event to the game
 		public void AddEvent(Event newEvent){
 			// Setup events keyframe
 			newEvent.Keyframe = state.Keyframe;
 
-			if (NetworkGame.Instance.enabled){
+			if (IsNetworked){
 				// Network will take care of adding lag compensation
 				NetworkGame.Instance.AddEvent(newEvent);
 			}else{
@@ -146,9 +156,9 @@ namespace RetroBread{
 		}
 
 
-	#endregion
+		#endregion
 
-	#region Pause / Resume
+		#region Pause / Resume
 
 		// Manually pause the game (to load resources for instance)
 		public void SetPaused(bool paused){
@@ -156,10 +166,12 @@ namespace RetroBread{
 			// When server resumes the game we may notice a state jump
 			// TODO: improve it if necessary
 			IsPaused = paused;
-			NetworkSync.Instance.SetReady(!paused);
+			if (IsNetworked) {
+				NetworkSync.Instance.SetReady(!paused);
+			}
 		}
 
-		// Game pause requested from network
+		// Game pause requested from network for instance
 		private void OnPause(){
 			// For now we just pause and don't adjust the current state
 			// from the original pause momment, so we may notice a state jump on resume
@@ -185,7 +197,7 @@ namespace RetroBread{
 
 			// override current state
 			InternalState newCurrentState = newState as InternalState;
-			
+
 			// reuse as much as possible
 			newCurrentState.ReuseVCFromOtherState(currentState);
 			currentState = newCurrentState;
@@ -202,10 +214,10 @@ namespace RetroBread{
 
 		// Game state changed from server
 		private void OnStateCorrection(State newState){
-			
+
 			// override current state
 			InternalState newCurrentState = newState as InternalState;
-			
+
 			// reuse as much as possible
 			newCurrentState.ReuseVCFromOtherState(currentState);
 
@@ -220,11 +232,11 @@ namespace RetroBread{
 		}
 
 
-	#endregion
+		#endregion
 
 
 
-	#region Update Loop
+		#region Update Loop
 
 
 		// Single logics tick
@@ -236,8 +248,8 @@ namespace RetroBread{
 				latestKeyframeBuffered = currentState.Keyframe;
 			}
 		}
-		
-		
+
+
 		// logics update cycles
 		private void UpdateLogics(float deltaTime){
 
@@ -261,7 +273,7 @@ namespace RetroBread{
 			uint oldestEventKeyframe = eventsBuffer.GetOldestEventKeyframeSinceLastCheck();
 			uint presentKeyframe = currentState.Keyframe;
 			if (oldestEventKeyframe < presentKeyframe){
-	//			UnityEngine.Debug.Log("Need to rewind " + (presentKeyframe - oldestEventKeyframe) + "frames");
+				//			UnityEngine.Debug.Log("Need to rewind " + (presentKeyframe - oldestEventKeyframe) + "frames");
 				if (!LoadBufferedState(oldestEventKeyframe, false)) {
 					UnityEngine.Debug.LogWarning("Can't rewind, no buffered state is old enough");
 					// TODO: ask network server for a state update
@@ -286,8 +298,13 @@ namespace RetroBread{
 		// It also automatically corrects the state when older input is detected
 		public void Update(float deltaTime){
 
+			if (currentState == null) {
+				// Not yet initialized
+				return;
+			}
+
 			// Flush network events
-			if (NetworkGame.Instance.enabled){
+			if (IsNetworked){
 				NetworkGame.Instance.FlushEvents();
 			}
 
@@ -326,11 +343,11 @@ namespace RetroBread{
 		}
 
 
-	#endregion
+		#endregion
 
 
 
-	#region Save / Load buffered states
+		#region Save / Load buffered states
 
 		// Force buffering the current state
 		public uint SaveBufferedState(){
@@ -380,7 +397,7 @@ namespace RetroBread{
 			return statesBuffer.GetOldestState();
 		}
 
-	#endregion
+		#endregion
 
 	}
 

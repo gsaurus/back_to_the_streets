@@ -56,7 +56,15 @@ public class WorldController:Controller<WorldModel>{
 
 
 	private void HandlePlayerConnections(WorldModel model){
-		List<uint> allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers();
+		
+		List<uint> allPlayers;
+		if (StateManager.Instance.IsNetworked) {
+			allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers();
+		} else {
+			allPlayers = new List<uint>();
+			allPlayers.Add(0);
+		}
+
 
 		// Remove characters for inactive players
 		for (int i = 0 ; i < model.skiers.Length ; ++i){
