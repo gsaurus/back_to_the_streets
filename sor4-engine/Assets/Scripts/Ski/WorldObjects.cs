@@ -24,7 +24,7 @@ public class WorldObject
 	public bool isRight;
 
 	// Keep track of visual object
-	GameObject view;
+	public GameObject view;
 
 	static GameObject[] rocksPool;
 	static GameObject[] tree1Pool;
@@ -71,10 +71,18 @@ public class WorldObject
 	public void ApplyColorToFlagArros(GameObject arrowsObj)
 	{
 		SpriteRenderer[] sprites = arrowsObj.GetComponentsInChildren<SpriteRenderer>();
-		Color flagColor = type == -2 ? Color.red : Color.blue;
+		Color flagColor = type == -2 ? new Color(0.7f, 0.2f, 0.2f) : new Color(0.2f, 0.2f, 0.7f);
 		foreach (SpriteRenderer sprite in sprites){
 			sprite.material.color = flagColor;
 		}
+		GameObject collisionPanel = arrowsObj.transform.Find("quad").gameObject;
+		MeshRenderer quadRenderer = collisionPanel.GetComponent<MeshRenderer>();
+		quadRenderer.material.color = new Color(flagColor.r, flagColor.g, flagColor.b, 0);
+		GameObject signaller = arrowsObj.transform.Find("signaller").gameObject;
+		quadRenderer = signaller.GetComponent<MeshRenderer>();
+		Color signallerColor = type == -2 ? Color.red : Color.blue;
+		signallerColor.a = 0.025f;
+		quadRenderer.material.color = signallerColor;
 	}
 	
 
@@ -247,7 +255,20 @@ public class WorldObjects{
 				skier.targetVelX = 0;
 				skier.targetVelY = 0;
 				skier.x = target;
+
+				// Animate flag collision panel
+				AnimateFlagOnCollision(obj.view);
 			}
+		}
+	}
+
+
+	private static void AnimateFlagOnCollision(GameObject flagObj){
+		if (flagObj == null) return;
+		GameObject collisionPanel = flagObj.transform.Find("quad").gameObject;
+		FlagCollisionEffect effect = collisionPanel.GetComponent<FlagCollisionEffect>();
+		if (effect != null) {
+			effect.enabled = true;
 		}
 	}
 
