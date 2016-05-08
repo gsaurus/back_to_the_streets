@@ -71,7 +71,7 @@ public class WorldObject
 	public void ApplyColorToFlagArros(GameObject arrowsObj)
 	{
 		SpriteRenderer[] sprites = arrowsObj.GetComponentsInChildren<SpriteRenderer>();
-		Color flagColor = type == -2 ? new Color(0.7f, 0.2f, 0.2f) : new Color(0.2f, 0.2f, 0.7f);
+		Color flagColor = type == -2 ? new Color(0.9f, 0.3f, 0.3f) : new Color(0.3f, 0.3f, 0.9f);
 		foreach (SpriteRenderer sprite in sprites){
 			sprite.material.color = flagColor;
 		}
@@ -105,7 +105,7 @@ public class WorldObject
 //					modelTransform.localEulerAngles = new Vector3(0, 180, 0);
 //				}
 			}
-			view.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+			view.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
 
 			ApplyColorToFlagArros(view);
 

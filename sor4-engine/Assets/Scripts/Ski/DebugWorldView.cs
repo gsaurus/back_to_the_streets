@@ -67,10 +67,12 @@ public class DebugWorldView:View<WorldModel>{
 		UpdateSkiers(model, deltaTime);
 
 		// check if next flag is outside screen
-
-		int playerId = NetworkCenter.Instance.GetPlayerNumber();
-		if (playerId < 0 || playerId >= model.skiers.Length)
-			return;
+		int playerId = 0;
+		if (StateManager.Instance.IsNetworked) {
+			playerId = NetworkCenter.Instance.GetPlayerNumber ();
+			if (playerId < 0 || playerId >= model.skiers.Length)
+				return;
+		}
 
 		SkierModel mySkier = model.skiers[playerId];
 
@@ -98,6 +100,7 @@ public class DebugWorldView:View<WorldModel>{
 			arrowsToPointNextFlag.SetActive(true);
 			flag.ApplyColorToFlagArros(arrowsToPointNextFlag);
 			float scale = 0.1f - 0.08f * (1 - Mathf.Min(distanceAway, 3) / 3) + Mathf.Max(0.8f - flagScreenPos.y,0) * 0.25f;
+			scale *= 2.5f;
 			arrowsToPointNextFlag.transform.localScale = new Vector3(scale, scale, scale);
 		}
 		arrowsToPointNextFlag.SetActive(setActive);

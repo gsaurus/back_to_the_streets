@@ -945,7 +945,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 70
-  field of view: 60
+  field of view: 70
   orthographic: 0
   orthographic size: 7
   m_Depth: -1
@@ -967,8 +967,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 766733176}
-  m_LocalRotation: {x: -0.000000049668703, y: 0.9523958, z: -0.30486432, w: -0.00000015516497}
-  m_LocalPosition: {x: 0, y: 9.5, z: 10}
+  m_LocalRotation: {x: -0.00000004216698, y: 0.9659258, z: -0.25881907, w: -0.0000001573693}
+  m_LocalPosition: {x: 0, y: 4, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2019,7 +2019,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 412002, guid: 71688207889ae42f094631492b6640d8, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -9.02999973
+      value: -9.03
       objectReference: {fileID: 0}
     - target: {fileID: 412002, guid: 71688207889ae42f094631492b6640d8, type: 2}
       propertyPath: m_LocalRotation.x
@@ -2035,7 +2035,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 412002, guid: 71688207889ae42f094631492b6640d8, type: 2}
       propertyPath: m_LocalRotation.w
-      value: -1.62920685e-07
+      value: -0.00000016292068
       objectReference: {fileID: 0}
     - target: {fileID: 412002, guid: 71688207889ae42f094631492b6640d8, type: 2}
       propertyPath: m_RootOrder
@@ -2043,30 +2043,6 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 125532, guid: 71688207889ae42f094631492b6640d8, type: 2}
       propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8219146, guid: 71688207889ae42f094631492b6640d8, type: 2}
-      propertyPath: panLevelCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8219146, guid: 71688207889ae42f094631492b6640d8, type: 2}
-      propertyPath: reverbZoneMixCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8264486, guid: 71688207889ae42f094631492b6640d8, type: 2}
-      propertyPath: panLevelCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8264486, guid: 71688207889ae42f094631492b6640d8, type: 2}
-      propertyPath: reverbZoneMixCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8258150, guid: 71688207889ae42f094631492b6640d8, type: 2}
-      propertyPath: panLevelCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8258150, guid: 71688207889ae42f094631492b6640d8, type: 2}
-      propertyPath: reverbZoneMixCustomCurve.m_RotationOrder
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

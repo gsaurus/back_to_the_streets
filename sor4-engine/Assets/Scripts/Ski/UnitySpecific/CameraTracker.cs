@@ -26,7 +26,7 @@ public class CameraTracker : MonoBehaviour {
 		Camera mainCamera = Camera.main;
 		mainCamera.transform.position = transform.position + originalPosition;
 		Vector3 originalSkierAngles = transform.localEulerAngles;
-		mainCamera.transform.localEulerAngles = new Vector3(originalRotation.x, Mathf.Lerp(mainCamera.transform.localEulerAngles.y, Mathf.Lerp(originalRotation.y, originalSkierAngles.y, 0.2f), 0.025f));
+		mainCamera.transform.localEulerAngles = new Vector3(originalRotation.x, Mathf.Lerp(mainCamera.transform.localEulerAngles.y, Mathf.Lerp(originalRotation.y, originalSkierAngles.y, 0.2f), 0.1f));
 //	originalSkierAngles
 //		Vector3 target = new Vector3(transform.position.x, //Mathf.Lerp(0f, transform.position.x, 0.95f),
 //		                             transform.position.y + 4,

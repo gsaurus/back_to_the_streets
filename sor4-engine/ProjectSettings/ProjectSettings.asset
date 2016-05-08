@@ -17,8 +17,8 @@ PlayerSettings:
   m_VirtualRealitySplashScreen: {fileID: 0}
   defaultScreenWidth: 750
   defaultScreenHeight: 500
-  defaultScreenWidthWeb: 1024
-  defaultScreenHeightWeb: 576
+  defaultScreenWidthWeb: 750
+  defaultScreenHeightWeb: 500
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   m_ActiveColorSpace: 0
