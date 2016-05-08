@@ -117,9 +117,19 @@ public class WorldObject
 			}
 			view.SetActive(true);
 			view.transform.localEulerAngles = new Vector3(310 + UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(0, 360));
-			float radius = type == 0 ? UnityEngine.Random.Range(1.0f, 1.3f) : UnityEngine.Random.Range(0.75f, 1.25f);
-			view.transform.localScale = new Vector3(radius, UnityEngine.Random.Range(0.75f, 1.75f), radius);
+			float radius = type == 0 ? UnityEngine.Random.Range(1.0f, 1.3f) : UnityEngine.Random.Range(1.5f, 2.0f);
+			float scale = type == 0 ? 1 : UnityEngine.Random.Range(0.5f, 1.0f);
+			view.transform.localScale = new Vector3(radius, UnityEngine.Random.Range(1.75f, 2.5f), radius);
+			view.transform.localScale *= scale;
 			yPos = -0.25f;
+			if (type != 0) {
+				view.GetComponent<MeshRenderer>().material.color =
+					new Color(
+						UnityEngine.Random.Range(0.15f, 0.6f),
+						UnityEngine.Random.Range(0.4f, 0.8f),
+						UnityEngine.Random.Range (0.15f, 0.6f))
+				;
+			}
 		}
 		view.transform.localPosition  = new Vector3((float)x, yPos, (float)y);
 
@@ -147,7 +157,9 @@ public class WorldObjects{
 	static FixedFloat minDistanceAhead = 80;
 	// every 50 units, resort the list
 	static FixedFloat controlRange = 1.0f;
-	static FixedFloat maxDifficultyDistance = 500;
+	static FixedFloat maxDifficultyDistance = 600;
+	static FixedFloat initialCleanupDistance = 1100;
+	static FixedFloat finalGoalDistance = 1200;
 
 	static List<int> yList = new List<int>(100);
 	static Dictionary<int, List<WorldObject>> objectsByY = new Dictionary<int, List<WorldObject>>(100);
@@ -273,6 +285,18 @@ public class WorldObjects{
 	}
 
 
+
+	static FixedFloat GetDifficultySetting(FixedFloat nextY){
+		if (nextY > -maxDifficultyDistance) {
+			return -nextY / maxDifficultyDistance;
+		} else if (nextY < -initialCleanupDistance && nextY > -finalGoalDistance) {
+			return (-nextY - initialCleanupDistance) / (finalGoalDistance - initialCleanupDistance);
+		} else if (nextY < -finalGoalDistance) {
+			return FixedFloat.Zero;
+		}
+		return FixedFloat.One;
+	}
+
 	public static void UpdateTrack(WorldModel world, FixedFloat minY, FixedFloat maxY) {
 
 		if (rnd == null){
@@ -322,7 +346,8 @@ public class WorldObjects{
 		int latestIntY = (int)maxKnownY;
 		bool nextObjectIsFlag;
 		FixedFloat minYForGeneration = 0.5f;
-		FixedFloat limitForObjects = nextTargetY < -maxDifficultyDistance ? minYForGeneration : minYForGeneration + (1-(-nextTargetY / maxDifficultyDistance)) * 2.0f;
+		FixedFloat difficultySetting = GetDifficultySetting(maxKnownY);
+		FixedFloat limitForObjects = minYForGeneration + (1-difficultySetting) * 2.0f;
 		for (nextY = maxKnownY - 0.0001f ; nextY > nextTargetY ; ){
 			nextY -= rnd.NextFloat(0.0001f, limitForObjects);
 			nextObjectIsFlag = nextY < nextFlagDistance;
@@ -378,10 +403,11 @@ public class WorldObjects{
 	static FixedFloat GetRandomXAroundCenter(FixedFloat center, FixedFloat nextY) {
 		FixedFloat randomT = rnd.NextFloat(0, 1);
 
-		FixedFloat tripleProbability = nextY < -maxDifficultyDistance ? 0.0f : 1.0f - (-nextY / maxDifficultyDistance);
-
-		randomT = randomT * randomT;
-		if (tripleProbability > 0 && rnd.NextFloat(0, 1) > tripleProbability) {
+		FixedFloat difficultySetting = GetDifficultySetting(nextY);
+		if (difficultySetting < 0.5) {
+			randomT *= randomT;
+		}
+		if (rnd.NextFloat(0, 1) < difficultySetting + 0.15f) {
 			randomT *= randomT;
 		}
 
@@ -389,7 +415,7 @@ public class WorldObjects{
 		if (rnd.NextInt(0,1) == 0) {
 			randomT *= -1;
 		}
-		return center + (randomT * maxHorizontalDistance);
+		return center + (randomT * (maxHorizontalDistance*(1+(1-difficultySetting)*0.5f)));
 	}
 
 }
