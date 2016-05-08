@@ -17,7 +17,7 @@ namespace RetroBread{
 		public StateManagerSetup(Model initialModel, bool isNetworked = false){
 			this.initialModel = initialModel;
 			updateRate = 0.0166666667f;	// default: 60fps
-			saveStateFrequency = 5;	// default: clone every 5 frames
+			saveStateFrequency = 3;	// default: clone every 3 frames
 			this.isNetworked = isNetworked;
 		}
 	}
@@ -136,6 +136,7 @@ namespace RetroBread{
 		private void OnEventsAdded(List<Event> newEvents){
 			uint oldestKeyframe = uint.MaxValue;
 			foreach (Event e in newEvents){
+				Debug.Log("Event applied for player " + e.PlayerId);
 				eventsBuffer.AddEvent(e);
 				if (e.Keyframe < oldestKeyframe){
 					oldestKeyframe = e.Keyframe;

@@ -209,17 +209,8 @@ namespace RetroBread{
 					List<Event> events;
 					events = NetworkCenter.Instance.serializer.Deserialize<List<Event>>(eventsData);
 					if (events != null){
-						// Security: if there's any event that doesn't pertain to sender, cancel it
-						// TODO: no need to send playerId on the event through the network, remove redundant information
-						int senderId = NetworkCenter.Instance.GetPlayerNumber(info.sender.guid);
-						foreach (Event playerEvent in events){
-							if (playerEvent.PlayerId != (uint)senderId){
-								Debug.LogWarning("Player #" + senderId + " trying to register events for player #" + playerEvent.PlayerId);
-							#if !DEBUG
-								return;
-							#endif
-							}
-						}
+						// TODO: Security: if there's any event that doesn't pertain to sender, cancel it
+						// However there seems to be a bug in unity that info tells the wrong sender
 						onEventsAddedEvent(events);
 					}
 				}

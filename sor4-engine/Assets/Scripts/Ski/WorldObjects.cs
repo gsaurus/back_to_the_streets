@@ -91,7 +91,7 @@ public class WorldObject
 			view = GameObject.Instantiate(flagPrefab);
 			if (type == -2){
 				view.transform.localEulerAngles = new Vector3(0, 180, 0);
-				Transform modelTransform = view.transform.FindChild("model");
+//				Transform modelTransform = view.transform.FindChild("model");
 //				if (modelTransform != null){
 //					// still need the flag faced to the camera
 //					modelTransform.localEulerAngles = new Vector3(0, 180, 0);
@@ -164,8 +164,6 @@ public class WorldObjects{
 	static List<int> yList = new List<int>(100);
 	static Dictionary<int, List<WorldObject>> objectsByY = new Dictionary<int, List<WorldObject>>(100);
 
-
-	static FixedFloat maxYKnown;
 	static FixedFloat lastTrackX;
 	static FixedFloat lastTrackY;
 	static FixedFloat nextTrackX;
@@ -242,6 +240,7 @@ public class WorldObjects{
 				}
 				skier.y = obj.y + 1;
 				skier.frozenTimer =  (uint)(FixedFloat.Abs(skier.x-target) / maxHorizontalDistance) * frozenTime;
+				if (skier.frozenTimer > 2*frozenTime) skier.frozenTimer = 2*frozenTime;
 				if (skier.frozenTimer < collisionFallenTime) skier.frozenTimer = collisionFallenTime;
 				skier.velX = 0;
 				skier.velY = 0;
@@ -387,8 +386,6 @@ public class WorldObjects{
 
 
 		}
-
-		maxYKnown = maxKnownY = nextY;
 
 	}
 

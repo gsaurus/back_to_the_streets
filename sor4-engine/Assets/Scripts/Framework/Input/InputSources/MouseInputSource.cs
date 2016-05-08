@@ -11,7 +11,7 @@ namespace RetroBread{
 
 		const float minDelayBetweenEvents = 0.1f; // in seconds
 
-	#if !UNITY_IPHONE && !UNITY_ANDROID
+	#if (!UNITY_IPHONE && !UNITY_ANDROID) || UNITY_EDITOR
 
 		// Control events sent
 		private double lastEventTimeStamp = 0.0;
