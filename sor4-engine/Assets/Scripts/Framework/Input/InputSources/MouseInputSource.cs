@@ -22,7 +22,7 @@ namespace RetroBread{
 
 
 		public void Awake(){
-			// nothing to do
+			
 		}
 
 		void SendAxis(float axis){
@@ -56,6 +56,7 @@ namespace RetroBread{
 
 		public void Update(){
 			float axis = Input.GetAxis("Horizontal");
+			axis /= Screen.dpi == 0 ? 1 : Screen.dpi;
 			float newAxis = Mathf.Lerp(previousAxis, axis, 0.5f);
 			previousAxis = axis;
 			SendAxis(newAxis);

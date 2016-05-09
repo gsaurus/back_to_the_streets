@@ -84,6 +84,13 @@ namespace RetroBread{
 			if (this.currentState != null){
 				currentState.Destroy();
 			}
+			if (setup == null){
+				IsPaused = true;
+				this.statesBuffer = null;
+				this.eventsBuffer = null;
+				return;
+			}
+
 			DefaultVCFactories.RegisterFactories();
 			this.currentState = new InternalState(setup.initialModel, (long) new System.Random().Next(1, int.MaxValue));
 

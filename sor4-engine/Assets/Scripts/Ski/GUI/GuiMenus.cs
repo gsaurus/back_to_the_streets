@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using RetroBread;
 using RetroBread.Network;
 
-public class GuiMenus : MonoBehaviour
+public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 {
 	enum MenuState {
 		enterNickname,
@@ -45,14 +45,20 @@ public class GuiMenus : MonoBehaviour
 
 	private string nickname;
 
+	private bool isMarkedToRestart;
+
 
 	public void OnNicknameChange(string newNickname){
 		nickname = newNickname;
 	}
 
 
+	public void ToggleVolume(bool value){
+		AudioListener.volume = value ? 1 : 0;
+	}
+
+
 	void OnEnable(){
-//		AudioListener.volume = 0;
 		NetworkMaster.Instance.RefreshServersList();
 		NetworkGame.Instance.onResumeEvent += OnGameResume;
 	}
@@ -71,6 +77,9 @@ public class GuiMenus : MonoBehaviour
 		SetupPlayerData();
 
 		this.enabled = true;
+		matchMakingProgress = 0;
+		matchmakingStartTime = 0;
+		matchMakingIntervals = null;
 		FadeToState(MenuState.matchmaking);
 
 		// Try to connect to a server
@@ -211,20 +220,33 @@ public class GuiMenus : MonoBehaviour
 		
 		}
 
+		if (isMarkedToRestart) {
+			isMarkedToRestart = false;
+			StartCoroutine(RestartGameAfterSeconds(6.0f));
+		}
+
 	}
 
 
 	private void UpdateMatchmakingProgress(){
-		if (matchMakingIntervals == null) return;
-		if (matchMakingProgress <= matchMakingIntervals.Length) {
+		Color disabledColor = new Color(0.5f, 0.5f, 0.5f);
+		Color enabledColor = new Color(0.25f, 1.0f, 0.25f);
+		UnityEngine.UI.Image image;
+		if (matchMakingIntervals == null){
+			for (int i = 0 ; i < matchmakingProgressParent.transform.childCount ; ++i) {
+				image = matchmakingProgressParent.transform.GetChild(i).gameObject.GetComponent<UnityEngine.UI.Image>();
+				if (image != null) {
+					image.color = disabledColor;
+				}
+			}
+			return;
+		}
+		if (matchMakingProgress > 0 && matchMakingProgress <= matchMakingIntervals.Length) {
 			float deltaTime = Time.unscaledTime - matchmakingStartTime;
 			if (deltaTime > matchMakingIntervals[matchMakingProgress-1]) {
 				++matchMakingProgress;
 			}
 		}
-		UnityEngine.UI.Image image;
-		Color disabledColor = new Color(0.5f, 0.5f, 0.5f);
-		Color enabledColor = new Color(0.25f, 1.0f, 0.25f);
 		Color color;
 		for (int i = 0 ; i < matchmakingProgressParent.transform.childCount ; ++i) {
 			image = matchmakingProgressParent.transform.GetChild(i).gameObject.GetComponent<UnityEngine.UI.Image>();
@@ -270,18 +292,19 @@ public class GuiMenus : MonoBehaviour
 
 	IEnumerator FadeCanvasTo(GameObject obj, float aValue, float aTime){
 		if (aValue > 0.25f) {
-			obj.SetActive (true);
+			obj.SetActive(true);
 		}
 		CanvasGroup canvas = obj.GetComponent<CanvasGroup>();
-		if (canvas == null || Math.Abs(canvas.alpha - aValue) < 0.05f) yield break;
-		float alpha = canvas.alpha;
-		for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / aTime){
-			canvas.alpha = Mathf.Lerp(alpha, aValue, t);
-			yield return null;
+		if (canvas != null && Math.Abs(canvas.alpha - aValue) > 0.05f){
+			float alpha = canvas.alpha;
+			for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / aTime){
+				canvas.alpha = Mathf.Lerp(alpha, aValue, t);
+				yield return null;
+			}
+			canvas.alpha = aValue;
 		}
-		canvas.alpha = aValue;
 		if (aValue < 0.25f) {
-			obj.SetActive (false);
+			obj.SetActive(false);
 		}
 	}
 
@@ -323,6 +346,25 @@ public class GuiMenus : MonoBehaviour
 		FadeToState(MenuState.inGame);
 		StartCoroutine(DelayedEnable(false, canvasFadeTime));
 	}
+
+
+
+	public void MarkToRestart(){
+		isMarkedToRestart = true;
+		enabled = true;
+	}
+
+
+	IEnumerator RestartGameAfterSeconds(float seconds){
+		yield return new WaitForSeconds(seconds);
+		if (NetworkCenter.Instance.IsConnected()){
+			NetworkCenter.Instance.Disconnect();
+		}
+		WorldObjects.Reset();
+		StateManager.Instance.Setup(null);
+		FadeToState(MenuState.enterNickname);
+	}
+
 
 //	void OnPlayerConnectionConfirmed(string guid) {
 //		Debug.Log("On Player Connection Confirmed");

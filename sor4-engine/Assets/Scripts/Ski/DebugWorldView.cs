@@ -391,6 +391,16 @@ public class DebugWorldView:View<WorldModel>{
 
 #endregion
 
+
+	public override void OnDestroy(WorldModel model){
+		if (skierViews == null) return;
+		foreach (GameObject skierView in skierViews) {
+			if (skierView != null){
+				GameObject.Destroy(skierView);
+			}
+		}
+	}
+
 	
 }
 

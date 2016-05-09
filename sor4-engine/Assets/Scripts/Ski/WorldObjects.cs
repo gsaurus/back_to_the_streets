@@ -192,6 +192,24 @@ public class WorldObjects{
 	static List<WorldObject> flags = new List<WorldObject>();
 
 
+	public static void Reset(){
+		rnd = null;
+		foreach (List<WorldObject> objects in objectsByY.Values){
+			foreach (WorldObject obj in objects) {
+				obj.OnDestroy();
+			}
+		}
+		yList = new List<int>(100);
+		objectsByY = new Dictionary<int, List<WorldObject>>(100);
+
+		lastTrackX = 0;
+		lastTrackY = 0;
+		nextTrackX = 0;
+		nextTrackY = 0;
+		nextFlagIsRight = false;
+		nextFlagDistance = 0;
+	}
+
 
 	public static WorldObject GetNextFlagForSkier(SkierModel skierModel){
 		WorldObject flag = null;

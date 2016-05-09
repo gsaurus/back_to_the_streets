@@ -42,6 +42,9 @@ public class WorldController:Controller<WorldModel>{
 	private SkierModel bottomSkierRef;
 
 
+	private bool alreadyCrossedGoal;
+
+
 #region Initializations
 
 	static WorldController(){
@@ -50,7 +53,7 @@ public class WorldController:Controller<WorldModel>{
 
 
 	public WorldController(){
-		// Nothing to do
+		alreadyCrossedGoal = false;
 	}
 
 
@@ -159,6 +162,11 @@ public class WorldController:Controller<WorldModel>{
 				// check collisions
 				WorldObjects.HandleCollisionWithWorld(world, skier);
 				WorldObjects.HandleCollisionWithOtherSkiers(world, skier);
+
+				if (crossedGoal && !alreadyCrossedGoal) {
+					alreadyCrossedGoal = true;
+					GuiMenus.Instance.MarkToRestart();
+				}
 			}
 		}
 
