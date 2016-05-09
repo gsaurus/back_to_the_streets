@@ -1,6 +1,20 @@
 Engine documentation:
 https://docs.google.com/document/d/1YAtgp1-7RQTSQqmVyXsWawJDXM8KLNKdgQm-GsvNzPs/
 
+
+
+For DevLog
+
+- MVC, protocol buffers for storage & network, components like unity, but one for controller, one for view
+- Projects pipeline (unity, dlls)
+- Editor: conditions, events, "automatically" have animations behaviour in-game
+- 2D tricks: orthogonal, z order discrete layers to avoid character layer overlapping
+- [anchoring system for weapons and grabs]
+- [level physics from quads?.. later with level editor..]
+
+
+
+
 *** Storage Entity Data Format ***
 OK - define storage format 1
 OK - code storage format 1
@@ -252,7 +266,8 @@ Log
 27-04-16
 	- Network player data containing selected character
 	- Z order in discrete "layers" to avoid character layers overlapping
-
+28-04..02-05-16
+	:( no work done :(
 
 
 ************************
