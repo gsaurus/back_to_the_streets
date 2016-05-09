@@ -134,8 +134,10 @@ public class DebugWorldView:View<WorldModel>{
 			if (skierView != null){
 
 				// update position
-				Vector3 targetPos = new Vector3((float)skierModel.x, 0.0f, (float)skierModel.y);
+				float yPos = (skierModel.fallenTimer > 0 || skierModel.frozenTimer > 0) ? 0.32f : -0.3f;
+				Vector3 targetPos = new Vector3((float)skierModel.x, yPos, (float)skierModel.y);
 				UpdatePosition(skierModel, skierView, targetPos);
+				skierView.transform.position = new Vector3 (skierView.transform.position.x, yPos, skierView.transform.position.z);
 
 				// update angle
 				float targetAngle = skierModel.targetVelY == 0 ? -Mathf.PI * 0.5f : (float)Mathf.Atan2((float)skierModel.targetVelX, (float)skierModel.targetVelY);
@@ -149,16 +151,16 @@ public class DebugWorldView:View<WorldModel>{
 				Animator animator = skierView.GetComponent<Animator>();
 				if (animator != null) {
 					// update moving animation
+
 					if (skierModel.fallenTimer == 0 && skierModel.frozenTimer == 0){
 
-						float frictionRate = Mathf.Abs((float)skierModel.friction);
-
 						animator.Play(rideAnimHash);
+						float frictionRate = Mathf.Abs((float)skierModel.friction);
 						float blendFactor = (float)(skierModel.friction) * 2.0f;
-						Mathf.Clamp(blendFactor, -1, 1);
-						blendFactor = blendFactor*0.5f + 0.5f;
-						animator.SetFloat("Blend", blendFactor);
-						animator.speed = new Vector2((float)skierModel.velX, (float)skierModel.velY).magnitude;
+						Mathf.Clamp (blendFactor, -1, 1);
+						blendFactor = blendFactor * 0.5f + 0.5f;
+						animator.SetFloat ("Blend", blendFactor);
+						animator.speed = new Vector2 ((float)skierModel.velX, (float)skierModel.velY).magnitude;
 
 						ParticleSystem particles = skierView.GetComponentInChildren<ParticleSystem>();
 						if (particles != null) {

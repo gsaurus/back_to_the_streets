@@ -128,26 +128,30 @@ public class WorldController:Controller<WorldModel>{
 		for (uint skierId = 0 ; skierId < world.skiers.Length ; ++skierId){
 			skier = world.skiers[skierId];
 			if (skier != null){
+				bool crossedGoal = skier.y < -WorldObjects.finalGoalDistance;
+				if (!crossedGoal) {
+					if (skier.fallenTimer > 0) {
+						if (--skier.fallenTimer == 0) {
+							UpdateSkierDirectionBasedOnInput(skier, 0);
+						}
+					}
+					if (skier.frozenTimer > 0) {
+						if (--skier.frozenTimer == 0) {
+							UpdateSkierDirectionBasedOnInput(skier, 0);
+						}
+					}
 
-				if (skier.fallenTimer > 0){
-					if (--skier.fallenTimer == 0){
-						UpdateSkierDirectionBasedOnInput(skier, 0);
-					}
-				}
-				if (skier.frozenTimer > 0){
-					if (--skier.frozenTimer == 0){
-						UpdateSkierDirectionBasedOnInput(skier, 0);
+					// Use input to update skier direction
+					if (skier.fallenTimer == 0 && skier.frozenTimer == 0){
+						PlayerInputModel inputModel = StateManager.state.GetModel(skier.inputModelRef) as PlayerInputModel;
+						if (inputModel != null && inputModel.axis != 0.0f){
+							// reversed cose camera is reversed too
+							UpdateSkierDirectionBasedOnInput(skier, -inputModel.axis);
+						}
 					}
 				}
 
-				// Use input to update skier direction
-				if (skier.fallenTimer == 0 && skier.frozenTimer == 0){
-					PlayerInputModel inputModel = StateManager.state.GetModel(skier.inputModelRef) as PlayerInputModel;
-					if (inputModel != null && inputModel.axis != 0.0f){
-						// reversed cose camera is reversed too
-						UpdateSkierDirectionBasedOnInput(skier, -inputModel.axis);
-					}
-				}
+
 
 				// Update skier position
 				UpdateSkierPosition(skier);
@@ -185,6 +189,20 @@ public class WorldController:Controller<WorldModel>{
 
 	private void UpdateSkierPosition(SkierModel skier) {
 
+		bool crossedGoal = skier.y < -WorldObjects.finalGoalDistance;
+		if (crossedGoal && skier.targetVelX != 0 && skier.targetVelY != 0) {
+			if (skier.targetVelX > 0) skier.targetVelX += 0.03f;
+			else skier.targetVelX -= 0.03f;
+			FixedFloat angle = FixedFloat.Atan2 (skier.targetVelY, skier.targetVelX);
+			skier.targetVelY = FixedFloat.Sin(angle);
+			if (skier.targetVelX > 1 || skier.targetVelX < -1) {
+				skier.targetVelX = skier.targetVelY = 0;
+			}
+			//skier.targetVelX = FixedFloat.Cos(angle);
+			//skier.targetVelX = 0.0f;
+			//skier.targetVelY = 0.0f;
+		}
+
 		if (skier.velX < skier.targetVelX){
 			skier.velX = FixedFloat.Min(skier.velX + accX, skier.targetVelX);
 		}else if (skier.velX > skier.targetVelX) {
@@ -216,20 +234,19 @@ public class WorldController:Controller<WorldModel>{
 				if (skier.friction > FixedFloat.Zero) skier.friction = FixedFloat.Zero;
 			}
 		}
-		
-		
-		if (skier.fallenTimer == 0 && skier.frozenTimer == 0
-		    && vY > -minVerticalVelocity
-		){
-			vY = -minVerticalVelocity;
-		}
 
-		if (skier == topSkierRef){
-			vX *= 0.9f;
-			vY *= 0.9f;
-		}else if (skier == bottomSkierRef){
-			vX *= 1.1f;
-			vY *= 1.1f;
+		if (!crossedGoal) {
+			if (skier.fallenTimer == 0 && skier.frozenTimer == 0
+				&& vY > -minVerticalVelocity) {
+				vY = -minVerticalVelocity;
+			}
+			if (skier == topSkierRef){
+				vX *= 0.9f;
+				vY *= 0.9f;
+			}else if (skier == bottomSkierRef){
+				vX *= 1.1f;
+				vY *= 1.1f;
+			}
 		}
 
 		skier.x += vX;

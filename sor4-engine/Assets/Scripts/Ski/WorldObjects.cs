@@ -37,6 +37,7 @@ public class WorldObject
 	static GameObject tree1Prefab;
 	static GameObject tree2Prefab;
 	static GameObject flagPrefab;
+	public static GameObject goalPrefab;
 
 
 	static WorldObject(){
@@ -44,6 +45,7 @@ public class WorldObject
 		tree1Prefab = Resources.Load("tree1") as GameObject;
 		tree2Prefab = Resources.Load("tree2") as GameObject;
 		flagPrefab = Resources.Load("flag") as GameObject;
+		goalPrefab = Resources.Load("goal") as GameObject;
 
 		// Instantiate objects pools
 		rocksPool = new GameObject[1000];
@@ -75,22 +77,28 @@ public class WorldObject
 		foreach (SpriteRenderer sprite in sprites){
 			sprite.material.color = flagColor;
 		}
-		GameObject collisionPanel = arrowsObj.transform.Find("quad").gameObject;
-		MeshRenderer quadRenderer = collisionPanel.GetComponent<MeshRenderer>();
-		quadRenderer.material.color = new Color(flagColor.r, flagColor.g, flagColor.b, 0);
-		GameObject signaller = arrowsObj.transform.Find("signaller").gameObject;
-		quadRenderer = signaller.GetComponent<MeshRenderer>();
-		Color signallerColor = type == -2 ? Color.red : Color.blue;
-		signallerColor.a = 0.025f;
-		quadRenderer.material.color = signallerColor;
+		Transform transform = arrowsObj.transform.Find("quad");
+		if (transform != null) {
+			GameObject collisionPanel = transform.gameObject;
+			MeshRenderer quadRenderer = collisionPanel.GetComponent<MeshRenderer> ();
+			quadRenderer.material.color = new Color (flagColor.r, flagColor.g, flagColor.b, 0);
+		}
+		transform = arrowsObj.transform.Find("signaller");
+		if (transform != null) {
+			GameObject signaller = transform.gameObject;
+			MeshRenderer quadRenderer = signaller.GetComponent<MeshRenderer> ();
+			Color signallerColor = type == -2 ? Color.red : Color.blue;
+			signallerColor.a = 0.025f;
+			quadRenderer.material.color = signallerColor;
+		}
 	}
 	
 
 	public WorldObject(int type, FixedFloat x, FixedFloat y, bool isRight) {
 		this.type = type;
 		this.y = y;
-		this.x1 = x - 0.7f;
-		this.x2 = x + 0.7f;
+		this.x1 = x - 1.0f;
+		this.x2 = x + 1.0f;
 		this.isRight = isRight;
 
 		float yPos;
@@ -109,7 +117,7 @@ public class WorldObject
 
 			ApplyColorToFlagArros(view);
 
-			yPos = 0.0f;
+			yPos = -0.1f;
 		}else {
 
 			// Rocks & Trees
@@ -129,13 +137,14 @@ public class WorldObject
 			float scale = type == 0 ? 1 : UnityEngine.Random.Range(0.5f, 1.0f);
 			view.transform.localScale = new Vector3(radius, UnityEngine.Random.Range(1.75f, 2.5f), radius);
 			view.transform.localScale *= scale;
-			yPos = -0.25f;
+			yPos = 0.25f; //-0.25f;
 			if (type != 0) {
 				view.GetComponent<MeshRenderer>().material.color =
 					new Color(
-						UnityEngine.Random.Range(0.15f, 0.6f),
-						UnityEngine.Random.Range(0.4f, 0.8f),
-						UnityEngine.Random.Range (0.15f, 0.6f))
+						UnityEngine.Random.Range(0.2f, 0.6f),
+						UnityEngine.Random.Range(0.2f, 0.7f),
+						UnityEngine.Random.Range(0.2f, 0.6f)
+					)
 				;
 			}
 		}
@@ -165,9 +174,9 @@ public class WorldObjects{
 	static FixedFloat minDistanceAhead = 80;
 	// every 50 units, resort the list
 	static FixedFloat controlRange = 1.0f;
-	static FixedFloat maxDifficultyDistance = 600;
-	static FixedFloat initialCleanupDistance = 1100;
-	static FixedFloat finalGoalDistance = 1200;
+	static FixedFloat maxDifficultyDistance = 650;
+	static FixedFloat initialCleanupDistance = 900;
+	public static FixedFloat finalGoalDistance = 1000;
 
 	static List<int> yList = new List<int>(100);
 	static Dictionary<int, List<WorldObject>> objectsByY = new Dictionary<int, List<WorldObject>>(100);
@@ -301,7 +310,11 @@ public class WorldObjects{
 
 
 	static FixedFloat GetNextFlagY(){
-		return nextFlagDistance - rnd.NextFloat(20, 50);
+		FixedFloat nextFlagY = nextFlagDistance - rnd.NextFloat(20, 50);
+		if (nextFlagY < -finalGoalDistance + 60 && nextFlagY > -finalGoalDistance) {
+			nextFlagY = -finalGoalDistance;
+		}
+		return nextFlagY;
 	}
 
 
@@ -353,7 +366,7 @@ public class WorldObjects{
 		}
 
 		// create more track
-		FixedFloat maxKnownY = yList.Count == 0 ? 0 : yList[yList.Count-1];
+		FixedFloat maxKnownY = yList.Count == 0 ? -5 : yList[yList.Count-1];
 		FixedFloat distanceAhead;
 		if (StateManager.state.Keyframe > 180){
 			distanceAhead = minDistanceAhead - controlRange;
@@ -367,10 +380,10 @@ public class WorldObjects{
 		bool nextObjectIsFlag;
 		FixedFloat minYForGeneration = 0.5f;
 		FixedFloat difficultySetting = GetDifficultySetting(maxKnownY);
-		FixedFloat limitForObjects = minYForGeneration + (1-difficultySetting) * 2.0f;
+		FixedFloat limitForObjects = minYForGeneration + (1-difficultySetting) * 3.0f;
 		for (nextY = maxKnownY - 0.0001f ; nextY > nextTargetY ; ){
 			nextY -= rnd.NextFloat(0.0001f, limitForObjects);
-			nextObjectIsFlag = nextY < nextFlagDistance;
+			nextObjectIsFlag = nextY < nextFlagDistance && nextFlagDistance >= -finalGoalDistance;
 			while (nextY < nextTrackY){
 				lastTrackY = nextY;
 				lastTrackX = nextTrackX;
@@ -397,8 +410,18 @@ public class WorldObjects{
 				randomX = centerX + (nextFlagIsRight ? randomX : -randomX);
 				WorldObject flagObj = new WorldObject(nextFlagIsRight ? -2 : -1, randomX, nextY, nextFlagIsRight);
 				newObjects.Add(flagObj);
-				nextFlagDistance = GetNextFlagY();
+				flags.Add(flagObj);
 				nextFlagIsRight = !nextFlagIsRight;
+				if (nextFlagDistance == -finalGoalDistance) {
+					// it's the goal, add an extra flag and spawn goal view
+					randomX = nextFlagIsRight ? randomX - 8 : randomX + 8;
+					flagObj = new WorldObject(nextFlagIsRight ? -2 : -1, randomX, nextY, nextFlagIsRight);
+					newObjects.Add(flagObj);
+					flags.Add(flagObj);
+					GameObject goalObj = GameObject.Instantiate(WorldObject.goalPrefab);
+					goalObj.transform.position = new Vector3((float)(nextFlagIsRight ? randomX + 4 : randomX - 4), 0, (float)-finalGoalDistance);
+				}
+				nextFlagDistance = GetNextFlagY();
 				flags.Add(flagObj);
 			}else {
 				randomX = GetRandomXAroundCenter(centerX, nextY);

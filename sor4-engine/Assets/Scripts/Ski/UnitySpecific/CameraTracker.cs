@@ -24,7 +24,7 @@ public class CameraTracker : MonoBehaviour {
 	// Update is called once per frame
 	void Update() {
 		Camera mainCamera = Camera.main;
-		mainCamera.transform.position = transform.position + originalPosition;
+		mainCamera.transform.position = new Vector3(transform.position.x, 0, transform.position.z) + originalPosition;
 		Vector3 originalSkierAngles = transform.localEulerAngles;
 		mainCamera.transform.localEulerAngles = new Vector3(originalRotation.x, Mathf.Lerp(mainCamera.transform.localEulerAngles.y, Mathf.Lerp(originalRotation.y, originalSkierAngles.y, 0.2f), 0.1f));
 //	originalSkierAngles
