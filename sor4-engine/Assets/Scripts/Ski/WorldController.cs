@@ -9,6 +9,8 @@ public class WorldController:Controller<WorldModel>{
 
 	public const uint totalGameFrames = 9997200; // 2 minutes
 
+	public const uint framesToStart = 178;
+
 //	// velocity applied to horizontal movement
 //	public FixedFloat maxHorizontalVelocity = 0.165f;
 //	// velocity applied to vertical movement
@@ -165,6 +167,7 @@ public class WorldController:Controller<WorldModel>{
 
 				if (crossedGoal && !alreadyCrossedGoal) {
 					alreadyCrossedGoal = true;
+					ClockCounter.Instance.Stop();
 					GuiMenus.Instance.MarkToRestart();
 				}
 			}
@@ -292,7 +295,7 @@ public class WorldController:Controller<WorldModel>{
 
 		HandlePlayerConnections(model);
 
-		if (StateManager.state.Keyframe > 178){
+		if (StateManager.state.Keyframe > framesToStart){
 			// Update skiers only after initial countdown
 			UpdateSkiers(model);
 		}

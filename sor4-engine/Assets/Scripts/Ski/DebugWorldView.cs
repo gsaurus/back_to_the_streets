@@ -167,7 +167,7 @@ public class DebugWorldView:View<WorldModel>{
 							particles.enableEmission = true;
 							particles.emissionRate = 1 + animator.speed * 20 + frictionRate * 329;
 							particles.transform.localEulerAngles = new Vector3(30 + (1 - frictionRate) * 60, 90, 0);
-							particles.transform.localPosition = new Vector3(particles.transform.localPosition.x, -0.75f, particles.transform.localPosition.z);
+							//particles.transform.localPosition = new Vector3(particles.transform.localPosition.x, -0.75f, particles.transform.localPosition.z);
 						}
 
 						// Audio
@@ -195,7 +195,7 @@ public class DebugWorldView:View<WorldModel>{
 						ParticleSystem particles = skierView.GetComponentInChildren<ParticleSystem>();
 						if (particles != null) {
 							particles.enableEmission = false;
-							particles.transform.localPosition = new Vector3(particles.transform.localPosition.x, -999, particles.transform.localPosition.z);
+							//particles.transform.localPosition = new Vector3(particles.transform.localPosition.x, 999, particles.transform.localPosition.z);
 						}
 
 						// Audio
