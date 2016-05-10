@@ -57,6 +57,10 @@ namespace RetroBread{
 		public void Update(){
 			float axis = Input.GetAxis("Horizontal");
 			axis /= Screen.dpi == 0 ? 1 : Screen.dpi;
+			float axisKeyboard = Input.GetAxis("Horizontal Keyboard") * Screen.width;
+			float axisJoystick = Input.GetAxis("Horizontal Joystick") * Screen.width;
+			if (axis == 0) axis = axisKeyboard;
+			if (axis == 0) axis = axisJoystick;
 			float newAxis = Mathf.Lerp(previousAxis, axis, 0.5f);
 			previousAxis = axis;
 			SendAxis(newAxis);
