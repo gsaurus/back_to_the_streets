@@ -34,6 +34,8 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 	public GameObject matchmakingProgressParent;
 
+	public GameObject leaderboardObject;
+
 	// controls menu flow
 	private MenuState menuState = MenuState.enterNickname;
 

@@ -26,7 +26,7 @@ public class ClockCounter : SingletonMonoBehaviour<ClockCounter> {
 	}
 
 
-	public string FloatToTime (float toConvert, string format){
+	public static string FloatToTime (float toConvert, string format){
          switch (format){
              case "00.0":
                  return string.Format("{0:00}:{1:0}", 

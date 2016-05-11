@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using RetroBread;
 using RetroBread.Network;
+using System.Linq;
 
 
 public class DebugWorldView:View<WorldModel>{
@@ -10,6 +11,9 @@ public class DebugWorldView:View<WorldModel>{
 	// The views
 	GameObject[] skierViews;
 	bool[] skierCollisionSoundActivated;
+
+	// leaderboard times
+	string[] skierFinishTimeStrings;
 
 	// Common material used by all views
 	static Material meshesMaterial;
@@ -57,6 +61,7 @@ public class DebugWorldView:View<WorldModel>{
 		// Allocate memory for views arrays
 		skierViews = new GameObject[WorldModel.MaxPlayers];
 		skierCollisionSoundActivated = new bool[WorldModel.MaxPlayers];
+		skierFinishTimeStrings = new string[WorldModel.MaxPlayers];
 	}
 
 
@@ -104,6 +109,56 @@ public class DebugWorldView:View<WorldModel>{
 			arrowsToPointNextFlag.transform.localScale = new Vector3(scale, scale, scale);
 		}
 		arrowsToPointNextFlag.SetActive(setActive);
+
+		UpdateLeaderboard(model);
+	}
+
+
+	private void UpdateLeaderboard(WorldModel model){
+		GameObject leaderboard = GuiMenus.Instance.leaderboardObject;
+		leaderboard.SetActive(NetworkCenter.Instance.GetNumPlayersOnline() > 1);
+		if (!leaderboard.activeSelf) {
+			return;
+		}
+		KeyValuePair<int, float>[] skiersYs = new KeyValuePair<int, float>[model.skiers.Count()];
+		for (int i = 0 ; i < skiersYs.Count() ; ++i){
+			skiersYs[i] = new KeyValuePair<int, float>(i, model.skiers[i] == null ? 999 : (float)model.skiers[i].y);
+		}
+		skiersYs = skiersYs.OrderBy(x=>x.Value).ToArray<KeyValuePair<int, float>>();
+	
+		Transform leadTransf = leaderboard.transform;
+		UnityEngine.UI.Text textItem;
+		string entryString;
+		NetworkPlayerData data;
+		int ownPlayerNumber = NetworkCenter.Instance.GetPlayerNumber();
+		int orderedId;
+		int position = 1;
+		for (int i = 0 ; i < 6 ; ++i){
+			textItem = leadTransf.GetChild(i).gameObject.GetComponent<UnityEngine.UI.Text>();
+			textItem.enabled = i < skiersYs.Count() && skiersYs[i].Value != 999;
+			if (textItem.enabled) {
+				orderedId = skiersYs[i].Key;
+				data = NetworkCenter.Instance.GetPlayerData((uint)orderedId); // TODO: what if not networked
+				textItem.enabled = data != null;
+				if (textItem.enabled){
+					entryString = data.playerName;
+					if (skierFinishTimeStrings[orderedId] != null) {
+						entryString = skierFinishTimeStrings[orderedId] + " - " + entryString;
+					}else if (skiersYs[i].Value <= -WorldObjects.finalGoalDistance) {
+						int frameNum = (int) Mathf.Max((int)StateManager.state.Keyframe - (int)WorldController.framesToStart, 0.0f);
+						float currentTime = StateManager.Instance.UpdateRate * frameNum;
+						skierFinishTimeStrings[orderedId] = ClockCounter.FloatToTime(currentTime, "#0:00.00");
+						entryString = skierFinishTimeStrings[orderedId] + " - " + entryString;
+					}else{
+						entryString = position + ". " + entryString;
+					}
+					textItem.text = entryString;
+					textItem.color = orderedId == ownPlayerNumber ? Color.yellow : Color.white;
+					++position;
+				}
+			}
+		}
+
 	}
 
 
