@@ -139,7 +139,7 @@ public class DebugWorldView:View<WorldModel>{
 		KeyValuePair<int, float>[] skiersYs = new KeyValuePair<int, float>[model.skiers.Count()];
 		float order;
 		for (int i = 0 ; i < skiersYs.Count() ; ++i){
-			if (finishedSkiers[i] != 0) order = -99990 - finishedSkiers[i];
+			if (finishedSkiers[i] != 0) order = -999990 + finishedSkiers[i];
 			else if(model.skiers[i] == null) order = 999;
 			else order = (float)model.skiers[i].y;
 			skiersYs[i] = new KeyValuePair<int, float>(i, order);
@@ -157,22 +157,27 @@ public class DebugWorldView:View<WorldModel>{
 			textItem.enabled = i < skiersYs.Count() && skiersYs[i].Value != 999;
 			if (textItem.enabled) {
 				orderedId = skiersYs[i].Key;
-				entryString = GetSkierLeaderboardName(i);
+				entryString = GetSkierLeaderboardName(orderedId);
 				textItem.enabled = entryString != null;
 				if (textItem.enabled){
-					if (finishedSkiers[i] == 0 && skiersYs[i].Value <= -WorldObjects.finalGoalDistance) {
+					if (finishedSkiers[orderedId] == 0 && skiersYs[i].Value <= -WorldObjects.finalGoalDistance) {
 						int frameNum = (int) Mathf.Max((int)StateManager.state.Keyframe - (int)WorldController.framesToStart, 0.0f);
-						float currentTime = StateManager.Instance.UpdateRate * frameNum;
-						entryString = skiersNames[i] = ClockCounter.FloatToTime(currentTime, "#0:00.00") + " - " + skiersNames[i];
-						finishedSkiers[i] = orderedId + 1;
+						finishedSkiers[orderedId] = frameNum;
 					}
-					entryString = position + ". " + entryString;
+					if (finishedSkiers[orderedId] != 0) {
+						int frameNum = finishedSkiers[orderedId];
+						float currentTime = StateManager.Instance.UpdateRate * frameNum;
+						entryString = ClockCounter.FloatToTime(currentTime, "#0:00.00") + " - " + skiersNames[orderedId];
+					} else {
+						entryString = position + ". " + entryString;
+					}
 					textItem.text = entryString;
 					textItem.color = orderedId == ownPlayerNumber ? Color.yellow : Color.white;
 					++position;
 				}
 			}
 		}
+		leaderboard.SetActive(position > 1);
 
 	}
 
