@@ -23,8 +23,10 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 	private static float minWaitingTimeInOnline = 12.0f;
 	private static float maxWaitingTimeInOnline = 18.0f;
 	// On offline mode, don't wait that long
-	private static float minWaitingTimeInOffline = 2.5f;
-	private static float maxWaitingTimeInOffline = 5.0f;
+	private static float minWaitingTimeInOffline = 1.5f;
+	private static float maxWaitingTimeInOffline = 3.0f;
+
+	private static float hostsDiscoveryTimeout = 2.25f;
 
 
 	public GameObject background;
@@ -61,7 +63,6 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 
 	void OnEnable(){
-		NetworkMaster.Instance.RefreshServersList();
 		NetworkGame.Instance.onResumeEvent += OnGameResume;
 	}
 
@@ -86,20 +87,31 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 		// Try to connect to a server
 		NetworkSync.Instance.SetReady(false);
-		bool connected = TryToConnectToAvailableServer();
-		if (connected) {
-			PostStartMatchmaking(true);
-		} else {
-			StartCoroutine(DelayedStartMatchmaking());
-		}
+		StartCoroutine(HostsDiscovery());
 
 	}
 
-	IEnumerator DelayedStartMatchmaking(){
+
+	void OnHostFound(HostData host){
+		if (!NetworkCenter.Instance.IsConnected() && !NetworkMaster.Instance.IsAnouncingServer && NetworkMaster.IsServerAvailable(host)){
+			NetworkConnectionError error = NetworkMaster.Instance.ConnectToServer(host);
+			if (error == NetworkConnectionError.NoError) {
+				NetworkMaster.Instance.hostFoundEvent -= OnHostFound;
+				PostStartMatchmaking(true);
+			}
+		}
+	}
+
+
+	IEnumerator HostsDiscovery(){
+		NetworkMaster.Instance.hostFoundEvent += OnHostFound;
 		NetworkMaster.Instance.RefreshServersList();
-		yield return new WaitForSeconds(1.5f);
-		bool connected = TryToConnectToAvailableServer() || TryToCreateNewServer();
-		PostStartMatchmaking(connected);
+		yield return new WaitForSeconds(hostsDiscoveryTimeout);
+		if (matchMakingProgress == 0) {
+			NetworkMaster.Instance.hostFoundEvent -= OnHostFound;
+			bool connected = TryToCreateNewServer();
+			PostStartMatchmaking(connected);
+		}
 	}
 
 
