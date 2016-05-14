@@ -16,7 +16,7 @@ namespace RetroBread{
 
 			// If true, when a player is set to not ready, the game is paused
 			// else, the game keep running as long as the server lives
-			public bool pauseWhenPlayersNotReady = true;
+			public bool pauseWhenPlayersNotReady = false;
 
 			// Events when game events are added
 			public delegate void OnEventsAddedDelegate(List<Event> events);
@@ -64,23 +64,28 @@ namespace RetroBread{
 					State currentState = StateManager.state;
 					State oldestState = StateManager.Instance.GetOldestBufferedState();
 
-					if (pauseWhenPlayersNotReady){
-						// if everyone is ready, we can resume the game
-						if (NetworkSync.Instance.IsEveryoneReady()){
-							SendResumeMessage(currentState, oldestState);
-						}
-					}else {
-						if (guid == UnityEngine.Network.player.guid) {
-							// Server got ready, send resume to every ready client
-							List<string> readyGuids = NetworkSync.Instance.GetReadyPlayerGuids();
-							foreach (string readyGuid in readyGuids){
-								SendResumeMessage(currentState, oldestState, readyGuid);
-							}
-						}else{
-							// resume the game of the one that just went ready
-							SendResumeMessage(currentState, oldestState, guid);
-						}
+					// if everyone is ready, we can resume the game
+					if (NetworkSync.Instance.IsEveryoneReady()){
+						SendResumeMessage(currentState, oldestState);
 					}
+
+//					if (pauseWhenPlayersNotReady){
+//						// if everyone is ready, we can resume the game
+//						if (NetworkSync.Instance.IsEveryoneReady()){
+//							SendResumeMessage(currentState, oldestState);
+//						}
+//					}else {
+//						if (guid == UnityEngine.Network.player.guid) {
+//							// Server got ready, send resume to every ready client
+//							List<string> readyGuids = NetworkSync.Instance.GetReadyPlayerGuids();
+//							foreach (string readyGuid in readyGuids){
+//								SendResumeMessage(currentState, oldestState, readyGuid);
+//							}
+//						}else{
+//							// resume the game of the one that just went ready
+//							SendResumeMessage(currentState, oldestState, guid);
+//						}
+//					}
 				}
 			}
 
