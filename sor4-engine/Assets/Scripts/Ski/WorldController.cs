@@ -72,10 +72,12 @@ public class WorldController:Controller<WorldModel>{
 
 
 		// Remove characters for inactive players
-		for (int i = 0 ; i < model.skiers.Length ; ++i){
-			if (!allPlayers.Exists(x => x == i)){
-				// Doesn't exist anymore, remove
-				model.skiers[i] = null;
+		if (StateManager.Instance.IsNetworked) {
+			for (int i = 0; i < model.skiers.Length; ++i) {
+				if (!allPlayers.Exists (x => x == i)) {
+					// Doesn't exist anymore, remove
+					model.skiers [i] = null;
+				}
 			}
 		}
 		

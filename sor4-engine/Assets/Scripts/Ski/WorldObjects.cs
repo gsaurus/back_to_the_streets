@@ -91,14 +91,21 @@ public class WorldObject
 			signallerColor.a = 0.025f;
 			quadRenderer.material.color = signallerColor;
 		}
+		transform = arrowsObj.transform.Find("model");
+		if (transform != null) {
+			MeshRenderer[] renderers = transform.gameObject.GetComponentsInChildren<MeshRenderer>();
+			foreach (MeshRenderer renderer in renderers) {
+				renderer.material.color = type == -2 ? Color.red : Color.blue;
+			}
+		}
 	}
 	
 
 	public WorldObject(int type, FixedFloat x, FixedFloat y, bool isRight) {
 		this.type = type;
 		this.y = y;
-		this.x1 = x - 1.0f;
-		this.x2 = x + 1.0f;
+		this.x1 = x -1.1f;
+		this.x2 = x +1.1f;
 		this.isRight = isRight;
 
 		float yPos;
@@ -269,13 +276,8 @@ public class WorldObjects{
 				skier.targetVelY = 0;
 			}else {
 				// flag
-				FixedFloat target;
-				if (obj.type == -2){
-					target = obj.x2;
-				}else{ //if (obj.type == -1){
-					target = obj.x1;
-				}
-				skier.y = obj.y + 1;
+				FixedFloat target = StateManager.state.Random.NextFloat(obj.x1 + 0.01f, obj.x2 - 0.01f);
+				skier.y = obj.y + StateManager.state.Random.NextFloat(1,1.5f);
 				skier.frozenTimer =  (uint)(FixedFloat.Abs(skier.x-target) / maxHorizontalDistance) * frozenTime;
 				if (skier.frozenTimer > 2*frozenTime) skier.frozenTimer = 2*frozenTime;
 				if (skier.frozenTimer < collisionFallenTime) skier.frozenTimer = collisionFallenTime;
