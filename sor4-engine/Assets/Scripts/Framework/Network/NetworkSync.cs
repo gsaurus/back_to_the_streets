@@ -173,7 +173,7 @@ namespace RetroBread{
 
 			[RPC]
 			void SetPlayerReady(string guid, bool ready){
-				if (syncStates == null) return;
+				if (syncStates == null || syncStates.Count == 0) return;
 
 				if (guid == UnityEngine.Network.player.guid){
 					isReady = ready;
@@ -203,7 +203,7 @@ namespace RetroBread{
 
 			// Check if everyone is ready, including ourselves
 			public bool IsEveryoneReady(){
-				if (syncStates == null) return false;
+				if (syncStates == null || syncStates.Count == 0) return false;
 				if (!isReady) return false;
 				foreach (NetworkSyncState syncState in syncStates.Values){
 					if (!syncState.isReady){
@@ -215,10 +215,12 @@ namespace RetroBread{
 			
 			// Check if a specific player is ready
 			public bool IsPlayerReady(string guid){
+				if (syncStates == null || syncStates.Count == 0) return false;
+
 				if (guid == UnityEngine.Network.player.guid) {
 					return isReady;
 				}
-				if (syncStates == null) return false;
+
 				NetworkSyncState state;
 				if (syncStates.TryGetValue(guid, out state)){
 					return state.isReady;
@@ -233,7 +235,7 @@ namespace RetroBread{
 
 			// Get a list of the guis of all ready players
 			public List<string> GetReadyPlayerGuids(){
-				if (syncStates == null) return null;
+				if (syncStates == null || syncStates.Count == 0) return null;
 				List<string> readyPlayers = new List<string>(syncStates.Count);
 				if (isReady) readyPlayers.Add(UnityEngine.Network.player.guid);
 
@@ -271,7 +273,7 @@ namespace RetroBread{
 			// When a player discommects we remove it's state
 			// If it's the player itself we stop the ping coroutine
 			void OnPlayerDisconnectionConfirmed(string guid) {
-				if (guid == UnityEngine.Network.player.guid) {
+				if (guid == UnityEngine.Network.player.guid || (syncStates != null && syncStates.Count == 1)) {
 					Debug.Log("Player disconnection confirmed: " + guid);
 					StopCoroutine(PingPeers());
 					isReady = false;

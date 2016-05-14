@@ -175,8 +175,8 @@ public class WorldObjects{
 	// every 50 units, resort the list
 	static FixedFloat controlRange = 1.0f;
 	static FixedFloat maxDifficultyDistance = 650;
-	static FixedFloat initialCleanupDistance = 800;
-	public static FixedFloat finalGoalDistance = 850;
+	static FixedFloat initialCleanupDistance = 750;
+	public static FixedFloat finalGoalDistance = 800;
 
 	static List<int> yList = new List<int>(100);
 	static Dictionary<int, List<WorldObject>> objectsByY = new Dictionary<int, List<WorldObject>>(100);
@@ -330,8 +330,8 @@ public class WorldObjects{
 
 
 	static FixedFloat GetNextFlagY(){
-		FixedFloat nextFlagY = nextFlagDistance - rnd.NextFloat(20, 50);
-		if (nextFlagY < -finalGoalDistance + 51 && nextFlagY > -finalGoalDistance) {
+		FixedFloat nextFlagY = nextFlagDistance - rnd.NextFloat(20, 40);
+		if (nextFlagY < -finalGoalDistance + 40 && nextFlagY > -finalGoalDistance) {
 			nextFlagY = -finalGoalDistance;
 		}
 		return nextFlagY;
@@ -426,7 +426,7 @@ public class WorldObjects{
 
 			centerX = GetCenterXForY(nextY, lastTrackY, nextTrackY, lastTrackX, nextTrackX);
 			if (nextObjectIsFlag){
-				randomX = rnd.NextFloat(maxHorizontalDistance* 0.1f, maxHorizontalDistance * 0.5f);
+				randomX = rnd.NextFloat(maxHorizontalDistance* 0.2f, maxHorizontalDistance * 0.6f);
 				randomX = centerX + (nextFlagIsRight ? randomX : -randomX);
 				WorldObject flagObj = new WorldObject(nextFlagIsRight ? -2 : -1, randomX, nextY, nextFlagIsRight);
 				newObjects.Add(flagObj);

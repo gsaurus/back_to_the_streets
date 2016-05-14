@@ -225,11 +225,16 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 					SetupGame(false);
 				}
 				// game starting
+				RetroBread.Debug.Log("Starting game" + (NetworkSync.Instance.IsEveryoneReady() ? " everyone is ready" : "but not everyone is ready"));
 				FadeToState(MenuState.inGame);
 				StartCoroutine(DelayedEnable(false, canvasFadeTime));
 			}
 		
-		}else if (menuState == MenuState.inGame && StateManager.Instance.IsNetworked && (!NetworkCenter.Instance.IsConnected() || NetworkCenter.Instance.GetNumPlayersOnline() <= 1)){
+		}else if (menuState == MenuState.inGame
+			&& StateManager.Instance.IsNetworked
+			&& (!NetworkCenter.Instance.IsConnected() || NetworkCenter.Instance.GetNumPlayersOnline() <= 1)
+			&& StateManager.state != null && StateManager.state.Keyframe > 0
+		){
 			RetroBread.Debug.Log("No enough players connected, switching to offline mode");
 			StateManager.Instance.SetOffline();
 
@@ -262,8 +267,8 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 						view.skierViews[0] = tmpView;
 					}
 				}
-				NetworkCenter.Instance.Disconnect();
 			}
+			NetworkCenter.Instance.Disconnect();
 		}
 
 		if (isMarkedToRestart) {
@@ -403,9 +408,7 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 	IEnumerator RestartGameAfterSeconds(float seconds){
 		yield return new WaitForSeconds(seconds);
-		if (NetworkCenter.Instance.IsConnected()){
-			NetworkCenter.Instance.Disconnect();
-		}
+		NetworkCenter.Instance.Disconnect();
 		WorldObjects.Reset();
 		StateManager.Instance.Setup(null);
 		FadeToState(MenuState.enterNickname);

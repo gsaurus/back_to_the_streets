@@ -433,7 +433,7 @@ namespace RetroBread{
 				}
 
 				// disconnect
-				UnityEngine.Network.Disconnect();
+				UnityEngine.Network.Disconnect(1.0f);
 
 				// Reset internal state
 				NetworkPlayerData myData;

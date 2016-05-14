@@ -83,6 +83,7 @@ namespace RetroBread{
 			// TODO: init state with proper seed, either random or agreed with network
 			if (this.currentState != null){
 				currentState.Destroy();
+				currentState = null;
 			}
 			if (setup == null){
 				IsPaused = true;
