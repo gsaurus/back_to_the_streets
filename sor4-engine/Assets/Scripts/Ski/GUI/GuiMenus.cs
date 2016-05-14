@@ -19,12 +19,14 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 	private static float connectionFadeTime = 0.25f;
 
 
-	// waiting time for more players, in seconds
+	// waiting time for more players, in seconds -- server
 	private static float minWaitingTimeInOnline = 12.0f;
 	private static float maxWaitingTimeInOnline = 18.0f;
+	// waiting time for more players, in seconds -- client
+	private static float maxWaitingTimeClient = 20.0f;
 	// On offline mode, don't wait that long
-	private static float minWaitingTimeInOffline = 1.5f;
-	private static float maxWaitingTimeInOffline = 3.0f;
+	private static float minWaitingTimeInOffline = 2.5f;
+	private static float maxWaitingTimeInOffline = 5.0f;
 
 	private static float hostsDiscoveryTimeout = 2.25f;
 
@@ -124,8 +126,19 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 		// start fake matchmaking 
 		matchMakingProgress = 1;
 		// setup fake matchmaking
-		float minTime = connected ? minWaitingTimeInOnline : minWaitingTimeInOffline;
-		float maxTime = connected ? maxWaitingTimeInOnline : maxWaitingTimeInOffline;
+		float minTime;
+		float maxTime;
+		if (connected){
+			if (UnityEngine.Network.isServer){
+				minTime = minWaitingTimeInOnline;
+				maxTime = maxWaitingTimeInOnline;
+			}else{
+				minTime = maxTime = maxWaitingTimeClient;
+			}
+		}else{
+			minTime = minWaitingTimeInOffline;
+			maxTime = maxWaitingTimeInOffline;
+		}
 		maxTime = UnityEngine.Random.Range(minTime, maxTime);
 		matchMakingIntervals = new float[WorldModel.MaxPlayers-1];
 		for (int i = 0; i < WorldModel.MaxPlayers-1; ++i) {
