@@ -120,8 +120,11 @@ namespace RetroBread{
 			// Ping peers every now and then
 			IEnumerator PingPeers(){
 				// wait just a litle bit before start pinging, avoid initial unstability
-				yield return new WaitForSeconds(0.1f);
-				if (syncStates == null || !NetworkCenter.Instance.IsConnected()) yield break;
+				yield return new WaitForSeconds(0.05f);
+				if (syncStates == null || !NetworkCenter.Instance.IsConnected()){
+					Debug.LogWarning("Ping initiation failed!");
+					yield break;
+				}
 				while(syncStates.Count > 0){
 					GetComponent<NetworkView>().RPC("PingRequest", RPCMode.Others);
 					yield return new WaitForSeconds(pingRate);
@@ -149,7 +152,7 @@ namespace RetroBread{
 					Debug.LogWarning("Got a ping response from an unknown player " + senderGuid);
 					return;
 				}
-				syncState.Update (travelTime);
+				syncState.Update(travelTime);
 			}
 
 		#endregion
@@ -161,7 +164,10 @@ namespace RetroBread{
 			// Mark this player as ready
 			public void SetReady(bool ready){
 				if (ready != isReady){
+					Debug.Log("set " + (ready ? "" : "not ") + "ready: " + UnityEngine.Network.player.guid);
 					GetComponent<NetworkView>().RPC("SetPlayerReady", RPCMode.All, UnityEngine.Network.player.guid, ready);
+				}else {
+					Debug.Log("player already " + (ready ? "" : "not ") + "ready: " + UnityEngine.Network.player.guid);
 				}
 			}
 
@@ -176,9 +182,12 @@ namespace RetroBread{
 					if (syncStates.TryGetValue(guid, out state)){
 						state.isReady = ready;
 					}else{
-						UnityEngine.Debug.LogWarning("SetReady: Player with guid \"" + guid + "\" not found");
+						Debug.LogWarning("SetReady: Player with guid \"" + guid + "\" not found");
+						return;
 					}
 				}
+
+				Debug.Log("player become " + (ready ? "" : "not ") + "ready: " + UnityEngine.Network.player.guid);
 
 				// dispatch events about players being ready or not
 				if (ready){
@@ -245,6 +254,7 @@ namespace RetroBread{
 			// When the player first connects with someone else we start the ping coroutine
 			void OnPlayerConnectionConfirmed(string guid) {
 				if (guid != UnityEngine.Network.player.guid) {
+					Debug.Log("Player connection confirmed: " + guid);
 					NetworkSyncState syncState = new NetworkSyncState();
 					if (syncStates == null) {
 						syncStates = new Dictionary<string, NetworkSyncState>();
@@ -262,6 +272,7 @@ namespace RetroBread{
 			// If it's the player itself we stop the ping coroutine
 			void OnPlayerDisconnectionConfirmed(string guid) {
 				if (guid == UnityEngine.Network.player.guid) {
+					Debug.Log("Player disconnection confirmed: " + guid);
 					StopCoroutine(PingPeers());
 					isReady = false;
 					if (syncStates != null) {

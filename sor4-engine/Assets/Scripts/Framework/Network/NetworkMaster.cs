@@ -32,6 +32,8 @@ namespace RetroBread{
 			public List<HostData> hosts { get; private set; }
 			
 			public bool IsAnouncingServer { get; private set; }
+
+			private float connectingTimeStamp;
 			
 			
 			
@@ -107,18 +109,26 @@ namespace RetroBread{
 			
 			
 			public NetworkConnectionError ConnectToServer(HostData host, string password = null) {
-				return UnityEngine.Network.Connect(host, password);
+				NetworkConnectionError error = UnityEngine.Network.Connect(host, password);
+				if (error == NetworkConnectionError.NoError) {
+					RetroBread.Debug.Log("Connecting");
+					connectingTimeStamp = Time.realtimeSinceStartup;
+				} else {
+					RetroBread.Debug.LogWarning("Failed to connect to server with error: " + error);
+				}
+				return error;
 			}
 			
 			void OnConnectedToServer() {
 				// Once connected, disable NetworkMaster
+				Debug.Log("Connecting to server confirmed, took " + (Time.realtimeSinceStartup - connectingTimeStamp) + " seconds");
 				enabled = false;
 			}
 			
 			// Let other components handle failure
-			//	void OnFailedToConnect(NetworkConnectionError error) {
-			//		//Debug.Log("Could not connect to server: " + error);
-			//	}
+			void OnFailedToConnect(NetworkConnectionError error) {
+				Debug.Log("Could not connect to server in " + (Time.realtimeSinceStartup - connectingTimeStamp) + " seconds, error: " + error);
+			}
 			
 			
 			void OnDisable(){

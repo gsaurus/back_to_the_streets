@@ -49,6 +49,7 @@ namespace RetroBread{
 
 			// Set our own player data
 			public void SetPlayerData(NetworkPlayerData data) {
+				RetroBread.Debug.Log("Set player data: " + UnityEngine.Network.player.guid + " -> " + (data == null ? "null" : data.playerName));
 				players[UnityEngine.Network.player.guid] = data;
 			}
 
@@ -168,6 +169,7 @@ namespace RetroBread{
 
 			// When server is initialized, he's connected
 			void OnServerInitialized() {
+				Debug.Log("Server initialized");
 				NetworkPlayerData playerData = GetPlayerData();
 				playerNumbers[playerData.uniqueId] = FindSlotForPlayer(playerData);
 				if (playerConnectedEvent != null) {
@@ -178,7 +180,7 @@ namespace RetroBread{
 			// Server received a new connection.
 			// Wait for client to anounce his player data
 			void OnPlayerConnected(NetworkPlayer player) {
-				//Debug.Log("Player connected from: " + player.ipAddress + ", guid: " + player.guid);
+				Debug.Log("Player connected from: " + player.ipAddress + ", guid: " + player.guid + ", waiting player data");
 				StartCoroutine(WaitForPlayerData(player));
 			}
 
@@ -187,7 +189,7 @@ namespace RetroBread{
 				//Debug.Log("wait");
 				yield return new WaitForSeconds(connectingPlayerTimeout);
 				if (GetPlayerData(player) == null) {
-					//Debug.Log("wait ended, kill!");
+					Debug.LogWarning("Player didn't anounce data: " + player.guid);
 					TryCloseConnection(player);
 				}
 			}
@@ -289,6 +291,7 @@ namespace RetroBread{
 			// Add all received players to our dictionaries
 			[RPC]
 			void SetAllPlayersData(byte[] playersData, byte[] playerNumsData){
+				Debug.Log("Received all players data from server");
 				players = serializer.Deserialize<Dictionary<string, NetworkPlayerData>>(playersData);
 				playerNumbers = serializer.Deserialize<Dictionary<string, uint>>(playerNumsData);
 
@@ -349,10 +352,14 @@ namespace RetroBread{
 				NetworkPlayerData playerData = GetPlayerData();
 				if (playerData == null) {
 					// Wops, we can't play without data
-					Debug.LogWarning("No Player Data to anounce to server");
+					Debug.LogWarning("No Player Data to anounce to server: " + UnityEngine.Network.player.guid);
+					foreach (string playerGuid in players.Keys){
+						Debug.Log("guid: " + playerGuid);
+					}
 					Disconnect();
 					return;
 				}
+				Debug.Log("Connected to server, announcing data..");
 				byte[] data = serializer.Serialize(playerData);
 				GetComponent<NetworkView>().RPC("OnClientPlayerDataAnounced", RPCMode.Server, data);
 
@@ -367,7 +374,7 @@ namespace RetroBread{
 					Debug.LogWarning("Connecting timeout reached, disconnecting..");
 					Disconnect();
 				}
-				Debug.Log("Connected to server");
+				Debug.Log("Anouncing data to server succeeded");
 			}
 
 			
@@ -419,6 +426,7 @@ namespace RetroBread{
 
 			public void Disconnect(){
 				string guid = UnityEngine.Network.player.guid;
+				Debug.Log("disconnecting (" + guid + ")");
 				// Send event notification
 				if (playerDisconnectedEvent != null) {
 					playerDisconnectedEvent(guid);
@@ -428,10 +436,12 @@ namespace RetroBread{
 				UnityEngine.Network.Disconnect();
 
 				// Reset internal state
-				NetworkPlayerData myData = players[UnityEngine.Network.player.guid];
-				players.Clear();
+				NetworkPlayerData myData;
+				if (players.TryGetValue(UnityEngine.Network.player.guid, out myData)){
+					players.Clear();
+					SetPlayerData(myData);
+				}
 				playerNumbers.Clear();
-				SetPlayerData(myData);
 			}
 
 			void OnApplicationQuit() {

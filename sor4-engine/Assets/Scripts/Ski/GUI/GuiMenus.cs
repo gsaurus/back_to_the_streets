@@ -20,8 +20,8 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 
 	// waiting time for more players, in seconds
-	private static float minWaitingTimeInOnline = 5.0f;
-	private static float maxWaitingTimeInOnline = 15.0f;
+	private static float minWaitingTimeInOnline = 12.0f;
+	private static float maxWaitingTimeInOnline = 18.0f;
 	// On offline mode, don't wait that long
 	private static float minWaitingTimeInOffline = 2.5f;
 	private static float maxWaitingTimeInOffline = 5.0f;
@@ -85,6 +85,7 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 		FadeToState(MenuState.matchmaking);
 
 		// Try to connect to a server
+		NetworkSync.Instance.SetReady(false);
 		bool connected = TryToConnectToAvailableServer();
 		if (connected) {
 			PostStartMatchmaking(true);
@@ -155,11 +156,10 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 			foreach (HostData host in hosts) {
 				if (NetworkMaster.IsServerAvailable(host)){
 					NetworkConnectionError error = NetworkMaster.Instance.ConnectToServer(host);
+					return error == NetworkConnectionError.NoError;
 					if (error == NetworkConnectionError.NoError) {
-						RetroBread.Debug.Log("Connected.\nWaiting for players...");
 						return true;
 					} else {
-						RetroBread.Debug.LogWarning("Failed to connect to server with error: " + error);
 						if (--errorRetries == 0) {
 							return false;
 						}
@@ -180,11 +180,12 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 		matchMakingProgress = Math.Max(matchMakingProgress, numPlayersReady + 1);
 
 		// Automatically set clients ready
-		if (!NetworkSync.Instance.IsPlayerReady ()) {
+		if (!NetworkSync.Instance.IsPlayerReady()) {
 			if (Network.isClient) {
 				// clients automatically set ready
 				NetworkSync.Instance.SetReady(true);
 			} else {
+				RetroBread.Debug.Log("looks like I'm a server");
 				// If server, set ready if there are enough players, or if enough time passed
 				if (matchMakingProgress >= WorldModel.MaxPlayers) {
 					if (numPlayersReady > 0) {
@@ -192,7 +193,9 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 					}
 				}
 			}
-		}
+		}else{
+			RetroBread.Debug.Log("already ready");
+		} 
 			
 	}
 
@@ -214,6 +217,12 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 						NetworkMaster.Instance.CancelServer();
 						SetupGame(false);
 					}
+				}
+				if (!NetworkCenter.Instance.IsConnected() && StateManager.Instance.IsNetworked) {
+					// Something went wrong while connecting, go offline
+					RetroBread.Debug.LogWarning("Connection problems, going offline");
+					NetworkCenter.Instance.Disconnect();
+					SetupGame(false);
 				}
 				// game starting
 				FadeToState(MenuState.inGame);
