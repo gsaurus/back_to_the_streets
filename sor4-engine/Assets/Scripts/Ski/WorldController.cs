@@ -61,34 +61,52 @@ public class WorldController:Controller<WorldModel>{
 
 
 	private void HandlePlayerConnections(WorldModel model){
-		
+
 		List<uint> allPlayers;
-		if (StateManager.Instance.IsNetworked) {
-			allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers();
-		} else {
-			allPlayers = new List<uint>();
-			allPlayers.Add(0);
+
+		if (model.skiers [0] == null) {
+			// initialize skiers
+			if (StateManager.Instance.IsNetworked) {
+				allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers ();
+			} else {
+				allPlayers = new List<uint> ();
+				allPlayers.Add (0);
+				int maxPlayers = UnityEngine.Random.Range (3, 6);
+				for (uint i = 1; i < maxPlayers; ++i)
+					allPlayers.Add(i);
+			}
+			
+			// Create characters for new players
+			int playerPosition = StateManager.Instance.IsNetworked ? -1 : UnityEngine.Random.Range (0, allPlayers.Count);
+			FixedFloat playerX = 0;
+			foreach (uint playerId in allPlayers) {
+				if (model.skiers [playerId] == null) {
+					Model inputModel = new PlayerInputModel (playerId);
+					ModelReference inputModelRef = StateManager.state.AddModel (inputModel);
+					playerX = playerId * 1.5f;
+					if (playerPosition >= 0) {
+						if (playerId == 0) {
+							playerX = playerPosition * 1.5f;
+						} else if (playerId == playerPosition) {
+							playerX = 0;
+						}
+					}
+					model.skiers [playerId] = new SkierModel (playerX, 0, inputModelRef);
+				}
+			}
 		}
+
 
 
 		// Remove characters for inactive players
 		if (StateManager.Instance.IsNetworked) {
+			allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers();
 			for (int i = 0; i < model.skiers.Length; ++i) {
 				if (!allPlayers.Exists (x => x == i)) {
 					// Doesn't exist anymore, remove
-					model.skiers [i] = null;
+					model.skiers[i] = null;
 				}
 			}
-		}
-		
-		// Create characters for new players
-		foreach(uint playerId in allPlayers){
-			if (model.skiers[playerId] == null){
-				Model inputModel = new PlayerInputModel(playerId);
-				ModelReference inputModelRef = StateManager.state.AddModel(inputModel);
-				model.skiers[playerId] = new SkierModel(playerId * 1.5f, 0, inputModelRef);
-			}
-			
 		}
 	}
 	

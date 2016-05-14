@@ -172,28 +172,6 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 			return false;
 		}
 	}
-
-
-	bool TryToConnectToAvailableServer(){
-		List<HostData> hosts = NetworkMaster.Instance.hosts;
-		int errorRetries = 4;
-		if (hosts != null){
-			foreach (HostData host in hosts) {
-				if (NetworkMaster.IsServerAvailable(host)){
-					NetworkConnectionError error = NetworkMaster.Instance.ConnectToServer(host);
-					return error == NetworkConnectionError.NoError;
-					if (error == NetworkConnectionError.NoError) {
-						return true;
-					} else {
-						if (--errorRetries == 0) {
-							return false;
-						}
-					}
-				}
-			}
-		}
-		return false;
-	}
 		
 
 
