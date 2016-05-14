@@ -94,8 +94,7 @@ namespace RetroBread{
 					MasterServer.UnregisterHost();
 					IsAnouncingServer = false;
 					enabled = true;
-					NetworkCenter.Instance.Disconnect();
-					Debug.Log("Server Canceled, disconnecting..");
+					Debug.Log("Server announcement canceled");
 				}
 			}
 			

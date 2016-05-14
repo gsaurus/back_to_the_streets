@@ -171,6 +171,12 @@ namespace RetroBread{
 
 		#region Pause / Resume
 
+
+		public void SetOffline(){
+			IsNetworked = false;
+			IsPaused = false;
+		}
+
 		// Manually pause the game (to load resources for instance)
 		public void SetPaused(bool paused){
 			// For now we just pause right away.

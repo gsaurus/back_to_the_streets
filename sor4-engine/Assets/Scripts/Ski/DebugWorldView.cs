@@ -9,7 +9,7 @@ using System.Linq;
 public class DebugWorldView:View<WorldModel>{
 	
 	// The views
-	GameObject[] skierViews;
+	public GameObject[] skierViews;
 	bool[] skierCollisionSoundActivated;
 
 	// leaderboard times
@@ -66,7 +66,6 @@ public class DebugWorldView:View<WorldModel>{
 
 
 
-
 	protected override void Update(WorldModel model, float deltaTime){
 
 		UpdateSkiers(model, deltaTime);
@@ -74,7 +73,7 @@ public class DebugWorldView:View<WorldModel>{
 		// check if next flag is outside screen
 		int playerId = 0;
 		if (StateManager.Instance.IsNetworked) {
-			playerId = NetworkCenter.Instance.GetPlayerNumber ();
+			playerId = NetworkCenter.Instance.GetPlayerNumber();
 			if (playerId < 0 || playerId >= model.skiers.Length)
 				return;
 		}
@@ -130,7 +129,7 @@ public class DebugWorldView:View<WorldModel>{
 		UnityEngine.UI.Text textItem;
 		string entryString;
 		NetworkPlayerData data;
-		int ownPlayerNumber = NetworkCenter.Instance.GetPlayerNumber();
+		int ownPlayerNumber = StateManager.Instance.IsNetworked ? NetworkCenter.Instance.GetPlayerNumber() : 0;
 		int orderedId;
 		int position = 1;
 		for (int i = 0 ; i < 6 ; ++i){

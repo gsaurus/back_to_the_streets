@@ -229,6 +229,41 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 				StartCoroutine(DelayedEnable(false, canvasFadeTime));
 			}
 		
+		}else if (menuState == MenuState.inGame && StateManager.Instance.IsNetworked && (!NetworkCenter.Instance.IsConnected() || NetworkCenter.Instance.GetNumPlayersOnline() <= 1)){
+			RetroBread.Debug.Log("No enough players connected, switching to offline mode");
+			StateManager.Instance.SetOffline();
+
+			State state = StateManager.state;
+			int oldPlayerId = NetworkCenter.Instance.GetPlayerNumber();
+			if (state == null || state.MainModel == null || oldPlayerId < 0) {
+				SetupGame(false);
+			} else {
+				WorldModel world = state.MainModel as WorldModel;
+				DebugWorldView view = world.View() as DebugWorldView;
+				// switch own skier model
+				if (world.skiers.Length > oldPlayerId) {
+					SkierModel mySkier = world.skiers[oldPlayerId];
+					SkierModel firstSkier = world.skiers[0];
+					world.skiers[0] = mySkier;
+					world.skiers[oldPlayerId] = firstSkier;
+					PlayerInputModel playerInput = StateManager.state.GetModel(mySkier.inputModelRef) as PlayerInputModel;
+					if (playerInput != null) {
+						playerInput.playerId = 0;
+					}
+					playerInput = StateManager.state.GetModel(firstSkier.inputModelRef) as PlayerInputModel;
+					if (playerInput != null) {
+						playerInput.playerId = (uint)oldPlayerId;
+					}
+
+					// switch views
+					if (view != null) {
+						GameObject tmpView = view.skierViews[oldPlayerId];
+						view.skierViews[oldPlayerId] = view.skierViews[0];
+						view.skierViews[0] = tmpView;
+					}
+				}
+				NetworkCenter.Instance.Disconnect();
+			}
 		}
 
 		if (isMarkedToRestart) {

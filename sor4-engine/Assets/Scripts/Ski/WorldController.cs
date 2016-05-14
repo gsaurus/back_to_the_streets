@@ -129,6 +129,7 @@ public class WorldController:Controller<WorldModel>{
 		CheckTopAndBottomSkiers(world);
 
 		SkierModel skier;
+		int ownPlayerNumber = StateManager.Instance.IsNetworked ? NetworkCenter.Instance.GetPlayerNumber() : 0;
 		// For each tank update it's position and orientation
 		for (uint skierId = 0 ; skierId < world.skiers.Length ; ++skierId){
 			skier = world.skiers[skierId];
@@ -165,7 +166,7 @@ public class WorldController:Controller<WorldModel>{
 				WorldObjects.HandleCollisionWithWorld(world, skier);
 				WorldObjects.HandleCollisionWithOtherSkiers(world, skier);
 
-				if (crossedGoal && !alreadyCrossedGoal) {
+				if (crossedGoal && skierId == ownPlayerNumber && !alreadyCrossedGoal) {
 					alreadyCrossedGoal = true;
 					ClockCounter.Instance.Stop();
 					GuiMenus.Instance.MarkToRestart();

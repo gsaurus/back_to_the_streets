@@ -175,8 +175,8 @@ public class WorldObjects{
 	// every 50 units, resort the list
 	static FixedFloat controlRange = 1.0f;
 	static FixedFloat maxDifficultyDistance = 650;
-	static FixedFloat initialCleanupDistance = 900;
-	public static FixedFloat finalGoalDistance = 1000;
+	static FixedFloat initialCleanupDistance = 800;
+	public static FixedFloat finalGoalDistance = 850;
 
 	static List<int> yList = new List<int>(100);
 	static Dictionary<int, List<WorldObject>> objectsByY = new Dictionary<int, List<WorldObject>>(100);
@@ -190,6 +190,8 @@ public class WorldObjects{
 
 
 	static List<WorldObject> flags = new List<WorldObject>();
+
+	static GameObject goalObj;
 
 
 	public static void Reset(){
@@ -329,7 +331,7 @@ public class WorldObjects{
 
 	static FixedFloat GetNextFlagY(){
 		FixedFloat nextFlagY = nextFlagDistance - rnd.NextFloat(20, 50);
-		if (nextFlagY < -finalGoalDistance + 60 && nextFlagY > -finalGoalDistance) {
+		if (nextFlagY < -finalGoalDistance + 51 && nextFlagY > -finalGoalDistance) {
 			nextFlagY = -finalGoalDistance;
 		}
 		return nextFlagY;
@@ -436,7 +438,9 @@ public class WorldObjects{
 					flagObj = new WorldObject(nextFlagIsRight ? -2 : -1, randomX, nextY, nextFlagIsRight);
 					newObjects.Add(flagObj);
 					flags.Add(flagObj);
-					GameObject goalObj = GameObject.Instantiate(WorldObject.goalPrefab);
+					if (goalObj == null) {
+						goalObj = GameObject.Instantiate(WorldObject.goalPrefab);
+					}
 					goalObj.transform.position = new Vector3((float)(nextFlagIsRight ? randomX + 4 : randomX - 4), 0, (float)-finalGoalDistance);
 				}
 				nextFlagDistance = GetNextFlagY();
