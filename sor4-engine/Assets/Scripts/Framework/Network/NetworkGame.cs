@@ -39,14 +39,14 @@ namespace RetroBread{
 			private List<Event> eventsBuffer = new List<Event>();
 			
 			// On awake, register delegates
-			void Awake(){
+			void OnEnable(){
 				NetworkSync.Instance.playerReadyEvent += OnPlayerReadyEvent;
 				NetworkSync.Instance.playerNotReadyEvent += OnPlayerNotReadyEvent;
 				NetworkCenter.Instance.playerDisconnectedEvent += OnPlayerNotReadyEvent;
 			}
 
 			// On destroy, unregister delegates
-			void OnDestroy(){
+			void OnDisable(){
 				NetworkSync.Instance.playerReadyEvent -= OnPlayerReadyEvent;
 				NetworkSync.Instance.playerNotReadyEvent -= OnPlayerNotReadyEvent;
 				NetworkCenter.Instance.playerDisconnectedEvent -= OnPlayerNotReadyEvent;

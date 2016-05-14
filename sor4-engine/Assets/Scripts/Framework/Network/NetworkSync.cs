@@ -70,7 +70,7 @@ namespace RetroBread{
 
 			// On awake we register delegates
 			// Delegates used to know when a player connects / disconnects to add / remove it's synk state
-			void Awake(){
+			void OnEnable(){
 				// register connection delegates
 				NetworkCenter.Instance.playerConnectedEvent += OnPlayerConnectionConfirmed;
 				NetworkCenter.Instance.playerDisconnectedEvent += OnPlayerDisconnectionConfirmed;
@@ -78,7 +78,7 @@ namespace RetroBread{
 
 			// On destroy we unregister delegates
 			// Delegates used to know when a player connects / disconnects to add / remove it's synk state
-			void OnDestroy(){
+			void OnDisable(){
 				// unregister connection delegates
 				NetworkCenter.Instance.playerConnectedEvent -= OnPlayerConnectionConfirmed;
 				NetworkCenter.Instance.playerDisconnectedEvent -= OnPlayerDisconnectionConfirmed;

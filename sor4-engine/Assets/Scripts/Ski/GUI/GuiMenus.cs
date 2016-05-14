@@ -212,9 +212,9 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 				if (NetworkMaster.Instance.IsAnouncingServer) {
 					List<string> readyPlayers = NetworkSync.Instance.GetReadyPlayerGuids();
+					NetworkMaster.Instance.CancelServer();
 					if (readyPlayers == null || readyPlayers.Count == 0) {
 						// only me, let's go offline
-						NetworkMaster.Instance.CancelServer();
 						SetupGame(false);
 					}
 				}
