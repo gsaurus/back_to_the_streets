@@ -47,7 +47,7 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 	private float[] matchMakingIntervals;
 	private float matchmakingStartTime;
 
-	private string nickname;
+	public string nickname;
 
 	private bool isMarkedToRestart;
 
@@ -274,9 +274,7 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 					// switch views
 					if (view != null) {
-						GameObject tmpView = view.skierViews[oldPlayerId];
-						view.skierViews[oldPlayerId] = view.skierViews[0];
-						view.skierViews[0] = tmpView;
+						view.SwitchPlayers(oldPlayerId, 0);
 					}
 				}
 			}

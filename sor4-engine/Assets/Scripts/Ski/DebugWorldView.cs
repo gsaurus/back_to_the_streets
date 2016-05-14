@@ -13,7 +13,8 @@ public class DebugWorldView:View<WorldModel>{
 	bool[] skierCollisionSoundActivated;
 
 	// leaderboard times
-	string[] skierFinishTimeStrings;
+	int[] finishedSkiers;
+	string[] skiersNames;
 
 	// Common material used by all views
 	static Material meshesMaterial;
@@ -61,7 +62,8 @@ public class DebugWorldView:View<WorldModel>{
 		// Allocate memory for views arrays
 		skierViews = new GameObject[WorldModel.MaxPlayers];
 		skierCollisionSoundActivated = new bool[WorldModel.MaxPlayers];
-		skierFinishTimeStrings = new string[WorldModel.MaxPlayers];
+		finishedSkiers = new int[WorldModel.MaxPlayers];
+		skiersNames = new string[WorldModel.MaxPlayers];
 	}
 
 
@@ -113,44 +115,58 @@ public class DebugWorldView:View<WorldModel>{
 	}
 
 
+	private string GetSkierLeaderboardName(int skierId){
+		if (skiersNames[skierId] == null) {
+			if (StateManager.Instance.IsNetworked) {
+				NetworkPlayerData data;
+				data = NetworkCenter.Instance.GetPlayerData((uint) skierId);
+				if (data == null) return null;
+				skiersNames[skierId] = data.playerName;
+			} else {
+				if (skierId == 0) {
+					skiersNames[skierId] = GuiMenus.Instance.nickname;
+				}else {
+					skiersNames[skierId] = GuiMenus.defaultNickname + UnityEngine.Random.Range(0, int.MaxValue);
+				}
+			}
+		}
+		return skiersNames[skierId];
+	}
+
+
 	private void UpdateLeaderboard(WorldModel model){
 		GameObject leaderboard = GuiMenus.Instance.leaderboardObject;
-		leaderboard.SetActive(NetworkCenter.Instance.GetNumPlayersOnline() > 1);
-		if (!leaderboard.activeSelf) {
-			return;
-		}
 		KeyValuePair<int, float>[] skiersYs = new KeyValuePair<int, float>[model.skiers.Count()];
+		float order;
 		for (int i = 0 ; i < skiersYs.Count() ; ++i){
-			skiersYs[i] = new KeyValuePair<int, float>(i, model.skiers[i] == null ? 999 : (float)model.skiers[i].y);
+			if (finishedSkiers[i] != 0) order = -99990 - finishedSkiers[i];
+			else if(model.skiers[i] == null) order = 999;
+			else order = (float)model.skiers[i].y;
+			skiersYs[i] = new KeyValuePair<int, float>(i, order);
 		}
 		skiersYs = skiersYs.OrderBy(x=>x.Value).ToArray<KeyValuePair<int, float>>();
 	
 		Transform leadTransf = leaderboard.transform;
 		UnityEngine.UI.Text textItem;
 		string entryString;
-		NetworkPlayerData data;
 		int ownPlayerNumber = StateManager.Instance.IsNetworked ? NetworkCenter.Instance.GetPlayerNumber() : 0;
 		int orderedId;
 		int position = 1;
-		for (int i = 0 ; i < 6 ; ++i){
+		for (int i = 0 ; i < WorldModel.MaxPlayers ; ++i){
 			textItem = leadTransf.GetChild(i).gameObject.GetComponent<UnityEngine.UI.Text>();
 			textItem.enabled = i < skiersYs.Count() && skiersYs[i].Value != 999;
 			if (textItem.enabled) {
 				orderedId = skiersYs[i].Key;
-				data = NetworkCenter.Instance.GetPlayerData((uint)orderedId); // TODO: what if not networked
-				textItem.enabled = data != null;
+				entryString = GetSkierLeaderboardName(i);
+				textItem.enabled = entryString != null;
 				if (textItem.enabled){
-					entryString = data.playerName;
-					if (skierFinishTimeStrings[orderedId] != null) {
-						entryString = skierFinishTimeStrings[orderedId] + " - " + entryString;
-					}else if (skiersYs[i].Value <= -WorldObjects.finalGoalDistance) {
+					if (finishedSkiers[i] == 0 && skiersYs[i].Value <= -WorldObjects.finalGoalDistance) {
 						int frameNum = (int) Mathf.Max((int)StateManager.state.Keyframe - (int)WorldController.framesToStart, 0.0f);
 						float currentTime = StateManager.Instance.UpdateRate * frameNum;
-						skierFinishTimeStrings[orderedId] = ClockCounter.FloatToTime(currentTime, "#0:00.00");
-						entryString = skierFinishTimeStrings[orderedId] + " - " + entryString;
-					}else{
-						entryString = position + ". " + entryString;
+						entryString = skiersNames[i] = ClockCounter.FloatToTime(currentTime, "#0:00.00") + " - " + skiersNames[i];
+						finishedSkiers[i] = orderedId + 1;
 					}
+					entryString = position + ". " + entryString;
 					textItem.text = entryString;
 					textItem.color = orderedId == ownPlayerNumber ? Color.yellow : Color.white;
 					++position;
@@ -288,26 +304,11 @@ public class DebugWorldView:View<WorldModel>{
 								audio[1].PlayOneShot(painClips[painIndex]);
 							}
 
-//							if (skierModel.fallenTimer == 0) {
-//								bool ouchSoundPlaying = audio[0].isPlaying;
-//								for (int k = 3 ; i < 13 ; ++i) {
-//									if (audio[k].isPlaying) {
-//										ouchSoundPlaying = true;
-//										break;
-//									}
-//								}
-//								if (!ouchSoundPlaying){
-//									int painIndex = UnityEngine.Random.Range(0,9);
-//									audio[0].pitch = UnityEngine.Random.Range(0.5f, 1.5f);
-//									audio[0].PlayOneShot(painClips[painIndex]);
-//								}
-//							}
 						}
 					}
 
 				}
 
-				//tankViews[i].transform.RotateAround(new Vector3(0.5f, 0.5f, 0.0f), Vector3.forward, 0.4f);
 			}
 		}
 	}
@@ -323,7 +324,21 @@ public class DebugWorldView:View<WorldModel>{
 	}
 	
 	
-	
+
+	public void SwitchPlayers(int oldPlayerId, int newPlayerId = 0){
+		// game object
+		GameObject tmpView = skierViews[oldPlayerId];
+		skierViews[oldPlayerId] = skierViews[newPlayerId];
+		skierViews[newPlayerId] = tmpView;
+		// leaderboard
+		string tmpName = skiersNames[oldPlayerId];
+		skiersNames[oldPlayerId] = skiersNames[newPlayerId];
+		skiersNames[newPlayerId] = tmpName;
+		int tmpFinished = finishedSkiers[oldPlayerId];
+		finishedSkiers[oldPlayerId] = finishedSkiers[newPlayerId];
+		finishedSkiers[newPlayerId] = tmpFinished;
+	}
+
 	
 	
 	#region Views Creation
