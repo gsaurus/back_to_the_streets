@@ -181,9 +181,9 @@ public class WorldObjects{
 	static FixedFloat minDistanceAhead = 80;
 	// every 50 units, resort the list
 	static FixedFloat controlRange = 1.0f;
-	static FixedFloat maxDifficultyDistance = 650;
-	static FixedFloat initialCleanupDistance = 750;
-	public static FixedFloat finalGoalDistance = 800;
+	static FixedFloat maxDifficultyDistance = 600;
+	static FixedFloat initialCleanupDistance = 675;
+	public static FixedFloat finalGoalDistance = 700;
 
 	static List<int> yList = new List<int>(100);
 	static Dictionary<int, List<WorldObject>> objectsByY = new Dictionary<int, List<WorldObject>>(100);
