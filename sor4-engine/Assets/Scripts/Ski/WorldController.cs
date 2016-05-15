@@ -79,14 +79,15 @@ public class WorldController:Controller<WorldModel>{
 			// Create characters for new players
 			int playerPosition = StateManager.Instance.IsNetworked ? -1 : UnityEngine.Random.Range (0, allPlayers.Count);
 			FixedFloat playerX = 0;
+			FixedFloat distanceBetweenPlayers = 2.2f;
 			foreach (uint playerId in allPlayers) {
 				if (model.skiers [playerId] == null) {
 					Model inputModel = new PlayerInputModel (playerId);
 					ModelReference inputModelRef = StateManager.state.AddModel (inputModel);
-					playerX = playerId * 1.5f;
+					playerX = (int)playerId * distanceBetweenPlayers;
 					if (playerPosition >= 0) {
 						if (playerId == 0) {
-							playerX = playerPosition * 1.5f;
+							playerX = playerPosition * distanceBetweenPlayers;
 						} else if (playerId == playerPosition) {
 							playerX = 0;
 						}
@@ -177,6 +178,10 @@ public class WorldController:Controller<WorldModel>{
 						else if (!StateManager.Instance.IsNetworked && skierId > 0) {
 							FixedFloat botTargetAxis = WorldObjects.GetTargetAxisForBot(world, skier);
 							UpdateSkierDirectionBasedOnInput(skier, botTargetAxis);
+							if (skier.y > world.skiers[0].y + 3.5) {
+								skier.velX *= 1.02f;
+								skier.velY *= 1.02f;
+							}
 						}
 					}
 				}
@@ -187,8 +192,10 @@ public class WorldController:Controller<WorldModel>{
 				UpdateSkierPosition(skier);
 
 				// check collisions
-				WorldObjects.HandleCollisionWithWorld(world, skier);
-				WorldObjects.HandleCollisionWithOtherSkiers(world, skier);
+				if (StateManager.Instance.IsNetworked || skierId == 0 || skier.y < world.skiers [0].y + 4) {
+					WorldObjects.HandleCollisionWithWorld(world, skier);
+					WorldObjects.HandleCollisionWithOtherSkiers(world, skier);
+				}
 
 				if (crossedGoal && skierId == ownPlayerNumber && !alreadyCrossedGoal) {
 					alreadyCrossedGoal = true;
