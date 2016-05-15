@@ -257,6 +257,9 @@ public class WorldObjects{
 		nextTrackY = 0;
 		nextFlagIsRight = false;
 		nextFlagDistance = 0;
+		if (goalObj != null) {
+			goalObj.transform.position = new Vector3(999, 999, 999);
+		}
 	}
 
 
@@ -589,7 +592,7 @@ public class WorldObjects{
 		if (rnd == null){
 			uint seed = StateManager.state.Random.NextUnsignedInt();
 			rnd = new SimpleRandomGenerator(seed);
-			switch(StateManager.state.Random.NextInt(0,2)){
+			switch(StateManager.state.Random.NextInt(0,1)){
 				case 0:{
 					ApplyCleanTrackSetup();
 					break;

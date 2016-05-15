@@ -20,15 +20,15 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 
 	// waiting time for more players, in seconds -- server
-	private static float minWaitingTimeInOnline = 0.1f; //12.0f;
-	private static float maxWaitingTimeInOnline = 0.1f; //17.0f;
+	private static float minWaitingTimeInOnline = 12.0f;
+	private static float maxWaitingTimeInOnline = 17.0f;
 	// waiting time for more players, in seconds -- client
 	private static float maxWaitingTimeClient = 19.0f;
 	// On offline mode, don't wait that long
 	private static float minWaitingTimeInOffline = 2.5f;
 	private static float maxWaitingTimeInOffline = 5.0f;
 
-	private static float hostsDiscoveryTimeout = 0.1f; //2.25f;
+	private static float hostsDiscoveryTimeout = 2.25f;
 
 
 	public GameObject background;
