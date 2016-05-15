@@ -34,6 +34,10 @@ public class DebugWorldView:View<WorldModel>{
 	static GameObject arrowsToPointNextFlag;
 
 
+	private static string[] randomNames = {"Vordnys", "Ern", "Ytino", "Tasina", "Age'ad", "Radodel", "Perd", "Est'und", "Ineum", "Tiaough", "Isquat", "Ighttai", "Osyer", "Blichad", "Warbur", "Burray", "Hatont", "Kayuzocu", "Esstai", "Nyight", "Chaine", "Ougherad", "Ghaves", "Umhat", "Estmard", "Perup", "Irt", "Vesmor", "Darech", "Mosir", "Rojaby", "Netad", "Ormath", "Sered", "Hatlor", "Chrould", "Stielt", "Tinradu", "Goum", "Garasden", "Urnard", "Orothi", "Rilgha", "Ingt", "Morjrod", "Vesburdyn", "Say'mosa", "Vynet", "Ryncheer", "Ang'thero", "Tufaku", "Ziaz", "Verorma", "Ennrad", "Shyald", "Rakeng", "Delald", "Tonend", "Cluightiss", "Artler", "Erale", "Umpol", "Oughlves", "Dan'angu", "Ceryk", "Belan", "Devkin", "Ikalo", "Tiarad", "Inaw", "Omentin", "Uiro", "Yhini", "Achdeni", "Yecodu", "Throchether", "Gehox", "Uane", "Rulot", "Ar'gar", "Warool'd", "Hontas", "Darddra", "Rodock", "Tainy", "Vesunt-dyn", "Lyeas", "Thed", "Stayn", "Oldih", "Achest", "Epera", "Nuhayr", "Gaden", "Puredu", "Bantia", "Et'atha", "Ildage", "Enthiss", "Slewor", "Onysu", "Tant", "Den'ori", "Ogara", "Tinikim", "Itackiss", "Reaghech", "Burray", "Eld'dra", "Leend", "Oemi", "Mew", "Ghaorskel", "Hedab", "Yerm", "Serh", "Luxyhi", "Lobyl", "Chrekim", "Lebegy", "Toraro", "Nagala", "Ashoas", "Em'echa", "Looughche", "Kimtai", "Seromy", "Yray", "Tinrodest", "Yrano", "Sayden", "Ychao", "Dian", "Ildomwar", "Shydan", "Lor'old", "Toathina", "Chegh", "Ustald", "Ir'ech", "Ackhate", "Umanshy", "Askela", "Ild'queu", "Ir'buro", "Styanina", "Quehon", "Lytai", "Uskdra", "Engtur", "Ghaengo", "Eorme", "Os'hin'einn", "Laranche", "Nysoki", "Jaythust", "Paementh", "Hiashiss", "Waresturn", "Englye", "Bierald", "Emios", "Vorrak", "Kel'elda", "Moruas", "Sulsh", "Chad", "Kinm", "Ing'est", "Enr", "Tan'tia", "Oughdenves", "Cerranser", "Untris", "Banash", "Imhon", "Kaltia", "Wekavi", "Et'rak", "As'enge", "Ad'inga", "Ray-areld", "Sefoj", "Aughusaya", "Beestnal", "Danrothchehat", "Itzray", "Diem", "Sayl", "Hatrak", "Obure", "Sayrtkin", "Vetare", "Sermit", "Miliy", "Totanwor", "Kim'as", "Leiltmor", "Puser", "Samjard", "Nystund", "Pol'eto", "Sniad", "Jagldbur", "Dadraend", "Nighssul", "Rilom", "Imril", "Emz", "Hyxoh", "Asskelshy", "Rot", "Ir'lye", "Oacka", "Pereld", "Attor", "Rilat", "Cias", "Mosen", "Burech", "Umque", "Eoldu", "Ildyser", "Dasayen", "Emth", "Uraye", "Kekov", "Necnal", "Seetim", "Keleld", "Rylasa", "Atrak", "Chenal", "Ghaurn", "Per'urn", "Biph", "Danbane", "Muramarui", "Yoshisen", "Shirobashi", "Fuku", "Keifuru", "Asayuki", "Mura", "Kitasaka", "Yamaki", "Zakiwa", "Gintaka", "Watafuru", "Kamizawa", "Motomatsu", "Ueshiro", "Uematsu", "Morihara", "Asaue", "Suzushima", "Sakizen", "Toyowa", "Takaki", "Furugin", "Hontoyo", "Kawahana", "Zawaoo", "Toto", "Aki", "Senmarui", "Ichishima", "Kawahira", "Kuchitake", "Ikita", "Harayama", "Fujihashi", "Kuchikei", "Nabenaka", "Fujigin", "Furubashi", "Oosawa", "Shitataka", "Furufuru", "Haruken", "Morishiro", "Totoyo", "Shimataka", "Kisuzu", "Kuromatsu", "Shiroyama", "Marui", "Kuroken", "Nishi", "Wara", "Keiyoshi", "Nakaoo", "Hiramori", "Kitasawa", "Tasuzu", "Ooko", "Bashiao", "Suzuhana", "Aoo", "Toyokin", "Asasen", "Koharu", "Kiwara", "Okawara", "Nota", "Aowata", "Harazaki", "Yamayoshi", "Ooshita", "Kuro", "Dao", "Hoshimiya", "Kinkuro", "Honken", "Nishiyuki", "Zen", "Furutaka", "Akaka", "Nishisaka", "Tahashi", "Kinhara", "Kamiue", "Too", "Omiya", "Yoshisuzu", "Nabemori", "Nishihira", "Sakaoka", "Sensen", "Haruyuki", "Ochi", "Hon", "Haratoyo", "Yamamarui", "Kamifuku", "Oto", "Kawazawa", "Akikuro", "Hanayoshi", "Kin", "Kihashi", "Matsusa", "Haraki", "Kamikawa", "Ichi", "Ken", "Yuki", "Ginkami", "Ginmarui", "Sen", "Okamarui", "Ginyuki", "Uehira", "Fukutaka", "Nishifuku", "Eulasti", "Tyisri", "Aelollo", "Silastical", "Istysti", "Phyalaecal", "Idaria", "Heosristi", "Ilosudru", "Eustydil", "Istysuir", "Ila", "Haelae", "Hailly", "Ririthria", "Reuli", "Seoralria", "Silaeriam", "Aduelis", "Tyaedarin", "Risty", "Inan", "Eulargue", "Pheulae", "Ailillo", "Illynu", "Reolaeru", "Ilasu", "Phastyria", "Saelostiphos", "Thiadallo", "Aesristi", "Eoduenura", "Bliallysti", "Eurithrgue", "Pharithnu", "Pheully", "Haesty", "Rialollo", "Chreola", "Iarithriadil", "Eulaesura", "Athe", "Eoduesuir", "Seosurn", "Tyiduergue", "Asur", "Iarallo", "Phistyriarap", "Ialiria", "Yaloriacal", "Sirinu", "Aina", "Yasurnup", "Iduesum", "Hiadairiara", "Brisur", "Riralp", "Pheuralsu", "Aelora", "Ida", "Yala", "Tyeostyru", "Ithe", "Aellystip", "Aeda", "Tyeulidru", "Kaelanup", "Eoristi", "Saeral", "Eudaillocal", "Astyrin", "Phalaerap", "Yalarin", "Tyeudueria", "Aelidru", "Eulaeria", "Aedairia", "Tyiariria", "Phiadaideu", "Ilaenura", "Pharithstip", "Haisurnu", "Saedaidil", "Rilaphos", "Sweolae", "Adadru", "Phiarinudru", "Anariacal", "Tyaistystim", "Asurriarin", "Iduephos", "Ila", "Ilical", "Aenargue", "Seoral", "Phathestiru", "Aistydil", "Dyathe", "Ithe", "Isrinu", "Illy", "Illyphos", "Laililis", "Ririllo", "Aerin", "Aralra", "Phyaralnura", "Aelly", "Pheoduello", "Aisurllo", "Yadue", "Aerithsti", "Eurithsulis", "Raisurria", "Eusristi", "Anadeu", "Syalo", "Haelasusuir", "Darem", "Vesleri", "Wosam", "Queest", "Tinerr", "Hyer", "Samalda", "Hitor", "Trerod", "Oldsuly", "Rodiw", "Endis", "Estzver", "Oldmosy", "Ancdel", "Broque", "Tanik", "Garnther", "Lar", "Sulsshy", "Trim", "Chight", "Yias", "Umrper", "Ding", "Sydan", "Undiq", "Howar", "Lekel", "Cerare", "Tiusk", "Snosam", "Elmrris", "Ashdeny", "Enest", "Eldurt", "Burisse", "Ormur", "Tasiss", "Achati", "Erint", "Ildic", "Aughing", "Skelkale", "Threkel", "Keler", "Elmcaugh", "Rothquee", "Rakntin", "Raknpol", "Eldlye", "Shishy", "Imow", "Irine", "Yerod", "Elmati", "Worttur", "Quetia", "Tasaph", "Isndan", "Delir", "Quacdel", "Elmken", "Banard", "Eldyw", "Tonlyeo", "Omsenth", "Estald", "Duhon", "Warer", "Phidra", "Gashy", "Lilye", "Acham", "Clyaw", "Ackelde", "Anemo", "Turirr", "Rothenth", "Ildisi", "Hinyunt", "Dariw", "Ranhsam", "Gion", "Thahin", "Wier", "Rothaughi", "Garsay", "Danaugh", "Itor", "Saytis", "Mosann", "Marak", "Oughlkel", "Bantino", "Erumo", "Burdel", "Lloden", "Vesrisa", "Bashy", "Rynlgar", "Aldvory", "Lerrayu", "Emoldu", "Noach", "Echat", "Aughril", "Undaq", "Soum", "Liaw", "Tiaoh", "Asytas", "Delen", "Inedyn", "Belerd", "Elmcmos", "Therkray", "Adup", "Rodrril", "Grorg", "Glulfpolph", "Noo", "Bormhead", "Thooznit", "Bridiotthimble", "Moofthong", "Hulf", "Klorklump", "Fumphong", "Clokforon", "Ponkum", "Boogum", "Glidiot", "Fum", "Grormface", "Wuzz", "Gonkdip", "Dunuzz", "Kloof", "Wubpoof", "Kungjug", "Gumborm", "Bok", "Blorm", "Numb", "Polphcloof", "Guzzhoo", "Klormkoron", "Hidiotult", "Fub", "Korkgoog", "Dorgface", "Fumphknuckle", "Boofthump", "Domphfomph", "Dulfclown", "Glung", "Goronball", "Multthimble", "Jolph", "Boofoot", "Thulf", "Dumb", "Gub", "Fomphjoo", "Flidiot", "Punph", "Flidiot", "Doobgridiot", "Thoo", "Gumloaf", "Froronbrult", "Boobum", "Form", "Poltung", "Frongmong", "Koozfinger", "Bruzz", "Funtgrunph", "Clumphtwit", "Glungmolph", "Klunbhead", "Poork", "Gelchelch", "Mormoof", "Folphdelch", "Bog", "Formghuck", "Wuckclolph", "Clumbfong", "Nungbone", "Wong", "Mug", "Mobjuck", "Folph", "Pub", "Gug", "Flonk", "Blugface", "Num", "Form", "Blog", "Gronkgorm", "Noobghun", "Glelchwolt", "Guckgun", "Gumphnum", "Blump", "Gunphnolph", "Flooffrorg", "Nomph", "Blult", "Guck", "Pum", "Bulfjoof", "Gorongidiot", "Klulf", "Borgnoog", "Glolph", "Fook", "Golt", "Dokflork", "Worgolph", "Pumphgunb", "Grolph", "Clelchfidiot", "Kuntloaf", "Pooftwit", "Puzzwipe", "Munboog", "Pogorg", "Nugguzz", "Fongskull", "Gunph", "Pulf", "Pookwomph", "Woogforon", "Ghog", "Doofpuff", "Airnumb", "Wadwipefoot", "Knocksneeze", "Clodgoof", "Twerpsnark", "Ballpuff", "Dooffacetwit", "Lumpmeat", "Twerpfinger", "Fumblethimble", "Facefumbledoof", "Wipegoof", "Clodfacenumb", "Wadtwerp", "Thimblehead", "Knockpuff", "Airmuckface", "Lumpair", "Headgrumble", "Cheesesnark", "Facehead", "Clodtwit", "Bonewad", "Knockgoof", "Faceclot", "Twerpfumble", "Thimbleloaf", "Clodtwerp", "Bonedork", "Lunkface", "Cornwipetwerp", "Faceknocker", "Dorkbump", "Wipeknock", "Doltcheese", "Nitmunch", "Knockfoot", "Cheeseskullmuck", "Dipdoof", "Pinpin", "Ankledork", "Goofnit", "Puffball", "Doofankle", "Ankledumb", "Thimbleclodmunch", "Anklepin", "Cornair", "Goofdoofdip", "Thimbledorkbumble", "Knockerfinger", "Pinknuckle", "Sneezeairmuck", "Ankletwit", "Knucklehead", "Skullknocker", "Facetwit", "Wadbump", "Clotbeef", "Bumplump", "Munchbumair", "Doltgrumbleair", "Knuckleknock", "Pinlunk", "Bumpclot", "Munchdoof", "Cheesetwit", "Anklegoof", "Lumplump", "Wipeface", "Twerpgoof", "Twerpbeef", "Clotwimp", "Lunkdork", "Lumpdip", "Lunknit", "Cheeseclod", "Sneezeclot", "Clodwipe", "Fumbleface", "Puffankle", "Thimblethimble", "Bumppuff", "Nitknocker", "Corndumb", "Grumbleclown", "Clotfoot", "Meathead", "Fingerair", "Clodknocker", "Footnumb", "Goofthimble", "Fingerclod", "Clotgoof", "Pinmuckloaf", "Beefbumble", "Wadfumble", "Footballbone", "Ballmunchdumb", "Fingerwipe", "Cheeseair", "Twerpfingerball", "Ankleskullpin", "Snarkfumble", "Headgrumbleclot", "Wimpthimble", "Faceclot", "Sneezedip", "Dippin", "Knockwad", "Fingergoof", "Sneezefoot", "Skullmeat", "Nitdipwad", "Munchface", "Bumbumble", "Knockwimpdip", "Knucklegrumble", "Kalst", "Otone", "Snerr", "Lleent", "Epero", "Sulk", "Oemo", "Yees", "Zoib", "Itiay", "Yiar", "Roir", "Undi", "Uskrr", "Isv", "Raell", "Hind", "Pet", "Belf", "Awd", "Atine", "Ransh", "Ehiny", "Lyey", "Zhaus", "Etheri", "Arode", "Adt", "Bosh", "Thrert", "Breuv", "Athera", "Torl", "Yryna", "Voz", "Chent", "Hond", "Idrau", "Teup", "Smiph", "Yaen", "Echt", "Daess", "Otasa", "Aesti", "Miert", "Urayo", "Eendo", "Chelt", "Threr", "Throy", "Ueno", "Emoro", "Rodr", "Agell", "Sloond", "Garn", "Strayr", "Rael", "Teyrr", "Orz", "Ealei", "Ehiny", "Etrt", "Heinn", "Niel", "Lerr", "Oatho", "Iomy", "Verc", "Cream", "Ormll", "Reul", "Usayi", "Ighay", "Anr", "Scheus", "Fac", "Ethery", "Ardd", "Rayr", "Sulst", "Straes", "Umoso", "Teh", "Riath", "Gand", "Choiss", "Rhoes", "Zayth", "Slois", "Steald", "Ytori", "Mogh", "Eiai", "Photh", "Theenn", "Itona", "Oomo", "Essk", "Vesk", "Naess", "Tony", "Aleld", "Agek", "Kaw", "Main", "Hinh", "Oldl", "Perv", "Oene", "Reyt", "Meis", "Zhos", "Polrr", "Awari", "Waind", "Saim", "Uraye"};
+
+
+
 	// local copy of last state's map, to identify map changes
 	int[] lastKnownMap;
 
@@ -126,13 +130,15 @@ public class DebugWorldView:View<WorldModel>{
 				if (skierId == 0) {
 					skiersNames[skierId] = GuiMenus.Instance.nickname;
 				}else {
-					int rnd = UnityEngine.Random.Range (0, 6);
+					int rnd = UnityEngine.Random.Range (0, 15);
 					if (rnd == 2) {
 						skiersNames [skierId] = GuiMenus.defaultNickname + UnityEngine.Random.Range (0, 999999);
 					} else if (rnd < 2) {
 						skiersNames [skierId] = GuiMenus.defaultNickname + UnityEngine.Random.Range (0, 99999999);
-					} else {
+					} else if (rnd < 6){
 						skiersNames [skierId] = GuiMenus.defaultNickname + UnityEngine.Random.Range (0, 129999999);
+					}else {
+						skiersNames[skierId] = randomNames[UnityEngine.Random.Range(0, randomNames.Length)];
 					}
 				}
 			}
@@ -159,6 +165,7 @@ public class DebugWorldView:View<WorldModel>{
 		int ownPlayerNumber = StateManager.Instance.IsNetworked ? NetworkCenter.Instance.GetPlayerNumber() : 0;
 		int orderedId;
 		int position = 1;
+		int winnerFrameNum = -1;
 		for (int i = 0 ; i < WorldModel.MaxPlayers ; ++i){
 			textItem = leadTransf.GetChild(i).gameObject.GetComponent<UnityEngine.UI.Text>();
 			textItem.enabled = i < skiersYs.Count() && skiersYs[i].Value != 999;
@@ -173,18 +180,35 @@ public class DebugWorldView:View<WorldModel>{
 					}
 					if (finishedSkiers[orderedId] != 0) {
 						int frameNum = finishedSkiers[orderedId];
-						float currentTime = StateManager.Instance.UpdateRate * frameNum;
-						entryString = ClockCounter.FloatToTime(currentTime, "#0:00.00") + " - " + skiersNames[orderedId];
+						float currentTime;
+						if (winnerFrameNum > 0) {
+							currentTime = StateManager.Instance.UpdateRate * (frameNum - winnerFrameNum);
+							entryString = "+" + ClockCounter.FloatToTime(currentTime, "#0:00") + " - " + skiersNames [orderedId];
+						} else {
+							currentTime = StateManager.Instance.UpdateRate * frameNum;
+							entryString = ClockCounter.FloatToTime (currentTime, "#0:00.00") + " - " + skiersNames [orderedId];
+							winnerFrameNum = frameNum;
+						}
 					} else {
 						entryString = position + ". " + entryString;
 					}
 					textItem.text = entryString;
 					textItem.color = orderedId == ownPlayerNumber ? Color.yellow : Color.white;
+
+					if (orderedId == ownPlayerNumber) {
+						GuiMenus.Instance.playerPosition = position;
+					}
+
 					++position;
 				}
 			}
 		}
 		leaderboard.SetActive(position > 1);
+
+		string winnerName = skiersNames[skiersYs[0].Key];
+		if (winnerName != null) {
+			GuiMenus.Instance.loserObj.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = winnerName + " won";
+		}
 
 	}
 
@@ -357,20 +381,23 @@ public class DebugWorldView:View<WorldModel>{
 	
 
 	private GameObject CreateSkier(bool own){
-		Color color;
-		if (own){
-			color = new Color(0.0f, 0.0f, 1.0f, 1.0f);
-		}else {
-			color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
-		}
-		GameObject mainObj = GameObject.Instantiate(skierPrefab);
 		
-		//		MeshRenderer renderer = mainObj.GetComponent<MeshRenderer>();
-//		renderer.material.color = color;
+		GameObject mainObj = GameObject.Instantiate(skierPrefab, new Vector3(0,0,10), Quaternion.identity) as GameObject;
 
 		if (own) {
-			mainObj.AddComponent<CameraTracker>();
+			mainObj.AddComponent<CameraTracker> ();
 		}
+
+//		Color color;
+//		if (own){
+//			color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+//		}else {
+//			color = new Color(UnityEngine.Random.Range(0.2f, 1.0f), UnityEngine.Random.Range(0.2f, 1.0f), UnityEngine.Random.Range(0.25f, 1.0f), 1.0f);
+//		}
+//		SkinnedMeshRenderer[] renderers = mainObj.GetComponentsInChildren<SkinnedMeshRenderer>();
+//		foreach(SkinnedMeshRenderer renderer in renderers) {
+//			renderer.material.color = color;
+//		}
 
 		return mainObj;
 	}
@@ -485,6 +512,7 @@ public class DebugWorldView:View<WorldModel>{
 		GameObject leaderboard = GuiMenus.Instance.leaderboardObject;
 		leaderboard.SetActive(false);
 	}
+
 
 	
 }

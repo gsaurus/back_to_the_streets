@@ -20,15 +20,15 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 
 	// waiting time for more players, in seconds -- server
-	private static float minWaitingTimeInOnline = 0.1f; //12.0f;
-	private static float maxWaitingTimeInOnline = 0.1f; //18.0f;
+	private static float minWaitingTimeInOnline = 12.0f;
+	private static float maxWaitingTimeInOnline = 17.0f;
 	// waiting time for more players, in seconds -- client
-	private static float maxWaitingTimeClient = 20.0f;
+	private static float maxWaitingTimeClient = 19.0f;
 	// On offline mode, don't wait that long
 	private static float minWaitingTimeInOffline = 2.5f;
 	private static float maxWaitingTimeInOffline = 5.0f;
 
-	private static float hostsDiscoveryTimeout = 0.1f; //2.25f;
+	private static float hostsDiscoveryTimeout = 2.25f;
 
 
 	public GameObject background;
@@ -53,6 +53,17 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 	private bool isMarkedToRestart;
 
+	private bool isMusicOn = true;
+
+	public UnityEngine.UI.Toggle musicToggle;
+
+
+	public GameObject winnerObj;
+	public GameObject secondObj;
+	public GameObject loserObj;
+
+	public int playerPosition;
+
 
 	public void OnNicknameChange(string newNickname){
 		nickname = newNickname;
@@ -61,6 +72,13 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 	public void ToggleVolume(bool value){
 		AudioListener.volume = value ? 1 : 0;
+		bool oldIsMusicOn = isMusicOn;
+		musicToggle.isOn = isMusicOn && value;
+		isMusicOn = oldIsMusicOn;
+	}
+
+	public void ToggleMusic(bool value){
+		isMusicOn = value;
 	}
 
 
@@ -202,6 +220,25 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 			
 	}
 
+
+
+	private void UpdateMusic(){
+		AudioSource[] audioSources = GetComponents<AudioSource>();
+		if (audioSources == null || audioSources.Length < 2)
+			return;
+		audioSources[0].enabled = audioSources[1].enabled = isMusicOn;
+		if (!isMusicOn) {
+			return;
+		}
+
+		bool isInGame = menuState == MenuState.inGame;
+		float targetMenuVolume = isInGame ? 0 : 0.75f;
+		float targetGameVolume = isInGame ? 0.6f : 0;
+		audioSources[0].volume = Mathf.Lerp (audioSources[0].volume, targetMenuVolume, 0.005f);
+		audioSources[1].volume = Mathf.Lerp (audioSources[1].volume, targetGameVolume, 0.005f);
+	}
+
+
 	void Update(){
 
 		if (menuState == MenuState.matchmaking) {
@@ -274,9 +311,11 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 		if (isMarkedToRestart) {
 			isMarkedToRestart = false;
-			StartCoroutine(RestartGameAfterSeconds(6.0f));
+			StartCoroutine(RestartGameAfterSeconds(5.0f));
 		}
 
+		UpdateMusic();
+	
 	}
 
 
@@ -313,6 +352,9 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 	void FadeToState(MenuState newState){
 		if (menuState == newState) return;
+		winnerObj.SetActive(false);
+		secondObj.SetActive(false);
+		loserObj.SetActive(false);
 		switch (newState) {
 			case MenuState.inGame:{
 				StartCoroutine(FadeCanvasTo(background, 0.0f, canvasFadeTime));
@@ -401,7 +443,14 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 
 
-	public void MarkToRestart(){
+	public void GameOver(){
+
+		switch(playerPosition) {
+			case 1: winnerObj.SetActive (true); break;
+			case 2: secondObj.SetActive(true); break;
+			default: loserObj.SetActive(true); break;
+		}
+
 		isMarkedToRestart = true;
 		enabled = true;
 	}

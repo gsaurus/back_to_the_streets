@@ -81,7 +81,7 @@ public class WorldController:Controller<WorldModel>{
 			FixedFloat playerX = 0;
 			FixedFloat distanceBetweenPlayers = 2.2f;
 			foreach (uint playerId in allPlayers) {
-				if (model.skiers [playerId] == null) {
+				if (model.skiers[playerId] == null) {
 					Model inputModel = new PlayerInputModel (playerId);
 					ModelReference inputModelRef = StateManager.state.AddModel (inputModel);
 					playerX = (int)playerId * distanceBetweenPlayers;
@@ -102,10 +102,12 @@ public class WorldController:Controller<WorldModel>{
 		// Remove characters for inactive players
 		if (StateManager.Instance.IsNetworked) {
 			allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers();
-			for (int i = 0; i < model.skiers.Length; ++i) {
-				if (!allPlayers.Exists (x => x == i)) {
-					// Doesn't exist anymore, remove
-					model.skiers[i] = null;
+			if (allPlayers.Count > 1) {
+				for (int i = 0; i < model.skiers.Length; ++i) {
+					if (!allPlayers.Exists (x => x == i)) {
+						// Doesn't exist anymore, remove
+						model.skiers [i] = null;
+					}
 				}
 			}
 		}
@@ -192,7 +194,7 @@ public class WorldController:Controller<WorldModel>{
 				UpdateSkierPosition(skier);
 
 				// check collisions
-				if (StateManager.Instance.IsNetworked || skierId == 0 || skier.y < world.skiers [0].y + 4) {
+				if (StateManager.Instance.IsNetworked || skierId == 0 || skier.y < world.skiers[0].y + 4) {
 					WorldObjects.HandleCollisionWithWorld(world, skier);
 					WorldObjects.HandleCollisionWithOtherSkiers(world, skier);
 				}
@@ -200,7 +202,7 @@ public class WorldController:Controller<WorldModel>{
 				if (crossedGoal && skierId == ownPlayerNumber && !alreadyCrossedGoal) {
 					alreadyCrossedGoal = true;
 					ClockCounter.Instance.Stop();
-					GuiMenus.Instance.MarkToRestart();
+					GuiMenus.Instance.GameOver();
 				}
 			}
 		}

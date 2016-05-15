@@ -21,7 +21,7 @@ public class ClockCounter : SingletonMonoBehaviour<ClockCounter> {
 			int frameNum = (int) Mathf.Max((int)StateManager.state.Keyframe - (int)WorldController.framesToStart, 0.0f);
 			float currentTime = StateManager.Instance.UpdateRate * frameNum;
 			UnityEngine.UI.Text text = GetComponent<UnityEngine.UI.Text>();
-			text.text = FloatToTime(currentTime, "00:00.00");
+			text.text = FloatToTime(currentTime, "0:00.00");
 		}
 	}
 
@@ -50,8 +50,8 @@ public class ClockCounter : SingletonMonoBehaviour<ClockCounter> {
                      Mathf.Floor((toConvert*1000) % 1000));//miliseconds
              case "#0:00":
                  return string.Format("{0:#0}:{1:00}",
-                     Mathf.Floor(toConvert / 60),//minutes
-                     Mathf.Floor(toConvert) % 60);//seconds
+					Mathf.Floor(toConvert) % 60,//seconds
+					Mathf.Floor((toConvert*10) % 10));//miliseconds
              case "#00:00":
                  return string.Format("{0:#00}:{1:00}", 
                      Mathf.Floor(toConvert / 60),//minutes
