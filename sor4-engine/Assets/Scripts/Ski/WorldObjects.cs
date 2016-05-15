@@ -170,20 +170,60 @@ public class WorldObject
 
 public class WorldObjects{
 
+	static void ApplyNormalSetup(){
+		maxHorizontalDistance = 20;
+
+		maxDifficultyDistance = 600;
+		initialCleanupDistance = 675;
+		finalGoalDistance = 700;
+		minFlagDistance = 20;
+		maxFlagDistance = 40;
+		randomTrackVariation = 30;
+		minTrackYGeneration = 20;
+		maxTrackYGeneration = 60;
+		minFlagHorizontalDist = 0.1f;
+		maxFlagHorizontalDist = 0.6f;
+	}
+
+
+	static void ApplyCleanTrackSetup(){
+		maxHorizontalDistance = 30;
+		maxDifficultyDistance = -1;
+		initialCleanupDistance = -1;
+		finalGoalDistance = 350;
+		minFlagDistance = 5;
+		maxFlagDistance = 20;
+		randomTrackVariation = 1;
+		minTrackYGeneration = 2;
+		maxTrackYGeneration = 6;
+		minFlagHorizontalDist = -0.05f;
+		maxFlagHorizontalDist = 0.2f;
+	}
+
+
 	// 
 	static SimpleRandomGenerator rnd = null;
 
 	public static uint collisionFallenTime = 45;
 	public static uint frozenTime = 150;
 
-	static FixedFloat maxHorizontalDistance = 20;
 	static FixedFloat maxDistanceBehind = 10;
 	static FixedFloat minDistanceAhead = 80;
 	// every 50 units, resort the list
 	static FixedFloat controlRange = 1.0f;
+
+	static FixedFloat maxHorizontalDistance = 20;
 	static FixedFloat maxDifficultyDistance = 600;
 	static FixedFloat initialCleanupDistance = 675;
 	public static FixedFloat finalGoalDistance = 700;
+
+	static FixedFloat minFlagDistance = 20;
+	static FixedFloat maxFlagDistance = 40;
+	static FixedFloat randomTrackVariation = 30;
+	static FixedFloat minTrackYGeneration = 20;
+	static FixedFloat maxTrackYGeneration = 60;
+	static FixedFloat minFlagHorizontalDist = 0.1f;
+	static FixedFloat maxFlagHorizontalDist = 0.6f;
 
 	static List<int> yList = new List<int>(100);
 	static Dictionary<int, List<WorldObject>> objectsByY = new Dictionary<int, List<WorldObject>>(100);
@@ -318,7 +358,7 @@ public class WorldObjects{
 		
 			if (otherSkier != null && otherSkier != skier && otherSkier.frozenTimer == 0){
 				if ((int)skier.y == (int)otherSkier.y){
-					if (FixedFloat.Abs(skier.x - otherSkier.x) < 0.25f){
+					if (FixedFloat.Abs(skier.x - otherSkier.x) < 0.2f){
 						skier.fallenTimer = collisionFallenTime;
 						skier.velX = skier.x < otherSkier.x ? -1.2 : 1.2;
 						skier.velY = 0.4f;
@@ -523,8 +563,8 @@ public class WorldObjects{
 
 
 	static FixedFloat GetNextFlagY(){
-		FixedFloat nextFlagY = nextFlagDistance - rnd.NextFloat(20, 40);
-		if (nextFlagY < -finalGoalDistance + 40 && nextFlagY > -finalGoalDistance) {
+		FixedFloat nextFlagY = nextFlagDistance - rnd.NextFloat(minFlagDistance, maxFlagDistance);
+		if (nextFlagY < -finalGoalDistance + maxFlagDistance && nextFlagY > -finalGoalDistance) {
 			nextFlagY = -finalGoalDistance;
 		}
 		return nextFlagY;
@@ -533,6 +573,7 @@ public class WorldObjects{
 
 
 	static FixedFloat GetDifficultySetting(FixedFloat nextY){
+		if (maxDifficultyDistance == -1) return FixedFloat.One;
 		if (nextY > -maxDifficultyDistance) {
 			return -nextY / maxDifficultyDistance;
 		} else if (nextY < -initialCleanupDistance && nextY > -finalGoalDistance) {
@@ -548,6 +589,16 @@ public class WorldObjects{
 		if (rnd == null){
 			uint seed = StateManager.state.Random.NextUnsignedInt();
 			rnd = new SimpleRandomGenerator(seed);
+			switch(StateManager.state.Random.NextInt(0,2)){
+				case 0:{
+					ApplyCleanTrackSetup();
+					break;
+				}
+				default:{
+					ApplyNormalSetup();
+					break;
+				}
+			}
 			nextFlagIsRight = rnd.NextUnsignedInt() % 2 == 0;
 			nextFlagDistance = GetNextFlagY();
 		}
@@ -600,8 +651,8 @@ public class WorldObjects{
 			while (nextY < nextTrackY){
 				lastTrackY = nextY;
 				lastTrackX = nextTrackX;
-				nextTrackX = nextTrackX + rnd.NextFloat(-30, 30);
-				nextTrackY = nextY - rnd.NextFloat(20, 60);
+				nextTrackX = nextTrackX + rnd.NextFloat(-randomTrackVariation, randomTrackVariation);
+				nextTrackY = nextY - rnd.NextFloat(minTrackYGeneration, maxTrackYGeneration);
 			}
 
 			int nextIntY = (int)nextY;
@@ -619,7 +670,7 @@ public class WorldObjects{
 
 			centerX = GetCenterXForY(nextY, lastTrackY, nextTrackY, lastTrackX, nextTrackX);
 			if (nextObjectIsFlag){
-				randomX = rnd.NextFloat(maxHorizontalDistance* 0.1f, maxHorizontalDistance * 0.6f);
+				randomX = rnd.NextFloat(maxHorizontalDistance* minFlagHorizontalDist, maxHorizontalDistance * maxFlagHorizontalDist);
 				randomX = centerX + (nextFlagIsRight ? randomX : -randomX);
 				WorldObject flagObj = new WorldObject(nextFlagIsRight ? -2 : -1, randomX, nextY, nextFlagIsRight);
 				newObjects.Add(flagObj);
@@ -660,11 +711,15 @@ public class WorldObjects{
 		FixedFloat randomT = rnd.NextFloat(0, 1);
 
 		FixedFloat difficultySetting = GetDifficultySetting(nextY);
-		if (difficultySetting < 0.5) {
-			randomT *= randomT;
-		}
-		if (rnd.NextFloat(0, 1) < difficultySetting + 0.15f) {
-			randomT *= randomT;
+		if (maxDifficultyDistance == -1) {
+			randomT = randomT * randomT * randomT * randomT;
+		} else {
+			if (difficultySetting < 0.5) {
+				randomT *= randomT;
+			}
+			if (rnd.NextFloat (0, 1) < difficultySetting + 0.15f) {
+				randomT *= randomT;
+			}
 		}
 
 		randomT = 1.05f - randomT;
