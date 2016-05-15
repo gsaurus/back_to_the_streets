@@ -126,7 +126,14 @@ public class DebugWorldView:View<WorldModel>{
 				if (skierId == 0) {
 					skiersNames[skierId] = GuiMenus.Instance.nickname;
 				}else {
-					skiersNames[skierId] = GuiMenus.defaultNickname + UnityEngine.Random.Range(0, int.MaxValue);
+					int rnd = UnityEngine.Random.Range (0, 6);
+					if (rnd == 2) {
+						skiersNames [skierId] = GuiMenus.defaultNickname + UnityEngine.Random.Range (0, 999999);
+					} else if (rnd < 2) {
+						skiersNames [skierId] = GuiMenus.defaultNickname + UnityEngine.Random.Range (0, 99999999);
+					} else {
+						skiersNames [skierId] = GuiMenus.defaultNickname + UnityEngine.Random.Range (0, 129999999);
+					}
 				}
 			}
 		}
@@ -474,6 +481,9 @@ public class DebugWorldView:View<WorldModel>{
 				GameObject.Destroy(skierView);
 			}
 		}
+
+		GameObject leaderboard = GuiMenus.Instance.leaderboardObject;
+		leaderboard.SetActive(false);
 	}
 
 	

@@ -20,8 +20,8 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 
 	// waiting time for more players, in seconds -- server
-	private static float minWaitingTimeInOnline = 12.0f;
-	private static float maxWaitingTimeInOnline = 18.0f;
+	private static float minWaitingTimeInOnline = 1.0f; //12.0f;
+	private static float maxWaitingTimeInOnline = 1.0f; //18.0f;
 	// waiting time for more players, in seconds -- client
 	private static float maxWaitingTimeClient = 20.0f;
 	// On offline mode, don't wait that long
@@ -77,7 +77,7 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 	public void StartMatchmaking(){
 		// Setup player data
 		if (string.IsNullOrEmpty(nickname)) {
-			nickname = defaultNickname + UnityEngine.Random.Range(0, int.MaxValue);
+			nickname = defaultNickname + UnityEngine.Random.Range(0, 129999999);
 		}
 		SetupPlayerData();
 

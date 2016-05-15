@@ -174,6 +174,10 @@ public class WorldController:Controller<WorldModel>{
 							// reversed cose camera is reversed too
 							UpdateSkierDirectionBasedOnInput(skier, -inputModel.axis);
 						}
+						else if (!StateManager.Instance.IsNetworked && skierId > 0) {
+							FixedFloat botTargetAxis = WorldObjects.GetTargetAxisForBot(world, skier);
+							UpdateSkierDirectionBasedOnInput(skier, botTargetAxis);
+						}
 					}
 				}
 

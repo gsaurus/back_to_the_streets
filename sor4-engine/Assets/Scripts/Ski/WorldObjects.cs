@@ -331,6 +331,99 @@ public class WorldObjects{
 	}
 
 
+
+	private static FixedVector3 NextTargetFlagForBot(SkierModel skier){
+		// Find next flag
+		List<WorldObject> objects;
+		for (int y = (int)skier.y - 1; y >= -finalGoalDistance - 2; --y) {
+			if (objectsByY.TryGetValue ((int)y, out objects)) {
+				foreach (WorldObject obj in objects) {
+					if (obj.type < 0) {
+						return new FixedVector3(obj.type == -2 ? obj.x2 : obj.x1 , obj.y, 0);
+					}
+				}
+			}
+		}
+		return FixedVector3.Zero;
+	}
+
+	private static void UpdateTargetAngleBasedOnObstacles(SkierModel skier, FixedFloat targetX, int targetY, ref FixedFloat targetAngle){
+		List<WorldObject> objects;
+		FixedFloat objX = 0;
+		FixedFloat deltaX;
+		FixedFloat deltaY;
+		FixedFloat extraAngle;
+		FixedFloat extraX = 1.5f; //StateManager.state.Random.NextFloat(1.5f, 3.0f);
+		bool right;
+		FixedFloat closestDeltaX;
+		WorldObject closestObject;
+		//bool right = targetAngle < 0;
+		for (int y = (int)skier.y; y >= targetY; --y) {
+			if (objectsByY.TryGetValue(y, out objects)) {
+				closestObject = null;
+				closestDeltaX = 9999;
+				foreach (WorldObject obj in objects) {
+					if (obj.type >= 0) {
+						objX = (obj.x1 + obj.x2) * 0.5f;
+						deltaX = skier.x - objX; //(right ? obj.x2 : obj.x1);
+						if (deltaX < closestDeltaX) {
+							closestObject = obj;
+						}
+					}
+				}
+				if (closestObject != null) {
+					deltaX = closestDeltaX;
+					deltaY = skier.y - closestObject.y;
+					if (deltaX > deltaY + 2) continue;
+					if (deltaY <= 0)
+						deltaY = 0.5f; //deltaX < 1 ? 0.01f : 1.0f;
+					extraAngle = 0;
+					if (deltaX != 0) {
+						extraAngle = FixedFloat.HalfPI - FixedFloat.Atan2(deltaY, deltaX);
+					}
+					if (FixedFloat.Abs(extraAngle - targetAngle) < 0.09f / deltaY) {
+						objX = (closestObject.x1 + closestObject.x2) * 0.5f;
+						right = objX < targetX; //extraAngle > targetAngle;
+						deltaX = skier.x - (right ? closestObject.x2 + extraX : closestObject.x1 - extraX);
+						if (deltaY > 1) deltaY-=1;
+						extraAngle = FixedFloat.HalfPI - FixedFloat.Atan2(deltaY, deltaX);
+						targetAngle = extraAngle;
+						return;
+					}
+				}
+			}
+		}
+	}
+
+
+
+	public static FixedFloat GetTargetAxisForBot(WorldModel world, SkierModel skier, bool smart = true){
+		if (skier.fallenTimer > 0 || skier.frozenTimer > 0){
+			return FixedFloat.Zero; // ignore if on the floor
+		}
+		FixedVector3 target = NextTargetFlagForBot(skier);
+		FixedFloat targetAxis;
+		FixedFloat deltaX = skier.x - target.X;
+		FixedFloat deltaY = skier.y - target.Y;
+		FixedFloat targetAngle = 0;
+
+		if (skier.y < -2.0f && skier.velY > -0.25f && FixedFloat.Abs(skier.velX) < 0.4f) {
+			return -deltaX;
+		}
+
+		if (deltaX != 0) {
+			targetAngle = FixedFloat.HalfPI - FixedFloat.Atan2(deltaY, deltaX);
+		}
+
+
+		UpdateTargetAngleBasedOnObstacles(skier, target.X, (int)target.Y, ref targetAngle);
+
+		FixedFloat originalAngle = FixedFloat.HalfPI - FixedFloat.Atan2(-skier.velY, skier.velX);
+		targetAxis = (-targetAngle - originalAngle) * 0.075f;
+		return targetAxis;
+	}
+
+
 	static FixedFloat GetNextFlagY(){
 		FixedFloat nextFlagY = nextFlagDistance - rnd.NextFloat(20, 40);
 		if (nextFlagY < -finalGoalDistance + 40 && nextFlagY > -finalGoalDistance) {
