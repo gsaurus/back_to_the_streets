@@ -187,13 +187,13 @@ public class WorldObjects{
 
 
 	static void ApplyCleanTrackSetup(){
-		maxHorizontalDistance = 30;
+		maxHorizontalDistance = 40;
 		maxDifficultyDistance = -1;
 		initialCleanupDistance = -1;
 		finalGoalDistance = 350;
-		minFlagDistance = 5;
+		minFlagDistance = 7;
 		maxFlagDistance = 20;
-		randomTrackVariation = 1;
+		randomTrackVariation = 5;
 		minTrackYGeneration = 2;
 		maxTrackYGeneration = 6;
 		minFlagHorizontalDist = -0.05f;
@@ -361,12 +361,27 @@ public class WorldObjects{
 		
 			if (otherSkier != null && otherSkier != skier && otherSkier.frozenTimer == 0){
 				if ((int)skier.y == (int)otherSkier.y){
-					if (FixedFloat.Abs(skier.x - otherSkier.x) < 0.2f){
+					FixedFloat deltaX = FixedFloat.Abs(skier.x - otherSkier.x);
+					FixedFloat deltaY = FixedFloat.Abs(skier.y - otherSkier.y);
+					if (deltaX < 0.15f && deltaY < 0.2f) {
 						skier.fallenTimer = collisionFallenTime;
 						skier.velX = skier.x < otherSkier.x ? -1.2 : 1.2;
 						skier.velY = 0.4f;
 						skier.targetVelX = 0;
 						skier.targetVelY = 0;
+					} else if (deltaX < 0.25f && deltaY < 0.35f) {
+						if (skier.x < otherSkier.x) {
+							skier.velX -= 0.8f;
+						} else {
+							skier.velX += 0.8f;
+						}
+						if (deltaY > 0.1f) {
+							if (skier.y < otherSkier.y) {
+								skier.velY -= 0.5f;
+							} else {
+								skier.velY += 0.5f;
+							}
+						}
 					}
 				}
 			}
@@ -576,7 +591,7 @@ public class WorldObjects{
 
 
 	static FixedFloat GetDifficultySetting(FixedFloat nextY){
-		if (maxDifficultyDistance == -1) return FixedFloat.One;
+		if (maxDifficultyDistance == -1) return FixedFloat.Zero;
 		if (nextY > -maxDifficultyDistance) {
 			return -nextY / maxDifficultyDistance;
 		} else if (nextY < -initialCleanupDistance && nextY > -finalGoalDistance) {

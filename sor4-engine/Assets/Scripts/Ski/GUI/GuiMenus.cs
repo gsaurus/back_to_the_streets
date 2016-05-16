@@ -18,17 +18,22 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 	private static float canvasFadeTime = 0.3f;
 	private static float connectionFadeTime = 0.25f;
 
-
 	// waiting time for more players, in seconds -- server
-	private static float minWaitingTimeInOnline = 12.0f;
-	private static float maxWaitingTimeInOnline = 17.0f;
+	private static float minWaitingTimeInOnline = 0.1f;
+	private static float maxWaitingTimeInOnline = 0.1f;
+	private static float hostsDiscoveryTimeout = 0.1f;
+
+//	// waiting time for more players, in seconds -- server
+//	private static float minWaitingTimeInOnline = 12.0f;
+//	private static float maxWaitingTimeInOnline = 17.0f;
+//	private static float hostsDiscoveryTimeout = 2.25f;
+
 	// waiting time for more players, in seconds -- client
 	private static float maxWaitingTimeClient = 19.0f;
 	// On offline mode, don't wait that long
 	private static float minWaitingTimeInOffline = 2.5f;
 	private static float maxWaitingTimeInOffline = 5.0f;
 
-	private static float hostsDiscoveryTimeout = 2.25f;
 
 
 	public GameObject background;
@@ -232,8 +237,8 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 		}
 
 		bool isInGame = menuState == MenuState.inGame;
-		float targetMenuVolume = isInGame ? 0 : 0.75f;
-		float targetGameVolume = isInGame ? 0.6f : 0;
+		float targetMenuVolume = isInGame ? 0 : 0.7f;
+		float targetGameVolume = isInGame ? 0.45f : 0;
 		audioSources[0].volume = Mathf.Lerp (audioSources[0].volume, targetMenuVolume, 0.005f);
 		audioSources[1].volume = Mathf.Lerp (audioSources[1].volume, targetGameVolume, 0.005f);
 	}
