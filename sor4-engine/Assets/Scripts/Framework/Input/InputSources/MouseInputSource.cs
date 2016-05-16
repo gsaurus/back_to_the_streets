@@ -11,7 +11,7 @@ namespace RetroBread{
 
 		const float minDelayBetweenEvents = 0.1f; // in seconds
 
-		public static bool useMouseAngle = true; //false;
+		public static bool useMouseAngle = false;
 
 		public static float mouseSensivity = 1.8f;
 
