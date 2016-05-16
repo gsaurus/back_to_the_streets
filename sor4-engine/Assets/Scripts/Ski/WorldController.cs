@@ -211,6 +211,16 @@ public class WorldController:Controller<WorldModel>{
 
 	private void UpdateSkierDirectionBasedOnInput(SkierModel skier, FixedFloat deltaVel){
 
+		if (MouseInputSource.useMouseAngle && deltaVel < -1000) {
+			deltaVel += 10005; // worst hammer ever, use this value to flag this kind of controls
+			// convert input into angle
+			FixedFloat targetAngle = FixedFloat.HalfPI * deltaVel;
+			FixedFloat originalAngle = FixedFloat.HalfPI - FixedFloat.Atan2(-skier.velY, skier.velX);
+
+			// convert angle into deltaVel
+			deltaVel = (-targetAngle - originalAngle) * 0.1f;
+		}
+
 		if (deltaVel < 0 && skier.targetVelX < -maxXValue - deltaVel) {
 			deltaVel = -maxXValue - skier.targetVelX;
 		}else if (deltaVel > 0 && skier.targetVelX > maxXValue - deltaVel) {
