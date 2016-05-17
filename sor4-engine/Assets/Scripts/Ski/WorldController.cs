@@ -180,10 +180,6 @@ public class WorldController:Controller<WorldModel>{
 						else if (!StateManager.Instance.IsNetworked && skierId > 0) {
 							FixedFloat botTargetAxis = WorldObjects.GetTargetAxisForBot(world, skier);
 							UpdateSkierDirectionBasedOnInput(skier, botTargetAxis);
-							if (skier.y > world.skiers[0].y + 3.5) {
-								skier.velX *= 1.02f;
-								skier.velY *= 1.02f;
-							}
 						}
 					}
 				}
@@ -194,7 +190,7 @@ public class WorldController:Controller<WorldModel>{
 				UpdateSkierPosition(skier);
 
 				// check collisions
-				if (StateManager.Instance.IsNetworked || skierId == 0 || skier.y < world.skiers[0].y + 4) {
+				if (StateManager.Instance.IsNetworked || skierId == 0 || skier.y < world.skiers[0].y + WorldObjects.botsInvincibilityRange) {
 					WorldObjects.HandleCollisionWithWorld(world, skier);
 					WorldObjects.HandleCollisionWithOtherSkiers(world, skier);
 				}

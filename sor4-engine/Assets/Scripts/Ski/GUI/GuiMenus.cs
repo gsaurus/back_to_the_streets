@@ -238,7 +238,7 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 		bool isInGame = menuState == MenuState.inGame;
 		float targetMenuVolume = isInGame ? 0 : 0.7f;
-		float targetGameVolume = isInGame ? 0.45f : 0;
+		float targetGameVolume = isInGame ? 0.15f : 0;
 		audioSources[0].volume = Mathf.Lerp (audioSources[0].volume, targetMenuVolume, 0.005f);
 		audioSources[1].volume = Mathf.Lerp (audioSources[1].volume, targetGameVolume, 0.005f);
 	}

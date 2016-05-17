@@ -204,6 +204,9 @@ public class WorldObjects{
 	// 
 	static SimpleRandomGenerator rnd = null;
 
+	public static FixedFloat botsInactivityRange = 5.0f;
+	public static FixedFloat botsInvincibilityRange = 3.0f;
+
 	public static uint collisionFallenTime = 45;
 	public static uint frozenTime = 150;
 
@@ -377,7 +380,7 @@ public class WorldObjects{
 						}
 						if (deltaY > 0.1f) {
 							if (skier.y < otherSkier.y) {
-								skier.velY -= 0.5f;
+								skier.velY -= 0.25f;
 							} else {
 								skier.velY += 0.5f;
 							}
@@ -528,53 +531,65 @@ public class WorldObjects{
 
 
 
-	public static FixedFloat GetTargetAxisForBot(WorldModel world, SkierModel skier, bool smart = true){
+	public static FixedFloat GetTargetAxisForBot(WorldModel world, SkierModel skier){
 		// randomization based on player position
 		FixedFloat deltaYToPlayer = world.skiers [0].y - skier.y;
 
 		if (skier.fallenTimer > 0 || skier.frozenTimer > 0 || (deltaYToPlayer > 1 && StateManager.state.Random.NextFloat (0, deltaYToPlayer * 0.05f) > 3.0f)) {
 			return FixedFloat.Zero; // ignore if on the floor
 		}
-		FixedVector3 target = NextTargetFlagForBot (world, skier);
+
 		FixedFloat targetAxis;
-		FixedFloat deltaX = skier.x - target.X;
-		FixedFloat deltaY = skier.y - target.Y;
-		FixedFloat targetAngle = 0;
-
-//		if (skier.y < -2.0f && skier.velY > -0.25f && FixedFloat.Abs(skier.velX) < 0.4f) {
-//			return -deltaX;
-//		}
-
-		if (deltaX != 0) {
-			targetAngle = FixedFloat.HalfPI - FixedFloat.Atan2 (deltaY, deltaX);
-		}
-
-		UpdateTargetAngleBasedOnOpponents (world, skier, target.X, (int)target.Y, ref targetAngle);
-
-		UpdateTargetAngleBasedOnObstacles (world, skier, ref target, ref targetAngle);
-
 		FixedFloat originalAngle = FixedFloat.HalfPI - FixedFloat.Atan2 (-skier.velY, skier.velX);
+		FixedVector3 target = NextTargetFlagForBot(world, skier);
+			
+		if (skier.y < world.skiers [0].y + WorldObjects.botsInactivityRange) {
 
+			FixedFloat deltaX = skier.x - target.X;
+			FixedFloat deltaY = skier.y - target.Y;
+			FixedFloat targetAngle = 0;
 
-		if (skier == world.skiers[2]){
-			if (deltaY > 2.2f) {
-				targetAngle /= (FixedFloat.Sqrt(deltaY) * 0.5f);
+			//		if (skier.y < -2.0f && skier.velY > -0.25f && FixedFloat.Abs(skier.velX) < 0.4f) {
+			//			return -deltaX;
+			//		}
+
+			if (deltaX != 0) {
+				targetAngle = FixedFloat.HalfPI - FixedFloat.Atan2 (deltaY, deltaX);
 			}
-		}
-		targetAxis = (-targetAngle - originalAngle);
 
-		deltaY = skier.y - target.Y;
-		if (deltaY > 2.5) {
-			targetAxis *= 0.075f;
-			FixedFloat percentage = 0.25f;
-			if (skier == world.skiers[2])
-				percentage = 0.1f;
-			else if (skier == world.skiers [3])
-				percentage = 0.075f;
-			targetAxis /= (deltaY * percentage);
+
+			//UpdateTargetAngleBasedOnOpponents (world, skier, target.X, (int)target.Y, ref targetAngle);
+			UpdateTargetAngleBasedOnObstacles (world, skier, ref target, ref targetAngle);
+
+
+			if (skier == world.skiers [2]) {
+				if (deltaY > 2.2f) {
+					targetAngle /= (FixedFloat.Sqrt (deltaY) * 0.5f);
+				}
+			}
+			targetAxis = (-targetAngle - originalAngle);
+
+			deltaY = skier.y - target.Y;
+			if (deltaY > 2.5) {
+				if (skier == world.skiers[1]) {
+					targetAxis *= 0.075f;
+				} else {
+					targetAxis *= 0.075f;
+					FixedFloat percentage = 0.25f;
+					if (skier == world.skiers[2])
+						percentage = 0.1f;
+					else if (skier == world.skiers[3])
+						percentage = 0.075f;
+					targetAxis /= (deltaY * percentage);
+				}
+			} else {
+				targetAxis *= 0.075f;
+			}
 		} else {
-			targetAxis *= 0.1f;
+			targetAxis = -originalAngle;
+			skier.x = FixedFloat.Lerp(skier.x, target.X, 0.01f);
 		}
+
 			
 		return targetAxis;
 	}
