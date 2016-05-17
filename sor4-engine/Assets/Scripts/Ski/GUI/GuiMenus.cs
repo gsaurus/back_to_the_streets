@@ -13,6 +13,8 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 		inGame
 	};
 
+	public GameObject inGameBackground;
+
 	public static string defaultNickname = "Guest_";
 
 	private static float canvasFadeTime = 0.3f;

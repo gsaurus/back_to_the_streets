@@ -397,9 +397,9 @@ public class WorldObjects{
 		// Find next flag
 		FixedFloat extraX = 0;
 		if (skier == world.skiers[1]) {
-			extraX = 2.0f;
+			extraX = 0.5f;
 		} else if (skier == world.skiers[3]) {
-			extraX = 4.0f;
+			extraX = 1.5f;
 		}
 		List<WorldObject> objects;
 		for (int y = (int)skier.y - 1; y >= -finalGoalDistance - 2; --y) {
@@ -553,8 +553,14 @@ public class WorldObjects{
 			//			return -deltaX;
 			//		}
 
+				
 			if (deltaX != 0) {
-				targetAngle = FixedFloat.HalfPI - FixedFloat.Atan2 (deltaY, deltaX);
+				if (!(skier == world.skiers[2] && deltaY > 6.0f && FixedFloat.Abs(deltaX) < deltaY * 0.25f)) {
+					targetAngle = FixedFloat.HalfPI - FixedFloat.Atan2 (deltaY, deltaX);
+				}
+				if (skier == world.skiers[1] && deltaY > 6.0f) {
+					targetAngle *= 0.5f;
+				}
 			}
 
 
@@ -577,7 +583,7 @@ public class WorldObjects{
 					targetAxis *= 0.075f;
 					FixedFloat percentage = 0.25f;
 					if (skier == world.skiers[2])
-						percentage = 0.1f;
+						percentage = 0.09f;
 					else if (skier == world.skiers[3])
 						percentage = 0.075f;
 					targetAxis /= (deltaY * percentage);
