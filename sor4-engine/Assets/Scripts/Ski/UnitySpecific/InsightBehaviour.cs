@@ -3,11 +3,14 @@ using System.Collections;
 
 public class InsightBehaviour : MonoBehaviour {
 
-	float minValueClassic = 1.1f;
-	float maxValueClassic = 6.0f;
+	float minValueClassic = 1.2f;
+	float maxValueClassic = 20.0f;
 
-	float minValueFree = 0.8f;
-	float maxValueFree = 2.5f;
+	float minValueFree = 20.0f;
+	float maxValueFree = 140.0f;
+
+//	float minValueFree = 0.8f;
+//	float maxValueFree = 2.5f;
 
 
 	// Use this for initialization
@@ -36,7 +39,7 @@ public class InsightBehaviour : MonoBehaviour {
 		SetupMinMaxValues(out minValue, out maxValue);
 		RetroBread.MouseInputSource.mouseSensivity = minValue + (value * (maxValue - minValue));
 //		if (RetroBread.MouseInputSource.useMouseAngle) {
-//			RetroBread.MouseInputSource.mouseSensivity *= RetroBread.MouseInputSource.mouseSensivity;
+		RetroBread.MouseInputSource.mouseSensivity = Mathf.Sqrt(RetroBread.MouseInputSource.mouseSensivity);
 //		}
 	}
 
@@ -44,7 +47,9 @@ public class InsightBehaviour : MonoBehaviour {
 	void UpdateSliderValue(){
 		float minValue, maxValue;
 		SetupMinMaxValues(out minValue, out maxValue);
-		float value = (RetroBread.MouseInputSource.mouseSensivity - minValue) / (maxValue - minValue);
+		float value = RetroBread.MouseInputSource.mouseSensivity;
+		value *= value;
+		value = (value - minValue) / (maxValue - minValue);
 //		if (RetroBread.MouseInputSource.useMouseAngle) {
 //			Mathf.Sqrt(value);
 //		}

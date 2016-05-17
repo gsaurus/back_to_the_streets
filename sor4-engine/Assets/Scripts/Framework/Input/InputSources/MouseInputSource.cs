@@ -13,7 +13,7 @@ namespace RetroBread{
 
 		public static bool useMouseAngle = false;
 
-		public static float mouseSensivity = 1.8f;
+		public static float mouseSensivity = 7.1f; //1.2f;
 
 	#if (!UNITY_IPHONE && !UNITY_ANDROID) || UNITY_EDITOR
 
@@ -74,7 +74,8 @@ namespace RetroBread{
 					angledMouseIsActive = true;
 				} else {
 					axis = Input.GetAxis ("Horizontal");
-					axis /= Screen.dpi == 0 ? 1 : Screen.dpi;
+					axis /= Screen.width;
+					//axis /= Screen.dpi == 0 ? 1 : Screen.dpi;
 					axis *= mouseSensivity;
 					if (angledMouseIsActive) previousAxis = 0;
 					angledMouseIsActive = false;
