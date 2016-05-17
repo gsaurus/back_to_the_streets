@@ -71,7 +71,8 @@ public class WorldController:Controller<WorldModel>{
 			} else {
 				allPlayers = new List<uint> ();
 				allPlayers.Add (0);
-				int maxPlayers = UnityEngine.Random.Range (3, 6);
+				int maxPlayers = UnityEngine.Random.Range(3, 7);
+				if (maxPlayers == 6) maxPlayers = 5;
 				for (uint i = 1; i < maxPlayers; ++i)
 					allPlayers.Add(i);
 			}
@@ -178,7 +179,10 @@ public class WorldController:Controller<WorldModel>{
 							UpdateSkierDirectionBasedOnInput(skier, -inputModel.axis);
 						}
 						else if (!StateManager.Instance.IsNetworked && skierId > 0) {
-							FixedFloat botTargetAxis = WorldObjects.GetTargetAxisForBot(world, skier);
+							FixedFloat botTargetAxis = FixedFloat.Zero;
+							if (StateManager.state.Keyframe % 3 == skierId % 3) {
+								botTargetAxis = WorldObjects.GetTargetAxisForBot(world, skier);
+							}
 							UpdateSkierDirectionBasedOnInput(skier, botTargetAxis);
 						}
 					}
@@ -187,7 +191,7 @@ public class WorldController:Controller<WorldModel>{
 
 
 				// Update skier position
-				UpdateSkierPosition(skier);
+				UpdateSkierPosition(world, skier, (int)skierId);
 
 				// check collisions
 				if (StateManager.Instance.IsNetworked || skierId == 0 || skier.y < world.skiers[0].y + WorldObjects.botsInvincibilityRange) {
@@ -238,7 +242,7 @@ public class WorldController:Controller<WorldModel>{
 //		UnityEngine.Debug.Log("velX: " + skier.velX + ", deltaVel: " + deltaVel);
 	}
 
-	private void UpdateSkierPosition(SkierModel skier) {
+	private void UpdateSkierPosition(WorldModel world, SkierModel skier, int skierId) {
 
 		bool crossedGoal = skier.y < -WorldObjects.finalGoalDistance;
 		if (crossedGoal && skier.targetVelX != 0 && skier.targetVelY != 0) {
@@ -298,6 +302,11 @@ public class WorldController:Controller<WorldModel>{
 				vX *= 1.1f;
 				vY *= 1.1f;
 			}
+		}
+
+		if (!StateManager.Instance.IsNetworked && skierId != 0 && skier.y > world.skiers[0].y - 8 && skier.y < -40) {
+			vX *= 1.0 + (0.01f * skierId);
+			vY *= 1.0 + (0.01f * skierId);
 		}
 
 		skier.x += vX;

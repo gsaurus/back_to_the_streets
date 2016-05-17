@@ -112,15 +112,8 @@ public class WorldObject
 		if (type < 0){
 			// Flag
 			view = GameObject.Instantiate(flagPrefab);
-			if (type == -2){
-				view.transform.localEulerAngles = new Vector3(0, 180, 0);
-//				Transform modelTransform = view.transform.FindChild("model");
-//				if (modelTransform != null){
-//					// still need the flag faced to the camera
-//					modelTransform.localEulerAngles = new Vector3(0, 180, 0);
-//				}
-			}
-			view.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+			view.transform.localEulerAngles = new Vector3(10, type == -2 ? 180 : 0, 0);
+			view.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
 
 			ApplyColorToFlagArros(view);
 
@@ -397,12 +390,12 @@ public class WorldObjects{
 		// Find next flag
 		FixedFloat extraX = 0;
 		if (skier == world.skiers[1]) {
-			extraX = 0.5f;
+			extraX = 0.15f;
 		} else if (skier == world.skiers[3]) {
-			extraX = 1.5f;
+			extraX = 0.2f;
 		}
 		List<WorldObject> objects;
-		for (int y = (int)skier.y - 1; y >= -finalGoalDistance - 2; --y) {
+		for (int y = (int)skier.y - 1; y >= -finalGoalDistance - 10; --y) {
 			if (objectsByY.TryGetValue ((int)y, out objects)) {
 				foreach (WorldObject obj in objects) {
 					if (obj.type < 0) {
@@ -422,7 +415,7 @@ public class WorldObjects{
 				}
 			}
 		}
-		return FixedVector3.Zero;
+		return new FixedVector3(0, -finalGoalDistance - 10, 0);
 	}
 
 
@@ -532,6 +525,7 @@ public class WorldObjects{
 
 
 	public static FixedFloat GetTargetAxisForBot(WorldModel world, SkierModel skier){
+
 		// randomization based on player position
 		FixedFloat deltaYToPlayer = world.skiers [0].y - skier.y;
 
@@ -563,33 +557,31 @@ public class WorldObjects{
 				}
 			}
 
-
-			//UpdateTargetAngleBasedOnOpponents (world, skier, target.X, (int)target.Y, ref targetAngle);
-			UpdateTargetAngleBasedOnObstacles (world, skier, ref target, ref targetAngle);
-
-
-			if (skier == world.skiers [2]) {
-				if (deltaY > 2.2f) {
-					targetAngle /= (FixedFloat.Sqrt (deltaY) * 0.5f);
+			if (deltaY > 3.0f) {
+				if (skier == world.skiers[1] || skier == world.skiers[4]) {
+					targetAngle += deltaX * 0.05f;
+				} else if (skier == world.skiers[2] && deltaY > 12.0f) {
+					targetAngle /= FixedFloat.Sqrt(deltaY);
 				}
 			}
+
+
+			//UpdateTargetAngleBasedOnOpponents (world, skier, target.X, (int)target.Y, ref targetAngle);
+			UpdateTargetAngleBasedOnObstacles(world, skier, ref target, ref targetAngle);
+
+
 			targetAxis = (-targetAngle - originalAngle);
 
 			deltaY = skier.y - target.Y;
 			if (deltaY > 2.5) {
-				if (skier == world.skiers[1]) {
-					targetAxis *= 0.075f;
-				} else {
-					targetAxis *= 0.075f;
-					FixedFloat percentage = 0.25f;
-					if (skier == world.skiers[2])
-						percentage = 0.09f;
-					else if (skier == world.skiers[3])
-						percentage = 0.075f;
-					targetAxis /= (deltaY * percentage);
-				}
+				if (skier == world.skiers[1])
+					targetAxis *= 0.105f;
+				else if (skier == world.skiers[3])
+					targetAxis /= FixedFloat.Sqrt(deltaY);
+				else
+					targetAxis *= 0.12f;
 			} else {
-				targetAxis *= 0.075f;
+				targetAxis *= 0.275f;
 			}
 		} else {
 			targetAxis = -originalAngle;
@@ -671,11 +663,11 @@ public class WorldObjects{
 		// create more track
 		FixedFloat maxKnownY = yList.Count == 0 ? -5 : yList[yList.Count-1];
 		FixedFloat distanceAhead;
-		if (StateManager.state.Keyframe > 180){
+//		if (StateManager.state.Keyframe > 180){
 			distanceAhead = minDistanceAhead - controlRange;
-		}else {
-			distanceAhead = (FixedFloat.Create(StateManager.state.Keyframe) / 180.0f) * (minDistanceAhead - controlRange);
-		}
+//		}else {
+//			distanceAhead = (FixedFloat.Create(StateManager.state.Keyframe) / 180.0f) * (minDistanceAhead - controlRange);
+//		}
 		FixedFloat nextTargetY = maxY - distanceAhead;
 
 		FixedFloat nextY;

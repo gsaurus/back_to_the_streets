@@ -83,6 +83,8 @@ public class DebugWorldView:View<WorldModel>{
 	protected override void Update(WorldModel model, float deltaTime){
 
 		UpdateSkiers(model, deltaTime);
+	
+		UpdateLeaderboard(model);
 
 		// check if next flag is outside screen
 		int playerId = 0;
@@ -123,7 +125,6 @@ public class DebugWorldView:View<WorldModel>{
 		}
 		arrowsToPointNextFlag.SetActive(setActive);
 
-		UpdateLeaderboard(model);
 	}
 
 
