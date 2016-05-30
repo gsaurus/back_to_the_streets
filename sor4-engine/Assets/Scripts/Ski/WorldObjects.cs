@@ -124,6 +124,8 @@ public class WorldObject
 			if (type == 0) {
 				view = rocksPool[rockPoolId++];
 				if (rockPoolId >= rocksPool.Length) rockPoolId = 0;
+				this.x1 = x -1.4f;
+				this.x2 = x +1.4f;
 			}else if (type % 2 == 0){
 				view = tree1Pool[tree1PoolId++];
 				if (tree1PoolId >= tree1Pool.Length) tree1PoolId = 0;
@@ -132,7 +134,7 @@ public class WorldObject
 				if (tree2PoolId >= tree2Pool.Length) tree2PoolId = 0;
 			}
 			view.SetActive(true);
-			view.transform.localEulerAngles = new Vector3(310 + UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(0, 360));
+			view.transform.localEulerAngles = new Vector3(310 + UnityEngine.Random.Range(-8, 8), UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(0, 360));
 			float radius = type == 0 ? UnityEngine.Random.Range(1.0f, 1.3f) : UnityEngine.Random.Range(1.5f, 2.0f);
 			float scale = type == 0 ? 1 : UnityEngine.Random.Range(0.5f, 1.0f);
 			view.transform.localScale = new Vector3(radius, UnityEngine.Random.Range(1.75f, 2.5f), radius);
@@ -308,11 +310,26 @@ public class WorldObjects{
 		if (obj != null){
 			if (obj.type >= 0){
 				// obstacle
-				skier.fallenTimer = collisionFallenTime;
-				skier.velX = obj.isRight ? -1.4 : 1.4;
-				skier.velY = 0.6f;
-				skier.targetVelX = 0;
-				skier.targetVelY = 0;
+				FixedFloat objWidth = obj.x2 - obj.x1;
+				FixedFloat objCenterX = (obj.x1+obj.x2)/2.0;
+				FixedFloat deltaX = FixedFloat.Abs(skier.x - objCenterX);
+				FixedFloat deltaY = FixedFloat.Abs(skier.y - obj.y);
+				if (deltaX < 0.2f*objWidth && deltaY < 0.1f) {
+					skier.fallenTimer = collisionFallenTime;
+					skier.velX = obj.isRight ? -1.4 : 1.4;
+					skier.velY = 0.6f;
+					skier.targetVelX = 0;
+					skier.targetVelY = 0;
+				} else if (deltaX < 0.6f*objWidth && deltaY < 0.6f) {
+					if (skier.x < objCenterX) {
+						skier.velX -= 0.2f;
+					} else {
+						skier.velX += 0.2f;
+					}
+					if (deltaY > 0.2f && skier.y > obj.y) {
+						skier.velY *= 0.75f; //+= 0.2f;
+					}
+				}
 			}else {
 				// flag
 				FixedFloat target = StateManager.state.Random.NextFloat(obj.x1 + 0.01f, obj.x2 - 0.01f);
@@ -581,7 +598,11 @@ public class WorldObjects{
 				else
 					targetAxis *= 0.12f;
 			} else {
-				targetAxis *= 0.275f;
+				if (skier.velY > -0.1f){
+					targetAxis *= 0.275f;
+				}else{
+					targetAxis *= 0.190f;
+				}
 			}
 		} else {
 			targetAxis = -originalAngle;

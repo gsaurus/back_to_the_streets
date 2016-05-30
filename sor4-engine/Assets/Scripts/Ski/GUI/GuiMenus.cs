@@ -23,7 +23,7 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 	// waiting time for more players, in seconds -- server
 	private static float minWaitingTimeInOnline = 0.1f;
 	private static float maxWaitingTimeInOnline = 0.1f;
-	private static float hostsDiscoveryTimeout = 0.1f;
+	private static float hostsDiscoveryTimeout = 2.0f;
 
 //	// waiting time for more players, in seconds -- server
 //	private static float minWaitingTimeInOnline = 12.0f;

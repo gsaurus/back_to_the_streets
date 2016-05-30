@@ -259,7 +259,9 @@ public class DebugWorldView:View<WorldModel>{
 				if (own) {
 					Transform bgTransform = GuiMenus.Instance.inGameBackground.transform;
 					float yFactor = (float)((-skierModel.y) / WorldObjects.finalGoalDistance);
-					bgTransform.position = new Vector3 (bgTransform.position.x, yFactor*1.7f , bgTransform.position.z);
+					Vector3 camRotation = Camera.main.transform.localRotation.eulerAngles;
+					float xFacgtor = (180-camRotation.y)*0.02f;
+					bgTransform.localPosition = new Vector3 (1*xFacgtor, yFactor*1.7f , bgTransform.localPosition.z);
 					RenderSettings.fogColor = Color.Lerp(originalFogColor, finalFogColor, yFactor);
 				}
 
