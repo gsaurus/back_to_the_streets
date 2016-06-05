@@ -679,7 +679,7 @@ public class WorldObjects{
 			uint seed = state.Random.NextUnsignedInt();
 			rnd = new SimpleRandomGenerator(seed);
 			if (GuiMenus.Instance.demoStateManager == null || state != GuiMenus.Instance.demoStateManager.state) {
-				switch (state.Random.NextInt (0, 1)) {
+				switch (state.Random.NextInt(0, 2)) {
 					case 0:{
 						ApplyCleanTrackSetup();
 						break;

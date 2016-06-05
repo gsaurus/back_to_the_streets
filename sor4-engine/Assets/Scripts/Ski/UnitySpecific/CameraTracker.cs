@@ -55,7 +55,6 @@ public class CameraTracker : MonoBehaviour {
 			Vector3 angles = mainCamera.transform.localEulerAngles;
 			angles.z = 0;
 			mainCamera.transform.LookAt(demoLookAtPosition);
-			Debug.Log (Vector3.Distance(angles, mainCamera.transform.localEulerAngles));
 			if (Vector3.Distance(angles, mainCamera.transform.localEulerAngles) > 0.2f) {
 				mainCamera.transform.localEulerAngles = Vector3.Lerp(angles, mainCamera.transform.localEulerAngles, 0.2f * Time.deltaTime);
 			}

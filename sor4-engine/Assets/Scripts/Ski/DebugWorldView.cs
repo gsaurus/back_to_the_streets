@@ -168,7 +168,7 @@ public class DebugWorldView:View<WorldModel>{
 		KeyValuePair<int, float>[] skiersYs = new KeyValuePair<int, float>[model.skiers.Count()];
 		float order;
 		for (int i = 0 ; i < skiersYs.Count() ; ++i){
-			if (finishedSkiers[i] != 0) order = -999990 + finishedSkiers[i];
+			if (finishedSkiers[i] != 0) order = -999990 + finishedSkiers[i]*10 + i;
 			else if(model.skiers[i] == null) order = 999;
 			else order = (float)model.skiers[i].y;
 			skiersYs[i] = new KeyValuePair<int, float>(i, order);
