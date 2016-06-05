@@ -166,6 +166,7 @@ public class WorldObject
 public class WorldObjects{
 
 
+
 	static void ApplyDemoSetup(){
 		maxHorizontalDistance = 40;
 
@@ -179,11 +180,13 @@ public class WorldObjects{
 		maxTrackYGeneration = 60;
 		minFlagHorizontalDist = 0.1f;
 		maxFlagHorizontalDist = 0.55f;
+		minYForGeneration = 0.5f;
 
 		maxDistanceBehind = 30;
 		minDistanceAhead = 60;
 		botsInactivityRange = 50.0f;
 		botsInvincibilityRange = 30.0f;
+		trackType = 0;
 	}
 
 
@@ -200,11 +203,13 @@ public class WorldObjects{
 		maxTrackYGeneration = 60;
 		minFlagHorizontalDist = 0.1f;
 		maxFlagHorizontalDist = 0.6f;
+		minYForGeneration = 0.5f;
 
 		maxDistanceBehind = 10;
 		minDistanceAhead = 80;
 		botsInactivityRange = 5.0f;
 		botsInvincibilityRange = 3.0f;
+		trackType = 0;
 	}
 
 
@@ -220,14 +225,41 @@ public class WorldObjects{
 		maxTrackYGeneration = 6;
 		minFlagHorizontalDist = -0.05f;
 		maxFlagHorizontalDist = 0.2f;
+		minYForGeneration = 0.5f;
 
 		maxDistanceBehind = 10;
 		minDistanceAhead = 80;
 		botsInactivityRange = 5.0f;
 		botsInvincibilityRange = 3.0f;
+		trackType = 0;
 	}
 
 
+	static void ApplySplineTrackSetup(){
+		maxHorizontalDistance = 9;
+
+		maxDifficultyDistance = 20;
+		initialCleanupDistance = 9700;
+		finalGoalDistance = 450;
+
+		minFlagDistance = 10;
+		maxFlagDistance = 10;
+		randomTrackVariation = 50;
+		minTrackYGeneration = 45;
+		maxTrackYGeneration = 60;
+		minFlagHorizontalDist = -1.0f;
+		maxFlagHorizontalDist = -0.95f;
+		minYForGeneration = 0.15f;
+
+		maxDistanceBehind = 10;
+		minDistanceAhead = 80;
+		botsInactivityRange = 5.0f;
+		botsInvincibilityRange = 3.0f;
+		trackType = 1;
+	}
+
+
+	static int trackType = 0;
 	// 
 	static SimpleRandomGenerator rnd = null;
 
@@ -254,10 +286,13 @@ public class WorldObjects{
 	static FixedFloat maxTrackYGeneration = 60;
 	static FixedFloat minFlagHorizontalDist = 0.1f;
 	static FixedFloat maxFlagHorizontalDist = 0.6f;
+	static FixedFloat minYForGeneration = 0.5f;
 
 	static List<int> yList = new List<int>(100);
 	static Dictionary<int, List<WorldObject>> objectsByY = new Dictionary<int, List<WorldObject>>(100);
 
+	static FixedFloat twoLastTrackX;
+	static FixedFloat twoLastTrackY;
 	static FixedFloat lastTrackX;
 	static FixedFloat lastTrackY;
 	static FixedFloat nextTrackX;
@@ -281,6 +316,8 @@ public class WorldObjects{
 		yList = new List<int>(100);
 		objectsByY = new Dictionary<int, List<WorldObject>>(100);
 
+		twoLastTrackX = 0;
+		twoLastTrackY = 0;
 		lastTrackX = 0;
 		lastTrackY = 0;
 		nextTrackX = 0;
@@ -449,10 +486,14 @@ public class WorldObjects{
 			extraX = 0.2f;
 		}
 		List<WorldObject> objects;
+		bool secondFlag = false;
+		bool direct = false;
+		FixedVector3 res1 = FixedVector3.Zero;
 		for (int y = (int)skier.y - 1; y >= -finalGoalDistance - 10; --y) {
 			if (objectsByY.TryGetValue ((int)y, out objects)) {
 				foreach (WorldObject obj in objects) {
 					if (obj.type < 0) {
+						direct = false;
 						FixedVector3 res = new FixedVector3(obj.type == -2 ? obj.x2 + extraX : obj.x1 - extraX , obj.y, 0);
 						if ((obj.type == -2 && res.X < skier.x) || obj.type == -1 && res.X > skier.x) {
 							if (skier == world.skiers [2]) {
@@ -461,10 +502,18 @@ public class WorldObjects{
 								res.X = (res.X + skier.x) * 0.75f;
 							}else {
 								res.X = skier.x;
+								direct = true;
 							}
 						}
 						//res.Y += 0.5f;
-						return res;
+						if (secondFlag) {
+							return (res + res1) * 0.5;
+						}else if (trackType == 0 || !direct) {
+							return res;
+						} else {
+							res1 = res;
+							secondFlag = true;
+						}
 					}
 				}
 			}
@@ -661,7 +710,7 @@ public class WorldObjects{
 
 
 
-	static FixedFloat GetDifficultySetting(FixedFloat nextY){
+	static FixedFloat GetDifficultySetting(FixedFloat nextY, bool generation = false){
 		if (maxDifficultyDistance == -1) return FixedFloat.Zero;
 		if (nextY > -maxDifficultyDistance) {
 			return -nextY / maxDifficultyDistance;
@@ -679,9 +728,13 @@ public class WorldObjects{
 			uint seed = state.Random.NextUnsignedInt();
 			rnd = new SimpleRandomGenerator(seed);
 			if (GuiMenus.Instance.demoStateManager == null || state != GuiMenus.Instance.demoStateManager.state) {
-				switch (state.Random.NextInt(0, 2)) {
+				switch (state.Random.NextInt(0, 3)) {
 					case 0:{
 						ApplyCleanTrackSetup();
+						break;
+					}
+					case 1:{
+						ApplySplineTrackSetup();
 						break;
 					}
 					default:{
@@ -735,16 +788,21 @@ public class WorldObjects{
 		FixedFloat nextY;
 		int latestIntY = (int)maxKnownY;
 		bool nextObjectIsFlag;
-		FixedFloat minYForGeneration = 0.5f;
 		FixedFloat difficultySetting = GetDifficultySetting(maxKnownY);
 		FixedFloat limitForObjects = minYForGeneration + (1-difficultySetting) * 3.0f;
 		for (nextY = maxKnownY - 0.0001f ; nextY > nextTargetY ; ){
 			nextY -= rnd.NextFloat(0.0001f, limitForObjects);
 			nextObjectIsFlag = nextY < nextFlagDistance && nextFlagDistance >= -finalGoalDistance;
 			while (nextY < nextTrackY){
+				twoLastTrackX = lastTrackX;
+				twoLastTrackY = lastTrackY;
 				lastTrackY = nextY;
 				lastTrackX = nextTrackX;
-				nextTrackX = nextTrackX + rnd.NextFloat(-randomTrackVariation, randomTrackVariation);
+				if (trackType == 1) {
+					nextTrackX = nextTrackX + (rnd.NextFloat (0.75, 1.0) * randomTrackVariation) * (-1 + rnd.NextInt(0, 1)*2);
+				} else {
+					nextTrackX = nextTrackX + rnd.NextFloat (-randomTrackVariation, randomTrackVariation);
+				}
 				nextTrackY = nextY - rnd.NextFloat(minTrackYGeneration, maxTrackYGeneration);
 			}
 
@@ -761,7 +819,7 @@ public class WorldObjects{
 			FixedFloat centerX;
 			FixedFloat randomX;
 
-			centerX = GetCenterXForY(nextY, lastTrackY, nextTrackY, lastTrackX, nextTrackX);
+			centerX = GetCenterXForY(nextY);
 			if (nextObjectIsFlag){
 				randomX = rnd.NextFloat(maxHorizontalDistance* minFlagHorizontalDist, maxHorizontalDistance * maxFlagHorizontalDist);
 				randomX = centerX + (nextFlagIsRight ? randomX : -randomX);
@@ -807,16 +865,32 @@ public class WorldObjects{
 	}
 
 	
-	static FixedFloat GetCenterXForY(FixedFloat y, FixedFloat lastY, FixedFloat newY, FixedFloat lastX, FixedFloat newX){
-		FixedFloat t = (y-lastY) / (newY - lastY);
-		return lastX + t * (newX - lastX);
+	static FixedFloat GetCenterXForY(FixedFloat y){
+//		FixedFloat t = (y-lastY) / (newY - lastY);
+//		return lastX + t * (newX - lastX);
+
+		//lastTrackY, nextTrackY, lastTrackX, nextTrackX
+
+		if (trackType == 1) {
+			FixedFloat t = (y - lastTrackY) / (nextTrackY - lastTrackY);
+			FixedFloat oneMinusT = FixedFloat.One - t;
+			return oneMinusT * oneMinusT * lastTrackX +
+			2 * oneMinusT * t * twoLastTrackX +
+			t * t * nextTrackX;
+		} else {
+			FixedFloat t = (y-lastTrackY) / (nextTrackY - lastTrackY);
+			return lastTrackX + t * (nextTrackX - lastTrackX);
+		}
 	}
 
 	static FixedFloat GetRandomXAroundCenter(FixedFloat center, FixedFloat nextY) {
 		FixedFloat randomT = rnd.NextFloat(0, 1);
 
-		FixedFloat difficultySetting = GetDifficultySetting(nextY);
-		if (maxDifficultyDistance == -1) {
+		FixedFloat difficultySetting = GetDifficultySetting(nextY, true);
+		if (maxDifficultyDistance == -1 || trackType == 1) {
+			if (trackType == 1) {
+				randomT = randomT * 0.94f;
+			}
 			randomT = randomT * randomT * randomT * randomT;
 		} else {
 			if (difficultySetting < 0.5) {
@@ -830,6 +904,9 @@ public class WorldObjects{
 		randomT = 1.05f - randomT;
 		if (rnd.NextInt(0,1) == 0) {
 			randomT *= -1;
+		}
+		if (trackType == 1) {
+			return center + (-1 + (randomT * 2) * maxHorizontalDistance);
 		}
 		return center + (randomT * (maxHorizontalDistance*(1+(1-difficultySetting)*0.5f)));
 	}
