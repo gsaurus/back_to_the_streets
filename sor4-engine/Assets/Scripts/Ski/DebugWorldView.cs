@@ -270,6 +270,10 @@ public class DebugWorldView:View<WorldModel>{
 					float xFacgtor = (180-camRotation.y)*0.02f;
 					bgTransform.localPosition = new Vector3 (1*xFacgtor, yFactor*1.7f , bgTransform.localPosition.z);
 					RenderSettings.fogColor = Color.Lerp(originalFogColor, finalFogColor, yFactor);
+					Transform mist = bgTransform.parent.FindChild("Mist");
+					if (mist != null) {
+						mist.gameObject.GetComponent<SpriteRenderer>().color = RenderSettings.fogColor;
+					}
 				}
 
 				// update position
