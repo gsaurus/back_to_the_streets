@@ -170,8 +170,8 @@ public class WorldObjects{
 		maxHorizontalDistance = 40;
 
 		maxDifficultyDistance = 10;
-		initialCleanupDistance = 999999;
-		finalGoalDistance = 999999;
+		initialCleanupDistance = 9700;
+		finalGoalDistance = 9800;
 		minFlagDistance = 20;
 		maxFlagDistance = 40;
 		randomTrackVariation = 30;
