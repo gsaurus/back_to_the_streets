@@ -34,7 +34,7 @@ public class CameraTracker : MonoBehaviour {
 			}
 			avgPos /= activeSkiers;
 			avgPos.y = 20;
-			if (Vector3.Distance(mainCamera.transform.position, avgPos) > 20) {
+			if (Vector3.Distance(mainCamera.transform.position, avgPos) > 60) {
 				mainCamera.transform.position = avgPos;
 				mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z + 12);
 			}
