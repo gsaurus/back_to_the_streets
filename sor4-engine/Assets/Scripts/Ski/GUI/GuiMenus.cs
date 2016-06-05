@@ -184,7 +184,9 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 
 	void SetupDemo(bool enabled){
+		if (IsDemoPlaying () == enabled) return;
 		GameObject light = GameObject.Find("theLight");
+		Camera mainCamera = Camera.main;
 		if (enabled) {
 			light.transform.eulerAngles = new Vector3(30, 0, 0);
 			if (demoStateManager == null) {
@@ -193,12 +195,14 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 			WorldModel world = new WorldModel ();
 			StateManagerSetup setup = new StateManagerSetup (world, false);
 			demoStateManager.Setup(setup);	
+			mainCamera.transform.localEulerAngles = new Vector3(55, 300, 350);
 		} else {
 			light.transform.eulerAngles = new Vector3(30, 150, 0);
 			if (demoStateManager != null) {
 				demoStateManager.Setup (null);
 				demoStateManager = null;
 			}
+			mainCamera.transform.localEulerAngles = new Vector3(28, 180, 0);
 		}
 	}
 

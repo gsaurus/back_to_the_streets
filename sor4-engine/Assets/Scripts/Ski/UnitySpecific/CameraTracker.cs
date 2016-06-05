@@ -15,7 +15,7 @@ public class CameraTracker : MonoBehaviour {
 	static CameraTracker(){
 		Camera mainCamera = Camera.main;
 		originalPosition = mainCamera.transform.position;
-		originalRotation = mainCamera.transform.localEulerAngles;
+		originalRotation = new Vector3(28, 180, 0); //mainCamera.transform.localEulerAngles;
 	}
 
 	// Update is called once per frame
@@ -40,9 +40,9 @@ public class CameraTracker : MonoBehaviour {
 			}
 
 			targetCenter = new Vector3(
-				Mathf.Lerp(mainCamera.transform.position.x, avgPos.x + 10, 10.0f *Time.deltaTime),
+				Mathf.Lerp(mainCamera.transform.position.x, avgPos.x + 10, 4.0f *Time.deltaTime),
 				20,
-				Mathf.Lerp(mainCamera.transform.position.z, avgPos.z - 16, 10.0f *Time.deltaTime)
+				Mathf.Lerp(mainCamera.transform.position.z, avgPos.z - 16, 4.0f *Time.deltaTime)
 			);
 			mainCamera.transform.position = targetCenter;
 
@@ -50,14 +50,14 @@ public class CameraTracker : MonoBehaviour {
 			demoLookAtPosition = new Vector3(
 				Mathf.Lerp(demoLookAtPosition.x, avgPos.x, 2.5f * Time.deltaTime),
 				0,
-				Mathf.Lerp(demoLookAtPosition.z, avgPos.z, 20.0f * Time.deltaTime)
+				Mathf.Lerp(demoLookAtPosition.z, avgPos.z, 10.0f * Time.deltaTime)
 			);
 			Vector3 angles = mainCamera.transform.localEulerAngles;
 			angles.z = 0;
 			mainCamera.transform.LookAt(demoLookAtPosition);
-			Debug.Log (Vector3.Distance (angles, mainCamera.transform.localEulerAngles));
-			if (Vector3.Distance(angles, mainCamera.transform.localEulerAngles) > 0.12f) {
-				mainCamera.transform.localEulerAngles = Vector3.Lerp(mainCamera.transform.localEulerAngles, angles, 0.0001f * Time.deltaTime);
+			Debug.Log (Vector3.Distance(angles, mainCamera.transform.localEulerAngles));
+			if (Vector3.Distance(angles, mainCamera.transform.localEulerAngles) > 0.2f) {
+				mainCamera.transform.localEulerAngles = Vector3.Lerp(angles, mainCamera.transform.localEulerAngles, 0.2f * Time.deltaTime);
 			}
 			angles = mainCamera.transform.localEulerAngles;
 			angles.z = -7.5f;
