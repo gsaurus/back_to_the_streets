@@ -20,15 +20,15 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 	private static float canvasFadeTime = 0.3f;
 	private static float connectionFadeTime = 0.25f;
 
-	// waiting time for more players, in seconds -- server
-	private static float minWaitingTimeInOnline = 0.1f;
-	private static float maxWaitingTimeInOnline = 0.1f;
-	private static float hostsDiscoveryTimeout = 2.0f;
-
 //	// waiting time for more players, in seconds -- server
-//	private static float minWaitingTimeInOnline = 12.0f;
-//	private static float maxWaitingTimeInOnline = 17.0f;
-//	private static float hostsDiscoveryTimeout = 2.25f;
+//	private static float minWaitingTimeInOnline = 0.1f;
+//	private static float maxWaitingTimeInOnline = 0.1f;
+//	private static float hostsDiscoveryTimeout = 2.0f;
+
+	// waiting time for more players, in seconds -- server
+	private static float minWaitingTimeInOnline = 12.0f;
+	private static float maxWaitingTimeInOnline = 17.0f;
+	private static float hostsDiscoveryTimeout = 2.25f;
 
 	// waiting time for more players, in seconds -- client
 	private static float maxWaitingTimeClient = 19.0f;
@@ -72,6 +72,13 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 	public int playerPosition;
 
 
+	// Demo state manager
+	public StateManager demoStateManager { get; private set; }
+
+	public bool IsDemoPlaying(){
+		return demoStateManager != null;
+	}
+
 	public void OnNicknameChange(string newNickname){
 		nickname = newNickname;
 	}
@@ -91,6 +98,7 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 	void OnEnable(){
 		NetworkGame.Instance.onResumeEvent += OnGameResume;
+		SetupDemo(true);
 	}
 
 
@@ -175,6 +183,24 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 	}
 
 
+	void SetupDemo(bool enabled){
+		GameObject light = GameObject.Find("theLight");
+		if (enabled) {
+			light.transform.eulerAngles = new Vector3(30, 0, 0);
+			if (demoStateManager == null) {
+				demoStateManager = new StateManager();
+			}
+			WorldModel world = new WorldModel ();
+			StateManagerSetup setup = new StateManagerSetup (world, false);
+			demoStateManager.Setup(setup);	
+		} else {
+			light.transform.eulerAngles = new Vector3(30, 150, 0);
+			demoStateManager.Setup(null);
+			demoStateManager = null;
+		}
+	}
+
+
 
 	void SetupGame(bool networked){
 		RetroBread.Debug.Log("Setup " + (networked ? "Online" : "Offline") + " Game");
@@ -183,7 +209,6 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 		StateManagerSetup setup = new StateManagerSetup(world, networked);
 		StateManager.Instance.Setup(setup);	
-	
 	}
 	
 
@@ -246,6 +271,13 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 	}
 
 
+
+	void LateUpdate(){
+		if (demoStateManager != null) {
+			demoStateManager.Update (Time.deltaTime);
+		}
+	}
+
 	void Update(){
 
 		if (menuState == MenuState.matchmaking) {
@@ -256,6 +288,10 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 			UpdateMatchmakingProgress();
 
 			if (NetworkSync.Instance.IsEveryoneReady() || (!NetworkCenter.Instance.IsConnected() && matchMakingProgress >= WorldModel.MaxPlayers)) {
+
+				// Game is about to start, stop demo
+				SetupDemo(false);
+				WorldObjects.Reset();
 
 				if (NetworkMaster.Instance.IsAnouncingServer) {
 					List<string> readyPlayers = NetworkSync.Instance.GetReadyPlayerGuids();
@@ -280,12 +316,12 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 		}else if (menuState == MenuState.inGame
 			&& StateManager.Instance.IsNetworked
 			&& (!NetworkCenter.Instance.IsConnected() || NetworkCenter.Instance.GetNumPlayersOnline() <= 1)
-			&& StateManager.state != null && StateManager.state.Keyframe > 0
+			&& StateManager.mainState != null && StateManager.mainState.Keyframe > 0
 		){
 			RetroBread.Debug.Log("No enough players connected, switching to offline mode");
 			StateManager.Instance.SetOffline();
 
-			State state = StateManager.state;
+			State state = StateManager.mainState;
 			int oldPlayerId = NetworkCenter.Instance.GetPlayerNumber();
 			if (state == null || state.MainModel == null || oldPlayerId < 0) {
 				SetupGame(false);
@@ -298,11 +334,11 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 					SkierModel firstSkier = world.skiers[0];
 					world.skiers[0] = mySkier;
 					world.skiers[oldPlayerId] = firstSkier;
-					PlayerInputModel playerInput = StateManager.state.GetModel(mySkier.inputModelRef) as PlayerInputModel;
+					PlayerInputModel playerInput = StateManager.mainState.GetModel(mySkier.inputModelRef) as PlayerInputModel;
 					if (playerInput != null) {
 						playerInput.playerId = 0;
 					}
-					playerInput = StateManager.state.GetModel(firstSkier.inputModelRef) as PlayerInputModel;
+					playerInput = StateManager.mainState.GetModel(firstSkier.inputModelRef) as PlayerInputModel;
 					if (playerInput != null) {
 						playerInput.playerId = (uint)oldPlayerId;
 					}
@@ -444,6 +480,7 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 	private void OnGameResume(State newState, State oldestState, float timeToStart){
 		// game starting
+		SetupDemo(false);
 		FadeToState(MenuState.inGame);
 		StartCoroutine(DelayedEnable(false, canvasFadeTime));
 	}
@@ -467,7 +504,9 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 		yield return new WaitForSeconds(seconds);
 		NetworkCenter.Instance.Disconnect();
 		WorldObjects.Reset();
-		StateManager.Instance.Setup(null);
+		//StateManager.Instance.Setup(null);
+		SetupGame(false);
+		SetupDemo(true);
 		FadeToState(MenuState.enterNickname);
 	}
 

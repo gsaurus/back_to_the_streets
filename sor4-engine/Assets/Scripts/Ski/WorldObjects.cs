@@ -165,6 +165,28 @@ public class WorldObject
 
 public class WorldObjects{
 
+
+	static void ApplyDemoSetup(){
+		maxHorizontalDistance = 40;
+
+		maxDifficultyDistance = 10;
+		initialCleanupDistance = 999999;
+		finalGoalDistance = 999999;
+		minFlagDistance = 20;
+		maxFlagDistance = 40;
+		randomTrackVariation = 30;
+		minTrackYGeneration = 20;
+		maxTrackYGeneration = 60;
+		minFlagHorizontalDist = 0.1f;
+		maxFlagHorizontalDist = 0.55f;
+
+		maxDistanceBehind = 30;
+		minDistanceAhead = 60;
+		botsInactivityRange = 50.0f;
+		botsInvincibilityRange = 30.0f;
+	}
+
+
 	static void ApplyNormalSetup(){
 		maxHorizontalDistance = 20;
 
@@ -178,6 +200,11 @@ public class WorldObjects{
 		maxTrackYGeneration = 60;
 		minFlagHorizontalDist = 0.1f;
 		maxFlagHorizontalDist = 0.6f;
+
+		maxDistanceBehind = 10;
+		minDistanceAhead = 80;
+		botsInactivityRange = 5.0f;
+		botsInvincibilityRange = 3.0f;
 	}
 
 
@@ -193,6 +220,11 @@ public class WorldObjects{
 		maxTrackYGeneration = 6;
 		minFlagHorizontalDist = -0.05f;
 		maxFlagHorizontalDist = 0.2f;
+
+		maxDistanceBehind = 10;
+		minDistanceAhead = 80;
+		botsInactivityRange = 5.0f;
+		botsInvincibilityRange = 3.0f;
 	}
 
 
@@ -258,6 +290,7 @@ public class WorldObjects{
 		if (goalObj != null) {
 			goalObj.transform.position = new Vector3(999, 999, 999);
 		}
+		flags = new List<WorldObject>();
 	}
 
 
@@ -301,7 +334,7 @@ public class WorldObjects{
 	}
 
 
-	public static void HandleCollisionWithWorld(WorldModel world, SkierModel skier){
+	public static void HandleCollisionWithWorld(State state, WorldModel world, SkierModel skier){
 
 		if (skier.fallenTimer > 0 || skier.frozenTimer > 0){
 			return; // ignore if already collided
@@ -332,8 +365,8 @@ public class WorldObjects{
 				}
 			}else {
 				// flag
-				FixedFloat target = StateManager.state.Random.NextFloat(obj.x1 + 0.01f, obj.x2 - 0.01f);
-				skier.y = obj.y + StateManager.state.Random.NextFloat(1,1.5f);
+				FixedFloat target = state.Random.NextFloat(obj.x1 + 0.01f, obj.x2 - 0.01f);
+				skier.y = obj.y + state.Random.NextFloat(1,1.5f);
 				skier.frozenTimer =  (uint)(FixedFloat.Abs(skier.x-target) / maxHorizontalDistance) * frozenTime;
 				if (skier.frozenTimer > 2*frozenTime) skier.frozenTimer = 2*frozenTime;
 				if (skier.frozenTimer < collisionFallenTime) skier.frozenTimer = collisionFallenTime;
@@ -344,7 +377,9 @@ public class WorldObjects{
 				skier.x = target;
 
 				// Animate flag collision panel
-				AnimateFlagOnCollision(obj.view);
+				if (!GuiMenus.Instance.IsDemoPlaying()) {
+					AnimateFlagOnCollision(obj.view);
+				}
 			}
 		}
 	}
@@ -541,12 +576,12 @@ public class WorldObjects{
 
 
 
-	public static FixedFloat GetTargetAxisForBot(WorldModel world, SkierModel skier){
+	public static FixedFloat GetTargetAxisForBot(State state, WorldModel world, SkierModel skier){
 
 		// randomization based on player position
 		FixedFloat deltaYToPlayer = world.skiers [0].y - skier.y;
 
-		if (skier.fallenTimer > 0 || skier.frozenTimer > 0 || (deltaYToPlayer > 1 && StateManager.state.Random.NextFloat (0, deltaYToPlayer * 0.05f) > 3.0f)) {
+		if (skier.fallenTimer > 0 || skier.frozenTimer > 0 || (deltaYToPlayer > 1 && state.Random.NextFloat (0, deltaYToPlayer * 0.05f) > 3.0f)) {
 			return FixedFloat.Zero; // ignore if on the floor
 		}
 
@@ -636,20 +671,24 @@ public class WorldObjects{
 		return FixedFloat.One;
 	}
 
-	public static void UpdateTrack(WorldModel world, FixedFloat minY, FixedFloat maxY) {
+	public static void UpdateTrack(State state, WorldModel world, FixedFloat minY, FixedFloat maxY) {
 
 		if (rnd == null){
-			uint seed = StateManager.state.Random.NextUnsignedInt();
+			uint seed = state.Random.NextUnsignedInt();
 			rnd = new SimpleRandomGenerator(seed);
-			switch(StateManager.state.Random.NextInt(0,1)){
-				case 0:{
-					ApplyCleanTrackSetup();
-					break;
+			if (GuiMenus.Instance.demoStateManager == null || state != GuiMenus.Instance.demoStateManager.state) {
+				switch (state.Random.NextInt (0, 1)) {
+					case 0:{
+						ApplyCleanTrackSetup();
+						break;
+					}
+					default:{
+						ApplyNormalSetup();
+						break;
+					}
 				}
-				default:{
-					ApplyNormalSetup();
-					break;
-				}
+			} else {
+				ApplyDemoSetup();
 			}
 			nextFlagIsRight = rnd.NextUnsignedInt() % 2 == 0;
 			nextFlagDistance = GetNextFlagY();
@@ -752,6 +791,18 @@ public class WorldObjects{
 	}
 
 
+	public static FixedFloat GetAverageXForY(int y){
+		List<WorldObject> objects;
+		if (objectsByY.TryGetValue(y, out objects)) {
+			FixedFloat avg = 0;
+			foreach (WorldObject obj in objects) {
+				avg += (obj.x1 + obj.x2) * 0.5f;
+			}
+			avg /= objects.Count;
+			return avg;
+		}
+		return -1;
+	}
 
 	
 	static FixedFloat GetCenterXForY(FixedFloat y, FixedFloat lastY, FixedFloat newY, FixedFloat lastX, FixedFloat newX){

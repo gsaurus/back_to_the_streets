@@ -80,50 +80,57 @@ public class DebugWorldView:View<WorldModel>{
 
 
 
-	protected override void Update(WorldModel model, float deltaTime){
+	protected override void Update(State state, WorldModel model, float deltaTime){
+
+		if (state == StateManager.mainState && GuiMenus.Instance.IsDemoPlaying()) {
+			return;
+		}
 
 		UpdateSkiers(model, deltaTime);
 	
-		UpdateLeaderboard(model);
+		UpdateLeaderboard(state, model);
 
 		// check if next flag is outside screen
-		int playerId = 0;
-		if (StateManager.Instance.IsNetworked) {
-			playerId = NetworkCenter.Instance.GetPlayerNumber();
-			if (playerId < 0 || playerId >= model.skiers.Length)
+		if (!GuiMenus.Instance.IsDemoPlaying ()) {
+			int playerId = 0;
+			if (StateManager.Instance.IsNetworked) {
+				playerId = NetworkCenter.Instance.GetPlayerNumber ();
+				if (playerId < 0 || playerId >= model.skiers.Length)
+					return;
+			}
+
+			SkierModel mySkier = model.skiers [playerId];
+
+			WorldObject flag = WorldObjects.GetNextFlagForSkier (mySkier);
+			if (flag == null)
 				return;
+			Vector3 flagScreenPos = new Vector3 ((float)(flag.isRight ? flag.x1 : flag.x2), 0.0f, (float)flag.y);
+			flagScreenPos = Camera.main.WorldToScreenPoint (flagScreenPos);
+			flagScreenPos = new Vector3 (flagScreenPos.x / Camera.main.pixelWidth, flagScreenPos.y / Camera.main.pixelHeight, 2.0f);
+			bool setActive = false;
+			float distanceAway = 0.0f;
+			if (flagScreenPos.x < 0 && flag.isRight) {
+				distanceAway = -flagScreenPos.x;
+				arrowsToPointNextFlag.transform.localEulerAngles = new Vector3 (0, 180, 0);
+				Vector3 arrowsPosition = Camera.main.ScreenToWorldPoint (new Vector3 (0.00f * Camera.main.pixelWidth, Mathf.Clamp (flagScreenPos.y, 0.1f, 0.95f) * Camera.main.pixelHeight, flagScreenPos.z));
+				arrowsToPointNextFlag.transform.position = arrowsPosition;
+				setActive = true;
+			} else if (flagScreenPos.x > 1 && !flag.isRight) {
+				distanceAway = flagScreenPos.x - 1;
+				arrowsToPointNextFlag.transform.localEulerAngles = new Vector3 (0, 0, 0);
+				Vector3 arrowsPosition = Camera.main.ScreenToWorldPoint (new Vector3 (1.0f * Camera.main.pixelWidth, Mathf.Clamp (flagScreenPos.y, 0.1f, 0.95f) * Camera.main.pixelHeight, flagScreenPos.z));
+				arrowsToPointNextFlag.transform.position = arrowsPosition;
+				setActive = true;
+			}
+			if (setActive) {
+				arrowsToPointNextFlag.SetActive (true);
+				flag.ApplyColorToFlagArros (arrowsToPointNextFlag);
+				float scale = 0.1f - 0.08f * (1 - Mathf.Min (distanceAway, 3) / 3) + Mathf.Max (0.8f - flagScreenPos.y, 0) * 0.25f;
+				scale *= 2.5f;
+				arrowsToPointNextFlag.transform.localScale = new Vector3 (scale, scale, scale);
+			}
+			arrowsToPointNextFlag.SetActive (setActive);
 		}
-
-		SkierModel mySkier = model.skiers[playerId];
-
-		WorldObject flag = WorldObjects.GetNextFlagForSkier(mySkier);
-		if (flag == null) return;
-		Vector3 flagScreenPos = new Vector3((float)(flag.isRight ? flag.x1 : flag.x2), 0.0f, (float)flag.y);
-		flagScreenPos = Camera.main.WorldToScreenPoint(flagScreenPos);
-		flagScreenPos = new Vector3(flagScreenPos.x / Camera.main.pixelWidth, flagScreenPos.y / Camera.main.pixelHeight, 2.0f);
-		bool setActive = false;
-		float distanceAway = 0.0f;
-		if (flagScreenPos.x < 0 && flag.isRight) {
-			distanceAway = -flagScreenPos.x;
-			arrowsToPointNextFlag.transform.localEulerAngles = new Vector3(0, 180, 0);
-			Vector3 arrowsPosition = Camera.main.ScreenToWorldPoint(new Vector3(0.00f * Camera.main.pixelWidth, Mathf.Clamp(flagScreenPos.y, 0.1f, 0.95f) * Camera.main.pixelHeight, flagScreenPos.z));
-			arrowsToPointNextFlag.transform.position = arrowsPosition;
-			setActive = true;
-		}else if (flagScreenPos.x > 1 && !flag.isRight) {
-			distanceAway = flagScreenPos.x - 1;
-			arrowsToPointNextFlag.transform.localEulerAngles = new Vector3(0, 0, 0);
-			Vector3 arrowsPosition = Camera.main.ScreenToWorldPoint(new Vector3(1.0f * Camera.main.pixelWidth, Mathf.Clamp(flagScreenPos.y, 0.1f, 0.95f) * Camera.main.pixelHeight, flagScreenPos.z));
-			arrowsToPointNextFlag.transform.position = arrowsPosition;
-			setActive = true;
-		}
-		if (setActive) {
-			arrowsToPointNextFlag.SetActive(true);
-			flag.ApplyColorToFlagArros(arrowsToPointNextFlag);
-			float scale = 0.1f - 0.08f * (1 - Mathf.Min(distanceAway, 3) / 3) + Mathf.Max(0.8f - flagScreenPos.y,0) * 0.25f;
-			scale *= 2.5f;
-			arrowsToPointNextFlag.transform.localScale = new Vector3(scale, scale, scale);
-		}
-		arrowsToPointNextFlag.SetActive(setActive);
 
 	}
 
@@ -156,7 +163,7 @@ public class DebugWorldView:View<WorldModel>{
 	}
 
 
-	private void UpdateLeaderboard(WorldModel model){
+	private void UpdateLeaderboard(State state, WorldModel model){
 		GameObject leaderboard = GuiMenus.Instance.leaderboardObject;
 		KeyValuePair<int, float>[] skiersYs = new KeyValuePair<int, float>[model.skiers.Count()];
 		float order;
@@ -184,7 +191,7 @@ public class DebugWorldView:View<WorldModel>{
 				textItem.enabled = entryString != null;
 				if (textItem.enabled){
 					if (finishedSkiers[orderedId] == 0 && skiersYs[i].Value <= -WorldObjects.finalGoalDistance) {
-						int frameNum = (int) Mathf.Max((int)StateManager.state.Keyframe - (int)WorldController.framesToStart, 0.0f);
+						int frameNum = (int) Mathf.Max((int)state.Keyframe - (int)WorldController.framesToStart, 0.0f);
 						finishedSkiers[orderedId] = frameNum;
 					}
 					if (finishedSkiers[orderedId] != 0) {
@@ -533,7 +540,7 @@ public class DebugWorldView:View<WorldModel>{
 #endregion
 
 
-	public override void OnDestroy(WorldModel model){
+	public override void OnDestroy(State state, WorldModel model){
 		if (skierViews == null) return;
 		foreach (GameObject skierView in skierViews) {
 			if (skierView != null){

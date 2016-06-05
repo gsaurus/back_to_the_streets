@@ -60,7 +60,7 @@ public class WorldController:Controller<WorldModel>{
 
 
 
-	private void HandlePlayerConnections(WorldModel model){
+	private void HandlePlayerConnections(State state, WorldModel model){
 
 		List<uint> allPlayers;
 
@@ -70,9 +70,16 @@ public class WorldController:Controller<WorldModel>{
 				allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers ();
 			} else {
 				allPlayers = new List<uint> ();
-				allPlayers.Add (0);
-				int maxPlayers = UnityEngine.Random.Range(3, 7);
-				if (maxPlayers == 6) maxPlayers = 5;
+				allPlayers.Add(0);
+				int maxPlayers;
+				if (GuiMenus.Instance.demoStateManager == null || state != GuiMenus.Instance.demoStateManager.state) {
+					maxPlayers = UnityEngine.Random.Range (3, 7);
+					if (maxPlayers == 6) {
+						maxPlayers = 5;
+					}
+				} else {
+					maxPlayers = UnityEngine.Random.Range (4, 7);
+				}
 				for (uint i = 1; i < maxPlayers; ++i)
 					allPlayers.Add(i);
 			}
@@ -84,7 +91,7 @@ public class WorldController:Controller<WorldModel>{
 			foreach (uint playerId in allPlayers) {
 				if (model.skiers[playerId] == null) {
 					Model inputModel = new PlayerInputModel (playerId);
-					ModelReference inputModelRef = StateManager.state.AddModel (inputModel);
+					ModelReference inputModelRef = state.AddModel (inputModel);
 					playerX = (int)playerId * distanceBetweenPlayers;
 					if (playerPosition >= 0) {
 						if (playerId == 0) {
@@ -148,7 +155,7 @@ public class WorldController:Controller<WorldModel>{
 	}
 
 
-	private void UpdateSkiers(WorldModel world){
+	private void UpdateSkiers(State state, WorldModel world){
 
 		CheckTopAndBottomSkiers(world);
 
@@ -173,15 +180,15 @@ public class WorldController:Controller<WorldModel>{
 
 					// Use input to update skier direction
 					if (skier.fallenTimer == 0 && skier.frozenTimer == 0){
-						PlayerInputModel inputModel = StateManager.state.GetModel(skier.inputModelRef) as PlayerInputModel;
+						PlayerInputModel inputModel = state.GetModel(skier.inputModelRef) as PlayerInputModel;
 						if (inputModel != null && inputModel.axis != 0.0f){
 							// reversed cose camera is reversed too
 							UpdateSkierDirectionBasedOnInput(skier, -inputModel.axis);
 						}
-						else if (!StateManager.Instance.IsNetworked && skierId > 0) {
+						else if ((GuiMenus.Instance.demoStateManager != null && GuiMenus.Instance.demoStateManager.state == state) || (!StateManager.Instance.IsNetworked && skierId > 0)) {
 							FixedFloat botTargetAxis = FixedFloat.Zero;
-							if (StateManager.state.Keyframe % 3 == skierId % 3) {
-								botTargetAxis = WorldObjects.GetTargetAxisForBot(world, skier);
+							if (state.Keyframe % 3 == skierId % 3) {
+								botTargetAxis = WorldObjects.GetTargetAxisForBot(state, world, skier);
 							}
 							UpdateSkierDirectionBasedOnInput(skier, botTargetAxis);
 						}
@@ -195,7 +202,7 @@ public class WorldController:Controller<WorldModel>{
 
 				// check collisions
 				if (StateManager.Instance.IsNetworked || skierId == 0 || skier.y < world.skiers[0].y + WorldObjects.botsInvincibilityRange) {
-					WorldObjects.HandleCollisionWithWorld(world, skier);
+					WorldObjects.HandleCollisionWithWorld(state, world, skier);
 					WorldObjects.HandleCollisionWithOtherSkiers(world, skier);
 				}
 
@@ -321,7 +328,7 @@ public class WorldController:Controller<WorldModel>{
 
 
 
-	protected override void Update(WorldModel model){
+	protected override void Update(State state, WorldModel model){
 
 		// update track
 		FixedFloat minY = 0;
@@ -340,13 +347,13 @@ public class WorldController:Controller<WorldModel>{
 			}
 		}
 
-		WorldObjects.UpdateTrack(model, minY, maxY);
+		WorldObjects.UpdateTrack(state, model, minY, maxY);
 
-		HandlePlayerConnections(model);
+		HandlePlayerConnections(state, model);
 
-		if (StateManager.state.Keyframe > framesToStart){
+		if (state.Keyframe > framesToStart || (GuiMenus.Instance.demoStateManager != null && state == GuiMenus.Instance.demoStateManager.state)){
 			// Update skiers only after initial countdown
-			UpdateSkiers(model);
+			UpdateSkiers(state, model);
 		}
 	}
 	

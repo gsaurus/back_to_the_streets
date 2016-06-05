@@ -61,7 +61,7 @@ namespace RetroBread{
 			// 2) game doesn't allow joining on middle game: if all ready, server send state to all
 			void OnPlayerReadyEvent(string guid){
 				if (UnityEngine.Network.isServer && NetworkSync.Instance.IsPlayerReady()){
-					State currentState = StateManager.state;
+					State currentState = StateManager.mainState;
 					State oldestState = StateManager.Instance.GetOldestBufferedState();
 
 					// if everyone is ready, we can resume the game
@@ -176,7 +176,7 @@ namespace RetroBread{
 
 			// Apply lag compensation on the given events
 			private void ApplyLagCompensationOnEvent(Event e){
-				uint newKeyframe = StateManager.state.Keyframe;
+				uint newKeyframe = StateManager.mainState.Keyframe;
 				newKeyframe += GetLagFrames();
 				if (e.Keyframe < newKeyframe){
 					e.Keyframe = newKeyframe;

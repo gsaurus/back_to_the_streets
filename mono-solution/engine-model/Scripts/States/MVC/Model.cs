@@ -18,11 +18,11 @@ namespace RetroBread{
 		// From there, the reference never change, maintaining the consistency
 		[ProtoMember(1)]
 		public ModelReference Index { get ; set; }
-		
+
 		// Models with lower update order updates first
 		[ProtoMember(2)]
 		public int UpdatingOrder { get; set; }
-		
+
 		// used to obtain the VC factories
 		protected string viewFactoryId;
 		protected string controllerFactoryId;
@@ -34,7 +34,7 @@ namespace RetroBread{
 			}
 			set{
 				viewFactoryId = value;
-				InvalidateView();
+				InvalidateView(null);
 			}
 		}
 
@@ -45,13 +45,13 @@ namespace RetroBread{
 			}
 			set{
 				controllerFactoryId = value;
-				InvalidateController();
+				InvalidateController(null);
 			}
 		}
-		
+
 		// Set View and Controller from other model, if compatible.
 		// If this is a compatible state, we want to reuse our VC
-		public abstract bool SetVCFromModel(Model other);
+		public abstract bool SetVCFromModel(State state, Model other);
 
 		// Get the view associated to this model
 		public abstract View View();
@@ -60,10 +60,10 @@ namespace RetroBread{
 		public abstract Controller Controller();
 
 		// Unload resources
-		public abstract void Destroy();
+		public abstract void Destroy(State state);
 
-		public abstract void InvalidateView();
-		public abstract void InvalidateController();
+		public abstract void InvalidateView(State state);
+		public abstract void InvalidateController(State state);
 
 		// Default constructor
 		public Model(){
@@ -94,11 +94,11 @@ namespace RetroBread{
 
 	// We use the Curiously Recurring Template Pattern here to enforce types
 	public abstract class Model<T>:Model where T:Model<T>, new(){
-	
+
 		private View<T> view;
 
 		private Controller<T> controller;
-		
+
 
 		#region Constructors
 
@@ -117,14 +117,14 @@ namespace RetroBread{
 			this.viewFactoryId = viewFactoryId;
 			this.UpdatingOrder = updatingOrder;
 		}
-	
+
 
 		#endregion
 
 
 		// Set View and Controller from other model, if compatible.
 		// If this is a compatible state, we want to reuse our VC
-		public override bool SetVCFromModel(Model other) {
+		public override bool SetVCFromModel(State state, Model other) {
 
 			// Only use same View and Controller if they are of same type
 			// otherwise proper VC should be created afterwards
@@ -140,10 +140,10 @@ namespace RetroBread{
 			bool isControllerCompatible = otherModel.controllerFactoryId == this.controllerFactoryId;
 
 			if (isViewCompatible){
-				isViewCompatible = otherModel.view != null ? otherModel.view.IsCompatible(otherModel as T, thisModel) : false;
+				isViewCompatible = otherModel.view != null ? otherModel.view.IsCompatible(state, otherModel as T, thisModel) : false;
 			}
 			if (isControllerCompatible){
-				isControllerCompatible = otherModel.controller != null ? otherModel.controller.IsCompatible(otherModel as T, thisModel) : false;
+				isControllerCompatible = otherModel.controller != null ? otherModel.controller.IsCompatible(state, otherModel as T, thisModel) : false;
 			}
 
 			this.view = isViewCompatible ? otherModel.view : null;
@@ -180,33 +180,32 @@ namespace RetroBread{
 		}
 
 
-		public override void InvalidateController(){
-			if (controller != null) controller.OnDestroy(this as T);
+		public override void InvalidateController(State state){
+			if (controller != null) controller.OnDestroy(state, this as T);
 			controller = null;
 		}
 
-		public override void InvalidateView(){
-			if (view != null) view.OnDestroy(this as T);
+		public override void InvalidateView(State state){
+			if (view != null) view.OnDestroy(state, this as T);
 			view = null;
 		}
 
-		public void InvalidateVC(){
-			InvalidateView();
-			InvalidateController();
+		public void InvalidateVC(State state){
+			InvalidateView(state);
+			InvalidateController(state);
 		}
 
-		public sealed override void Destroy(){
-			InvalidateVC();
-			OnDestroy();
+		public sealed override void Destroy(State state){
+			InvalidateVC(state);
+			OnDestroy(state);
 		}
 
-		protected virtual void OnDestroy(){
+		protected virtual void OnDestroy(State state){
 			// Nothing by default
 		}
-			
+
 	}
 
 	#endregion
 
 }
-

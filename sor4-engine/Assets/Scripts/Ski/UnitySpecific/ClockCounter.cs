@@ -17,8 +17,8 @@ public class ClockCounter : SingletonMonoBehaviour<ClockCounter> {
 
 
 	void Update() {
-		if (isCounting && StateManager.state != null) {
-			int frameNum = (int) Mathf.Max((int)StateManager.state.Keyframe - (int)WorldController.framesToStart, 0.0f);
+		if (isCounting && StateManager.mainState != null) {
+			int frameNum = (int) Mathf.Max((int)StateManager.mainState.Keyframe - (int)WorldController.framesToStart, 0.0f);
 			float currentTime = StateManager.Instance.UpdateRate * frameNum;
 			UnityEngine.UI.Text text = GetComponent<UnityEngine.UI.Text>();
 			text.text = FloatToTime(currentTime, "0:00.00");

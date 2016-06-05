@@ -30,8 +30,8 @@ namespace RetroBread{
 		#region Singleton
 		private static readonly StateManager instance = new StateManager();
 		public static StateManager Instance { get{ return instance; } }
-		public static State state { get{ return instance.currentState; } }
-		private StateManager(){}
+		public static State mainState { get{ return instance.currentState; } }
+		public StateManager(){}
 		#endregion
 
 		// If received input keyframe differs this number of frames from current keyframe, sync time
@@ -50,6 +50,7 @@ namespace RetroBread{
 
 		// The current game state
 		private InternalState currentState;
+		public State state { get{ return currentState; } }
 
 		// logics update frequency
 		public float UpdateRate { get; private set; }
@@ -126,11 +127,11 @@ namespace RetroBread{
 
 		// Add an event to the game
 		public void AddEvent(Event newEvent){
-			if (state == null || IsPaused) {
+			if (currentState == null || IsPaused) {
 				return;
 			}
 			// Setup events keyframe
-			newEvent.Keyframe = state.Keyframe;
+			newEvent.Keyframe = currentState.Keyframe;
 
 			if (IsNetworked){
 				// Network will take care of adding lag compensation
@@ -153,7 +154,7 @@ namespace RetroBread{
 			// if frames are considerably different, delay or advance game time
 			if (NetworkGame.Instance.enabled){
 				uint lagFrames = NetworkGame.Instance.GetLagFrames();
-				int frameDifference = (int)(oldestKeyframe - state.Keyframe);
+				int frameDifference = (int)(oldestKeyframe - currentState.Keyframe);
 				if (frameDifference < -clockSinkToleranceFrames || frameDifference > lagFrames + clockSinkToleranceFrames){
 					clockSynkTime = frameDifference*UpdateRate;
 					//UnityEngine.Debug.Log("remainder: " + frameDifference);
@@ -164,7 +165,8 @@ namespace RetroBread{
 
 		// Get event for a given player in the current state keyframe
 		public List<Event> GetEventsForPlayer(uint playerId){
-			return eventsBuffer.GetEvents(state.Keyframe, playerId);
+			if (eventsBuffer == null) return null;
+			return eventsBuffer.GetEvents(currentState.Keyframe, playerId);
 		}
 
 
@@ -369,7 +371,7 @@ namespace RetroBread{
 
 		// Force buffering the current state
 		public uint SaveBufferedState(){
-			if (state.IsUpdating) return 0;
+			if (currentState.IsUpdating) return 0;
 			statesBuffer.SetState(currentState);
 			latestKeyframeBuffered = currentState.Keyframe;
 			return latestKeyframeBuffered;

@@ -13,9 +13,6 @@ namespace RetroBread{
 		// Let player create a new server
 		public sealed class NetworkMaster: SingletonMonoBehaviour<NetworkMaster>{
 			
-			private static string masterServerIP = "79.168.106.90"; //"127.0.0.1";
-			
-			
 			// A host state indicating it's open to new connections
 			public static readonly string networkHostAvailable = "open";
 			
@@ -25,8 +22,11 @@ namespace RetroBread{
 			
 			// game unique identifier
 			public string gameIdentifier = "Put Game Name here";
-			
-			public int port = 27886; // Use same as kaillera on this example..
+
+			public string masterIp = "";
+			public int masterPort = 0;
+			public int clientServerPort = 27884;
+			public int facilitatorPort = 0;
 			
 			// list of hosts found so far
 			public List<HostData> hosts { get; private set; }
@@ -45,10 +45,14 @@ namespace RetroBread{
 			
 			
 			public void RefreshServersList() {
-//				MasterServer.ipAddress = masterServerIP;
-//				MasterServer.port = 23466;
-//				UnityEngine.Network.natFacilitatorIP = masterServerIP;
-//				UnityEngine.Network.natFacilitatorPort = 50005;
+				if (!string.IsNullOrEmpty (masterIp)) {
+					MasterServer.ipAddress = masterIp;
+					MasterServer.port = masterPort;
+					if (facilitatorPort > 0) {
+						UnityEngine.Network.natFacilitatorIP = masterIp;
+						UnityEngine.Network.natFacilitatorPort = facilitatorPort;
+					}
+				}
 				MasterServer.ClearHostList();
 				hosts = new List<HostData>();
 				MasterServer.RequestHostList(gameIdentifier);
@@ -85,7 +89,7 @@ namespace RetroBread{
 			public NetworkConnectionError CreateServer(int maxPlayers, string password = null){
 				UnityEngine.Network.incomingPassword = password;
 				bool useNat = !UnityEngine.Network.HavePublicAddress();
-				return UnityEngine.Network.InitializeServer(maxPlayers-1, port, useNat);
+				return UnityEngine.Network.InitializeServer(maxPlayers-1, clientServerPort, useNat);
 			}
 
 			

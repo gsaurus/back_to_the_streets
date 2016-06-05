@@ -158,7 +158,7 @@ namespace RetroBread{
 			++nextModelIndex;
 
 		}
-	
+
 
 		// Update all views
 		public void UpdateViews(float deltaTime) {
@@ -169,7 +169,7 @@ namespace RetroBread{
 
 					Debug.StartProfiling("view update " + model.Index + " " + model.GetType().ToString());
 
-					view.Update(model, deltaTime);
+					view.Update(this, model, deltaTime);
 
 					Debug.StopProfiling();
 				}
@@ -192,7 +192,7 @@ namespace RetroBread{
 
 					Debug.StartProfiling("update " + model.Index + " " + model.GetType().ToString());
 
-					controller.Update(model);
+					controller.Update(this, model);
 
 					Debug.StopProfiling();
 				}
@@ -205,7 +205,7 @@ namespace RetroBread{
 
 					Debug.StartProfiling("post update " + model.Index + " " + model.GetType().ToString());
 
-					controller.PostUpdate(model);
+					controller.PostUpdate(this, model);
 
 					Debug.StopProfiling();
 				}
@@ -245,7 +245,7 @@ namespace RetroBread{
 			sortedModels.Remove(deletedModel.model);
 			models.Remove(deletedModel.model.Index);
 			deletedModel.PerformCallback();
-			deletedModel.model.Destroy();
+			deletedModel.model.Destroy(this);
 		}
 
 		private void AddModelInternal(ModelChangeInfo createdModel){
@@ -294,7 +294,7 @@ namespace RetroBread{
 		private void UpdateOperationChange(ModelChangeInfo modelInfo, ref List<ModelChangeInfo> list){
 			// Do not do updating operations outside of update cycles
 			if (!updateChanges.IsUpdating) return;
-			
+
 			if (list == null) {
 				list = new List<ModelChangeInfo>();
 			}
@@ -316,7 +316,7 @@ namespace RetroBread{
 				ReorderModelInternal(changeInfo);
 			}
 		}
-		
+
 		// Add a new model to the state (it's added only after the update cycle)
 		public ModelReference AddModel(Model model){
 			return AddModel(model, null, null);
@@ -376,18 +376,18 @@ namespace RetroBread{
 			Model myModel;
 			foreach (KeyValuePair<uint, Model> pair in otherState.models) {
 				if (models.TryGetValue(pair.Key, out myModel)) {
-					myModel.SetVCFromModel(pair.Value);
+					myModel.SetVCFromModel(this, pair.Value);
 				}
-				pair.Value.Destroy();
+				pair.Value.Destroy(this);
 			}
 		}
 
 		public void Destroy(){
 			foreach (Model model in models.Values){
-				model.Destroy();
+				model.Destroy(this);
 			}
 		}
-		
+
 	}
 
 
@@ -432,7 +432,7 @@ namespace RetroBread{
 				isUpdating = value;
 			}
 		}
-		
+
 		// The next lists are temporarily created during update cycle and consolidated after
 		// New models can be created
 		public List<ModelChangeInfo> createdModelsFromUpdate;
@@ -442,7 +442,7 @@ namespace RetroBread{
 		public List<ModelChangeInfo> reorderedModelsFromUpdate;
 		// Main model may change
 		public ModelChangeInfo newMainModel;
-		
+
 	}
 
 
