@@ -195,8 +195,10 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 			demoStateManager.Setup(setup);	
 		} else {
 			light.transform.eulerAngles = new Vector3(30, 150, 0);
-			demoStateManager.Setup(null);
-			demoStateManager = null;
+			if (demoStateManager != null) {
+				demoStateManager.Setup (null);
+				demoStateManager = null;
+			}
 		}
 	}
 

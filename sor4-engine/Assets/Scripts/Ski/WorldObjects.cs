@@ -347,7 +347,7 @@ public class WorldObjects{
 				FixedFloat objCenterX = (obj.x1+obj.x2)/2.0;
 				FixedFloat deltaX = FixedFloat.Abs(skier.x - objCenterX);
 				FixedFloat deltaY = FixedFloat.Abs(skier.y - obj.y);
-				if (deltaX < 0.2f*objWidth && deltaY < 0.1f) {
+				if (deltaX < 0.225f*objWidth && deltaY < 0.15f) {
 					skier.fallenTimer = collisionFallenTime;
 					skier.velX = obj.isRight ? -1.4 : 1.4;
 					skier.velY = 0.6f;
@@ -362,6 +362,8 @@ public class WorldObjects{
 					if (deltaY > 0.2f && skier.y > obj.y) {
 						skier.velY *= 0.75f; //+= 0.2f;
 					}
+					skier.velX *= 0.9f;
+					skier.velY *= 0.9f;
 				}
 			}else {
 				// flag

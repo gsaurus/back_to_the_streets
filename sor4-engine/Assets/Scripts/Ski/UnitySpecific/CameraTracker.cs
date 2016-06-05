@@ -46,16 +46,22 @@ public class CameraTracker : MonoBehaviour {
 			);
 			mainCamera.transform.position = targetCenter;
 
-			avgPos.z -= 0;
+			avgPos.z -= 7;
 			demoLookAtPosition = new Vector3(
 				Mathf.Lerp(demoLookAtPosition.x, avgPos.x, 2.5f * Time.deltaTime),
 				0,
 				Mathf.Lerp(demoLookAtPosition.z, avgPos.z, 20.0f * Time.deltaTime)
 			);
+			Vector3 angles = mainCamera.transform.localEulerAngles;
+			angles.z = 0;
 			mainCamera.transform.LookAt(demoLookAtPosition);
-			Vector3 angles = mainCamera.transform.eulerAngles;
-			angles.z = 6;
-			mainCamera.transform.eulerAngles = angles;
+			Debug.Log (Vector3.Distance (angles, mainCamera.transform.localEulerAngles));
+			if (Vector3.Distance(angles, mainCamera.transform.localEulerAngles) > 0.12f) {
+				mainCamera.transform.localEulerAngles = Vector3.Lerp(mainCamera.transform.localEulerAngles, angles, 0.0001f * Time.deltaTime);
+			}
+			angles = mainCamera.transform.localEulerAngles;
+			angles.z = -7.5f;
+			mainCamera.transform.localEulerAngles = angles;
 		} else {
 			mainCamera.transform.position = new Vector3(transform.position.x, 0, transform.position.z) + originalPosition;
 			Vector3 originalSkierAngles = transform.localEulerAngles;
