@@ -59,9 +59,9 @@ public class DebugWorldView:View<WorldModel>{
 			painClips[i] = Resources.Load("sound/WS_pain_" + (i+1)) as AudioClip;
 		}
 
-		failClip = Resources.Load("sound/WS_penalty") as AudioClip;
+		failClip = Resources.Load("sound/SSS_SFX_hit_penaltyWall") as AudioClip;
 
-		originalFogColor = RenderSettings.fogColor;
+        originalFogColor = RenderSettings.fogColor;
 	}
 
 
@@ -351,20 +351,22 @@ public class DebugWorldView:View<WorldModel>{
 								audio[2].Stop();
 								if (skierModel.frozenTimer == 0) {
 
-									audio[2].pitch = UnityEngine.Random.Range(0.8f, 1.2f);
-									audio[2].Play();
+									audio[2].pitch = UnityEngine.Random.Range(1f, 1.1f);
+                                    audio[2].volume = 1.0f;
+                                    audio[2].Play();
 //									audio[0].clip = painClips[painIndex];
 //									audio[0].Play();
 //									AudioSource.PlayClipAtPoint(painClips[painIndex], skierView.transform.position);
 								}else {
-									if (NetworkCenter.Instance.GetPlayerNumber() == i){
-										audio[2].PlayOneShot(failClip);
-									}
-								}
+//									if (NetworkCenter.Instance.GetPlayerNumber() == i){
+                                        audio[2].volume = 0.45f;
+										audio[2].PlayOneShot(failClip);         
+                                    //									}
+                                }
 
 								int painIndex = UnityEngine.Random.Range(0,9);
-								audio[1].volume = 1;
-								audio[1].pitch = UnityEngine.Random.Range(0.8f, 1.2f);
+								audio[1].volume = 0.35f;
+								audio[1].pitch = UnityEngine.Random.Range(0.7f, 1.0f);
 								audio[1].PlayOneShot(painClips[painIndex]);
 
 								skierCollisionSoundActivated[i] = true;
@@ -372,8 +374,8 @@ public class DebugWorldView:View<WorldModel>{
 
 							if (skierModel.fallenTimer == 0 && skierModel.frozenTimer > 20 && UnityEngine.Random.Range(0, 100) < 5){
 								int painIndex = UnityEngine.Random.Range(0,9);
-								audio[1].volume = 0.5f;
-								audio[1].pitch = UnityEngine.Random.Range(0.8f, 1.2f);
+								audio[1].volume = 0.35f;
+								audio[1].pitch = UnityEngine.Random.Range(0.7f, 1.0f);
 								audio[1].PlayOneShot(painClips[painIndex]);
 							}
 
