@@ -195,7 +195,7 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 			WorldModel world = new WorldModel ();
 			StateManagerSetup setup = new StateManagerSetup (world, false);
 			demoStateManager.Setup(setup);	
-			mainCamera.transform.localEulerAngles = new Vector3(55, 300, 350);
+			mainCamera.transform.localEulerAngles = new Vector3(93, 300, 350);
 		} else {
 			light.transform.eulerAngles = new Vector3(30, 150, 0);
 			if (demoStateManager != null) {

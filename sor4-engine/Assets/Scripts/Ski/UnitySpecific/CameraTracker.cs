@@ -59,7 +59,7 @@ public class CameraTracker : MonoBehaviour {
 				mainCamera.transform.localEulerAngles = Vector3.Lerp(angles, mainCamera.transform.localEulerAngles, 0.2f * Time.deltaTime);
 			}
 			angles = mainCamera.transform.localEulerAngles;
-			angles.z = -7.5f;
+			angles.z = -40.0f;
 			mainCamera.transform.localEulerAngles = angles;
 		} else {
 			mainCamera.transform.position = new Vector3(transform.position.x, 0, transform.position.z) + originalPosition;

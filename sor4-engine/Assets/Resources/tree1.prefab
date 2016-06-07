@@ -7,9 +7,9 @@ GameObject:
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 400396}
-  - 33: {fileID: 3384930}
-  - 23: {fileID: 2347650}
+  - 4: {fileID: 466220}
+  - 33: {fileID: 3330948}
+  - 23: {fileID: 2397014}
   m_Layer: 0
   m_Name: tree1
   m_TagString: Untagged
@@ -17,7 +17,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &400396
+--- !u!4 &466220
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -26,10 +26,11 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071067}
   m_LocalPosition: {x: -19.25, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: -89.980194, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!23 &2347650
+--- !u!23 &2397014
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -55,13 +56,13 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!33 &3384930
+--- !u!33 &3330948
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 114768}
-  m_Mesh: {fileID: 4300000, guid: 7b3b3c7f2df9b4491bbd0b3ee6739d0d, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 2b0f36aca51c1af45aa44ccf0e5f1c25, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
