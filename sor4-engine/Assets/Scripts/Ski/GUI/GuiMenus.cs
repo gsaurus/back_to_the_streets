@@ -21,14 +21,14 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 	private static float connectionFadeTime = 0.25f;
 
 	// waiting time for more players, in seconds -- server
-	private static float minWaitingTimeInOnline = 0.1f;
-	private static float maxWaitingTimeInOnline = 0.1f;
-	private static float hostsDiscoveryTimeout = 2.0f;
+//	private static float minWaitingTimeInOnline = 0.1f;
+//	private static float maxWaitingTimeInOnline = 0.1f;
+//	private static float hostsDiscoveryTimeout = 2.0f;
 
-//	// waiting time for more players, in seconds -- server
-//	private static float minWaitingTimeInOnline = 12.0f;
-//	private static float maxWaitingTimeInOnline = 17.0f;
-//	private static float hostsDiscoveryTimeout = 2.25f;
+	// waiting time for more players, in seconds -- server
+	private static float minWaitingTimeInOnline = 12.0f;
+	private static float maxWaitingTimeInOnline = 17.0f;
+	private static float hostsDiscoveryTimeout = 2.25f;
 
 	// waiting time for more players, in seconds -- client
 	private static float maxWaitingTimeClient = 19.0f;
@@ -181,6 +181,8 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 			matchMakingIntervals[i] = UnityEngine.Random.Range(0.5f, maxTime);
 		}
 		Array.Sort(matchMakingIntervals);
+		matchMakingIntervals[matchMakingIntervals.Length - 1] = maxTime;
+		matchMakingIntervals[matchMakingIntervals.Length - 2] = maxTime-1;
 		matchmakingStartTime = Time.unscaledTime;
 	
 	}
@@ -398,7 +400,11 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 		Color enabledColor = new Color(0.25f, 1.0f, 0.25f);
 		UnityEngine.UI.Image image;
 		if (matchMakingIntervals == null){
-			for (int i = 0 ; i < matchmakingProgressParent.transform.childCount ; ++i) {
+			image = matchmakingProgressParent.transform.GetChild(0).gameObject.GetComponent<UnityEngine.UI.Image>();
+			if (image != null) {
+				image.color = enabledColor;
+			}
+			for (int i = 1 ; i < matchmakingProgressParent.transform.childCount ; ++i) {
 				image = matchmakingProgressParent.transform.GetChild(i).gameObject.GetComponent<UnityEngine.UI.Image>();
 				if (image != null) {
 					image.color = disabledColor;
@@ -416,7 +422,7 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 		for (int i = 0 ; i < matchmakingProgressParent.transform.childCount ; ++i) {
 			image = matchmakingProgressParent.transform.GetChild(i).gameObject.GetComponent<UnityEngine.UI.Image>();
 			if (image != null) {
-				color = i < matchMakingProgress ? enabledColor : disabledColor;
+				color = i <= matchMakingProgress ? enabledColor : disabledColor;
 				StartCoroutine(FadeImageColorTo(image, color, connectionFadeTime));
 			}
 		}
