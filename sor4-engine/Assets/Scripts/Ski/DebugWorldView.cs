@@ -164,7 +164,8 @@ public class DebugWorldView:View<WorldModel>{
 
 
 	private void UpdateLeaderboard(State state, WorldModel model){
-		GameObject leaderboard = GuiMenus.Instance.leaderboardObject;
+		GameObject leaderboardMainObj = GuiMenus.Instance.leaderboardObject;
+		GameObject leaderboard = leaderboardMainObj.transform.GetChild(0).gameObject;
 		KeyValuePair<int, float>[] skiersYs = new KeyValuePair<int, float>[model.skiers.Count()];
 		float order;
 		for (int i = 0 ; i < skiersYs.Count() ; ++i){
@@ -219,7 +220,9 @@ public class DebugWorldView:View<WorldModel>{
 				}
 			}
 		}
-		leaderboard.SetActive(position > 1);
+		leaderboardMainObj.SetActive(position > 1);
+		RectTransform leaderboardRect = leaderboardMainObj.GetComponent<RectTransform>();
+		leaderboardRect.sizeDelta = leaderboard.GetComponent<RectTransform>().sizeDelta + new Vector2(6, 4);
 
 		string winnerName = skiersNames[skiersYs[0].Key];
 		if (winnerName != null) {
@@ -273,6 +276,7 @@ public class DebugWorldView:View<WorldModel>{
 					Transform mist = bgTransform.parent.FindChild("Mist");
 					if (mist != null) {
 						mist.gameObject.GetComponent<SpriteRenderer>().color = RenderSettings.fogColor;
+						mist.gameObject.SetActive(!GuiMenus.Instance.IsDemoPlaying());
 					}
 				}
 

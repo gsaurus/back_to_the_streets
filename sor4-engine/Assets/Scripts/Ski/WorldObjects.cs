@@ -112,7 +112,7 @@ public class WorldObject
 		if (type < 0){
 			// Flag
 			view = GameObject.Instantiate(flagPrefab);
-			view.transform.localEulerAngles = new Vector3(10, type == -2 ? 180 : 0, 0);
+			view.transform.localEulerAngles = new Vector3(type == -2 ? 340: 20, type == -2 ? 180 : 0, 0);
 			view.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
 
 			ApplyColorToFlagArros(view);
@@ -186,7 +186,7 @@ public class WorldObjects{
 		minDistanceAhead = 60;
 		botsInactivityRange = 50.0f;
 		botsInvincibilityRange = 30.0f;
-		trackType = 0;
+		trackType = 2;
 	}
 
 
@@ -508,7 +508,7 @@ public class WorldObjects{
 						//res.Y += 0.5f;
 						if (secondFlag) {
 							return (res + res1) * 0.5;
-						}else if (trackType == 0 || !direct) {
+						}else if (trackType != 1 || !direct) {
 							return res;
 						} else {
 							res1 = res;
@@ -842,6 +842,9 @@ public class WorldObjects{
 				flags.Add(flagObj);
 			}else {
 				randomX = GetRandomXAroundCenter(centerX, nextY);
+				if (trackType == 2) {
+					randomX = randomX * 1.3 - 20;
+				}
 				newObjects.Add(new WorldObject(rnd.NextInt(0, 4), randomX, nextY, randomX > centerX));
 			}
 

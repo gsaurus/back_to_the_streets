@@ -20,15 +20,15 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 	private static float canvasFadeTime = 0.3f;
 	private static float connectionFadeTime = 0.25f;
 
-//	// waiting time for more players, in seconds -- server
-//	private static float minWaitingTimeInOnline = 0.1f;
-//	private static float maxWaitingTimeInOnline = 0.1f;
-//	private static float hostsDiscoveryTimeout = 2.0f;
-
 	// waiting time for more players, in seconds -- server
-	private static float minWaitingTimeInOnline = 12.0f;
-	private static float maxWaitingTimeInOnline = 17.0f;
-	private static float hostsDiscoveryTimeout = 2.25f;
+	private static float minWaitingTimeInOnline = 0.1f;
+	private static float maxWaitingTimeInOnline = 0.1f;
+	private static float hostsDiscoveryTimeout = 2.0f;
+
+//	// waiting time for more players, in seconds -- server
+//	private static float minWaitingTimeInOnline = 12.0f;
+//	private static float maxWaitingTimeInOnline = 17.0f;
+//	private static float hostsDiscoveryTimeout = 2.25f;
 
 	// waiting time for more players, in seconds -- client
 	private static float maxWaitingTimeClient = 19.0f;
@@ -71,6 +71,9 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 	public int playerPosition;
 
+	public GameObject clockObj;
+	public GameObject startObj;
+
 
 	// Demo state manager
 	public StateManager demoStateManager { get; private set; }
@@ -109,7 +112,7 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 	public void StartMatchmaking(){
 		// Setup player data
-		if (string.IsNullOrEmpty(nickname)) {
+		if (string.IsNullOrEmpty(nickname) || nickname.Trim().Length == 0) {
 			nickname = defaultNickname + UnityEngine.Random.Range(0, 129999999);
 		}
 		SetupPlayerData();
@@ -194,8 +197,30 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 			}
 			WorldModel world = new WorldModel ();
 			StateManagerSetup setup = new StateManagerSetup (world, false);
-			demoStateManager.Setup(setup);	
-			mainCamera.transform.localEulerAngles = new Vector3(93, 300, 350);
+			demoStateManager.Setup(setup);
+			switch (UnityEngine.Random.Range (0, 4)) {
+			case 0:
+				mainCamera.transform.position = new Vector3 (40, 0.5f, 60);
+				mainCamera.transform.localEulerAngles = new Vector3 (30, -90, 330);
+				break;
+			case 1:
+				mainCamera.transform.position = new Vector3 (5, 0.2f, -2);
+				mainCamera.transform.localEulerAngles = new Vector3 (30, 350, 359);
+				break;
+			case 2:
+				mainCamera.transform.position = new Vector3 (100, 30f, -100);
+				mainCamera.transform.localEulerAngles = new Vector3 (70, 340, 335);
+				break;
+			case 3:
+				mainCamera.transform.position = new Vector3 (20, 40f, 10);
+				mainCamera.transform.localEulerAngles = new Vector3(93, 300, 350);
+				break;
+			default:
+				mainCamera.transform.position = new Vector3 (-20, 35.5f, 20);
+				mainCamera.transform.localEulerAngles = new Vector3 (100, 60, 359);
+				break;
+			}
+
 		} else {
 			light.transform.eulerAngles = new Vector3(30, 150, 0);
 			if (demoStateManager != null) {
@@ -401,11 +426,19 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 	void FadeToState(MenuState newState){
 		if (menuState == newState) return;
-		winnerObj.SetActive(false);
-		secondObj.SetActive(false);
-		loserObj.SetActive(false);
+//		winnerObj.SetActive(false);
+//		secondObj.SetActive(false);
+//		loserObj.SetActive(false);
+		Vector2 awayPosition = new Vector2(0, Screen.height*2);
+		winnerObj.GetComponent<RectTransform>().anchoredPosition = awayPosition;
+		secondObj.GetComponent<RectTransform>().anchoredPosition = awayPosition;
+		loserObj.GetComponent<RectTransform>().anchoredPosition = awayPosition;
 		switch (newState) {
 			case MenuState.inGame:{
+				clockObj.SetActive (false);
+				clockObj.SetActive (true);
+				startObj.SetActive (false);
+				startObj.SetActive (true);
 				StartCoroutine(FadeCanvasTo(background, 0.0f, canvasFadeTime));
 				StartCoroutine(FadeCanvasTo(nicknameParent, 0.0f, canvasFadeTime)); 
 				StartCoroutine(FadeCanvasTo(matchmakingParent, 0.0f, canvasFadeTime)); 
@@ -435,6 +468,7 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 	IEnumerator FadeCanvasTo(GameObject obj, float aValue, float aTime){
 		if (aValue > 0.25f) {
+			obj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 			obj.SetActive(true);
 		}
 		CanvasGroup canvas = obj.GetComponent<CanvasGroup>();
@@ -447,7 +481,8 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 			canvas.alpha = aValue;
 		}
 		if (aValue < 0.25f) {
-			obj.SetActive(false);
+			obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, Screen.height*2);
+			//obj.SetActive(false);
 		}
 	}
 
@@ -494,12 +529,15 @@ public class GuiMenus : SingletonMonoBehaviour<GuiMenus>
 
 
 	public void GameOver(){
-
+		GameObject obj;
 		switch(playerPosition) {
-			case 1: winnerObj.SetActive (true); break;
-			case 2: secondObj.SetActive(true); break;
-			default: loserObj.SetActive(true); break;
+			case 1: obj = winnerObj; break;
+			case 2: obj = secondObj; break;
+			default: obj = loserObj; break;
 		}
+		obj.SetActive(false);
+		obj.SetActive(true);
+		obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0.5f, 0.5f);
 
 		isMarkedToRestart = true;
 		enabled = true;
