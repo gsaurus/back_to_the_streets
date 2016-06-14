@@ -1,65 +1,97 @@
 using System;
+using System.Collections.Generic;
 using RetroBread;
 using ProtoBuf;
 
 
 
 [ProtoContract]
-public class SkierModel{
+public class ShipModel{
 
 	[ProtoMember(1)]
-	public FixedFloat x;
-
-	[ProtoMember(2)]
-	public FixedFloat y;
-
-	[ProtoMember(3)]
-	public FixedFloat velX;
-
-	[ProtoMember(4)]
-	public FixedFloat velY;
-
-	// If you fall (by collision), take a little time to stand up
-	[ProtoMember(5)]
-	public uint fallenTimer;
-
-	// If you miss a checkpoint, be frozen for a few frames
-	[ProtoMember(6)]
-	public uint frozenTimer;
-
-	// Used to slowdown the skier when doing tight curves
-	[ProtoMember(7)]
-	public FixedFloat friction;
-
-	[ProtoMember(8)]
-	public FixedFloat targetVelX;
-	[ProtoMember(9)]
-	public FixedFloat targetVelY;
-	
-	[ProtoMember(10)]
 	public ModelReference inputModelRef;
 
+	[ProtoMember(2)]
+	public int numMatrixLines;
+	[ProtoMember(3, OverwriteList=true)]
+	public int[] matrix;
+
+	[ProtoMember(4)]
+	public FixedFloat x;
+	[ProtoMember(5)]
+	public FixedFloat y;
+	[ProtoMember(6)]
+	public FixedFloat rotation;
+
+	[ProtoMember(7)]
+	public FixedFloat rotationVel;
+
+	[ProtoMember(8)]
+	public FixedFloat velAngle;
+	[ProtoMember(9)]
+	public FixedFloat velPower;
+
+	[ProtoMember(10)]
+	public FixedFloat aimingAngle;
+	[ProtoMember(11)]
+	public FixedFloat aimingVel;
+
+	[ProtoMember(12)]
+	public ModelReference dockerShip;
+
+	[ProtoMember(13, OverwriteList=true)]
+	public List<ModelReference> dockedShips;
+
+	//---------------------------------
+	// Extra data that could be obtained from matrix, but is stored to reduce computations
+
+	// Those are based on the number of thrusts, rotation engines and range engines
+	[ProtoMember(14)]
+	public FixedFloat accelerationPower;
+	[ProtoMember(15)]
+	public FixedFloat aimingRotationPower;
+	[ProtoMember(16)]
+	public FixedFloat range;
+
+	// Direct access to turrets, cannons and docks
+	[ProtoMember(17)]
+	public List<int> turretIds;
+	[ProtoMember(18)]
+	public List<int> cannonIds;
+	[ProtoMember(19)]
+	public List<int> dockIds;
+
+	// Mass center cell ref of the ship
+	[ProtoMember(20)]
+	public int centerCell;
+
+	/**
+	 * Docker acceleration = ship.accelerationPower + recursive_sum(dockeds_ships.accelerationPower)
+	 * Docker AND docked aimingRotationPower = ship.aimingRotationPower + recursive_sum(dockeds_ships.aimingRotationPower)
+	 * No extra range, range based on each ship
+	**/
+
+
+
 	// Default Constructor
-	public SkierModel(){
-		// set inactive
-		fallenTimer = 0;
-		frozenTimer = 0;
+	public ShipModel(){
+		
 	}
 
 	// Constructor
-	public SkierModel(FixedFloat x, FixedFloat y, ModelReference inputModelRef){
+	public ShipModel(int numMatrixLines, int[] matrix, FixedFloat x, FixedFloat y, ModelReference inputModelRef){
+		this.numMatrixLines = numMatrixLines;
+		this.matrix = matrix;
 		this.x = x;
 		this.y = y;
-		// moving straight down
-		this.velX = 0;
-		this.velY = 0;
-		this.targetVelX = 0;
-		this.targetVelY = -1.0f;
-
-		this.friction = 0.0f;
-
-		this.fallenTimer = 0;
-		this.frozenTimer = 0;
+		this.velAngle = 0;
+		this.velPower = 0;
+		this.aimingAngle = 0;
+		this.dockerShip = new ModelReference(ModelReference.InvalidModelIndex);
+		this.dockedShips = new List<ModelReference>();
+		this.turretIds = new List<int>();
+		this.cannonIds = new List<int>();
+		this.dockIds = new List<int>();
 		this.inputModelRef = inputModelRef;
 	}
 

@@ -26,7 +26,7 @@ public class WorldController:Controller<WorldModel>{
 
 		List<uint> allPlayers;
 
-		if (model.skiers [0] == null) {
+		if (model.ships[0] == null) {
 			// initialize skiers
 			if (StateManager.Instance.IsNetworked) {
 				allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers ();
@@ -47,7 +47,7 @@ public class WorldController:Controller<WorldModel>{
 			FixedFloat playerX = 0;
 			FixedFloat distanceBetweenPlayers = 2.2f;
 			foreach (uint playerId in allPlayers) {
-				if (model.skiers[playerId] == null) {
+				if (model.ships[playerId] == null) {
 					Model inputModel = new PlayerInputModel (playerId);
 					ModelReference inputModelRef = state.AddModel (inputModel);
 					playerX = (int)playerId * distanceBetweenPlayers;
@@ -58,7 +58,7 @@ public class WorldController:Controller<WorldModel>{
 							playerX = 0;
 						}
 					}
-					model.skiers [playerId] = new SkierModel (playerX, 0, inputModelRef);
+					model.ships[playerId] = null; //new ShipModel(playerX, 0, inputModelRef);
 				}
 			}
 		}
@@ -69,10 +69,10 @@ public class WorldController:Controller<WorldModel>{
 		if (StateManager.Instance.IsNetworked) {
 			allPlayers = NetworkCenter.Instance.GetAllNumbersOfConnectedPlayers();
 			if (allPlayers.Count > 1) {
-				for (int i = 0; i < model.skiers.Length; ++i) {
+				for (int i = 0; i < model.ships.Length; ++i) {
 					if (!allPlayers.Exists (x => x == i)) {
 						// Doesn't exist anymore, remove
-						model.skiers [i] = null;
+						model.ships[i] = null;
 					}
 				}
 			}

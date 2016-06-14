@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{77652C05-5978-49F0-85DF-E3A1CFB5A9C2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>shootermodel</RootNamespace>
@@ -47,7 +45,8 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Scripts\WorldModel.cs" />
-    <Compile Include="Scripts\SkierModel.cs" />
+    <Compile Include="Scripts\ShipModel.cs" />
+    <Compile Include="Scripts\BulletModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
