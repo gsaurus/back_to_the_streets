@@ -32,6 +32,10 @@ public sealed class Character{
 	[ProtoMember(6, OverwriteList=true)]
 	public string[] viewModels;
 
+	// Name of the portrait sprite assets, one for each skin
+	[ProtoMember(7, OverwriteList=true)]
+	public string[] portraits;
+
 	// Default Constructor
 	public Character(){
 		// Nothing to do

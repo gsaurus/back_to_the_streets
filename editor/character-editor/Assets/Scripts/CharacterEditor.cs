@@ -260,10 +260,9 @@ namespace RetroBread{
 			FileStream charStream = charFile.OpenRead();
 			RbStorageSerializer serializer = new RbStorageSerializer();
 			Storage.Character storageCharacter = serializer.Deserialize(charStream, null, typeof(Storage.Character)) as Storage.Character;
-
+			charStream.Close();
 			// Load character into editor character format
 			character = Character.LoadFromStorage(storageCharacter);
-
 			Reset();
 		}
 
@@ -275,13 +274,10 @@ namespace RetroBread{
 
 			// Open file stream and serialize it
 			FileInfo charFile = new FileInfo (charactersDataPath + storageCharacter.name + dataExtension);
-			if (charFile.Exists) {
-				// TODO: store backup
-				charFile.Delete();
-			}
-			FileStream charStream = charFile.Create();
+			FileStream charStream = charFile.Open(FileMode.Create, FileAccess.Write);
 			RbStorageSerializer serializer = new RbStorageSerializer();
 			serializer.Serialize(charStream, storageCharacter);
+			charStream.Close();
 		}
 
 

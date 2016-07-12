@@ -13,6 +13,6 @@ C:\Users\TOSHIBA\Documents\Git\engine\framework\engine-model\obj\Debug\engine-mo
 C:\Users\TOSHIBA\Documents\Git\engine\data-model\engine-model\bin\Debug\engine-model.dll
 C:\Users\TOSHIBA\Documents\Git\engine\data-model\engine-model\bin\Debug\engine-model.pdb
 C:\Users\TOSHIBA\Documents\Git\engine\data-model\engine-model\bin\Debug\protobuf-net.dll
-C:\Users\TOSHIBA\Documents\Git\engine\data-model\engine-model\obj\Debug\engine-model.csprojResolveAssemblyReference.cache
-C:\Users\TOSHIBA\Documents\Git\engine\data-model\engine-model\obj\Debug\engine-model.dll
-C:\Users\TOSHIBA\Documents\Git\engine\data-model\engine-model\obj\Debug\engine-model.pdb
+C:\Users\TOSHIBA\Documents\Git\engine\data-model\engine-model\obj\debug\engine-model.csprojResolveAssemblyReference.cache
+C:\Users\TOSHIBA\Documents\Git\engine\data-model\engine-model\obj\debug\engine-model.dll
+C:\Users\TOSHIBA\Documents\Git\engine\data-model\engine-model\obj\debug\engine-model.pdb

@@ -16,15 +16,23 @@ namespace RetroBread{
 		public GameObject addButton;
 		public GameObject removeButton;
 		public GameObject closeButton;
+		public GameObject portraitDropdown;
+		public GameObject portraitImage;
 
 		// Simplified references
 		private SingleSelectionList _bundlesList;
 		private SingleSelectionList _prefabsList;
 		private SingleSelectionList _skinsList;
+		private Dropdown _portraitDropdown;
+		private Image _portraitImage;
 		// Buttons
 		private Button _addButton;
 		private Button _removeButton;
 		private Button _closeButton;
+
+		// All sprites from bundles
+		private List<Sprite> bundleSprites;
+	
 
 		// List of model prefabs
 		GameObject[] prefabs;
@@ -42,6 +50,8 @@ namespace RetroBread{
 			_bundlesList = bundlesList.GetComponent<SingleSelectionList>();
 			_prefabsList = prefabsList.GetComponent<SingleSelectionList>();
 			_skinsList 	 = skinsList.GetComponent<SingleSelectionList>();
+			_portraitDropdown = portraitDropdown.GetComponent<Dropdown>();
+			_portraitImage = portraitImage.GetComponent<Image>();
 
 		}
 
@@ -52,6 +62,7 @@ namespace RetroBread{
 
 			SetupBundlesList();
 			SetupSkinsList();
+			SelectPortraitForSelectedSkin();
 
 			// can only close popup if a character is already selected
 			_closeButton.interactable = CharacterEditor.Instance.character.viewModels.Count > 0;
@@ -70,12 +81,12 @@ namespace RetroBread{
 		}
 			
 
-		private void SetupPrefabsList(string bundleName){
+		private void SetupPrefabsAndPortraitsList(string bundleName){
 			WWW www = WWW.LoadFromCacheOrDownload("file://" + CharacterEditor.charactersModelsPath + bundleName, 1);
 			if (www == null || www.assetBundle == null) return;
 			AssetBundle bundle = www.assetBundle;
 
-			// Load all assets to filter game objects with animations
+			// Load all prefabs to filter game objects with animations
 			prefabs = bundle.LoadAllAssets<GameObject>();
 			List<string> prefabNames = new List<string>(prefabs.Length);
 			foreach (GameObject prefab in prefabs){
@@ -83,7 +94,17 @@ namespace RetroBread{
 					prefabNames.Add(prefab.name);
 				}
 			}
+
+			// Load resources
+			bundleSprites = new List<Sprite>(bundle.LoadAllAssets<Sprite>());
+			List<string> spriteNames = new List<string>(prefabs.Length);
+			foreach (Sprite sprite in bundleSprites){
+				spriteNames.Add(sprite.name);
+			}
+
 			_prefabsList.Options = prefabNames;
+			_portraitDropdown.ClearOptions();
+			_portraitDropdown.AddOptions(spriteNames);
 
 			if (prefabNames.Count == 0) {
 				_addButton.interactable = false;
@@ -103,8 +124,28 @@ namespace RetroBread{
 		}
 
 
+		private void SelectPortraitForSelectedSkin(){
+			int characterIndex = CharacterEditor.Instance.character.viewModels.IndexOf(_skinsList.SelectedOption);
+			List<string> portraitsList = CharacterEditor.Instance.character.viewPortraits;
+			if (portraitsList != null && portraitsList.Count > characterIndex){
+				string portraitName = portraitsList[characterIndex];
+				int itemIndex = _portraitDropdown.options.FindIndex(x => x.text == portraitName);
+				if (itemIndex != _portraitDropdown.value){
+					_portraitDropdown.value = itemIndex;
+				}else{
+					RefreshPortraitImage();
+				}
+			}
+		}
+
+		private void RefreshPortraitImage(){
+			int characterIndex = CharacterEditor.Instance.character.viewModels.IndexOf(_skinsList.SelectedOption);
+			_portraitImage.sprite = bundleSprites.Find(x => x.name == CharacterEditor.Instance.character.viewPortraits[characterIndex]);
+		}
+
+
 		public void OnBundleSelected(int itemId){
-			SetupPrefabsList(_bundlesList.SelectedOption);
+			SetupPrefabsAndPortraitsList(_bundlesList.SelectedOption);
 		}
 
 
@@ -116,21 +157,38 @@ namespace RetroBread{
 			;
 		}
 
+		public void OnPortraitSpriteSelected(int itemId){
+			int characterIndex = CharacterEditor.Instance.character.viewModels.IndexOf(_skinsList.SelectedOption);
+			CharacterEditor.Instance.character.viewPortraits[characterIndex] = _portraitDropdown.options[_portraitDropdown.value].text;
+			RefreshPortraitImage();
+		}
+
+		public void OnSkinSelected(int skinId){
+			SelectPortraitForSelectedSkin();
+		}
+
 
 
 		public void OnAddButton(){
 			string bundleName = _bundlesList.SelectedOption;
 			string newSkin = _prefabsList.SelectedOption;
 			CharacterEditor.Instance.character.viewModels.Add(bundleName + CharacterEditor.skinsDelimiter + newSkin);
+			CharacterEditor.Instance.character.viewPortraits.Add("");
 			// Refresh skins list
 			SetupSkinsList();
+			// Refresh selected portrait
+			SelectPortraitForSelectedSkin();
 		}
 
 
 		public void OnRemoveButton(){
-			CharacterEditor.Instance.character.viewModels.Remove(_skinsList.SelectedOption);
+			int characterIndex = CharacterEditor.Instance.character.viewModels.IndexOf(_skinsList.SelectedOption);
+			CharacterEditor.Instance.character.viewModels.RemoveAt(characterIndex);
+			CharacterEditor.Instance.character.viewPortraits.RemoveAt(characterIndex);
 			// Refresh skins list
 			SetupSkinsList();
+			// Refresh selected portrait
+			SelectPortraitForSelectedSkin();
 		}
 
 		public void Close(){

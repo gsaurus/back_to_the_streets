@@ -4,3 +4,6 @@ AssetBundleManifest:
     Info_0:
       Name: abundle
       Dependencies: {}
+    Info_1:
+      Name: hud_bundle
+      Dependencies: {}

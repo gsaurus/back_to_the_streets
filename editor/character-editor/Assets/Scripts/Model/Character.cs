@@ -13,12 +13,14 @@ namespace RetroBread.Editor{
 
 		public List<string> viewAnchors;
 		public List<string> viewModels;
+		public List<string> viewPortraits;
 
 		public Character(string name){
 			this.name = name;
 			animations = new List<CharacterAnimation>();
 			viewAnchors = new List<string>();
 			viewModels = new List<string>();
+			viewPortraits = new List<string>();
 		}
 
 
@@ -34,6 +36,14 @@ namespace RetroBread.Editor{
 				character.viewModels = new List<string>(storageCharacter.viewModels);
 			} else {
 				character.viewModels = new List<string>();
+			}
+			if (storageCharacter.portraits != null) {
+				character.viewPortraits = new List<string>(storageCharacter.portraits);
+			} else {
+				character.viewPortraits = new List<string>();
+				for (int i = 0 ; i < character.viewModels.Count ; ++i){
+					character.viewPortraits.Add("");
+				}
 			}
 			// Populate animations
 			if (storageCharacter.animations != null) {
@@ -58,6 +68,9 @@ namespace RetroBread.Editor{
 			}
 			if (viewModels != null) {
 				storageCharacter.viewModels = viewModels.ToArray();
+			}
+			if (viewPortraits != null) {
+				storageCharacter.portraits = viewPortraits.ToArray();
 			}
 
 			// Generate boxes, generic parameters, and imediately construct the rest of the data
