@@ -13,11 +13,14 @@ unity-game/bin/
 unity-game/*.sln
 unity-game/*.csproj
 editor/assets-packer/*.sln
-editor/character-editor/*.sln
 editor/assets-packer/*.csproj
-editor/character-editor/*.csproj
 editor/assets-packer/bin/
+editor/character-editor/*.csproj
+editor/character-editor/*.sln
 editor/character-editor/bin/
+editor/hud-editor/*.csproj
+editor/hud-editor/*.sln
+editor/hud-editor/bin/
 **/win*_Data/*
 win*.exe
 player_win_development_x86.pdb
