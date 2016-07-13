@@ -38,11 +38,15 @@ namespace RetroBread{
 		[ProtoMember(7)]
 		public int pauseTimer;
 
-		// For now, have combos built in to simplify
-		[ProtoMember(8)]
-		public int comboCounter;
-		[ProtoMember(9)]
-		public int comboTimer;
+		// Custom int variables.
+		// e.g. comboCounter, energy, etc
+		[ProtoMember(8, OverwriteList=true)]
+		public Dictionary<string, int> customVariables;
+
+		// Custom automatic timers (they decrement on each frame)
+		// e.g. comboTimer, knockdownTimer
+		[ProtoMember(9, OverwriteList=true)]
+		public Dictionary<string, int> customTimers;
 
 		// Entities anchored to it
 		[ProtoMember(10, OverwriteList=true)]
@@ -56,15 +60,6 @@ namespace RetroBread{
 		// Only used if parent entity is != null.
 		[ProtoMember(12)]
 		public FixedVector3 positionRelativeToParent;
-
-		// TODO: not sure about custom variables & timers yet
-//		// Custom int variables
-//		[ProtoMember(8, OverwriteList=true)]
-//		public List<int> customVariables;
-//
-//		// Custom automatic timers (they decrement on each frame)
-//		[ProtoMember(9, OverwriteList=true)]
-//		public List<int> customTimers;
 
 
 		#region Constructors
@@ -122,6 +117,8 @@ namespace RetroBread{
 				inputModelId = new ModelReference(ModelReference.InvalidModelIndex);
 			}
 			anchoredEntities = new List<ModelReference>();
+			customVariables = new Dictionary<string, int>();
+			customTimers = new Dictionary<string, int>();
 		}
 
 
@@ -147,6 +144,8 @@ namespace RetroBread{
 				inputModelId = new ModelReference(ModelReference.InvalidModelIndex);
 			}
 			anchoredEntities = new List<ModelReference>();
+			customVariables = new Dictionary<string, int>();
+			customTimers = new Dictionary<string, int>();
 		}
 
 		// TODO: simplify arguments with a builder object?

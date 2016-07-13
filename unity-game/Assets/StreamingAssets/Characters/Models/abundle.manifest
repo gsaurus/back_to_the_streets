@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1360932110
+CRC: 326320260
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 21629c321b1ffd00e8742eb33e74d1c6
+    Hash: 83bcb1a5ea0d23b37ea940908884030d
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 72159664a437b057c1eb1701f7ac369f
+    Hash: beed9634f90aa2f991c7531c029b4583
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -15,7 +15,11 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 21
   Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
 - Class: 28
+  Script: {instanceID: 0}
+- Class: 33
   Script: {instanceID: 0}
 - Class: 43
   Script: {instanceID: 0}
@@ -29,10 +33,6 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 95
   Script: {instanceID: 0}
-- Class: 114
-  Script: {fileID: 11500000, guid: 147a0f0848f6bee46b135c2369a6eb45, type: 3}
-- Class: 115
-  Script: {instanceID: 0}
 - Class: 137
   Script: {instanceID: 0}
 - Class: 212
@@ -43,4 +43,6 @@ Assets:
 - Assets/Prefabs/hd_axel.prefab
 - Assets/Prefabs/3d_rocha.prefab
 - Assets/Prefabs/pixel_axel.prefab
+- Assets/Characters/axel_portrait.jpg
+- Assets/Characters/axel_HD_portrait.jpg
 Dependencies: []

@@ -146,15 +146,18 @@ namespace RetroBread{
 				}
 			}
 
-			// Built in combo timer
-			// If times up, combo counter is reset automatically
-			if (model.comboTimer > 0) {
-				if (--model.comboTimer == 0) {
-					model.comboCounter = 0;
+			// Update all custom timers
+			foreach (KeyValuePair<string, int> timer in model.customTimers){
+				if (timer.Value > 0){
+					int newTimer = timer.Value - 1;
+					// if there is a corresponding variable, automatically reset it
+					// TODO: is this the intended behaviour?...
+					if (newTimer == 0 && model.customVariables.ContainsKey(timer.Key)){
+						model.customVariables[timer.Key] = 0;
+					}
+					model.customTimers[timer.Key] = newTimer;
 				}
 			}
-
-			// TODO: Update custom timers??
 
 		}
 
@@ -247,18 +250,6 @@ namespace RetroBread{
 			}
 		}
 
-		// Add 1 to combo counter
-		public static void IncrementCombo(GameEntityModel model, int comboTimer){
-			++model.comboCounter;
-			model.comboTimer = comboTimer;
-		}
-
-		// Reset combo counter
-		public static void ResetCombo(GameEntityModel model){
-			model.comboCounter = 0;
-			model.comboTimer = 0;
-		}
-
 
 	#endregion
 
@@ -298,22 +289,6 @@ namespace RetroBread{
 			}
 			return false;
 		}
-
-
-		// ----------------------
-		// Combo counter & timer
-
-		// Combo counter value
-		public static int ComboCounter(GameEntityModel model){
-			return model.comboCounter;
-		}
-
-		// Combo timer
-		public static int ComboTimer(GameEntityModel model){
-			return model.comboTimer;
-		}
-
-	
 
 	#endregion
 		

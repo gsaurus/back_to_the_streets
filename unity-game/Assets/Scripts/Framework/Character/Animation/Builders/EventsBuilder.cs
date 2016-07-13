@@ -6,7 +6,6 @@ namespace RetroBread{
 
 	public static class EventsBuilder {
 
-
 		// Event builders indexed by type directly on array
 		private delegate AnimationEvent BuilderAction(Storage.GenericParameter param);
 		private static BuilderAction[] builderActions = {
@@ -175,12 +174,23 @@ namespace RetroBread{
 
 		// ++combo
 		private static AnimationEvent BuildIncrementCombo(Storage.GenericParameter parameter){
-			return new SingleEntityAnimationEvent<int>(null, GameEntityController.IncrementCombo, parameter.SafeInt(0));
+			return new SingleEntityAnimationEvent<int>(null,
+				delegate(GameEntityModel model, int comboTimer){
+					++model.customVariables[ConditionsBuilder.comboCustomVariableName];
+					model.customTimers[ConditionsBuilder.comboCustomVariableName] = comboTimer;
+				},
+				parameter.SafeInt(0));
 		}
 
 		// reset(combo)
 		private static AnimationEvent BuildResetCombo(Storage.GenericParameter parameter){
-			return new SimpleEntityAnimationEvent(null, GameEntityController.ResetCombo);
+			return new SimpleEntityAnimationEvent(
+				null,
+				delegate(GameEntityModel model){
+					model.customVariables[ConditionsBuilder.comboCustomVariableName] = 0;
+					model.customTimers[ConditionsBuilder.comboCustomVariableName] = 0;
+				}
+			);
 		}
 
 

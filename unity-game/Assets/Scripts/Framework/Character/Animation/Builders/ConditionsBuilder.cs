@@ -6,6 +6,8 @@ namespace RetroBread{
 
 	public static class ConditionsBuilder {
 
+		public static readonly string comboCustomVariableName = "combo";
+
 		public static int invalidKeyframe = -1;
 		private static int negationParamId = 0;
 
@@ -220,7 +222,13 @@ namespace RetroBread{
 			keyFrame = invalidKeyframe;
 			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType) parameter.SafeInt(1);
 			int value = parameter.SafeInt(0);
-			return new EntityArithmeticCondition<int>(type, GameEntityController.ComboCounter, value);
+			return new EntityArithmeticCondition<int>(
+				type,
+				delegate(GameEntityModel model){
+					return model.customVariables[comboCustomVariableName];
+				},
+				value
+			);
 		}
 
 		// combo timer <= 10
@@ -228,7 +236,13 @@ namespace RetroBread{
 			keyFrame = invalidKeyframe;
 			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType) parameter.SafeInt(1);
 			int value = parameter.SafeInt(0);
-			return new EntityArithmeticCondition<int>(type, GameEntityController.ComboTimer, value);
+			return new EntityArithmeticCondition<int>(
+				type,
+				delegate(GameEntityModel model){
+					return model.customTimers[comboCustomVariableName];
+				},
+				value
+			);
 		}
 
 
