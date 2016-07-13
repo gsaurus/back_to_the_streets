@@ -162,7 +162,7 @@ namespace RetroBread{
 				animator.Play(animationName);
 			}
 			float animLen = CurrentAnimationLength(animator);
-			float newAnimationTime = frame / (animLen / Time.fixedDeltaTime);
+			float newAnimationTime = frame / animLen;
 			animator.Play(animationName, 0, newAnimationTime);
 		}
 
@@ -175,7 +175,10 @@ namespace RetroBread{
 		private float CurrentAnimationLength(Animator animator){
 			// WARNING: currently clip.averageDuration is not accessible at runtime outside editor
 			AnimatorClipInfo[] clipsInfo = animator.GetCurrentAnimatorClipInfo(0);
-			return clipsInfo[0].clip.averageDuration;
+			//return clipsInfo[0].clip.averageDuration / Time.fixedDeltaTime;
+			int length;
+			CharacterEditor.Instance.currentSkinAnimationLengths.TryGetValue(clipsInfo[0].clip.name, out length);
+			return length;
 		}
 
 #endregion

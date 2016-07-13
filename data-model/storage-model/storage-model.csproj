@@ -47,10 +47,12 @@
     <Compile Include="Scripts\Character\CharacterAnimation.cs" />
     <Compile Include="Scripts\GenericParameter.cs" />
     <Compile Include="Scripts\Box.cs" />
+    <Compile Include="Scripts\HUD\HUD.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Scripts\" />
     <Folder Include="Scripts\Character\" />
+    <Folder Include="Scripts\HUD\" />
   </ItemGroup>
 </Project>

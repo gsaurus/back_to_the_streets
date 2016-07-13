@@ -12,8 +12,7 @@ namespace RetroBread{
 		public static string charactersModelsPath;
 
 		public static string dataExtension = ".bytes";
-
-		public static string skinsDelimiter = ":";
+		public static string prefabDelimiter = ":";
 
 		private static int invalidBoxId = -1;
 
@@ -34,7 +33,6 @@ namespace RetroBread{
 //			if (charactersModelsPath == null) charactersModelsPath = Directory.GetCurrentDirectory() + "/Data/Characters/Models/";
 			if (charactersDataPath == null) charactersDataPath = Application.streamingAssetsPath + "/Characters/Data/";
 			if (charactersModelsPath == null) charactersModelsPath = Application.streamingAssetsPath + "/Characters/Models/";
-			Caching.CleanCache();
 		}
 
 
@@ -91,7 +89,7 @@ namespace RetroBread{
 
 		// Load Character view model, and portrait
 		public static GameObject LoadViewModel(string characterName, string prefabName){
-			string[] pathItems = prefabName.Split(skinsDelimiter.ToCharArray());
+			string[] pathItems = prefabName.Split(prefabDelimiter.ToCharArray());
 			Storage.Character storageCharacter = null;
 			if (characterName != null){
 				loadedCharacters.TryGetValue(characterName, out storageCharacter);
@@ -101,7 +99,7 @@ namespace RetroBread{
 				string url = "file://" + charactersModelsPath + pathItems[0];
 				WWW www = WWW.LoadFromCacheOrDownload(url, 1);
 				if (www.assetBundle == null) {
-					Debug.LogError("Failed to load bundle at " + url);
+					Debug.LogError("Failed to load character bundle at " + url);
 				}
 				// Load model prefab from bundle
 				GameObject prefab = www.assetBundle.LoadAsset<GameObject>(pathItems[1]);
@@ -160,7 +158,7 @@ namespace RetroBread{
 				if (storageCharacter != null) {
 					loadedCharacters.Add(characterName, storageCharacter);
 				} else {
-					Debug.LogError("Can't find character " + characterName);
+					Debug.LogError("Can't find character data " + characterName);
 				}
 
 				// Load character into game character format (view, controller)

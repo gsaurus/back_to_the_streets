@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 306997894
+CRC: 1070627817
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 9599b2685b4edf3bcd25196af8e103d6
+    Hash: 65122d87fdab20775fb508090e277a05
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 31b13d8054508b913f393b2029f38c40
+    Hash: ed024b597887d344e02bbdcef4e1e200
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -20,6 +20,10 @@ ClassTypes:
 - Class: 95
   Script: {instanceID: 0}
 - Class: 114
+  Script: {fileID: 1980459831, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: 1301386320, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
   Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
 - Class: 115
   Script: {instanceID: 0}
@@ -27,8 +31,10 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 222
   Script: {instanceID: 0}
+- Class: 223
+  Script: {instanceID: 0}
 - Class: 224
   Script: {instanceID: 0}
 Assets:
-- Assets/Prefabs/HUD.prefab
+- Assets/Prefabs/HUD/tests_hud.prefab
 Dependencies: []

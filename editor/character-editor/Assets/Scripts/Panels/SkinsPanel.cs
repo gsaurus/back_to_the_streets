@@ -125,6 +125,7 @@ namespace RetroBread{
 
 
 		private void SelectPortraitForSelectedSkin(){
+			if (_skinsList.SelectedOption == null) return;
 			int characterIndex = CharacterEditor.Instance.character.viewModels.IndexOf(_skinsList.SelectedOption);
 			List<string> portraitsList = CharacterEditor.Instance.character.viewPortraits;
 			if (portraitsList != null && portraitsList.Count > characterIndex){
@@ -139,6 +140,7 @@ namespace RetroBread{
 		}
 
 		private void RefreshPortraitImage(){
+			if (_skinsList.SelectedOption == null) return;
 			int characterIndex = CharacterEditor.Instance.character.viewModels.IndexOf(_skinsList.SelectedOption);
 			_portraitImage.sprite = bundleSprites.Find(x => x.name == CharacterEditor.Instance.character.viewPortraits[characterIndex]);
 		}
@@ -158,6 +160,7 @@ namespace RetroBread{
 		}
 
 		public void OnPortraitSpriteSelected(int itemId){
+			if (_skinsList.SelectedOption == null) return;
 			int characterIndex = CharacterEditor.Instance.character.viewModels.IndexOf(_skinsList.SelectedOption);
 			CharacterEditor.Instance.character.viewPortraits[characterIndex] = _portraitDropdown.options[_portraitDropdown.value].text;
 			RefreshPortraitImage();
@@ -195,9 +198,11 @@ namespace RetroBread{
 			this.gameObject.SetActive(false);
 
 			// Load skin
-			string[] pathItems = _skinsList.SelectedOption.Split(CharacterEditor.skinsDelimiter.ToCharArray());
-			if (pathItems != null && pathItems.Length > 1) {
-				CharacterEditor.Instance.SetSkin(pathItems[0], pathItems[1]);
+			if (_skinsList.SelectedOption != null){
+				string[] pathItems = _skinsList.SelectedOption.Split(CharacterEditor.skinsDelimiter.ToCharArray());
+				if (pathItems != null && pathItems.Length > 1) {
+					CharacterEditor.Instance.SetSkin(pathItems[0], pathItems[1]);
+				}
 			}
 			CharacterEditor.Instance.SaveCharacter();
 		}

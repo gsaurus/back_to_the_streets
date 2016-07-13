@@ -68,6 +68,8 @@ namespace RetroBread{
 		public event OnSomethingChanged OnSkinChangedEvent;
 
 
+		public Dictionary<string, int> currentSkinAnimationLengths = new Dictionary<string, int>();
+
 		// Editor selections
 		private int selectedAnimationId;
 		public int SelectedAnimationId {
@@ -155,6 +157,7 @@ namespace RetroBread{
 		void Reset(){
 			
 			// Clear skin
+			currentSkinAnimationLengths = new Dictionary<string, int>();
 			if (characterModel != null) {
 				GameObject.Destroy(characterModel);
 				characterModel = null;
@@ -251,6 +254,19 @@ namespace RetroBread{
 
 
 
+		private void LoadAnimationsLength(TextAsset asset){
+			currentSkinAnimationLengths = new Dictionary<string, int>();
+			byte[] bytes = asset.bytes;
+			BinaryReader reader = new BinaryReader(new MemoryStream(bytes));
+			uint numAnimations = reader.ReadUInt32();
+			string animName;
+			int animLength;
+			for (int i = 0 ; i < numAnimations ; ++i){
+				animName = reader.ReadString();
+				animLength = reader.ReadInt32();
+				currentSkinAnimationLengths[animName] = animLength;
+			}
+		}
 
 		// Load
 		public void LoadCharacter(string characterName){
@@ -296,6 +312,9 @@ namespace RetroBread{
 				return false;
 			}
 
+			// Load animations length, because of Unity hidding a way of getting it in runtime
+			TextAsset animationsLengthData = www.assetBundle.LoadAsset<TextAsset>(modelName + " clipInfo");
+			LoadAnimationsLength(animationsLengthData);
 			// Update known animations
 			Animator charAnimator = prefab.GetComponent<Animator>();
 			int beforeAnimsCount = character.animations == null ? 0 : character.animations.Count;
@@ -332,13 +351,16 @@ namespace RetroBread{
 		private void UpdateKnownAnimations(Animator animator){
 			List<string> knownAnimations = AnimationNames();
 			RuntimeAnimatorController controller = animator.runtimeAnimatorController;
+			int clipLength;
 			if (controller != null){
 				foreach(AnimationClip clip in controller.animationClips){
 					//Debug.Log("len: " + clip.averageDuration + " / " + Time.fixedDeltaTime + " = " + (int) (clip.averageDuration / Time.fixedDeltaTime));
 					if (!knownAnimations.Contains(clip.name)) {
 						// New animation!
 						// WARNING: currently clip.averageDuration is not accessible at runtime outside editor
-						CharacterAnimation newAnim = new CharacterAnimation(clip.name, Mathf.CeilToInt(clip.averageDuration / Time.fixedDeltaTime));
+						//clipLength = clip.averageDuration;
+						currentSkinAnimationLengths.TryGetValue(clip.name, out clipLength);
+						CharacterAnimation newAnim = new CharacterAnimation(clip.name, Mathf.CeilToInt(clipLength / Time.fixedDeltaTime));
 						character.animations.Add(newAnim);
 					}
 				}
