@@ -24,6 +24,8 @@ namespace RetroBread{
 		// all info should go to a character controller
 		private static Dictionary<string, Storage.Character> loadedCharacters = new Dictionary<string, Storage.Character>();
 
+		// Portraits by portrait name
+		private static Dictionary<string, Sprite> loadedPortraitSprites = new Dictionary<string, Sprite>();
 
 
 		static CharacterLoader(){
@@ -33,6 +35,31 @@ namespace RetroBread{
 			if (charactersDataPath == null) charactersDataPath = Application.streamingAssetsPath + "/Characters/Data/";
 			if (charactersModelsPath == null) charactersModelsPath = Application.streamingAssetsPath + "/Characters/Models/";
 			Caching.CleanCache();
+		}
+
+
+		// Get a character portrait by entity id
+		public static Sprite GetCharacterPortrait(uint modelId){
+			GameEntityModel ownerModel = StateManager.state.GetModel(modelId) as GameEntityModel;
+			if (ownerModel == null) return null;
+			AnimationModel animModel = StateManager.state.GetModel(ownerModel.animationModelId) as AnimationModel;
+			if (animModel == null) return null;
+			string prefabName = null;
+			if (animModel.viewModelName != null){
+				prefabName = animModel.viewModelName;
+			}else{
+				prefabName = animModel.characterName;
+			}
+			Storage.Character storageCharacter;
+			if (!loadedCharacters.TryGetValue(animModel.characterName, out storageCharacter)) return null;
+			int index = Array.FindIndex<string>(storageCharacter.viewModels, x => x.Equals(prefabName));
+			if (index < 0) return null;
+			string spriteName = storageCharacter.portraits[index];
+			if (!loadedPortraitSprites.ContainsKey(spriteName)) return null;
+
+			Sprite portrait;
+			loadedPortraitSprites.TryGetValue(spriteName, out portrait);
+			return portrait;
 		}
 
 
@@ -62,24 +89,60 @@ namespace RetroBread{
 		}
 
 
-		// Load Character view model
-		public static GameObject LoadViewModel(string prefabName){
+		// Load Character view model, and portrait
+		public static GameObject LoadViewModel(string characterName, string prefabName){
 			string[] pathItems = prefabName.Split(skinsDelimiter.ToCharArray());
+			Storage.Character storageCharacter = null;
+			if (characterName != null){
+				loadedCharacters.TryGetValue(characterName, out storageCharacter);
+			}
+			string skinName;
 			if (pathItems != null && pathItems.Length > 1) {
 				string url = "file://" + charactersModelsPath + pathItems[0];
 				WWW www = WWW.LoadFromCacheOrDownload(url, 1);
 				if (www.assetBundle == null) {
 					Debug.LogError("Failed to load bundle at " + url);
 				}
-				GameObject prefab = www.assetBundle.LoadAsset(pathItems[1]) as GameObject;
+				// Load model prefab from bundle
+				GameObject prefab = www.assetBundle.LoadAsset<GameObject>(pathItems[1]);
+
+				// Load portrait from bundle
+				// TODO: refactor: duplicate code
+				if (storageCharacter != null) {
+					int index = Array.FindIndex<string>(storageCharacter.viewModels, x => x.Equals(prefabName));
+					if (index >= 0){
+						string spriteName = storageCharacter.portraits[index];
+						if (!loadedPortraitSprites.ContainsKey(spriteName)){
+							Sprite sprite = www.assetBundle.LoadAsset<Sprite>(spriteName);
+							loadedPortraitSprites[spriteName] = sprite;
+						}
+					}
+				}
+
 				www.assetBundle.Unload(false);
 				if (prefab != null) {
 					return prefab;
 				}
-				return Resources.Load(pathItems[1]) as GameObject;
+				skinName = pathItems[1];
+			}else {
+				skinName = prefabName;
 			}
 
-			return Resources.Load(prefabName) as GameObject;
+			// Load portrait from resources
+			// TODO: refactor: duplicate code
+			if (storageCharacter != null) {
+				int index = Array.FindIndex<string>(storageCharacter.viewModels, x => x.Equals(pathItems[1]));
+				if (index >= 0){
+					string spriteName = storageCharacter.portraits[index];
+					if (!loadedPortraitSprites.ContainsKey(spriteName)){
+						Sprite sprite = Resources.Load<Sprite>(spriteName);
+						loadedPortraitSprites[spriteName] = sprite;
+					}
+				}
+			}
+
+			// Load skin from resources
+			return Resources.Load<GameObject>(skinName);
 		}
 
 
@@ -109,8 +172,8 @@ namespace RetroBread{
 
 		private static AnimationEvent ReadEvent(Storage.Character charData, Storage.CharacterEvent storageEvent, out int keyFrame, Storage.CharacterAnimation animation){
 			// Build event
-			AnimationTriggerCondition condition = ConditionsBuilder.Build(charData, storageEvent.conditionIds, out keyFrame, animation);
-			AnimationEvent e = EventsBuilder.Build(charData, storageEvent.eventIds);
+			AnimationTriggerCondition condition = CharacterConditionsBuilder.Build(charData, storageEvent.conditionIds, out keyFrame, animation);
+			AnimationEvent e = CharacterEventsBuilder.Build(charData, storageEvent.eventIds);
 			e.condition = condition;
 			return e;
 		}
@@ -139,7 +202,7 @@ namespace RetroBread{
 				if (animation.events != null) {
 					foreach (Storage.CharacterEvent e in animation.events) {
 						animEvent = ReadEvent(charData, e, out keyFrame, animation);
-						if (keyFrame != ConditionsBuilder.invalidKeyframe) {
+						if (keyFrame != CharacterConditionsBuilder.invalidKeyframe) {
 							controller.AddKeyframeEvent((uint)keyFrame, animEvent);
 						} else {
 							controller.AddGeneralEvent(animEvent);
@@ -184,7 +247,7 @@ namespace RetroBread{
 					for(int hitId = 0 ; hitId < animation.hitBoxes.Length ; ++hitId){
 						storageHitBox = animation.hitBoxes[hitId];
 						param = charData.genericParameters[storageHitBox.paramId];
-						hitData = HitsBuilder.Build(param);
+						hitData = CharacterHitsBuilder.Build(param);
 						if (hitData == null) continue;
 						hitData.hitboxID = hitId;
 						// for each frame of each box

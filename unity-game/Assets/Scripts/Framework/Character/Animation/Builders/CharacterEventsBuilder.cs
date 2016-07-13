@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace RetroBread{
 
 
-	public static class EventsBuilder {
+	public static class CharacterEventsBuilder {
 
 		// Event builders indexed by type directly on array
 		private delegate AnimationEvent BuilderAction(Storage.GenericParameter param);
@@ -60,7 +60,7 @@ namespace RetroBread{
 			if (callIndex < builderActions.Length) {
 				return builderActions[callIndex](parameter);
 			}
-			Debug.Log("EventsBuilder: Unknown event type: " + parameter.type);
+			Debug.Log("CharacterEventsBuilder: Unknown event type: " + parameter.type);
 			return null;
 		}
 
@@ -176,8 +176,8 @@ namespace RetroBread{
 		private static AnimationEvent BuildIncrementCombo(Storage.GenericParameter parameter){
 			return new SingleEntityAnimationEvent<int>(null,
 				delegate(GameEntityModel model, int comboTimer){
-					++model.customVariables[ConditionsBuilder.comboCustomVariableName];
-					model.customTimers[ConditionsBuilder.comboCustomVariableName] = comboTimer;
+					++model.customVariables[CharacterConditionsBuilder.comboCustomVariableName];
+					model.customTimers[CharacterConditionsBuilder.comboCustomVariableName] = comboTimer;
 				},
 				parameter.SafeInt(0));
 		}
@@ -187,8 +187,8 @@ namespace RetroBread{
 			return new SimpleEntityAnimationEvent(
 				null,
 				delegate(GameEntityModel model){
-					model.customVariables[ConditionsBuilder.comboCustomVariableName] = 0;
-					model.customTimers[ConditionsBuilder.comboCustomVariableName] = 0;
+					model.customVariables[CharacterConditionsBuilder.comboCustomVariableName] = 0;
+					model.customTimers[CharacterConditionsBuilder.comboCustomVariableName] = 0;
 				}
 			);
 		}

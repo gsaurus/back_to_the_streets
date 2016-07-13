@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace RetroBread{
 
 
-	public static class HitsBuilder {
+	public static class CharacterHitsBuilder {
 
 		// Hits builders indexed by type directly on array
 		private delegate HitData BuilderAction(Storage.GenericParameter param);
@@ -20,7 +20,7 @@ namespace RetroBread{
 			if (callIndex < builderActions.Length) {
 				return builderActions[callIndex](param);
 			}
-			Debug.Log("HitsBuilder: Unknown hit type: " + param.type);
+			Debug.Log("CharacterHitsBuilder: Unknown hit type: " + param.type);
 			return null;
 		}
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace RetroBread{
 
 
-	public static class ConditionsBuilder {
+	public static class CharacterConditionsBuilder {
 
 		public static readonly string comboCustomVariableName = "combo";
 
@@ -72,7 +72,7 @@ namespace RetroBread{
 				}
 				return condition;
 			}
-			Debug.Log("ConditionsBuilder: Unknown condition type: " + parameter.type);
+			Debug.Log("CharacterConditionsBuilder: Unknown condition type: " + parameter.type);
 			return null;
 		}
 

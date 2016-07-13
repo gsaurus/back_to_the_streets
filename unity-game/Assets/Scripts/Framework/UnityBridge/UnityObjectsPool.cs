@@ -113,10 +113,15 @@ namespace RetroBread{
 
 			// Doesn't exist yet
 
+			string characterName = null;
+			if (animModel != null){
+				characterName = animModel.characterName;
+			}
+
 			// Instantiate it far, far away
 			UnityEngine.Object prefab;
 			if (!prefabs.TryGetValue(prefabName, out prefab)){
-				prefab = CharacterLoader.LoadViewModel(prefabName);
+				prefab = CharacterLoader.LoadViewModel(characterName, prefabName);
 				if (prefab == null) {
 					Debug.LogError("Failed to load prefab: " + prefabName);
 				}
