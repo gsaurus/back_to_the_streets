@@ -30,7 +30,7 @@ public class VersusWorldController:Controller<WorldModel>{
 
 	static VersusWorldController(){
 		// Setup character animations
-		SetupGameCharacters();
+		SetupGameData();
 
 		// Setup teams hit/collision matrixes
 		TeamsManagerController.SetupCollisionMatrixes(teamsCollisionMatrix, teamsHitMatrix);
@@ -266,7 +266,10 @@ public class VersusWorldController:Controller<WorldModel>{
 	
 	
 	
-	private static void SetupGameCharacters(){
+	private static void SetupGameData(){
+
+		// TODO: setup based on level info
+		HUDLoader.LoadHud("hud_bundle");
 
 		// TODO: setup based on players added
 		CharacterLoader.LoadCharacter("Axel_HD");

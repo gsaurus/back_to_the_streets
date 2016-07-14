@@ -22,7 +22,7 @@ namespace RetroBread{
 
 		// Handy static instantiation
 		public static void Instantiate(GameObject parent, GenericParameter parameter, int paramItemId, string description, int minValue = -1, int maxValue = -1){
-			GameObject paramObj = GameObject.Instantiate(CharacterEditor.Instance.intInputFieldParam);
+			GameObject paramObj = GameObject.Instantiate(HUDEditor.Instance.intInputFieldParam);
 			paramObj.GetComponent<IntInputFieldParam>().Setup(parameter, paramItemId, description, minValue, maxValue);
 			paramObj.transform.SetParent(parent.transform);
 		}

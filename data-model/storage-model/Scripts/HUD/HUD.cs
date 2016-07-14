@@ -7,12 +7,10 @@ namespace RetroBread.Storage{
 [ProtoContract]
 public sealed class HUD{
 
-	// Bundle where the HUD assets are
-	[ProtoMember(1)]
-	public string bundleName;
+	// Note: Bundle name where the HUD assets are is the same name as the storage data file name
 
 	// Name of the root prefab, the one containing all hud elements
-	[ProtoMember(2)]
+	[ProtoMember(1)]
 	public string mainPrefabName;
 
 //	[ProtoMember(3, OverwriteList=true)]
@@ -25,8 +23,7 @@ public sealed class HUD{
 	}
 
 	// Constructor
-	public HUD(string bundleName, string prefabName){
-		this.bundleName = bundleName;
+	public HUD(string prefabName){
 		this.mainPrefabName = prefabName;
 	}
 		

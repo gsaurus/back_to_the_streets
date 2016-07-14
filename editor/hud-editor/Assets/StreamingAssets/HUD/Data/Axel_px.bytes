@@ -1,31 +1,0 @@
-
-Axel_px"
-walk)"
-standing"
-fall"
-landing"
-prepare_jump"
-forward_jump"
-jump"
-backward_jump"
-	jump_down"
-jump_forward_kickê"
-jump_statick_kickì"
-double_kick"	
-punch"
-
-hard_punch"
-single_kick"
-back_attack"
-
-grandupper"
-grandupper_backwards"
-def_special"
-	ofspecialc"
-	being_hit
-"
-knocked_down	"
-knocked_hit_ground"
-stand_up/"
-knocked_down_to_die	"
-die?2abundle:pixel_axel

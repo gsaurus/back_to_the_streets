@@ -24,22 +24,6 @@ namespace RetroBread{
 			return "<invalid " + kind + ">";
 		}
 
-		protected static string[] GetAnimationsNames(){
-			Character character = CharacterEditor.Instance.character;
-			List<string> animNames = new List<string>();
-			if (character != null) {
-				foreach (CharacterAnimation anim in character.animations) {
-					animNames.Add(anim.name);
-				}
-			}
-			return animNames.ToArray();
-		}
-
-
-		protected static string[] GetAnchorsNames(){
-			Character character = CharacterEditor.Instance.character;
-			return character.viewAnchors.ToArray();
-		}
 
 	}
 

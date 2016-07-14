@@ -26,6 +26,7 @@ sh build_project.sh data-model/game-serializer/ $1
 
 # copy libs to unity project
 sh copy_dlls.sh unity-game $1
-
 # copy libs to character editor project
 sh copy_dlls.sh editor/character-editor $1
+# copy libs to hud editor project
+sh copy_dlls.sh editor/hud-editor $1

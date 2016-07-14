@@ -48,7 +48,7 @@ namespace RetroBread{
 			}
 
 			// Load HUD Model
-			string url = "file://" + hudModelsPath + hudData.bundleName;
+			string url = "file://" + hudModelsPath + hudName;
 			WWW www = WWW.LoadFromCacheOrDownload(url, 1);
 			if (www.assetBundle == null) {
 				Debug.LogError("Failed to load hud bundle at " + url);

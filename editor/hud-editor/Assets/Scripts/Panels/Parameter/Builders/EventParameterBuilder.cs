@@ -93,7 +93,7 @@ namespace RetroBread{
 				return "'" + parameter.SafeString(0) + "'"; 
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
-				StringDropdownParam.Instantiate(parent, parameter, 0, "Animation:", GetAnimationsNames());
+				StringDropdownParam.Instantiate(parent, parameter, 0, "Animation:", null);
 				FloatInputFieldParam.Instantiate(parent, parameter, 0, "Transition time:", 0);
 			}
 		}
@@ -258,7 +258,7 @@ namespace RetroBread{
 				IntDropdownParam.Instantiate(parent, parameter, 0, "Entity Reference:", entityReferenceType);
 				// TODO: dynamic content based on the dropdown!..
 				IntInputFieldParam.Instantiate(parent, parameter, 1, "Ref param (**):");
-				IntDropdownParam.Instantiate(parent, parameter, 2, "Grabbing Anchor:", GetAnchorsNames());
+				IntDropdownParam.Instantiate(parent, parameter, 2, "Grabbing Anchor:", null);
 				FloatInputFieldParam.Instantiate(parent, parameter, 0, "delta pos X:");
 				FloatInputFieldParam.Instantiate(parent, parameter, 1, "delta pos Y:");
 				FloatInputFieldParam.Instantiate(parent, parameter, 2, "delta pos Z:");
@@ -280,7 +280,7 @@ namespace RetroBread{
 				IntDropdownParam.Instantiate(parent, parameter, 0, "Entity Reference:", entityReferenceType);
 				// TODO: dynamic content based on the dropdown!..
 				IntInputFieldParam.Instantiate(parent, parameter, 1, "Ref param (**):");
-				IntDropdownParam.Instantiate(parent, parameter, 2, "Grabbing Anchor:", GetAnchorsNames());
+				IntDropdownParam.Instantiate(parent, parameter, 2, "Grabbing Anchor:", null);
 			}
 		}
 
@@ -307,7 +307,7 @@ namespace RetroBread{
 				;
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
-				IntDropdownParam.Instantiate(parent, parameter, 0, "Grabbing Anchor:", GetAnchorsNames());
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Grabbing Anchor:", null);
 			}
 		}
 
@@ -325,7 +325,7 @@ namespace RetroBread{
 				;
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
-				IntDropdownParam.Instantiate(parent, parameter, 0, "Grabbing Anchor:", GetAnchorsNames());
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Grabbing Anchor:", null);
 				FloatInputFieldParam.Instantiate(parent, parameter, 0, "delta pos X:");
 				FloatInputFieldParam.Instantiate(parent, parameter, 1, "delta pos Y:");
 				FloatInputFieldParam.Instantiate(parent, parameter, 2, "delta pos Z:");
@@ -344,8 +344,8 @@ namespace RetroBread{
 				;
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
-				IntDropdownParam.Instantiate(parent, parameter, 0, "Grabbing Anchor:", GetAnchorsNames());
-				StringDropdownParam.Instantiate(parent, parameter, 0, "Animation:", GetAnimationsNames());
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Grabbing Anchor:", null);
+				StringDropdownParam.Instantiate(parent, parameter, 0, "Animation:", null);
 			}
 		}
 

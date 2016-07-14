@@ -22,6 +22,7 @@ call build_project.bat data-model\game-serializer\ %1
 
 :: copy libs to unity-game project
 call copy_dlls.bat unity-game %1
-
 :: copy libs to character editor project
 call copy_dlls.bat editor\character-editor %1
+:: copy libs to hud editor project
+call copy_dlls.bat editor\hud-editor %1

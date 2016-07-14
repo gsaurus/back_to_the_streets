@@ -20,7 +20,7 @@ namespace RetroBread{
 
 		// Handy static instantiation
 		public static void Instantiate(GameObject parent, GenericParameter parameter, int paramItemId, string description, string[] options){
-			GameObject paramObj = GameObject.Instantiate(CharacterEditor.Instance.stringDropdownParam);
+			GameObject paramObj = GameObject.Instantiate(HUDEditor.Instance.stringDropdownParam);
 			paramObj.GetComponent<StringDropdownParam>().Setup(parameter, paramItemId, description, options);
 			paramObj.transform.SetParent(parent.transform);
 		}
