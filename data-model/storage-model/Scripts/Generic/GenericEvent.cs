@@ -7,7 +7,7 @@ namespace RetroBread.Storage{
 // E.g. at end of animation, jump to other animation; if get hit, play sound, etc
 // Both conditions and events may be composed
 [ProtoContract]
-public sealed class CharacterEvent{
+public sealed class GenericEvent{
 
 	// Pointers to GenericParameters
 	[ProtoMember(1)]
@@ -18,12 +18,12 @@ public sealed class CharacterEvent{
 	public int[] eventIds;
 
 	// Default Constructor
-	public CharacterEvent(){
+	public GenericEvent(){
 		// Nothing to do
 	}
 
 	// Constructor
-	public CharacterEvent(int[] conditionIds, int[] eventIds){
+	public GenericEvent(int[] conditionIds, int[] eventIds){
 		this.conditionIds = conditionIds;
 		this.eventIds = eventIds;
 	}

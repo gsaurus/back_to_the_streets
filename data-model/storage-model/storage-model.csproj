@@ -41,18 +41,20 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Scripts\Character\Character.cs" />
-    <Compile Include="Scripts\Character\CharacterEvent.cs" />
     <Compile Include="Scripts\Character\CollisionBox.cs" />
     <Compile Include="Scripts\Character\HitBox.cs" />
     <Compile Include="Scripts\Character\CharacterAnimation.cs" />
-    <Compile Include="Scripts\GenericParameter.cs" />
-    <Compile Include="Scripts\Box.cs" />
     <Compile Include="Scripts\HUD\HUD.cs" />
+    <Compile Include="Scripts\HUD\HUDObject.cs" />
+    <Compile Include="Scripts\Generic\Box.cs" />
+    <Compile Include="Scripts\Generic\GenericParameter.cs" />
+    <Compile Include="Scripts\Generic\GenericEvent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Scripts\" />
     <Folder Include="Scripts\Character\" />
     <Folder Include="Scripts\HUD\" />
+    <Folder Include="Scripts\Generic\" />
   </ItemGroup>
 </Project>

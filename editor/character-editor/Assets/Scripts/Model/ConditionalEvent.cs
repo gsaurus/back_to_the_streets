@@ -46,7 +46,7 @@ namespace RetroBread.Editor{
 
 		// This is a temporary builder variable
 		// it's populated during save, and discarded at save end 
-		private Storage.CharacterEvent storageEvent;
+		private Storage.GenericEvent storageEvent;
 
 
 
@@ -72,7 +72,7 @@ namespace RetroBread.Editor{
 
 
 
-		public static ConditionalEvent LoadFromStorage(Storage.CharacterEvent storageEvent, Storage.Character storageCharacter){
+		public static ConditionalEvent LoadFromStorage(Storage.GenericEvent storageEvent, Storage.Character storageCharacter){
 
 			ConditionalEvent newEvent = new ConditionalEvent();
 
@@ -92,15 +92,15 @@ namespace RetroBread.Editor{
 		}
 
 
-		public Storage.CharacterEvent SaveToStorage(){
-			Storage.CharacterEvent ret = storageEvent;
+		public Storage.GenericEvent SaveToStorage(){
+			Storage.GenericEvent ret = storageEvent;
 			storageEvent = null;
 			return ret;
 		}
 
 
 		public void BuildStorage(List<Box> boxes, List<GenericParameter> genericParams){
-			storageEvent = new Storage.CharacterEvent();
+			storageEvent = new Storage.GenericEvent();
 			storageEvent.conditionIds = new int[conditions.Count];
 			storageEvent.eventIds = new int[events.Count];
 			GenericParameter searchParam;

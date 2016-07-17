@@ -168,7 +168,7 @@ namespace RetroBread{
 		}
 
 
-		private static AnimationEvent ReadEvent(Storage.Character charData, Storage.CharacterEvent storageEvent, out int keyFrame, Storage.CharacterAnimation animation){
+		private static AnimationEvent ReadEvent(Storage.Character charData, Storage.GenericEvent storageEvent, out int keyFrame, Storage.CharacterAnimation animation){
 			// Build event
 			AnimationTriggerCondition condition = CharacterConditionsBuilder.Build(charData, storageEvent.conditionIds, out keyFrame, animation);
 			AnimationEvent e = CharacterEventsBuilder.Build(charData, storageEvent.eventIds);
@@ -198,7 +198,7 @@ namespace RetroBread{
 
 				// Setup animation events
 				if (animation.events != null) {
-					foreach (Storage.CharacterEvent e in animation.events) {
+					foreach (Storage.GenericEvent e in animation.events) {
 						animEvent = ReadEvent(charData, e, out keyFrame, animation);
 						if (keyFrame != CharacterConditionsBuilder.invalidKeyframe) {
 							controller.AddKeyframeEvent((uint)keyFrame, animEvent);

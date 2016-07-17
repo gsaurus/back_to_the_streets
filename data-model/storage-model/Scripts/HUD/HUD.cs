@@ -13,8 +13,13 @@ public sealed class HUD{
 	[ProtoMember(1)]
 	public string mainPrefabName;
 
-//	[ProtoMember(3, OverwriteList=true)]
-//	public Box[] boxes;
+	// Parameters, used in events
+	[ProtoMember(2, OverwriteList=true)]
+	public GenericParameter[] genericParameters;
+
+	// Objects information
+	[ProtoMember(3, OverwriteList=true)]
+	public HUDObject[] objects;
 
 
 	// Default Constructor

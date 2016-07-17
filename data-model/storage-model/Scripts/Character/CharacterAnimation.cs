@@ -24,7 +24,7 @@ public sealed class CharacterAnimation{
 	public CollisionBox[] collisionBoxes;
 
 	[ProtoMember(5, OverwriteList=true)]
-	public CharacterEvent[] events;
+	public GenericEvent[] events;
 
 	// Default Constructor
 	public CharacterAnimation(){

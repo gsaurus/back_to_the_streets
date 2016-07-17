@@ -51,7 +51,7 @@ namespace RetroBread.Editor{
 			// Populate events
 			if (storageAnimation.events != null) {
 				anim.events = new List<ConditionalEvent>(storageAnimation.events.Length);
-				foreach (Storage.CharacterEvent e in storageAnimation.events) {
+				foreach (Storage.GenericEvent e in storageAnimation.events) {
 					anim.events.Add(ConditionalEvent.LoadFromStorage(e, storageCharacter));
 				}
 			} else {
@@ -77,7 +77,7 @@ namespace RetroBread.Editor{
 				storageAnimation.hitBoxes[i] = hitBoxes[i].SaveToStorage();
 			}
 			// Populate events
-			storageAnimation.events = new Storage.CharacterEvent[events.Count];
+			storageAnimation.events = new Storage.GenericEvent[events.Count];
 			for (int i = 0 ; i < events.Count ; ++i){
 				storageAnimation.events[i] = events[i].SaveToStorage();
 			}
