@@ -59,9 +59,38 @@ namespace RetroBread{
 		public delegate void OnSomethingChanged();
 		public event OnSomethingChanged OnHUDChangedEvent;
 		public event OnSomethingChanged OnRootCanvasChangedEvent;
+		public event OnSomethingChanged OnObjectChangedEvent;
+		public event OnSomethingChanged OnEventChangedEvent;
 
 		public List<GameObject> canvasList = new List<GameObject>();
 
+
+		// Editor selections
+		private int selectedObjectId;
+		public int SelectedObjectId{
+			get { return selectedObjectId; }
+			set {
+				if (selectedObjectId != value) {
+					selectedObjectId = value;
+					if (OnObjectChangedEvent != null) {
+						OnObjectChangedEvent();
+					}
+				}
+			}
+		}
+
+		private int selectedEventId;
+		public int SelectedEventId{
+			get{ return selectedEventId; }
+			set{
+				if (selectedEventId != value) {
+					selectedEventId = value;
+					if (OnEventChangedEvent != null) {
+						OnEventChangedEvent();
+					}
+				}
+			}
+		}
 
 		static HUDEditor(){
 			// Setup debug
@@ -88,8 +117,10 @@ namespace RetroBread{
 //				hudModel = null;
 //			}
 
-			if (OnHUDChangedEvent != null)	OnHUDChangedEvent();
+			if (OnHUDChangedEvent 		 != null) 	OnHUDChangedEvent();
 			if (OnRootCanvasChangedEvent != null) 	OnRootCanvasChangedEvent();
+			if (OnObjectChangedEvent	 != null)	OnObjectChangedEvent();
+			if (OnEventChangedEvent		 != null) 	OnEventChangedEvent();
 
 		}
 
@@ -116,7 +147,7 @@ namespace RetroBread{
 				Storage.HUD storageHUD = serializer.Deserialize(hudStream, null, typeof(Storage.HUD)) as Storage.HUD;
 				hudStream.Close();
 				// Load hud into editor hud format
-				hud = HUD.LoadFromStorage(storageHUD);
+				hud = HUD.LoadFromStorage(hudName, storageHUD);
 			}else{
 				// New hud data
 				hud = new HUD(hudName);
@@ -179,9 +210,26 @@ namespace RetroBread{
 
 #region Handy getters/setters
 
-		
+		public HUDObject CurrentObject(){
+			if (hud == null || hud == null || hud.objects.Count == 0) {
+				return null;
+			}
+			return hud.objects[selectedObjectId];
+		}
+
+		public ConditionalEvent CurrentEvent(){
+			HUDObject currentObj = CurrentObject();
+			if (currentObj == null || currentObj.events.Count == 0) {
+				return null;
+			}
+			return currentObj.events[selectedEventId];
+		}
 
 #endregion
+
+		public void RefreshEvents(){
+			OnEventChangedEvent();
+		}
 
 
 	}

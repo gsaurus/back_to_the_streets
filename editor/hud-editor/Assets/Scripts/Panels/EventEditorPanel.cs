@@ -13,7 +13,7 @@ namespace RetroBread{
 
 		public void Close(){
 			gameObject.SetActive(false);
-			CharacterEditor.Instance.RefreshEvents();
+			HUDEditor.Instance.RefreshEvents();
 		}
 	
 

@@ -31,8 +31,8 @@ namespace RetroBread{
 		}
 
 		void OnEnable(){
-			CharacterEditor.Instance.OnAnimationChangedEvent += RefreshEventsList;
-			CharacterEditor.Instance.OnEventChangedEvent += RefreshEventsList;
+			HUDEditor.Instance.OnObjectChangedEvent += RefreshEventsList;
+			HUDEditor.Instance.OnEventChangedEvent += RefreshEventsList;
 
 //			List<string> newOptions = new List<string>();
 //			newOptions.Add(Directory.GetCurrentDirectory());
@@ -45,18 +45,18 @@ namespace RetroBread{
 
 
 		void RefreshEventsList(){
-			CharacterAnimation currentAnim = CharacterEditor.Instance.CurrentAnimation();
-			if (currentAnim == null || currentAnim.events.Count == 0) {
+			HUDObject currentObj = HUDEditor.Instance.CurrentObject();
+			if (currentObj == null || currentObj.events.Count == 0) {
 				_eventsList.Options = new List<string>();
 				_removeButton.interactable = false;
 				_editButton.interactable = false;
 				return;
 			}
 			List<string> newEvents = new List<string>();
-			foreach (ConditionalEvent e in currentAnim.events) {
+			foreach (ConditionalEvent e in currentObj.events) {
 				newEvents.Add(e.ToString());
 			}
-			int currentSelection = CharacterEditor.Instance.SelectedEventId;
+			int currentSelection = HUDEditor.Instance.SelectedEventId;
 			_eventsList.Options = newEvents;
 			_eventsList.SelectedItem = currentSelection;
 			_removeButton.interactable = true;
@@ -64,24 +64,24 @@ namespace RetroBread{
 		}
 
 		public void OnEventSelectionChanged(int itemId){
-			CharacterEditor.Instance.SelectedEventId = itemId;
+			HUDEditor.Instance.SelectedEventId = itemId;
 		}
 
 		public void OnAddButton(){
-			CharacterAnimation currentAnim = CharacterEditor.Instance.CurrentAnimation();
-			currentAnim.events.Add(new ConditionalEvent());
-			CharacterEditor.Instance.SelectedEventId = currentAnim.events.Count-1;
+			HUDObject currentObj = HUDEditor.Instance.CurrentObject();
+			currentObj.events.Add(new ConditionalEvent());
+			HUDEditor.Instance.SelectedEventId = currentObj.events.Count-1;
 			RefreshEventsList();
 			OnEditButton();
 		}
 
 		public void OnRemoveButton(){
-			CharacterAnimation currentAnim = CharacterEditor.Instance.CurrentAnimation();
-			currentAnim.events.RemoveAt(CharacterEditor.Instance.SelectedEventId);
-			if (currentAnim.events.Count == 0) {
-				CharacterEditor.Instance.SelectedEventId = 0;
-			}else if (CharacterEditor.Instance.SelectedEventId >= currentAnim.events.Count) {
-				CharacterEditor.Instance.SelectedEventId = currentAnim.events.Count - 1;
+			HUDObject currentObj = HUDEditor.Instance.CurrentObject();
+			currentObj.events.RemoveAt(HUDEditor.Instance.SelectedEventId);
+			if (currentObj.events.Count == 0) {
+				HUDEditor.Instance.SelectedEventId = 0;
+			}else if (HUDEditor.Instance.SelectedEventId >= currentObj.events.Count) {
+				HUDEditor.Instance.SelectedEventId = currentObj.events.Count - 1;
 			}
 			RefreshEventsList();
 		}

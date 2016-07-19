@@ -37,7 +37,7 @@ namespace RetroBread{
 
 			ConditionalEvent conditionalEvent = EventEditorPanel.eventToEdit;
 			if (conditionalEvent == null) {
-				conditionalEvent = CharacterEditor.Instance.CurrentEvent();
+				conditionalEvent = HUDEditor.Instance.CurrentEvent();
 			}
 
 			if (isCondition) {
