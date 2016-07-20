@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1070627817
+CRC: 4031289986
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 65122d87fdab20775fb508090e277a05
+    Hash: 41a3d4db3502b6d0ef79c632121549b8
   TypeTreeHash:
     serializedVersion: 2
     Hash: ed024b597887d344e02bbdcef4e1e200
@@ -37,4 +37,5 @@ ClassTypes:
   Script: {instanceID: 0}
 Assets:
 - Assets/Prefabs/HUD/tests_hud.prefab
+- Assets/Prefabs/HUD/other_hud.prefab
 Dependencies: []

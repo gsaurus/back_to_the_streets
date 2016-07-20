@@ -1,9 +1,8 @@
 fileFormatVersion: 2
-guid: de120105e5b9cb04bb113e9ea412510d
-folderAsset: yes
-timeCreated: 1468420937
+guid: 6976514e538295f47a1163dc7a311232
+timeCreated: 1469048026
 licenseType: Free
-DefaultImporter:
+NativeFormatImporter:
   userData: 
   assetBundleName: hud_bundle
   assetBundleVariant: 

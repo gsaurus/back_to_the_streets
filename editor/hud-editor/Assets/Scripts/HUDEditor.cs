@@ -225,6 +225,28 @@ namespace RetroBread{
 			return currentObj.events[selectedEventId];
 		}
 
+		public void SetRootCanvas(string canvasName){
+			hud.rootCanvas = canvasName;
+			if (OnRootCanvasChangedEvent != null) OnRootCanvasChangedEvent();
+		}
+
+		public void SelectObjectWithName(string objectName){
+			// Search for it
+			int index = 0;
+			foreach (HUDObject obj in hud.objects){
+				if (obj.name.Equals(objectName)){
+					SelectedObjectId = index;
+					return;
+				}
+				++index;
+			}
+			// not found, create it
+			HUDObject newHudObj = new HUDObject();
+			newHudObj.name = objectName;
+			hud.objects.Add(newHudObj);
+			SelectedObjectId = hud.objects.Count -1;
+		}
+
 #endregion
 
 		public void RefreshEvents(){
