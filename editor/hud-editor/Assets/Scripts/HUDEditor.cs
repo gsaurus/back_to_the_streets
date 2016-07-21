@@ -72,9 +72,8 @@ namespace RetroBread{
 			set {
 				if (selectedObjectId != value) {
 					selectedObjectId = value;
-					if (OnObjectChangedEvent != null) {
-						OnObjectChangedEvent();
-					}
+					if (OnObjectChangedEvent != null) OnObjectChangedEvent();
+					if (OnEventChangedEvent != null) OnEventChangedEvent();
 				}
 			}
 		}
@@ -228,6 +227,8 @@ namespace RetroBread{
 		public void SetRootCanvas(string canvasName){
 			hud.rootCanvas = canvasName;
 			if (OnRootCanvasChangedEvent != null) OnRootCanvasChangedEvent();
+			if (OnObjectChangedEvent	 != null) OnObjectChangedEvent();
+			if (OnEventChangedEvent		 != null) OnEventChangedEvent();
 		}
 
 		public void SelectObjectWithName(string objectName){
