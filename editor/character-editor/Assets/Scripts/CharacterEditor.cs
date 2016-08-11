@@ -350,21 +350,33 @@ namespace RetroBread{
 		// Any animation on the model becomes a logical animation
 		private void UpdateKnownAnimations(Animator animator){
 			List<string> knownAnimations = AnimationNames();
+			List<string> existingAnimations = new List<string>();
 			RuntimeAnimatorController controller = animator.runtimeAnimatorController;
 			int clipLength;
 			if (controller != null){
 				foreach(AnimationClip clip in controller.animationClips){
 					//Debug.Log("len: " + clip.averageDuration + " / " + Time.fixedDeltaTime + " = " + (int) (clip.averageDuration / Time.fixedDeltaTime));
+					existingAnimations.Add(clip.name);
+					// TODO: option to enforce animations length?
+					// Next two lines enforce animations lenght
+//					currentSkinAnimationLengths.TryGetValue(clip.name, out clipLength);
+//					character.animations[character.animations.FindIndex(x => x.name.Equals(clip.name))].numFrames = clipLength;
 					if (!knownAnimations.Contains(clip.name)) {
 						// New animation!
 						// WARNING: currently clip.averageDuration is not accessible at runtime outside editor
 						//clipLength = clip.averageDuration;
 						currentSkinAnimationLengths.TryGetValue(clip.name, out clipLength);
-						CharacterAnimation newAnim = new CharacterAnimation(clip.name, Mathf.CeilToInt(clipLength / Time.fixedDeltaTime));
+						CharacterAnimation newAnim = new CharacterAnimation(clip.name, clipLength);
 						character.animations.Add(newAnim);
 					}
 				}
 			}
+			// TODO: add option to remove / clean unexisting animations, for now this is just a handy thing
+//			foreach(string animName in knownAnimations){
+//				if (!existingAnimations.Contains(animName)) {
+//					character.animations.RemoveAt(character.animations.FindIndex(x => x.name.Equals(animName)));
+//				}
+//			}
 		}
 
 

@@ -129,10 +129,20 @@ namespace RetroBread{
 			if (currentAnim == null){
 				return;
 			}
-			currentAnim.hitBoxes.Add(new RetroBread.Editor.HitBox());
+
+			RetroBread.Editor.HitBox newBox = new RetroBread.Editor.HitBox();
+			// populate with whatever is in the editor, cose usually want to copy from other rather than build from scratch
+			int frameId = CharacterEditor.Instance.SelectedFrame;
+			newBox.EnsureBoxExists(frameId);
+			newBox.boxesPerFrame[frameId] = new Editor.Box(_boxPanel.GetPoint1(), _boxPanel.GetPoint2());
+			newBox.enabledFrames[frameId] = true;
+			// TODO: also copy hit parameter
+
+			currentAnim.hitBoxes.Add(newBox);
 			Refresh();
 			// select the recently added item
 			_hitsList.SelectedItem = _hitsList.OptionsCount-1;
+			CharacterEditor.Instance.RefreshHits();
 		}
 
 		public void OnRemoveButton(){

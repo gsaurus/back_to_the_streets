@@ -108,10 +108,18 @@ namespace RetroBread{
 			if (currentAnim == null){
 				return;
 			}
-			currentAnim.collisionBoxes.Add(new RetroBread.Editor.CollisionBox());
+			RetroBread.Editor.CollisionBox newBox = new RetroBread.Editor.CollisionBox();
+			// populate with whatever is in the editor, cose usually want to copy from other rather than build from scratch
+			int frameId = CharacterEditor.Instance.SelectedFrame;
+			newBox.EnsureBoxExists(frameId);
+			newBox.boxesPerFrame[frameId] = new Editor.Box(_boxPanel.GetPoint1(), _boxPanel.GetPoint2());
+			newBox.enabledFrames[frameId] = true;
+
+			currentAnim.collisionBoxes.Add(newBox);
 			Refresh();
 			// select the recently added item
 			_collisionsList.SelectedItem = _collisionsList.OptionsCount-1;
+			CharacterEditor.Instance.RefreshCollisions();
 		}
 
 		public void OnRemoveButton(){
