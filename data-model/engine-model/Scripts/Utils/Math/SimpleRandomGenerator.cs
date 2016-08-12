@@ -5,13 +5,13 @@ namespace RetroBread{
 
 	/// <summary>
 	/// Based on SimpleRNG by John D. Cook - http://www.johndcook.com
-	/// SimpleRNG is a simple random number generator based on 
+	/// SimpleRNG is a simple random number generator based on
 	/// George Marsaglia's MWC (multiply with carry) generator.
 	/// Although it is very simple, it passes Marsaglia's DIEHARD
 	/// series of random number generator tests.
-	/// 
-	/// Original document: http://www.codeproject.com/Articles/25172/Simple-Random-Number-Generation 
-	/// <summary>
+	///
+	/// Original document: http://www.codeproject.com/Articles/25172/Simple-Random-Number-Generation
+	/// </summary>
 	[ProtoContract]
 	public class SimpleRandomGenerator: RandomGenerator
 	{
@@ -21,9 +21,7 @@ namespace RetroBread{
 		public uint m_w;
 
 		public SimpleRandomGenerator(){
-			// Default seed
-			m_w = 521288629;
-			m_z = 362436069;
+			SetSeed(0);
 		}
 
 
@@ -32,11 +30,17 @@ namespace RetroBread{
 		}
 
 		public void SetSeed(long seed){
-			SetSeed((uint)(seed >> 16), (uint)(seed % 4294967296));
+			if (seed != 0) {
+				SetSeed((uint)(seed >> 16), (uint)(seed % 4294967296));
+			}else {
+				// Default seed
+				m_w = 521288629;
+				m_z = 362436069;
+			}
 		}
 
 		public void SetSeed(uint u, uint v){
-			if (u != 0) m_w = u; 
+			if (u != 0) m_w = u;
 			if (v != 0) m_z = v;
 		}
 
@@ -52,5 +56,3 @@ namespace RetroBread{
 	}
 
 }
-
-

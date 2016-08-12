@@ -32,7 +32,7 @@ namespace RetroBread{
 				return;
 			HitBox currentHit = CharacterEditor.Instance.CurrentHit();
 			foreach (HitBox hit in currentAnim.hitBoxes) {
-				if (hit.enabledFrames.Count >= currentFrame && hit.enabledFrames[currentFrame]) {
+				if (hit.enabledFrames.Count > currentFrame && hit.enabledFrames[currentFrame]) {
 					EnsureGameObject(numVisibleBoxes);
 					UpdateBox(numVisibleBoxes, hit.boxesPerFrame[currentFrame], hit == currentHit);
 					++numVisibleBoxes;

@@ -175,6 +175,7 @@ namespace RetroBread{
 		private float CurrentAnimationLength(Animator animator){
 			// WARNING: currently clip.averageDuration is not accessible at runtime outside editor
 			AnimatorClipInfo[] clipsInfo = animator.GetCurrentAnimatorClipInfo(0);
+			if (clipsInfo == null || clipsInfo.Count() == 0) return 0;
 			//return clipsInfo[0].clip.averageDuration / Time.fixedDeltaTime;
 			int length;
 			CharacterEditor.Instance.currentSkinAnimationLengths.TryGetValue(clipsInfo[0].clip.name, out length);

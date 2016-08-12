@@ -176,8 +176,16 @@ namespace RetroBread{
 		private static AnimationEvent BuildIncrementCombo(Storage.GenericParameter parameter){
 			return new SingleEntityAnimationEvent<int>(null,
 				delegate(GameEntityModel model, int comboTimer){
-					++model.customVariables[CharacterConditionsBuilder.comboCustomVariableName];
-					model.customTimers[CharacterConditionsBuilder.comboCustomVariableName] = comboTimer;
+					// Do not increment combo more than once per animation
+					int comboAnimFlag;
+					model.customVariables.TryGetValue(CharacterConditionsBuilder.comboAnimationClearFlag, out comboAnimFlag);
+					if (comboAnimFlag == 0) {
+						int currentCombo;
+						model.customVariables.TryGetValue(CharacterConditionsBuilder.comboCustomVariableName, out currentCombo);
+						model.customVariables[CharacterConditionsBuilder.comboCustomVariableName] = currentCombo + 1;
+						model.customTimers[CharacterConditionsBuilder.comboCustomVariableName] = comboTimer;
+						model.customVariables[CharacterConditionsBuilder.comboAnimationClearFlag] = 1;
+					}
 				},
 				parameter.SafeInt(0));
 		}

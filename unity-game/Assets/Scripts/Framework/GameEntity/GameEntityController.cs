@@ -33,6 +33,8 @@ namespace RetroBread{
 		// To simplify, one can only collide with only other entity at the same time
 		public ModelReference lastCollisionEntityId;
 
+		private int nextPauseTimer;
+
 
 		// Get PhysicPointModel
 		public static PhysicPointModel GetPointModel(GameEntityModel model){
@@ -147,6 +149,7 @@ namespace RetroBread{
 			}
 
 			// Update all custom timers
+			Dictionary<string, int> newTimerValues = new Dictionary<string, int>();
 			foreach (KeyValuePair<string, int> timer in model.customTimers){
 				if (timer.Value > 0){
 					int newTimer = timer.Value - 1;
@@ -155,10 +158,27 @@ namespace RetroBread{
 					if (newTimer == 0 && model.customVariables.ContainsKey(timer.Key)){
 						model.customVariables[timer.Key] = 0;
 					}
-					model.customTimers[timer.Key] = newTimer;
+					newTimerValues[timer.Key] = newTimer;
 				}
 			}
+			// consolidation
+			foreach (KeyValuePair<string, int> timer in newTimerValues) {
+				model.customTimers[timer.Key] = timer.Value;
+			}
 
+		}
+
+
+		protected override void PostUpdate(GameEntityModel model){
+			if (nextPauseTimer > 0) {
+				// Pause physics and animation
+				PhysicPointModel pointModel = GetPointModel(model);
+				if (pointModel != null) {
+					pointModel.isActive = false;
+					model.pauseTimer = nextPauseTimer;
+				}
+				nextPauseTimer = 0;
+			}
 		}
 
 
@@ -210,10 +230,8 @@ namespace RetroBread{
 
 		// Pause for a given number of frames (used for attack pause delay effect)
 		public static void PausePhysics(GameEntityModel model, int numFrames){
-			PhysicPointModel pointModel = GetPointModel(model);
-			if (pointModel == null) return;
-			pointModel.isActive = false;
-			model.pauseTimer = numFrames;
+			GameEntityController controller = model.Controller() as GameEntityController;
+			controller.nextPauseTimer = numFrames;
 		}
 
 

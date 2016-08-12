@@ -6,7 +6,11 @@ namespace RetroBread{
 
 	public static class CharacterConditionsBuilder {
 
+		// Combo counts sequences of animations
 		public static readonly string comboCustomVariableName = "combo";
+		// Combo can only be incremented once per animation, thus store if it was already incremented on a variable
+		public static readonly string comboAnimationClearFlag = "comboAnimClearFlag";
+
 
 		public static int invalidKeyframe = -1;
 		private static int negationParamId = 0;
@@ -225,7 +229,9 @@ namespace RetroBread{
 			return new EntityArithmeticCondition<int>(
 				type,
 				delegate(GameEntityModel model){
-					return model.customVariables[comboCustomVariableName];
+					int res;
+					model.customVariables.TryGetValue(comboCustomVariableName, out res);
+					return res;
 				},
 				value
 			);
@@ -239,7 +245,9 @@ namespace RetroBread{
 			return new EntityArithmeticCondition<int>(
 				type,
 				delegate(GameEntityModel model){
-					return model.customTimers[comboCustomVariableName];
+					int res;
+					model.customTimers.TryGetValue(comboCustomVariableName, out res);
+					return res;
 				},
 				value
 			);

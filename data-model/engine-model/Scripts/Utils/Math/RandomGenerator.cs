@@ -2,7 +2,7 @@ using ProtoBuf;
 using System;
 
 namespace RetroBread{
-	
+
 	[ProtoContract]
 	[ProtoInclude(1, typeof(SimpleRandomGenerator))]
 	public abstract class RandomGenerator{

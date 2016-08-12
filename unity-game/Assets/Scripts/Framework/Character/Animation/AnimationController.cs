@@ -185,6 +185,8 @@ namespace RetroBread{
 				// clear hitten entities
 				model.hittenEntitiesByHitId = null;
 				model.InvalidateVC();
+				// Clear combo animation flag
+				entityModel.customVariables[CharacterConditionsBuilder.comboAnimationClearFlag] = 0;
 			}
 
 			if (!haveNewNextFrame && !haveNewAnimation){

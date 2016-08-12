@@ -9,6 +9,8 @@ public class EntryPoint : MonoBehaviour
 	static EntryPoint(){
 		// Clear cach on startup, asset bundles may have been modified since last run
 		Caching.CleanCache();
+		// Framerate control
+		Application.targetFrameRate = 61;
 	}
 
 	// Use this for initialization

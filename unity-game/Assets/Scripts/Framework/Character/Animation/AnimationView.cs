@@ -61,15 +61,23 @@ namespace RetroBread{
 
 			// don't animate if paused
 			GameEntityModel entityModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
+			AnimatorStateInfo stateInfo;
 			bool entityPaused = false;
 			if (entityModel != null) {
 				entityPaused = entityModel.pauseTimer > 0;
 			}
-			animator.enabled = !(StateManager.Instance.IsPaused || entityPaused);
-			if (!animator.enabled) return;
+			if (StateManager.Instance.IsPaused || entityPaused) {
+				// Force correct frame to be displayed
+				animator.Play(model.animationName);
+				stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+				animator.Play(model.animationName, 0, ((model.currentFrame + 0.25f) * StateManager.Instance.UpdateRate) / stateInfo.length);
+				animator.Update(0.0f);
+				animator.enabled = false;
+				return;
+			}
+			animator.enabled = true;
 
 			// Get current animation (if transiting we consider next as current)
-			AnimatorStateInfo stateInfo;
 			if (animator.IsInTransition(0)){
 				stateInfo = animator.GetNextAnimatorStateInfo(0);
 			}else {
@@ -80,8 +88,8 @@ namespace RetroBread{
 				// if time is not in sync, resync it
 				if (isTimingSynchroizedWithModelFrames) {
 					int currentAnimationFrame = GetAnimationCurrentFrame(stateInfo);
-					if (Math.Abs(currentAnimationFrame - model.currentFrame) > 2) {
-						animator.Play(model.animationName, 0, (model.currentFrame * StateManager.Instance.UpdateRate) / stateInfo.length);
+					if (Math.Abs(currentAnimationFrame - model.currentFrame) > 1) {
+						animator.Play(model.animationName, 0, ((model.currentFrame + 0.25f) * StateManager.Instance.UpdateRate) / stateInfo.length);
 					}
 				}
 			}else {
