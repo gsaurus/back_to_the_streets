@@ -7,7 +7,7 @@ using RetroBread.Network;
 
 public class VersusWorldController:Controller<WorldModel>{
 
-	public const float gravityY = -0.017f;
+	public const float gravityY = -0.020f;
 
 	public const uint totalGameFrames = 7200; // 2 minutes
 
@@ -43,7 +43,7 @@ public class VersusWorldController:Controller<WorldModel>{
 
 
 	public FixedVector3 GetRandomSpawnPosition(WorldModel model){
-		return new FixedVector3(StateManager.state.Random.NextFloat(-4f, 4f), 0.0001, StateManager.state.Random.NextFloat(0, 2f));
+		return new FixedVector3(StateManager.state.Random.NextFloat(-4f, 4f), 0.0001, StateManager.state.Random.NextFloat(3f, 4.5f));
 //		FixedVector3 res = new FixedVector3((40 + StateManager.state.Random.NextFloat(-4f, 4f)) * (model.lastSpawnWasLeft ? 1 : -1),9,0);
 //		model.lastSpawnWasLeft = !model.lastSpawnWasLeft;
 //		return res;

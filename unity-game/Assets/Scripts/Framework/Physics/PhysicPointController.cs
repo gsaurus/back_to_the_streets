@@ -94,13 +94,13 @@ namespace RetroBread{
 			}
 			newCollisionInpact = FixedVector3.Zero;
 
-			if (model.isActive){
+//			if (model.isActive){
 				if (model.collisionInpact.Y == 0){
 					++model.framesSinceLastTimeGrounded;
 				}else{
 					model.framesSinceLastTimeGrounded = 0;
 				}
-			}
+//			}
 
 //			// testing isActive (pause delay)
 //			if (StateManager.state.Random.NextInt(0,60) == 4){
