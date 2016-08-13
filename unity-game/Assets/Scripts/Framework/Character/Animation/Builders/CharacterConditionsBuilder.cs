@@ -48,10 +48,13 @@ namespace RetroBread{
 			List<AnimationTriggerCondition> conditions = new List<AnimationTriggerCondition>(conditionIds.Length);
 			AnimationTriggerCondition condition;
 			keyFrame = invalidKeyframe;
+			int conditionKeyFrame;
 			foreach (int conditionId in conditionIds) {
-				condition = BuildFromParameter(charData.genericParameters[conditionId], out keyFrame, animation);
+				condition = BuildFromParameter(charData.genericParameters[conditionId], out conditionKeyFrame, animation);
 				if (condition != null) {
 					conditions.Add(condition);
+				} else if (conditionKeyFrame != invalidKeyframe){
+					keyFrame = conditionKeyFrame;
 				}
 			}
 			if (conditions.Count > 0) {
