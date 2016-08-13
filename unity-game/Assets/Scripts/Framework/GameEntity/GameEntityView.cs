@@ -92,9 +92,9 @@ namespace RetroBread{
 			foreach (HitInformation info in hits) {
 				GameEntityModel otherModel = StateManager.state.GetModel(info.entityId) as GameEntityModel;
 				if (otherModel != null) {
-					spawnAtLeft = otherModel.isFacingRight;
+					spawnAtLeft = !otherModel.isFacingRight;
 					randomValue = UnityEngine.Random.Range(0f, 1f);
-					randomValue *= randomValue;
+					randomValue = randomValue * randomValue * randomValue;
 					if (spawnAtLeft) {
 						randomValue = 1 - randomValue;
 					}
