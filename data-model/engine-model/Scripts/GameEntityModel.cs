@@ -67,7 +67,9 @@ namespace RetroBread{
 
 		// Default Constructor
 		public GameEntityModel(){
-			// nothing to do
+			anchoredEntities = new List<ModelReference>();
+			customVariables = new Dictionary<string, int>();
+			customTimers = new Dictionary<string, int>();
 		}
 
 

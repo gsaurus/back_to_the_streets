@@ -164,7 +164,7 @@ public class VersusWorldController:Controller<WorldModel>{
 						null,
 						"Axel_HD",
 						"idle",
-						CharacterLoader.GetCharacterSkinName("Axel_HD", playerId)
+						CharacterLoader.GetCharacterSkinName("Axel_HD", 0)
 					),
 					inputModel,
 					DefaultVCFactoryIds.GameEntityControllerFactoryId,
