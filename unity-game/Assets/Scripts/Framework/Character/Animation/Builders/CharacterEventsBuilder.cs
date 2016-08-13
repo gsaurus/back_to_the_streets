@@ -30,7 +30,8 @@ namespace RetroBread{
 			BuildAddRefImpulse,					// 18: impulse(grabbed, 0, (2.1, 4.2, 5.3))
 			BuildResetImpulse,					// 19: reset(impulse)
 			BuildConsuleInput,					// 20: consumeInput(A)
-			BuildGetHurt						// 21: getHurt(10%)
+			BuildGetHurt,						// 21: getHurt(10%)
+			BuildSpawnEffect					// 22: spawnFX(sparks)
 
 		};
 
@@ -322,6 +323,46 @@ namespace RetroBread{
 					damagePercentage
 				);
 			}
+		}
+
+		private static AnimationEvent BuildSpawnEffect(Storage.GenericParameter parameter){
+			FixedVector3 offset = BuildFixedVector3(parameter);
+			string prefabName = parameter.SafeString(0);
+			int locationType = parameter.SafeInt(0);
+			int lifetime = parameter.SafeInt(1);
+			bool localSpace = parameter.SafeBool(0);
+
+			// {"self", "anchor", "hit intersection", "hurt intersection"}
+			PentaEntityAnimationEvent<string, int, FixedVector3, bool, GameEntityView.ConvertGameToViewCoordinates>.EventExecutionDelegate theDelegate = null;
+			switch (locationType) {
+				case 0:
+					// self
+					theDelegate = GameEntityView.SpawnAtSelf;
+					break;
+				case 1:
+					// Anchor, TODO: which anchor?
+					RetroBread.Debug.LogError("Spawn at anchor not supported yet");
+					break;
+				case 2: 
+					// hit
+					theDelegate = GameEntityView.SpawnAtHitIntersection;
+					break;
+				case 3:
+					// hurt
+					theDelegate = GameEntityView.SpawnAtHurtIntersection;
+					break;
+			}
+
+			return new PentaEntityAnimationEvent<string, int, FixedVector3, bool, GameEntityView.ConvertGameToViewCoordinates>(
+				null,
+				theDelegate,
+				prefabName,
+				lifetime,
+				offset,
+				localSpace,
+				PhysicPoint2DView.ConvertGameToViewCoordinates // TODO: store this delegate at a setup file, so it's easier to configure
+			);
+
 		}
 
 

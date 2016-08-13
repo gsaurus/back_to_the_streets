@@ -194,6 +194,53 @@ namespace RetroBread{
 			prefabs.Clear();
 		}
 
+
+		// Load a prefab from the same bundle of the entity model, and set it's lifetime
+		public GameObject FireAndForget(GameEntityModel model, string objName, int lifetime = 0){
+			AnimationModel animModel = null;
+			if (model != null){
+				animModel = StateManager.state.GetModel(model.animationModelId) as AnimationModel;
+			}
+			string prefabName;
+			if (animModel == null) return null;
+			if (animModel.viewModelName != null){
+				prefabName = animModel.viewModelName;
+			}else{
+				prefabName = animModel.characterName;
+			}
+			string[] pathItems = prefabName.Split(CharacterLoader.prefabDelimiter.ToCharArray());
+			pathItems[1] = objName;
+			prefabName = pathItems[0] + CharacterLoader.prefabDelimiter + objName;
+
+			// Instantiate it
+			UnityEngine.Object prefab;
+			if (!prefabs.TryGetValue(prefabName, out prefab)){
+				if (pathItems != null && pathItems.Length > 1) {
+					string url = "file://" + CharacterLoader.charactersModelsPath + pathItems[0];
+					WWW www = WWW.LoadFromCacheOrDownload(url, 1);
+					if (www.assetBundle == null) {
+						Debug.LogError("Failed to load bundle at " + url);
+					}
+					// Load model prefab from bundle
+					prefab = www.assetBundle.LoadAsset<GameObject>(pathItems[1]);
+					www.assetBundle.Unload(false);
+					prefabs[prefabName] = prefab;
+				}
+			}
+			if (prefab != null) {
+				GameObject obj = GameObject.Instantiate(prefab) as GameObject;
+				obj.transform.position = new Vector3(float.MinValue, float.MaxValue, float.MinValue);
+				if (lifetime > 0) {
+					obj.AddComponent<FireAndForgetBehaviour>();
+					obj.GetComponent<FireAndForgetBehaviour>().lifetime = lifetime;
+				}
+				return obj;
+			} else {
+				Debug.LogError("Failed to load prefab: " + prefabName);
+				return null;
+			}
+		}
+
 	}
 
 }

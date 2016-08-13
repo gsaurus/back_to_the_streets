@@ -6,12 +6,7 @@ public class FireAndForgetBehaviour : MonoBehaviour {
 	public float lifetime;
 
 	void Start(){
-		StartCoroutine("FireAndForget");
-	}
-
-	IEnumerator FireAndForget(){
-		yield return new WaitForSeconds(lifetime);
-		GameObject.Destroy(this.gameObject);
+		GameObject.Destroy(this.gameObject, lifetime);
 	}
 
 }

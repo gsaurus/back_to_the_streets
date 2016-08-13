@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 131673091
+CRC: 1613585959
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 5e9197f238f6a27606da8738f0f987ef
+    Hash: cba72ff0b2220970882920b48aaead16
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 2840d76c4622656cb25842f666733793
+    Hash: 148e331603f5f8049401bcb63144ba3b
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -37,17 +37,23 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 137
   Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
 - Class: 212
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
 Assets:
 - Assets/Prefabs/Characters/hd_axel.prefab
+- Assets/Materials/ParticlesMaterial.mat
 - Assets/Prefabs/Characters/3d_rocha.prefab
 - Assets/Prefabs/Characters/pixel_axel.prefab
-- Assets/__temp_clip_info__/hd_axel clipInfo.bytes
 - Assets/Characters/axel_portrait.jpg
 - Assets/__temp_clip_info__/3d_rocha clipInfo.bytes
+- Assets/__temp_clip_info__/hd_axel clipInfo.bytes
+- Assets/Prefabs/Effects/sparks.prefab
 - Assets/Characters/axel_HD_portrait.jpg
 - Assets/__temp_clip_info__/pixel_axel clipInfo.bytes
 Dependencies: []

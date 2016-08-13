@@ -22,6 +22,12 @@ namespace RetroBread{
 		}
 
 
+		public static Vector3 ConvertGameToViewCoordinates(Vector3 coordinates){
+			float forcedZ = ((int)(coordinates.z * 100)) / 100.0f;
+			return new Vector3(coordinates.x, -100 * forcedZ, coordinates.y + coordinates.z);
+		}
+
+
 		protected void UpdateGameObjectPosition(GameObject obj, PhysicPointModel model, float deltaTime){
 
 			// Convert model position to 2D

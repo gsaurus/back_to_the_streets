@@ -51,7 +51,8 @@ namespace RetroBread{
 			new BuildRefImpulse(),						// 18: impulse(hitten, (2.1, 4.2, 5.3))
 			new BuildResetImpulse(),					// 19: reset(impulse)
 			new BuildConsumeInput(),					// 20: consumeInput(B)
-			new BuildGetHurt()							// 21: getHurt(10%)
+			new BuildGetHurt(),							// 21: getHurt(10%)
+			new BuildSpawnEffect()						// 22: spawnFX(sparks)
 		};
 
 
@@ -62,6 +63,8 @@ namespace RetroBread{
 
 		private static string[] hurtFacingOptions = {"inherit hit", "location", "inverse location", "orientation", "inverse orientation", "none"};
 	
+		private static string[] spawnLocation = {"self", "anchor", "hit intersection", "hurt intersection"};
+
 
 		public override string[] TypesList(){
 			string[] types = new string[builders.Length];
@@ -415,6 +418,22 @@ namespace RetroBread{
 			public override void Build(GameObject parent, GenericParameter parameter){
 				IntInputFieldParam.Instantiate(parent, parameter, 0, "Damage percentage");
 				IntDropdownParam.Instantiate(parent, parameter, 1, "Facing options", hurtFacingOptions);
+			}
+		}
+
+		private class BuildSpawnEffect: InternEventBuilder{
+			public BuildSpawnEffect():base("Spawn Effect"){}
+			public override string ToString(GenericParameter parameter){
+				return "spawn(" + parameter.SafeString(0) + ")";
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				StringInputFieldParam.Instantiate(parent, parameter, 0, "Effect");
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Location", spawnLocation);
+				IntInputFieldParam.Instantiate(parent, parameter, 1, "Lifetime");
+				BoolToggleParam.Instantiate(parent, parameter, 0, "Local space");
+				FloatInputFieldParam.Instantiate(parent, parameter, 0, "Offset X:");
+				FloatInputFieldParam.Instantiate(parent, parameter, 1, "Offset Y:");
+				FloatInputFieldParam.Instantiate(parent, parameter, 2, "Offset Z:");
 			}
 		}
 

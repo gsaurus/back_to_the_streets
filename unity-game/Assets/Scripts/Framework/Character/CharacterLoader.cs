@@ -101,6 +101,18 @@ namespace RetroBread{
 				if (www.assetBundle == null) {
 					Debug.LogError("Failed to load character bundle at " + url);
 				}
+
+				// TODO: HAMMER TIME: workaround to Unity bug on textures
+				// Refresh all material shaders
+				Material[] materials = www.assetBundle.LoadAllAssets<Material>();
+				foreach (Material m in materials) {
+					string shaderName = m.shader.name;
+					Shader newShader = Shader.Find(shaderName);
+					if (newShader != null) {
+						m.shader = newShader;
+					}
+				}
+
 				// Load model prefab from bundle
 				GameObject prefab = www.assetBundle.LoadAsset<GameObject>(pathItems[1]);
 

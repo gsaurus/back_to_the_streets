@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 
 
@@ -7,6 +8,8 @@ namespace RetroBread{
 
 
 	public class GameEntityView: View<GameEntityModel> {
+
+		public delegate Vector3 ConvertGameToViewCoordinates(Vector3 coordinates);
 
 
 		// Visual update
@@ -57,6 +60,81 @@ namespace RetroBread{
 			// No local data stored so it's always compatible
 			return true;
 		}
+
+
+
+
+
+
+		public static void SpawnAtSelf(GameEntityModel model, string prefabName, int lifetime, FixedVector3 offset, bool localSpace, ConvertGameToViewCoordinates gameToViewCoordinates){
+			GameObject obj = UnityObjectsPool.Instance.FireAndForget(model, prefabName, lifetime);
+			GameObject selfObj = UnityObjectsPool.Instance.GetGameObject(model.Index);
+			if (obj != null && selfObj != null) {
+				if (localSpace) {
+					obj.transform.SetParent(selfObj.transform);
+					obj.transform.localPosition = gameToViewCoordinates(offset.AsVector3());
+				} else {
+					obj.transform.position = selfObj.transform.position + gameToViewCoordinates(offset.AsVector3());
+				}
+
+			}
+		}
+
+
+		private static void SpawnAtIntersection(List<HitInformation> hits, GameEntityModel model, string prefabName, int lifetime, FixedVector3 offset, bool localSpace, ConvertGameToViewCoordinates gameToViewCoordinates){
+
+			GameObject selfObj = UnityObjectsPool.Instance.GetGameObject(model.Index);
+
+			// For each hit, spawn randomly within the intersection box
+			bool spawnAtLeft;
+			float randomValue;
+			Vector3 spawnLocation;
+			foreach (HitInformation info in hits) {
+				GameEntityModel otherModel = StateManager.state.GetModel(info.entityId) as GameEntityModel;
+				if (otherModel != null) {
+					spawnAtLeft = otherModel.isFacingRight;
+					randomValue = UnityEngine.Random.Range(0f, 1f);
+					randomValue *= randomValue;
+					if (spawnAtLeft) {
+						randomValue = 1 - randomValue;
+					}
+					// Get a suitable location to spawn
+					spawnLocation.x = (float)(info.intersection.pointOne.X + (info.intersection.pointTwo.X - info.intersection.pointOne.X) * randomValue);
+					randomValue = UnityEngine.Random.Range(0f, 1f);
+					randomValue = 1 - (randomValue * randomValue);
+					randomValue *= UnityEngine.Random.Range(0, 2) == 0 ? 0.5f : -0.5f;
+					spawnLocation.y = (float)(info.intersection.Center().Y + (info.intersection.pointTwo.Y - info.intersection.pointOne.Y) * randomValue);
+					float z1 = (float)GameEntityController.GetPointModel(model).position.Z;
+					float z2 = (float)GameEntityController.GetPointModel(otherModel).position.Z;
+					spawnLocation.z = Mathf.Min(z1, z2) - 0.1f;
+
+					// Spawn the object
+					GameObject obj = UnityObjectsPool.Instance.FireAndForget(model, prefabName, lifetime);
+					if (obj != null) {
+						spawnLocation += offset.AsVector3();
+						obj.transform.position = gameToViewCoordinates(spawnLocation);
+						if (localSpace) {
+							obj.transform.SetParent(selfObj.transform);
+						}
+					}
+				}
+			}
+
+		}
+
+		public static void SpawnAtHitIntersection(GameEntityModel model, string prefabName, int lifetime, FixedVector3 offset, bool localSpace, ConvertGameToViewCoordinates gameToViewCoordinates){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			if (controller.lastHits.Count == 0) return;
+			SpawnAtIntersection(controller.lastHits, model, prefabName, lifetime, offset, localSpace, gameToViewCoordinates); 
+		}
+
+
+		public static void SpawnAtHurtIntersection(GameEntityModel model, string prefabName, int lifetime, FixedVector3 offset, bool localSpace, ConvertGameToViewCoordinates gameToViewCoordinates){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			if (controller.lastHurts.Count == 0) return;
+			SpawnAtIntersection(controller.lastHurts, model, prefabName, lifetime, offset, localSpace, gameToViewCoordinates); 
+		}
+
 
 	}
 
