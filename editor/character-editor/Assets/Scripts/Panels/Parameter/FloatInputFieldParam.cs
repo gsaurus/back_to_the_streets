@@ -16,8 +16,8 @@ namespace RetroBread{
 
 		private GenericParameter parameter;
 		private int paramItemId;
-		private float minValue;
-		private float maxValue;
+		private float minValue = -1;
+		private float maxValue = -1;
 
 
 		// Handy static instantiation

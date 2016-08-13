@@ -15,7 +15,10 @@ namespace RetroBread{
 			}
 		}
 			
-		private string[] typesList = { "test 1", "test 2" };
+		private static string[] typesList = { "Standard" };
+
+		public static string[] facingOptions = {"location", "inverse location", "orientation", "inverse orientation", "none"};
+		public static string[] hitTypeOptions = {"contact", "K.O.", "grab", "electrocution", "burn", "freeze"};
 
 		public override string[] TypesList(){
 			return typesList;
@@ -29,32 +32,16 @@ namespace RetroBread{
 		public override void Build(GameObject parent, GenericParameter parameter){
 			switch (parameter.type) {
 				case 0:
-					BuildTest1(parent, parameter);
-					break;
-				case 1:
-					BuildTest2(parent, parameter);
+					BuildStandard(parent, parameter);
 					break;
 			}
 		}
 
 
-		private void BuildTest1(GameObject parent, GenericParameter parameter){
-			StringDropdownParam.Instantiate(parent, parameter, 0, "Component:", new string[]{"head", "body", "feet"});
-			FloatInputFieldParam.Instantiate(parent, parameter, 1, "X Offset:");
-			FloatInputFieldParam.Instantiate(parent, parameter, 2, "Y Offset:");
-			BoolToggleParam.Instantiate(parent, parameter, 3, "Strong as hell");
-		}
-
-		private void BuildTest2(GameObject parent, GenericParameter parameter){
-			Character character = CharacterEditor.Instance.character;
-			List<string> animNames = new List<string>();
-			if (character != null) {
-				foreach (CharacterAnimation anim in character.animations) {
-					animNames.Add(anim.name);
-				}
-			}
-			IntDropdownParam.Instantiate(parent, parameter, 0, "Animation:", animNames.ToArray());
-			IntInputFieldParam.Instantiate(parent, parameter, 1, "Frame: ", 0, character != null ? CharacterEditor.Instance.CurrentAnimation().numFrames : -1);
+		private void BuildStandard(GameObject parent, GenericParameter parameter){
+			IntDropdownParam.Instantiate(parent, parameter, 0, "Type:", hitTypeOptions);
+			IntInputFieldParam.Instantiate(parent, parameter, 1, "Damage");
+			IntDropdownParam.Instantiate(parent, parameter, 2, "Hitten Facing:", facingOptions);
 		}
 
 	}

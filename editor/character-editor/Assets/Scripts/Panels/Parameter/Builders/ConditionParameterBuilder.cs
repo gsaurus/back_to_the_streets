@@ -61,8 +61,8 @@ namespace RetroBread{
 			new BuildEntityCollisionForceArithmetics(),	// 9: collide_H >= 4.3
 			new BuildEntityCollision(),					// 10: entity collision
 			new BuildEntityHit(),						// 11: hit
-			new BuildEntityHurt(),						// 12: hurt
-			new BuildEntitySpecificHurt(),				// 13: hurt(3)
+			new BuildEntityHurt(),						// 12: hurt(K.O)
+			new BuildEntityHurtDirection(),				// 13: hurt_from(front)
 			new BuildComboCounter(),					// 14: combo >= 3
 			new BuildComboTimer(),						// 15: combo timer <= 10
 			new BuildGrabbed(),							// 16: grabbed
@@ -276,6 +276,7 @@ namespace RetroBread{
 
 
 		// hit
+		// TODO: more options depending on hit type or id?
 		private class BuildEntityHit: InternConditionBuilder{
 			public BuildEntityHit():base("Hit"){}
 			public override string ToString(GenericParameter parameter){
@@ -287,27 +288,37 @@ namespace RetroBread{
 		}
 
 
-		// hurt
+
+		private static string[] getHurtOptions(){
+			string[] hurtOptions = new string[HitParameterBuilder.hitTypeOptions.Length + 1];
+			for (int i = 0; i < HitParameterBuilder.hitTypeOptions.Length; ++i) {
+				hurtOptions[i] = HitParameterBuilder.hitTypeOptions[i];
+			}
+			hurtOptions[HitParameterBuilder.hitTypeOptions.Length] = "any";
+			return hurtOptions;
+		}
+
+		// hurt(K.O.)
 		private class BuildEntityHurt: InternConditionBuilder{
 			public BuildEntityHurt():base("Hurt"){}
 			public override string ToString(GenericParameter parameter){
-				return FilterNegationString(parameter, "hurt");
+				return FilterNegationString(parameter, "hurt(" + SafeToString(getHurtOptions(), parameter.SafeInt(0), "direction") + ")");
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
 				InstantiateNegation(parent, parameter);
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Type:", getHurtOptions());
 			}
 		}
 
 
-		// hurt(3)
-		private class BuildEntitySpecificHurt: InternConditionBuilder{
-			public BuildEntitySpecificHurt():base("Specific Hurt"){}
+		// hurt_from(front)
+		private class BuildEntityHurtDirection: InternConditionBuilder{
+			public BuildEntityHurtDirection():base("Hurt orientation"){}
 			public override string ToString(GenericParameter parameter){
-				return FilterNegationString(parameter, "hurt(" + parameter.SafeInt(0) + ")");
+				return "hurt_from(" + SafeToString(new string[]{"front", "back"}, parameter.SafeInt(0), "direction") + ")";
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateNegation(parent, parameter);
-				IntInputFieldParam.Instantiate(parent, parameter, 0, "collision ID:", 0);
+				IntDropdownParam.Instantiate(parent, parameter, 0, "From:", new string[]{"front", "back"});
 			}
 		}
 

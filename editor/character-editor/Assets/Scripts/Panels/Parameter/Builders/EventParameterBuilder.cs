@@ -50,7 +50,8 @@ namespace RetroBread{
 			new BuildSetAnchoredAnim(),					// 17: grabbedAnim(2, jump)
 			new BuildRefImpulse(),						// 18: impulse(hitten, (2.1, 4.2, 5.3))
 			new BuildResetImpulse(),					// 19: reset(impulse)
-			new BuildConsumeInput()						// 20: consumeInput(B)
+			new BuildConsumeInput(),					// 20: consumeInput(B)
+			new BuildGetHurt()							// 21: getHurt(10%)
 		};
 
 
@@ -58,6 +59,8 @@ namespace RetroBread{
 		private static string[] entityReferenceType = {"anchored", "parent", "colliding", "hitten", "hitter"};
 
 		private static string[] inputButtonOptions = {"A", "B", "C", "D", "E", "F", "G"};
+
+		private static string[] hurtFacingOptions = {"inherit hit", "location", "inverse location", "orientation", "inverse orientation", "none"};
 	
 
 		public override string[] TypesList(){
@@ -397,6 +400,21 @@ namespace RetroBread{
 			public override void Build(GameObject parent, GenericParameter parameter){
 				IntDropdownParam.Instantiate(parent, parameter, 0, "Button:", inputButtonOptions);
 				BoolToggleParam.Instantiate(parent, parameter, 0, "Consume Release Event");
+			}
+		}
+
+
+		// getHurt(10%)
+		private class BuildGetHurt: InternEventBuilder{
+			public BuildGetHurt():base("Get Hurt"){}
+			public override string ToString(GenericParameter parameter){
+				int value = parameter.SafeInt(0);
+				if (value == 100) return "getHurt";
+				return "getHurt(" + value + "%)";
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				IntInputFieldParam.Instantiate(parent, parameter, 0, "Damage percentage");
+				IntDropdownParam.Instantiate(parent, parameter, 1, "Facing options", hurtFacingOptions);
 			}
 		}
 

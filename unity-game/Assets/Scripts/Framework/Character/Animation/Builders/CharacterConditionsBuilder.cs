@@ -33,7 +33,7 @@ namespace RetroBread{
 			BuildEntityEntityCollisionCheck,		// 10: entity collision
 			BuildOnHit,								// 11: on hit
 			BuildOnHurt,							// 12: on hurt
-			BuildOnSpecificHurt,					// 13: on hurt(1)
+			BuildOnHurtDirection,					// 13: on hurt(1)
 			BuildComboCounter,						// 14: combo >= 2
 			BuildComboTimer,						// 15: combo timer < 10
 			BuildIsAnchored,						// 16: grabbed
@@ -208,17 +208,25 @@ namespace RetroBread{
 		}
 
 										
-		// on hurt
+		// on hurt(K.O.)
 		private static AnimationTriggerCondition BuildOnHurt(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
-			return new EntityArithmeticCondition<int>(ArithmeticConditionOperatorType.greater, GameEntityController.HurtSourcesCount, 0);
+			int hitTypeNum = parameter.SafeInt(0);
+			if (hitTypeNum < Enum.GetNames(typeof(HitData.HitType)).Length) {
+				return new SingleEntityBoolCondition<HitData.HitType>(
+					GameEntityController.HurtContainsType,
+					(HitData.HitType)hitTypeNum
+				);
+			}else{
+				return new EntityArithmeticCondition<int>(ArithmeticConditionOperatorType.greater, GameEntityController.HurtSourcesCount, 0);
+			}
 		}
 
-		// on hurt(3)
-		private static AnimationTriggerCondition BuildOnSpecificHurt(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		// hurt_from(front)
+		private static AnimationTriggerCondition BuildOnHurtDirection(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
-			int collisionId = (int)parameter.SafeInt(0);
-			return new SingleEntityBoolCondition<int>(GameEntityController.HurtsContainCollisionId, collisionId);
+			int direction = parameter.SafeInt(0);
+			return new SingleEntityBoolCondition<bool>(GameEntityController.IsHurtFrontal, direction == 0);
 		}
 
 		// combo <= 3

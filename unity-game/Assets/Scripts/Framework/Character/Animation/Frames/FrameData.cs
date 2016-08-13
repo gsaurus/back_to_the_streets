@@ -57,9 +57,38 @@ namespace RetroBread{
 		}
 	}
 
-	// Base class for a hitbox specific data
+
+	// Class for a hitbox specific data
+	// TODO: if necessary break into inheritance and extract specific stuff
 	public class HitData{
+
+		public enum HitType{
+			contact			= 0,
+			KO				= 1,
+			grab			= 2,
+			electrocution	= 3,
+			burn			= 4,
+			freeze			= 5
+		}
+
+		public enum HitFacing{
+			hitterLocation 				= 0,
+			inverseHitterLocation 		= 1,
+			hitterOrientation			= 2,
+			inverseHitterOrientation	= 3,
+			none						= 4
+		}
+
 		public int hitboxID;
+		public HitType type;
+		public int damage;
+		public HitFacing facingOptions;
+
+		public HitData(HitType type, int damage, HitFacing facingOptions){
+			this.type = type;
+			this.damage = damage;
+			this.facingOptions = facingOptions;
+		}
 	}
 
 

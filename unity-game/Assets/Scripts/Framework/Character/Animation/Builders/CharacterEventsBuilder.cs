@@ -29,7 +29,8 @@ namespace RetroBread{
 			BuildSetAnchoredAnim,				// 17: grabbedAnim(2, jump)
 			BuildAddRefImpulse,					// 18: impulse(grabbed, 0, (2.1, 4.2, 5.3))
 			BuildResetImpulse,					// 19: reset(impulse)
-			BuildConsuleInput					// 20: consumeInput(A)
+			BuildConsuleInput,					// 20: consumeInput(A)
+			BuildGetHurt						// 21: getHurt(10%)
 
 		};
 
@@ -298,6 +299,28 @@ namespace RetroBread{
 				return new SingleAnimationEvent<uint>(null, InputButtonOperations.ConsumeRelease, buttonId);
 			}else{
 				return new SingleAnimationEvent<uint>(null, InputButtonOperations.ConsumePress, buttonId);
+			}
+		}
+
+		// getHurt(10%)
+		private static AnimationEvent BuildGetHurt(Storage.GenericParameter parameter){
+			FixedFloat damagePercentage = parameter.SafeInt(0) * 0.01f;
+			int facingOptions = parameter.SafeInt(1);
+			facingOptions -= 1;
+			if (facingOptions < 0) {
+				// inherit from hitter data
+				return new SingleEntityAnimationEvent<FixedFloat>(
+					null,
+					GameEntityController.HurtBasedOnHitData,
+					damagePercentage
+				);
+			} else {
+				return new DoubleEntityAnimationEvent<HitData.HitFacing, FixedFloat>(
+					null,
+					GameEntityController.HurtBasedOnFacingOptions,
+					(HitData.HitFacing)facingOptions,
+					damagePercentage
+				);
 			}
 		}
 

@@ -268,6 +268,28 @@ namespace RetroBread{
 			}
 		}
 
+		public static void HurtBasedOnFacingOptions(GameEntityModel model, HitData.HitFacing facingOptions, FixedFloat damagePercentage){
+
+			// Facing
+			if (facingOptions == HitData.HitFacing.hitterLocation || facingOptions == HitData.HitFacing.inverseHitterLocation) {
+				FaceToHitterLocation(model, facingOptions == HitData.HitFacing.inverseHitterLocation);
+			} else if (facingOptions == HitData.HitFacing.hitterOrientation || facingOptions == HitData.HitFacing.inverseHitterOrientation) {
+				FaceToHitterDirection(model, facingOptions == HitData.HitFacing.inverseHitterOrientation);
+			} else {
+				// None, nothing to do
+			}
+
+			// TODO: Damage!
+		}
+
+		public static void HurtBasedOnHitData(GameEntityModel model, FixedFloat damagePercentage){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			if (controller.lastHurts.Count > 0) {
+				HitData hitData = controller.lastHurts[0].hitData;
+				HurtBasedOnFacingOptions(model, hitData.facingOptions, damagePercentage);
+			}
+		}
+
 
 	#endregion
 
@@ -295,6 +317,26 @@ namespace RetroBread{
 		public static int HurtSourcesCount(GameEntityModel model){
 			GameEntityController controller = model.Controller() as GameEntityController;
 			return controller.lastHurts.Count; 
+		}
+
+		public static bool HurtContainsType(GameEntityModel model, HitData.HitType type){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			foreach (HitInformation info in controller.lastHurts) {
+				if (info.hitData.type == type) return true;
+			}
+			return false;
+		}
+
+		public static bool IsHurtFrontal(GameEntityModel model, bool frontal){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			if (controller.lastHurts.Count == 0) return false;
+			GameEntityModel hitter = StateManager.state.GetModel(controller.lastHurts[0].entityId) as GameEntityModel;
+			PhysicPointModel modelPoint = GameEntityController.GetPointModel(model);
+			PhysicPointModel hitterPoint = GameEntityController.GetPointModel(hitter);
+			bool isFrontal;
+			if (model.isFacingRight) isFrontal = hitterPoint.position.X >= modelPoint.position.X;
+			else isFrontal = hitterPoint.position.X <= modelPoint.position.X;
+			return isFrontal == frontal;
 		}
 
 		// Hurt at a certain collisionID

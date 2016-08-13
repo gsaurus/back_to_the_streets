@@ -9,8 +9,7 @@ namespace RetroBread{
 		// Hits builders indexed by type directly on array
 		private delegate HitData BuilderAction(Storage.GenericParameter param);
 		private static BuilderAction[] builderActions = {
-			BuildSimpleHit
-			// TODO: everything else..
+			BuildStandardHit
 		};
 			
 
@@ -30,8 +29,8 @@ namespace RetroBread{
 
 
 		// frame = 4
-		private static HitData BuildSimpleHit(Storage.GenericParameter parameter){
-			return new HitData();
+		private static HitData BuildStandardHit(Storage.GenericParameter parameter){
+			return new HitData((HitData.HitType) parameter.SafeInt(0), parameter.SafeInt(1), (HitData.HitFacing) parameter.SafeInt(2));
 		}
 
 
