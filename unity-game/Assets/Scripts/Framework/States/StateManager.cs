@@ -65,6 +65,8 @@ namespace RetroBread{
 
 		public bool IsNetworked { get ; private set; }
 
+		public bool IsRewindingState { get ; private set; }
+
 
 		// Initialize with stuff
 		// TODO: what to setup here? Networked game or not, loggers, properties etc..
@@ -280,9 +282,11 @@ namespace RetroBread{
 					return;
 				}
 				// Old state restored, now redo the present state
+				IsRewindingState = true;
 				while (currentState.Keyframe < presentKeyframe){
 					UpdateLogicsTick();
 				}
+				IsRewindingState = false;
 			}
 		}
 
@@ -377,9 +381,11 @@ namespace RetroBread{
 			currentState = newCurrentState;
 
 			// restore any missing progress until the requested momment
+			IsRewindingState = true;
 			while (currentState.Keyframe < keyframe){
 				UpdateLogicsTick();
 			}
+			IsRewindingState = false;
 
 			if (discardNewerEvents){
 				if (keyframe > 0) {

@@ -67,6 +67,10 @@ namespace RetroBread{
 
 
 		public static void SpawnAtSelf(GameEntityModel model, string prefabName, int lifetime, FixedVector3 offset, bool localSpace, ConvertGameToViewCoordinates gameToViewCoordinates){
+
+			// No visual spawns if state is being remade
+			if (StateManager.Instance.IsRewindingState) return;
+
 			GameObject obj = UnityObjectsPool.Instance.FireAndForget(model, prefabName, lifetime);
 			GameObject selfObj = UnityObjectsPool.Instance.GetGameObject(model.Index);
 			if (obj != null && selfObj != null) {
@@ -123,6 +127,10 @@ namespace RetroBread{
 		}
 
 		public static void SpawnAtHitIntersection(GameEntityModel model, string prefabName, int lifetime, FixedVector3 offset, bool localSpace, ConvertGameToViewCoordinates gameToViewCoordinates){
+
+			// No visual spawns if state is being remade
+			if (StateManager.Instance.IsRewindingState) return;
+
 			GameEntityController controller = model.Controller() as GameEntityController;
 			if (controller.lastHits.Count == 0) return;
 			SpawnAtIntersection(controller.lastHits, model, prefabName, lifetime, offset, localSpace, gameToViewCoordinates); 
@@ -130,6 +138,10 @@ namespace RetroBread{
 
 
 		public static void SpawnAtHurtIntersection(GameEntityModel model, string prefabName, int lifetime, FixedVector3 offset, bool localSpace, ConvertGameToViewCoordinates gameToViewCoordinates){
+
+			// No visual spawns if state is being remade
+			if (StateManager.Instance.IsRewindingState) return;
+
 			GameEntityController controller = model.Controller() as GameEntityController;
 			if (controller.lastHurts.Count == 0) return;
 			SpawnAtIntersection(controller.lastHurts, model, prefabName, lifetime, offset, localSpace, gameToViewCoordinates); 
