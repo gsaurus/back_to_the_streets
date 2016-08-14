@@ -112,12 +112,7 @@ namespace RetroBread{
 		}
 
 
-		// Check collisions between physic models, and apply gravity to them
-		protected override void Update(PhysicWorldModel world){
-		
-			PhysicPointModel pointModel;
-			PhysicPointController pointController;
-
+		private List<PhysicPlaneModel> GetAllPlanes(PhysicWorldModel world){
 			// Get all planes to check collisions
 			List<PhysicPlaneModel> allPlanes;
 			if (staticPlanes != null) allPlanes = new List<PhysicPlaneModel>(staticPlanes);
@@ -136,6 +131,18 @@ namespace RetroBread{
 					allPlanes.Add(planeModel);
 				}
 			}
+			return allPlanes;
+		}
+
+
+		// Check collisions between physic models, and apply gravity to them
+		protected override void Update(PhysicWorldModel world){
+		
+			PhysicPointModel pointModel;
+			PhysicPointController pointController;
+
+			// Get all planes to check collisions
+			List<PhysicPlaneModel> allPlanes = GetAllPlanes(world);
 			
 			foreach(uint pointModelId in world.pointModels) {
 				pointModel = StateManager.state.GetModel(pointModelId) as PhysicPointModel;
@@ -292,6 +299,38 @@ namespace RetroBread{
 				worldModel.planeModels.Remove(model.Index);
 			}
 		}
+
+	#endregion
+
+
+	#region Raycasting
+
+	// Check collisions between physic models, and apply gravity to them
+	public FixedVector3 Raycast(PhysicWorldModel world, FixedVector3 origin, FixedVector3 direction){
+		
+		// A raycast long enough
+		FixedVector3 target = origin + direction * 99;
+
+		// Get all planes to check collisions
+		List<PhysicPlaneModel> allPlanes = GetAllPlanes(world);
+
+		FixedVector3 intersection;
+
+		// Find closest intersection
+		FixedVector3 closestIntersection = new FixedVector3(FixedFloat.MaxValue, FixedFloat.MaxValue, FixedFloat.MaxValue);
+		FixedFloat closestIntersectionDistance = FixedFloat.MaxValue;
+		foreach(PhysicPlaneModel planeModel in allPlanes){
+				if (PhysicPlaneController.CheckIntersection(planeModel, origin, target, FixedVector3.Zero, out intersection)){
+				FixedFloat distance = FixedVector3.Distance(origin, intersection);
+				if (distance < closestIntersectionDistance) {
+					closestIntersectionDistance = distance;
+					closestIntersection = intersection;
+				}
+			}
+		}
+		return closestIntersection;
+	}
+
 
 	#endregion
 

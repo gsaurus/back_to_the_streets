@@ -14,10 +14,12 @@ namespace RetroBread{
 		public GameObject anchorsPanel;
 		public GameObject openPanel;
 		public GameObject animationDropdown;
+		public GameObject shadowInputField;
 
 
 		private InputField _nameInputField;
 		private Dropdown _animationDropdown;
+		private InputField _shadowInputField;
 
 
 		void Awake(){
@@ -25,6 +27,7 @@ namespace RetroBread{
 			_animationDropdown = animationDropdown.GetComponent<Dropdown>();
 			CharacterEditor.Instance.OnCharacterChangedEvent += OnCharacterChanged;
 			CharacterEditor.Instance.OnAnimationChangedEvent += OnAnimationChanged;
+			_shadowInputField = shadowInputField.GetComponent<InputField>();
 		}
 
 		// Use this for initialization
@@ -48,7 +51,10 @@ namespace RetroBread{
 
 
 		void OnCharacterChanged(){
-			_nameInputField.text = CharacterEditor.Instance.character.name;
+			string name = CharacterEditor.Instance.character.name;
+			string shadow = CharacterEditor.Instance.character.shadowName;
+			_nameInputField.text = name != null ? name : "";
+			_shadowInputField.text = shadow != null ? shadow : "";
 			SetupAnimationsDropdown();
 		}
 
@@ -81,6 +87,10 @@ namespace RetroBread{
 		public void OnAnimationChanged(){
 			_animationDropdown.value = CharacterEditor.Instance.SelectedAnimationId;
 			_animationDropdown.RefreshShownValue();
+		}
+
+		public void OnShadowNameChanged(string newName){
+			CharacterEditor.Instance.character.shadowName = newName;
 		}
 
 

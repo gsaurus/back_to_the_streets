@@ -36,6 +36,17 @@ namespace RetroBread{
 		}
 
 
+		public static GameObject GetCharacterShadow(GameEntityModel model, GameObject root){
+			Storage.Character storageCharacter;
+			AnimationModel animModel = StateManager.state.GetModel(model.animationModelId) as AnimationModel;
+			if (animModel == null) return null;
+			if (!loadedCharacters.TryGetValue(animModel.characterName, out storageCharacter)) return null;
+			Transform shadow = root.transform.FindChild(storageCharacter.shadowName);
+			if (shadow == null) return null;
+			return shadow.gameObject;
+		}
+
+
 		// Get a character portrait by entity id
 		public static Sprite GetCharacterPortrait(uint modelId){
 			GameEntityModel ownerModel = StateManager.state.GetModel(modelId) as GameEntityModel;

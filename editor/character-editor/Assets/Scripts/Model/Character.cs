@@ -14,6 +14,7 @@ namespace RetroBread.Editor{
 		public List<string> viewAnchors;
 		public List<string> viewModels;
 		public List<string> viewPortraits;
+		public string shadowName;
 
 		public Character(string name){
 			this.name = name;
@@ -21,12 +22,14 @@ namespace RetroBread.Editor{
 			viewAnchors = new List<string>();
 			viewModels = new List<string>();
 			viewPortraits = new List<string>();
+			shadowName = null;
 		}
 
 
 		public static Character LoadFromStorage(Storage.Character storageCharacter){
 			// Basic data
 			Character character = new Character(storageCharacter.name);
+			character.shadowName = storageCharacter.shadowName;
 			if (storageCharacter.viewAnchors != null) {
 				character.viewAnchors = new List<string>(storageCharacter.viewAnchors);
 			} else {
@@ -63,6 +66,7 @@ namespace RetroBread.Editor{
 
 			// Basic data
 			Storage.Character storageCharacter = new Storage.Character(name);
+			storageCharacter.shadowName = shadowName;
 			if (viewAnchors != null) {
 				storageCharacter.viewAnchors = viewAnchors.ToArray();
 			}

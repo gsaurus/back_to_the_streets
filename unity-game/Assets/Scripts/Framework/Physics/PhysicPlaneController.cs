@@ -57,14 +57,12 @@ namespace RetroBread{
 
 
 		// Compute the intersection point against a line segment
-		public static bool CheckIntersection(PhysicPlaneModel planeModel, PhysicPointModel pointModel, out FixedVector3 intersection){
+		public static bool CheckIntersection(PhysicPlaneModel planeModel, FixedVector3 pos1, FixedVector3 pos2, FixedVector3 stepTolerance, out FixedVector3 intersection){
 			// plane may be moving, sum velocity to initial point position
-			FixedVector3 pos1 = pointModel.lastPosition;
-			FixedVector3 pos2 = pointModel.position;
 			pos1 += planeModel.GetVelocity();
 
 			// Check bounding box intersection, including step tolerance
-			if (!BoxIntersection(planeModel, pos1 + pointModel.stepTolerance, pos2)){
+			if (!BoxIntersection(planeModel, pos1 + stepTolerance, pos2)){
 				intersection = FixedVector3.Zero;
 				return false;
 			}
@@ -93,7 +91,7 @@ namespace RetroBread{
 
 			if (t < -error){
 				// falling through the plane, try step tolerance to recover
-				pos1 += pointModel.stepTolerance;
+				pos1 += stepTolerance;
 				pointDeltaPos = pos2 - pos1;
 				pos1ToOrigin = planeModel.origin - pos1;
 				dotDeltaPosNormal = FixedVector3.Dot(pointDeltaPos, planeModel.normal);
@@ -125,6 +123,16 @@ namespace RetroBread{
 
 			// a small delta due to precision errors
 			return FixedFloat.Abs(anglesSum - FixedFloat.TwoPI) < 0.2;
+		}
+
+
+		// Compute the intersection point against a line segment
+		public static bool CheckIntersection(PhysicPlaneModel planeModel, PhysicPointModel pointModel, out FixedVector3 intersection){
+			// plane may be moving, sum velocity to initial point position
+			FixedVector3 pos1 = pointModel.lastPosition;
+			FixedVector3 pos2 = pointModel.position;
+			pos1 += planeModel.GetVelocity();
+			return CheckIntersection(planeModel, pos1, pos2, pointModel.stepTolerance, out intersection);
 		}
 
 

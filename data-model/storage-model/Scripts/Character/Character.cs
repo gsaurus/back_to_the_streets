@@ -36,6 +36,9 @@ public sealed class Character{
 	[ProtoMember(7, OverwriteList=true)]
 	public string[] portraits;
 
+	[ProtoMember(8)]
+	public string shadowName;
+
 	// Default Constructor
 	public Character(){
 		// Nothing to do
