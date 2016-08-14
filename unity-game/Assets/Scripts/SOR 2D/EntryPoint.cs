@@ -12,7 +12,7 @@ public class EntryPoint : MonoBehaviour
 		// Clear cach on startup, asset bundles may have been modified since last run
 		Caching.CleanCache();
 		// Framerate control
-		Application.targetFrameRate = 61;
+		Application.targetFrameRate = 60;
 
 		RetroBread.Debug.Instance = new UnityDebug();
 		SorVCFactories.RegisterFactories(true);
