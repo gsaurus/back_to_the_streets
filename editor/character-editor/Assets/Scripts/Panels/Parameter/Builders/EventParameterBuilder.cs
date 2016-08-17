@@ -62,7 +62,7 @@ namespace RetroBread{
 		private static string[] inputButtonOptions = {"A", "B", "C", "D", "E", "F", "G"};
 
 		private static string[] hurtFacingOptions = {"inherit hit", "location", "inverse location", "orientation", "inverse orientation", "none"};
-	
+
 		private static string[] spawnLocation = {"self", "anchor", "hit intersection", "hurt intersection"};
 
 
@@ -91,12 +91,12 @@ namespace RetroBread{
 
 
 #region Builders
-			
+
 
 		private class BuildSetAnimation: InternEventBuilder{
 			public BuildSetAnimation():base("Jump to Animation"){}
 			public override string ToString(GenericParameter parameter){
-				return "'" + parameter.SafeString(0) + "'"; 
+				return "'" + parameter.SafeString(0) + "'";
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
 				StringDropdownParam.Instantiate(parent, parameter, 0, "Animation:", GetAnimationsNames());
@@ -421,6 +421,7 @@ namespace RetroBread{
 			}
 		}
 
+		// spawnFX(sparks)
 		private class BuildSpawnEffect: InternEventBuilder{
 			public BuildSpawnEffect():base("Spawn Effect"){}
 			public override string ToString(GenericParameter parameter){

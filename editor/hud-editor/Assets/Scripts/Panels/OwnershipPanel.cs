@@ -14,23 +14,17 @@ namespace RetroBread{
 		public GameObject playerObj;
 		public GameObject attackAnchorObj;
 		public GameObject visibilityTimerObj;
-		public GameObject portraitObj;
-		public GameObject characterTextObj;
 
 		InputField _teamObj;
 		InputField _playerObj;
 		Toggle _attackAnchorObj;
 		InputField _visibilityTimerObj;
-		Toggle _portraitObj;
-		Toggle _characterTextObj;
 
 		void Awake(){
 			_teamObj = teamObj.GetComponent<InputField>();
 			_playerObj = playerObj.GetComponent<InputField>();
 			_visibilityTimerObj = visibilityTimerObj.GetComponent<InputField>();
 			_attackAnchorObj = attackAnchorObj.GetComponent<Toggle>();
-			_portraitObj = portraitObj.GetComponent<Toggle>();
-			_characterTextObj = characterTextObj.GetComponent<Toggle>();
 			HUDEditor.Instance.OnObjectChangedEvent += OnObjectChangedEvent;
 		}
 
@@ -47,8 +41,6 @@ namespace RetroBread{
 			_playerObj.text = hudObj.playerId + "";
 			_visibilityTimerObj.text = ((float)hudObj.visibilityTime) + "";
 			_attackAnchorObj.isOn = hudObj.attackAndGrabDelegation;
-			_portraitObj.isOn = hudObj.usePortraitSprite;
-			_characterTextObj.isOn = hudObj.useCharacterText;
 		}
 
 

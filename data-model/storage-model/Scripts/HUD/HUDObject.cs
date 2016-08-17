@@ -23,12 +23,6 @@ public sealed class HUDObject{
 	[ProtoMember(5)]
 	public FixedFloat visibilityTime;
 
-	// Extra Setup
-	[ProtoMember(6)]
-	public bool usePortraitSprite;
-	[ProtoMember(7)]
-	public bool useCharacterText;
-
 	// Events
 	[ProtoMember(8, OverwriteList=true)]
 	public GenericEvent[] events;

@@ -70,6 +70,9 @@ namespace RetroBread{
 				// Add hudModel to the scene
 				GameObject.Instantiate(prefab);
 				hudModel = prefab;
+				hudModel.AddComponent<HUDViewBehaviour>();
+				HUDViewBehaviour hudView = hudModel.GetComponent<HUDViewBehaviour>();
+				hudView.hudData = hudData;
 			}else{
 				Debug.LogError("Failed to load hud canvas " + hudData.mainPrefabName + " from bundle " + url);
 			}
