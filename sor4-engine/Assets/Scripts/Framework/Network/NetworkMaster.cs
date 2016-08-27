@@ -30,6 +30,8 @@ public sealed class NetworkMaster: SingletonMonoBehaviour<NetworkMaster>{
 
 	// We start by refreshing servers list
 	void OnEnable(){
+		MasterServer.ipAddress = "155.94.137.89";
+		MasterServer.port = 27884;
 		RefreshServersList();
 		IsAnouncingServer = false;
 	}
@@ -72,6 +74,7 @@ public sealed class NetworkMaster: SingletonMonoBehaviour<NetworkMaster>{
 	public void CreateServer(int maxPlayers, string password = null){
 		Network.incomingPassword = password;
 		bool useNat = !Network.HavePublicAddress();
+		useNat = false;
 		Network.InitializeServer(maxPlayers-1, port, useNat);
 	}
 

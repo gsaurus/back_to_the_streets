@@ -193,10 +193,10 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 		byte[] allPlayerNumsData = serializer.Serialize(playerNumbers);
 
 		// send current players to the newcomer
-		networkView.RPC("SetAllPlayersData", info.sender, allPlayersData, allPlayerNumsData);
+		GetComponent<NetworkView>().RPC("SetAllPlayersData", info.sender, allPlayersData, allPlayerNumsData);
 
 		// and notify all players about the newcomer as well
-		networkView.RPC("AddPlayerData", RPCMode.All, (int)playerNumber, data, info.sender);
+		GetComponent<NetworkView>().RPC("AddPlayerData", RPCMode.All, (int)playerNumber, data, info.sender);
 	}
 
 
@@ -245,7 +245,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 	void OnPlayerDisconnected(NetworkPlayer player) {
 		Debug.Log("Player disconnected: " + player.ipAddress);
 		// notify all clients
-		networkView.RPC("RemovePlayerData", RPCMode.All, player);
+		GetComponent<NetworkView>().RPC("RemovePlayerData", RPCMode.All, player);
 	}
 
 
@@ -317,7 +317,7 @@ public sealed class NetworkCenter: SingletonMonoBehaviour<NetworkCenter>{
 			return;
 		}
 		byte[] data = serializer.Serialize(playerData);
-		networkView.RPC("OnClientPlayerDataAnounced", RPCMode.Server, data);
+		GetComponent<NetworkView>().RPC("OnClientPlayerDataAnounced", RPCMode.Server, data);
 
 		// wait for server response
 		StartCoroutine(WaitForServerData());

@@ -97,12 +97,12 @@ public class NetworkChat: MonoBehaviour{
 
 	// Send a message to all
 	public void SendTextMessage(string text) {
-		networkView.RPC("ChatMessageReceived", RPCMode.All, Network.player.guid, text);
+		GetComponent<NetworkView>().RPC("ChatMessageReceived", RPCMode.All, Network.player.guid, text);
 	}
 
 	// Send a private message to all
 	public void SendPrivateTextMessage(string text, NetworkPlayer player) {
-		networkView.RPC("PrivateChatMessageReceived", player, Network.player.guid, text);
+		GetComponent<NetworkView>().RPC("PrivateChatMessageReceived", player, Network.player.guid, text);
 	}
 
 	// Add a local bot message

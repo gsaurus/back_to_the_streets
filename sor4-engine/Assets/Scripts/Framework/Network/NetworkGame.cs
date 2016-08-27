@@ -83,7 +83,7 @@ public sealed class NetworkGame : SingletonMonoBehaviour<NetworkGame>{
 	// 2) game doesn't allow leave on middle game: pause game to all until everyone is ready again
 	void OnPlayerNotReadyEvent(string guid){
 		if (pauseWhenPlayersNotReady){
-			networkView.RPC("PauseGame",RPCMode.All); 
+			GetComponent<NetworkView>().RPC("PauseGame",RPCMode.All); 
 		}
 //		else {
 //			NetworkPlayer player;
@@ -104,12 +104,12 @@ public sealed class NetworkGame : SingletonMonoBehaviour<NetworkGame>{
 		if (targetGuid == null){
 			// send to all
 			timeToResume = NetworkSync.Instance.GetLagTime();
-			networkView.RPC("ResumeGame", RPCMode.All, currentStateData, oldestStateData, timeToResume);
+			GetComponent<NetworkView>().RPC("ResumeGame", RPCMode.All, currentStateData, oldestStateData, timeToResume);
 		}else{
 			NetworkPlayer player;
 			if (NetworkCenter.TryGetNetworkPlayerForGuid(targetGuid, out player)){
 				timeToResume = NetworkSync.Instance.GetLagTime(targetGuid);
-				networkView.RPC("ResumeGame", player, currentStateData, oldestStateData, timeToResume);
+				GetComponent<NetworkView>().RPC("ResumeGame", player, currentStateData, oldestStateData, timeToResume);
 			}
 		}
 	}
@@ -184,7 +184,7 @@ public sealed class NetworkGame : SingletonMonoBehaviour<NetworkGame>{
 	public void FlushEvents(){
 		if (eventsBuffer.Count > 0){
 			byte[] eventsData = NetworkCenter.Instance.serializer.Serialize(eventsBuffer);
-			networkView.RPC("OnEventsAdded", RPCMode.All, eventsData);
+			GetComponent<NetworkView>().RPC("OnEventsAdded", RPCMode.All, eventsData);
 			eventsBuffer.Clear();
 		}
 	}
