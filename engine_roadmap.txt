@@ -298,7 +298,7 @@ TODO: Polish:
 
 *** Pipeline ***
 01 - no longer streaming assets on the game end
-02 - scripts to copy bundles around
+OK - scripts to copy bundles around
 
 
 
