@@ -16,7 +16,7 @@ namespace RetroBread{
 
 
 	// Condition based on input button
-	public class InputButtonCondition: BoolCondition{
+	public class InputButtonCondition: BoolCondition<AnimationModel>{
 
 		// The button to be checked
 		private uint buttonId;

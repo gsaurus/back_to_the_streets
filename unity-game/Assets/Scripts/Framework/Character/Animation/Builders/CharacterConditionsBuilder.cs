@@ -18,7 +18,7 @@ namespace RetroBread{
 
 
 		// Condition builders indexed by type directly on array
-		private delegate AnimationTriggerCondition BuilderAction(Storage.GenericParameter param, out int keyFrame, Storage.CharacterAnimation animation);
+		private delegate GenericTriggerCondition<AnimationModel> BuilderAction(Storage.GenericParameter param, out int keyFrame, Storage.CharacterAnimation animation);
 		private static BuilderAction[] builderActions = {
 			BuildKeyFrame,							// 0: frame = 4
 			BuildFrameArithmetics,					// 1: frame >= 4
@@ -44,9 +44,9 @@ namespace RetroBread{
 			
 
 		// The public builder method
-		public static AnimationTriggerCondition Build(Storage.Character charData, int[] conditionIds, out int keyFrame, Storage.CharacterAnimation animation){
-			List<AnimationTriggerCondition> conditions = new List<AnimationTriggerCondition>(conditionIds.Length);
-			AnimationTriggerCondition condition;
+		public static GenericTriggerCondition<AnimationModel> Build(Storage.Character charData, int[] conditionIds, out int keyFrame, Storage.CharacterAnimation animation){
+			List<GenericTriggerCondition<AnimationModel>> conditions = new List<GenericTriggerCondition<AnimationModel>>(conditionIds.Length);
+			GenericTriggerCondition<AnimationModel> condition;
 			keyFrame = invalidKeyframe;
 			int conditionKeyFrame;
 			foreach (int conditionId in conditionIds) {
@@ -61,21 +61,21 @@ namespace RetroBread{
 				if (conditions.Count == 1) {
 					return conditions[0];
 				}
-				return new ConditionsList(conditions);
+				return new ConditionsList<AnimationModel>(conditions);
 			}
 			return null;
 		}
 
 
 		// Build a single condition
-		private static AnimationTriggerCondition BuildFromParameter(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildFromParameter(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
-			AnimationTriggerCondition condition;
+			GenericTriggerCondition<AnimationModel> condition;
 			int callIndex = parameter.type;
 			if (callIndex < builderActions.Length) {
 				condition = builderActions[callIndex](parameter, out keyFrame, animation);
 				if ( IsNegated(parameter) ) {
-					condition = new NegateCondition(condition);
+					condition = new NegateCondition<AnimationModel>(condition);
 				}
 				return condition;
 			}
@@ -96,7 +96,7 @@ namespace RetroBread{
 
 
 		// frame = 4
-		private static AnimationTriggerCondition BuildKeyFrame(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildKeyFrame(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = parameter.SafeInt(0);
 			if (keyFrame < 0) keyFrame = animation.numFrames;
 			return null;
@@ -104,7 +104,7 @@ namespace RetroBread{
 
 
 		// frame >= 4
-		private static AnimationTriggerCondition BuildFrameArithmetics(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildFrameArithmetics(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			uint frameIndex = (uint)parameter.SafeInt(0);
 			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType)parameter.SafeInt(1);
@@ -113,13 +113,13 @@ namespace RetroBread{
 
 
 		// moving
-		private static AnimationTriggerCondition BuildInputAxisMoving(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildInputAxisMoving(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			return new InputAxisMovingCondition();
 		}
 
 		// move left
-		private static AnimationTriggerCondition BuildInputAxisMovingDominance(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildInputAxisMovingDominance(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			switch (parameter.SafeInt(0)) {
                 case 0: return new InputAxisUpDominanceCondition();         // 0: up
@@ -132,7 +132,7 @@ namespace RetroBread{
 
 
         // move_H >= 5.2
-		private static AnimationTriggerCondition BuildInputAxisComponentArithmetics(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildInputAxisComponentArithmetics(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
             keyFrame = invalidKeyframe;
 			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType) parameter.SafeInt(1);
             FixedFloat value = parameter.SafeFloat(0);
@@ -145,7 +145,7 @@ namespace RetroBread{
 
 
 		// press D
-		private static AnimationTriggerCondition BuildInputButton(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildInputButton(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			uint buttonId = (uint) parameter.SafeInt(1);
 			switch (parameter.SafeInt(0)) {
@@ -158,21 +158,21 @@ namespace RetroBread{
 
 
 		// grounded
-		private static AnimationTriggerCondition BuildEntityIsGrounded(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildEntityIsGrounded(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			return new EntityBoolCondition(GameEntityPhysicsOperations.IsGrounded);
 		}
 
 
 		// facing right
-		private static AnimationTriggerCondition BuildEntityIsFacingRight(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildEntityIsFacingRight(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			return new EntityBoolCondition(GameEntityPhysicsOperations.IsFacingRight);
 		}
 
 
 		// collide left wall
-		private static AnimationTriggerCondition BuildEntityHittingWall(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildEntityHittingWall(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			switch (parameter.SafeInt(0)) {
 				case 0: return new EntityBoolCondition(GameEntityPhysicsOperations.IsHittingFarWall);	 // 0: far wall
@@ -185,7 +185,7 @@ namespace RetroBread{
 
 
 		// collideH >= 4.3
-		private static AnimationTriggerCondition BuildEntityCollisionForceArithmetics(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildEntityCollisionForceArithmetics(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType) parameter.SafeInt(1);
 			FixedFloat value = parameter.SafeFloat(0);
@@ -198,21 +198,21 @@ namespace RetroBread{
 		}
 
 		// entity collision
-		private static AnimationTriggerCondition BuildEntityEntityCollisionCheck(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildEntityEntityCollisionCheck(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			return new EntityBoolCondition(GameEntityController.IsCollidingWithOthers);
 		}
 
 
 		// on hit
-		private static AnimationTriggerCondition BuildOnHit(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildOnHit(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			return new EntityArithmeticCondition<int>(ArithmeticConditionOperatorType.greater, GameEntityController.HitTargetsCount, 0);
 		}
 
 										
 		// on hurt(K.O.)
-		private static AnimationTriggerCondition BuildOnHurt(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildOnHurt(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			int hitTypeNum = parameter.SafeInt(0);
 			if (hitTypeNum < Enum.GetNames(typeof(HitData.HitType)).Length) {
@@ -226,14 +226,14 @@ namespace RetroBread{
 		}
 
 		// hurt_from(front)
-		private static AnimationTriggerCondition BuildOnHurtDirection(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildOnHurtDirection(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			int direction = parameter.SafeInt(0);
 			return new SingleEntityBoolCondition<bool>(GameEntityController.IsHurtFrontal, direction == 0);
 		}
 
 		// combo <= 3
-		private static AnimationTriggerCondition BuildComboCounter(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildComboCounter(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType) parameter.SafeInt(1);
 			int value = parameter.SafeInt(0);
@@ -249,7 +249,7 @@ namespace RetroBread{
 		}
 
 		// combo timer <= 10
-		private static AnimationTriggerCondition BuildComboTimer(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildComboTimer(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType) parameter.SafeInt(1);
 			int value = parameter.SafeInt(0);
@@ -266,20 +266,20 @@ namespace RetroBread{
 
 
 		// grabbed
-		private static AnimationTriggerCondition BuildIsAnchored(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildIsAnchored(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			return new EntityBoolCondition(GameEntityAnchoringOperations.IsAnchored);
 		}
 
 		// grabbing(3)
-		private static AnimationTriggerCondition BuildIsAnchoring(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildIsAnchoring(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			return new SingleEntityBoolCondition<int>(GameEntityAnchoringOperations.IsAnchoring, parameter.SafeInt(0));
 		}
 
 
 		// impulseV(1.5)
-		private static AnimationTriggerCondition BuildCompareVerticalImpulse(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericTriggerCondition<AnimationModel> BuildCompareVerticalImpulse(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
 			ArithmeticConditionOperatorType type = (ArithmeticConditionOperatorType) parameter.SafeInt(0);
 			FixedFloat value = parameter.SafeFloat(0);

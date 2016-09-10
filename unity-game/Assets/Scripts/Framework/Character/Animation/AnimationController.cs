@@ -5,45 +5,15 @@ using System.Collections.Generic;
 namespace RetroBread{
 
 
-	// A trigger condition evaluates to true/false
-	public interface AnimationTriggerCondition{
-		bool Evaluate(AnimationModel model);
-	}
-
-	// An animation event is something we can execute if certain condition is met
-	// Implementations can store information to be used during execute
-	// Example: playSound stores the name of the sound and call playSound(soundName) on execute
-	public abstract class AnimationEvent{
-
-		// Condition may be null if executed directly at a key frame
-		// It is public only to be edited during character loading..
-		public AnimationTriggerCondition condition;
-
-		public AnimationEvent(AnimationTriggerCondition condition){
-			this.condition = condition;
-		}
-
-		// To be implemented, execute the event
-		public abstract void Execute(AnimationModel model);
-
-		// Check the condition and execute event if condition passes
-		public void Evaluate(AnimationModel model){
-			if (condition == null || condition.Evaluate(model)){
-				Execute(model);
-			}
-		}
-	}
-
-
 	// Animation Controller:
 	// Execute animation events and perform transitions automatically
 	public class AnimationController:Controller<AnimationModel>{
 
 		// Events associated to keyframes (evaluated once)
-		private Dictionary<uint, List<AnimationEvent>> keyframeEvents;
+		private Dictionary<uint, List<GenericEvent<AnimationModel>>> keyframeEvents;
 
 		// General events, evaluated every frame
-		private List<AnimationEvent> generalEvents;
+		private List<GenericEvent<AnimationModel>> generalEvents;
 
 
 		// Collision and hits information
@@ -51,22 +21,22 @@ namespace RetroBread{
 
 
 		public AnimationController(){
-			keyframeEvents = new Dictionary<uint, List<AnimationEvent>>();
-			generalEvents = new List<AnimationEvent>();
+			keyframeEvents = new Dictionary<uint, List<GenericEvent<AnimationModel>>>();
+			generalEvents = new List<GenericEvent<AnimationModel>>();
 		}
 
 		// Add frame based events
-		public void AddKeyframeEvent(uint keyframe, AnimationEvent e){
-			List<AnimationEvent> frameEvents;
+		public void AddKeyframeEvent(uint keyframe, GenericEvent<AnimationModel> e){
+			List<GenericEvent<AnimationModel>> frameEvents;
 			if (!keyframeEvents.TryGetValue(keyframe, out frameEvents)){
-				frameEvents = new List<AnimationEvent>(1);
+				frameEvents = new List<GenericEvent<AnimationModel>>(1);
 				keyframeEvents.Add(keyframe, frameEvents);
 			}
 			frameEvents.Add(e);
 		}
 
 		// Add general event
-		public void AddGeneralEvent(AnimationEvent e){
+		public void AddGeneralEvent(GenericEvent<AnimationModel> e){
 			generalEvents.Add(e);
 		}
 
@@ -127,9 +97,9 @@ namespace RetroBread{
 		// Process any events for this keyframe
 		private void ProcessKeyframeEvents(AnimationModel model){
 			if (keyframeEvents != null){
-				List<AnimationEvent> currentFrameEvents;
+				List<GenericEvent<AnimationModel>> currentFrameEvents;
 				if (keyframeEvents.TryGetValue(model.currentFrame, out currentFrameEvents)){
-					foreach (AnimationEvent e in currentFrameEvents){
+					foreach (GenericEvent<AnimationModel> e in currentFrameEvents){
 						e.Evaluate(model);
 					}
 				}
@@ -138,7 +108,7 @@ namespace RetroBread{
 
 		// Process general animation events
 		private void ProcessGeneralEvents(AnimationModel model){
-			foreach (AnimationEvent e in generalEvents){
+			foreach (GenericEvent<AnimationModel> e in generalEvents){
 				e.Evaluate(model);
 			}
 		}

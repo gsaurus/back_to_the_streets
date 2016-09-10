@@ -10,10 +10,10 @@ namespace RetroBread{
 	// Boolean condition with delegates
 	// Delegates should be obtained from controllers
 	// Right value can be a constant
-	public class BoolCondition: AnimationTriggerCondition{
+	public class BoolCondition<T>: GenericTriggerCondition<T>{
 
 		// Delegate of the getters
-		public delegate bool BoolConditionDelegate(AnimationModel model);
+		public delegate bool BoolConditionDelegate(T model);
 
 		// Left and right value getters delegates
 		protected BoolConditionDelegate getLeftVariableDelegate;
@@ -46,7 +46,7 @@ namespace RetroBread{
 		
 		
 		// Evaluate the condition
-		public bool Evaluate(AnimationModel model){
+		public bool Evaluate(T model){
 			
 			// obtain left & right values
 			bool lvalue, rvalue;
@@ -64,30 +64,30 @@ namespace RetroBread{
 	}
 
 
-	public class NegateCondition: AnimationTriggerCondition{
-		private AnimationTriggerCondition originalCondition;
+	public class NegateCondition<T>: GenericTriggerCondition<T>{
+		private GenericTriggerCondition<T> originalCondition;
 
-		public NegateCondition(AnimationTriggerCondition originalCondition){
+		public NegateCondition(GenericTriggerCondition<T> originalCondition){
 			this.originalCondition = originalCondition;
 		}
 
-		public bool Evaluate(AnimationModel model){
+		public bool Evaluate(T model){
 			return !originalCondition.Evaluate(model);
 		}
 
 	}
 
 
-	public class ConditionsList: AnimationTriggerCondition{
-		private List<AnimationTriggerCondition> conditions;
+	public class ConditionsList<T>: GenericTriggerCondition<T>{
+		private List<GenericTriggerCondition<T>> conditions;
 
-		public ConditionsList(List<AnimationTriggerCondition> conditions){
+		public ConditionsList(List<GenericTriggerCondition<T>> conditions){
 			this.conditions = conditions;
 		}
 
-		public bool Evaluate(AnimationModel model){
+		public bool Evaluate(T model){
 			if (conditions == null) return true;
-			foreach (AnimationTriggerCondition condition in conditions){
+			foreach (GenericTriggerCondition<T> condition in conditions){
 				if (!condition.Evaluate(model)){
 					return false;
 				}

@@ -22,7 +22,7 @@ namespace RetroBread{
 	// Compare two values. Values are obtained via getter delegates
 	// Delegates should be obtained from controllers
 	// Right value can be a constant
-	public class ArithmeticCondition<T>: AnimationTriggerCondition where T:IComparable<T>{
+	public class ArithmeticCondition<T>: GenericTriggerCondition<AnimationModel> where T:IComparable<T>{
 
 		// Delegate of the getters
 		public delegate T GetArithmeticConditionVariable(AnimationModel model);

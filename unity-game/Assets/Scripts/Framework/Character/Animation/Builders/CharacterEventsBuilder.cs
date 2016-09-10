@@ -7,7 +7,7 @@ namespace RetroBread{
 	public static class CharacterEventsBuilder {
 
 		// Event builders indexed by type directly on array
-		private delegate AnimationEvent BuilderAction(Storage.GenericParameter param);
+		private delegate GenericEvent<AnimationModel> BuilderAction(Storage.GenericParameter param);
 		private static BuilderAction[] builderActions = {
 			BuildSetAnimation,					// 0: 'walk'
 			BuildZeroAnimationVelocity,			// 1: vel(zero)
@@ -37,9 +37,9 @@ namespace RetroBread{
 
 
 		// The public builder method
-		public static AnimationEvent Build(Storage.Character charData, int[] eventIds){
-			List<AnimationEvent> events = new List<AnimationEvent>(eventIds.Length);
-			AnimationEvent e;
+		public static GenericEvent<AnimationModel> Build(Storage.Character charData, int[] eventIds){
+			List<GenericEvent<AnimationModel>> events = new List<GenericEvent<AnimationModel>>(eventIds.Length);
+			GenericEvent<AnimationModel> e;
 			foreach (int eventId in eventIds) {
 				e = BuildFromParameter(charData.genericParameters[eventId]);
 				if (e != null) {
@@ -50,14 +50,14 @@ namespace RetroBread{
 				if (events.Count == 1) {
 					return events[0];
 				}
-				return new EventsList(null, events);
+				return new EventsList<AnimationModel>(null, events);
 			}
 			return null;
 		}
 
 
 		// Build a single event
-		private static AnimationEvent BuildFromParameter(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildFromParameter(Storage.GenericParameter parameter){
 			int callIndex = parameter.type;
 			if (callIndex < builderActions.Length) {
 				return builderActions[callIndex](parameter);
@@ -105,12 +105,12 @@ namespace RetroBread{
 
 
 		// 'walk'
-		private static AnimationEvent BuildSetAnimation(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildSetAnimation(Storage.GenericParameter parameter){
 			return new AnimationTransitionEvent(null, parameter.SafeString(0), (float) parameter.SafeFloat(0), (uint)parameter.SafeInt(0));
 		}
 
 		// vel(zero)
-		private static AnimationEvent BuildZeroAnimationVelocity(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildZeroAnimationVelocity(Storage.GenericParameter parameter){
 			return new SingleEntityAnimationEvent<FixedVector3>(
 				null,
 				GameEntityPhysicsOperations.SetAnimationVelocity,
@@ -119,7 +119,7 @@ namespace RetroBread{
 		}
 
 		// vel(2.3, 1.5, 0.0)
-		private static AnimationEvent BuildSetAnimationVelocity(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildSetAnimationVelocity(Storage.GenericParameter parameter){
 			FixedVector3 vel = BuildFixedVector3(parameter);
 			return new SingleEntityAnimationEvent<FixedVector3>(
 				null, GameEntityPhysicsOperations.SetAnimationVelocity, vel
@@ -128,7 +128,7 @@ namespace RetroBread{
 
 
 		// inputVel(zero)
-		private static AnimationEvent BuildZeroMaxInputVelocity(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildZeroMaxInputVelocity(Storage.GenericParameter parameter){
 			return new SingleEntityAnimationEvent<FixedVector3>(
 				null,
 				GameEntityPhysicsOperations.SetMaxInputVelocity,
@@ -137,7 +137,7 @@ namespace RetroBread{
 		}
 
 		// inputVel(2.3, 1.5, 0.0)
-		private static AnimationEvent BuildSetMaxInputVelocity(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildSetMaxInputVelocity(Storage.GenericParameter parameter){
 			FixedFloat velx = parameter.SafeFloat(0);
 			FixedFloat velz = parameter.SafeFloat(1);
 			return new SingleEntityAnimationEvent<FixedVector3>(
@@ -149,7 +149,7 @@ namespace RetroBread{
 
 
 		// impulseV(1.5)
-		private static AnimationEvent BuildAddAnimationVerticalImpulse(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildAddAnimationVerticalImpulse(Storage.GenericParameter parameter){
 			FixedFloat vely = parameter.SafeFloat(0);
 			return new SingleEntityAnimationEvent<FixedVector3>(
 				null,
@@ -160,22 +160,22 @@ namespace RetroBread{
 
 
 		// flip
-		private static AnimationEvent BuildFlip(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildFlip(Storage.GenericParameter parameter){
 			return new SimpleEntityAnimationEvent(null, GameEntityController.Flip);
 		}
 
 		// autoFlip(false)
-		private static AnimationEvent BuildAutoFlip(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildAutoFlip(Storage.GenericParameter parameter){
 			return new SingleEntityAnimationEvent<bool>(null, GameEntityController.SetAutomaticFlip, parameter.SafeBool(0));
 		}
 
 		// pause(10)
-		private static AnimationEvent BuildPause(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildPause(Storage.GenericParameter parameter){
 			return new SingleEntityAnimationEvent<int>(null, GameEntityController.PausePhysics, parameter.SafeInt(0));
 		}
 
 		// ++combo
-		private static AnimationEvent BuildIncrementCombo(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildIncrementCombo(Storage.GenericParameter parameter){
 			return new SingleEntityAnimationEvent<int>(null,
 				delegate(GameEntityModel model, int comboTimer){
 					// Do not increment combo more than once per animation
@@ -193,7 +193,7 @@ namespace RetroBread{
 		}
 
 		// reset(combo)
-		private static AnimationEvent BuildResetCombo(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildResetCombo(Storage.GenericParameter parameter){
 			return new SimpleEntityAnimationEvent(
 				null,
 				delegate(GameEntityModel model){
@@ -206,7 +206,7 @@ namespace RetroBread{
 
 
 		// instantMove(2.1, 4.2, 5.3)
-		private static AnimationEvent BuildInstantMove(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildInstantMove(Storage.GenericParameter parameter){
 			FixedVector3 vel = BuildFixedVector3(parameter);
 			return new SingleEntityAnimationEvent<FixedVector3>(
 				null, GameEntityPhysicsOperations.MoveEntity, vel
@@ -218,7 +218,7 @@ namespace RetroBread{
 
 
 		// grab(hitten, 2, (2.1, 4.2, 5.3))
-		private static AnimationEvent BuildAnchorWithMove(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildAnchorWithMove(Storage.GenericParameter parameter){
 
 			GameEntityReferenceDelegator delegator = BuildEntityDelegator(parameter);
 			int anchorId = parameter.SafeInt(2);
@@ -231,7 +231,7 @@ namespace RetroBread{
 		}
 
 		// grab(hitten, 2)
-		private static AnimationEvent BuildAnchor(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildAnchor(Storage.GenericParameter parameter){
 			GameEntityReferenceDelegator delegator = BuildEntityDelegator(parameter);
 			int anchorId = parameter.SafeInt(2);
 			return new DoubleEntityAnimationEvent<GameEntityReferenceDelegator, int>(
@@ -240,18 +240,18 @@ namespace RetroBread{
 		}
 
 		// release(all)
-		private static AnimationEvent BuildReleaseAll(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildReleaseAll(Storage.GenericParameter parameter){
 			return new SimpleEntityAnimationEvent(null, GameEntityAnchoringOperations.ReleaseAllAnchoredEntities);
 		}
 
 		// release(2)
-		private static AnimationEvent BuildRelease(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildRelease(Storage.GenericParameter parameter){
 			int anchorId = parameter.SafeInt(0);
 			return new SingleEntityAnimationEvent<int>(null, GameEntityAnchoringOperations.ReleaseAnchoredEntity, anchorId);
 		}
 
 		// grabbedPos(2, (2.1, 4.2, 5.3))
-		private static AnimationEvent BuildSetAnchoredPos(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildSetAnchoredPos(Storage.GenericParameter parameter){
 			int anchorId = parameter.SafeInt(0);
 			FixedVector3 pos = BuildFixedVector3(parameter);
 			return new DoubleEntityAnimationEvent<int, FixedVector3>(
@@ -262,7 +262,7 @@ namespace RetroBread{
 
 
 		// grabbedAnim(2, jump)
-		private static AnimationEvent BuildSetAnchoredAnim(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildSetAnchoredAnim(Storage.GenericParameter parameter){
 			int anchorId = parameter.SafeInt(0);
 			string animName = parameter.SafeString(0);
 			return new DoubleEntityAnimationEvent<int, string>(
@@ -276,7 +276,7 @@ namespace RetroBread{
 
 
 		// impulse(grabbed, (2.1, 4.2, 5.3))
-		private static AnimationEvent BuildAddRefImpulse(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildAddRefImpulse(Storage.GenericParameter parameter){
 			GameEntityReferenceDelegator delegator = BuildEntityDelegator(parameter);
 			FixedVector3 impulse = BuildFixedVector3(parameter);
 			return new DoubleEntityAnimationEvent<GameEntityReferenceDelegator, FixedVector3>(
@@ -286,25 +286,25 @@ namespace RetroBread{
 		}
 
 		// reset(impulse)
-		private static AnimationEvent BuildResetImpulse(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildResetImpulse(Storage.GenericParameter parameter){
 			return new SimpleEntityAnimationEvent(
 				null, GameEntityPhysicsOperations.ResetPlanarImpulse
 			);
 		}
 
 		// consumeInput(A)
-		private static AnimationEvent BuildConsuleInput(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildConsuleInput(Storage.GenericParameter parameter){
 			bool isRelease = parameter.SafeBool(0);
 			uint buttonId = (uint) parameter.SafeInt(0);
 			if (isRelease){
-				return new SingleAnimationEvent<uint>(null, InputButtonOperations.ConsumeRelease, buttonId);
+				return new SingleEvent<AnimationModel, uint>(null, InputButtonOperations.ConsumeRelease, buttonId);
 			}else{
-				return new SingleAnimationEvent<uint>(null, InputButtonOperations.ConsumePress, buttonId);
+				return new SingleEvent<AnimationModel, uint>(null, InputButtonOperations.ConsumePress, buttonId);
 			}
 		}
 
 		// getHurt(10%)
-		private static AnimationEvent BuildGetHurt(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildGetHurt(Storage.GenericParameter parameter){
 			FixedFloat damagePercentage = parameter.SafeInt(0) * 0.01f;
 			int facingOptions = parameter.SafeInt(1);
 			facingOptions -= 1;
@@ -325,7 +325,7 @@ namespace RetroBread{
 			}
 		}
 
-		private static AnimationEvent BuildSpawnEffect(Storage.GenericParameter parameter){
+		private static GenericEvent<AnimationModel> BuildSpawnEffect(Storage.GenericParameter parameter){
 			FixedVector3 offset = BuildFixedVector3(parameter);
 			string prefabName = parameter.SafeString(0);
 			int locationType = parameter.SafeInt(0);

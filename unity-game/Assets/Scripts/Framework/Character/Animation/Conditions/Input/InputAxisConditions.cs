@@ -11,7 +11,7 @@ namespace RetroBread{
 	#region movement detection
 
 	// Check if there is any axis movement happening
-	public class InputAxisMovingCondition: AnimationTriggerCondition{
+	public class InputAxisMovingCondition: GenericTriggerCondition<AnimationModel>{
 
 		public bool Evaluate(AnimationModel model){
 			FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
@@ -21,7 +21,7 @@ namespace RetroBread{
 	}
 
 	// Check if character is mostly moving forward
-	public class InputAxisForwardDominanceCondition: AnimationTriggerCondition{
+	public class InputAxisForwardDominanceCondition: GenericTriggerCondition<AnimationModel>{
 		
 		public bool Evaluate(AnimationModel model){
 			FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
@@ -37,7 +37,7 @@ namespace RetroBread{
 
 
 	// Check if character is mostly moving backward
-	public class InputAxisBackwardDominanceCondition: AnimationTriggerCondition{
+	public class InputAxisBackwardDominanceCondition: GenericTriggerCondition<AnimationModel>{
 		
 		public bool Evaluate(AnimationModel model){
 			FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
@@ -53,7 +53,7 @@ namespace RetroBread{
 
 
 	// Check if character is mostly moving up
-	public class InputAxisUpDominanceCondition: AnimationTriggerCondition{
+	public class InputAxisUpDominanceCondition: GenericTriggerCondition<AnimationModel>{
 		
 		public bool Evaluate(AnimationModel model){
 			FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
@@ -68,7 +68,7 @@ namespace RetroBread{
 
 
 	// Check if character is mostly moving down
-	public class InputAxisDownDominanceCondition: AnimationTriggerCondition{
+	public class InputAxisDownDominanceCondition: GenericTriggerCondition<AnimationModel>{
 		
 		public bool Evaluate(AnimationModel model){
 			FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace RetroBread{
 
+
 	public static class HUDLoader{
 
 		public static string hudDataPath;
@@ -78,6 +79,17 @@ namespace RetroBread{
 			}
 
 		}
+
+
+
+		private static GenericEvent<HUDViewBehaviour> ReadEvent(Storage.HUD hud, Storage.GenericEvent storageEvent){
+			// Build event
+			GenericTriggerCondition<HUDViewBehaviour> condition = HUDConditionsBuilder.Build(hud, storageEvent.conditionIds);
+			GenericEvent<HUDViewBehaviour> e = HudEventsBuilder.Build(hud, storageEvent.eventIds);
+			e.condition = condition;
+			return e;
+		}
+
 
 		
 	} // class HUDLoader

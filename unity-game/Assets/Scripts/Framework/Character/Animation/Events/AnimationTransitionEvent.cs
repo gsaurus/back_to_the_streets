@@ -8,7 +8,7 @@ namespace RetroBread{
 
 
 	// Parameterless event
-	public class AnimationTransitionEvent: AnimationEvent{
+	public class AnimationTransitionEvent: GenericEvent<AnimationModel>{
 		
 		private string nextAnimation;
 
@@ -17,7 +17,7 @@ namespace RetroBread{
 		private uint initialFrame;
 
 		// Constructor
-		public AnimationTransitionEvent(AnimationTriggerCondition condition, string nextAnimation, float transitionTime = 0.2f , uint initialFrame = 0)
+		public AnimationTransitionEvent(GenericTriggerCondition<AnimationModel> condition, string nextAnimation, float transitionTime = 0.2f , uint initialFrame = 0)
 		:base(condition)
 		{
 			this.nextAnimation = nextAnimation;

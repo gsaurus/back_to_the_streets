@@ -8,7 +8,7 @@ namespace RetroBread{
 
 
 	// Parameterless event// Parameterless event
-	public class SimpleEntityAnimationEvent: AnimationEvent{
+	public class SimpleEntityAnimationEvent: GenericEvent<AnimationModel>{
 		
 		// Possible delegates
 		public delegate void EventExecutionDelegate(GameEntityModel model);
@@ -17,7 +17,7 @@ namespace RetroBread{
 		
 		
 		// Constructor with delegate and parameters
-		public SimpleEntityAnimationEvent(AnimationTriggerCondition condition, EventExecutionDelegate eventDelegate)
+		public SimpleEntityAnimationEvent(GenericTriggerCondition<AnimationModel> condition, EventExecutionDelegate eventDelegate)
 		:base(condition)
 		{
 			this.eventExecutionDelegate = eventDelegate;
@@ -34,7 +34,7 @@ namespace RetroBread{
 
 
 	// Event with a single parameter
-	public class SingleEntityAnimationEvent<T>: AnimationEvent{
+	public class SingleEntityAnimationEvent<T>: GenericEvent<AnimationModel>{
 		
 		// Possible delegates
 		public delegate void EventExecutionDelegate(GameEntityModel model, T param);
@@ -46,7 +46,7 @@ namespace RetroBread{
 		
 		
 		// Constructor with delegate and parameters
-		public SingleEntityAnimationEvent(AnimationTriggerCondition condition, EventExecutionDelegate eventDelegate, T param)
+		public SingleEntityAnimationEvent(GenericTriggerCondition<AnimationModel> condition, EventExecutionDelegate eventDelegate, T param)
 		:base(condition)
 		{
 			this.eventExecutionDelegate = eventDelegate;
@@ -64,7 +64,7 @@ namespace RetroBread{
 
 
 	// Event with two parameters
-	public class DoubleEntityAnimationEvent<U,V>: AnimationEvent{
+	public class DoubleEntityAnimationEvent<U,V>: GenericEvent<AnimationModel>{
 		
 		// Possible delegates
 		public delegate void EventExecutionDelegate(GameEntityModel model, U param1, V param2);
@@ -77,7 +77,7 @@ namespace RetroBread{
 		
 		
 		// Constructor with delegate and parameters
-		public DoubleEntityAnimationEvent(AnimationTriggerCondition condition, EventExecutionDelegate eventDelegate, U param1, V param2)
+		public DoubleEntityAnimationEvent(GenericTriggerCondition<AnimationModel> condition, EventExecutionDelegate eventDelegate, U param1, V param2)
 		:base(condition)
 		{
 			this.eventExecutionDelegate = eventDelegate;
@@ -97,7 +97,7 @@ namespace RetroBread{
 
 
 	// Event with three parameter
-	public class TrippleEntityAnimationEvent<U,V,K>: AnimationEvent{
+	public class TrippleEntityAnimationEvent<U,V,K>: GenericEvent<AnimationModel>{
 
 		// Possible delegates
 		public delegate void EventExecutionDelegate(GameEntityModel model, U param1, V param2, K param3);
@@ -111,7 +111,7 @@ namespace RetroBread{
 
 
 		// Constructor with delegate and parameters
-		public TrippleEntityAnimationEvent(AnimationTriggerCondition condition, EventExecutionDelegate eventDelegate, U param1, V param2, K param3)
+		public TrippleEntityAnimationEvent(GenericTriggerCondition<AnimationModel> condition, EventExecutionDelegate eventDelegate, U param1, V param2, K param3)
 			:base(condition)
 		{
 			this.eventExecutionDelegate = eventDelegate;
@@ -132,7 +132,7 @@ namespace RetroBread{
 
 
 	// Event with four parameters
-	public class QuadEntityAnimationEvent<U,V,K,L>: AnimationEvent{
+	public class QuadEntityAnimationEvent<U,V,K,L>: GenericEvent<AnimationModel>{
 
 		// Possible delegates
 		public delegate void EventExecutionDelegate(GameEntityModel model, U param1, V param2, K param3, L param4);
@@ -147,7 +147,7 @@ namespace RetroBread{
 
 
 		// Constructor with delegate and parameters
-		public QuadEntityAnimationEvent(AnimationTriggerCondition condition, EventExecutionDelegate eventDelegate, U param1, V param2, K param3, L param4)
+		public QuadEntityAnimationEvent(GenericTriggerCondition<AnimationModel> condition, EventExecutionDelegate eventDelegate, U param1, V param2, K param3, L param4)
 			:base(condition)
 		{
 			this.eventExecutionDelegate = eventDelegate;
@@ -168,7 +168,7 @@ namespace RetroBread{
 
 
 	// Event with five parameters
-	public class PentaEntityAnimationEvent<U,V,K,L,M>: AnimationEvent{
+	public class PentaEntityAnimationEvent<U,V,K,L,M>: GenericEvent<AnimationModel>{
 
 		// Possible delegates
 		public delegate void EventExecutionDelegate(GameEntityModel model, U param1, V param2, K param3, L param4, M param5);
@@ -184,7 +184,7 @@ namespace RetroBread{
 
 
 		// Constructor with delegate and parameters
-		public PentaEntityAnimationEvent(AnimationTriggerCondition condition, EventExecutionDelegate eventDelegate, U param1, V param2, K param3, L param4, M param5)
+		public PentaEntityAnimationEvent(GenericTriggerCondition<AnimationModel> condition, EventExecutionDelegate eventDelegate, U param1, V param2, K param3, L param4, M param5)
 			:base(condition)
 		{
 			this.eventExecutionDelegate = eventDelegate;

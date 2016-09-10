@@ -9,7 +9,7 @@ namespace RetroBread{
 
 	// Condition over an entity model (rather than just animation)
 	// parameterless
-	public class EntityBoolCondition: AnimationTriggerCondition{
+	public class EntityBoolCondition: GenericTriggerCondition<AnimationModel>{
 
 		// Possible delegates
 		public delegate bool ConditionExecutionDelegate(GameEntityModel model);
@@ -34,7 +34,7 @@ namespace RetroBread{
 	}
 
 
-	public class SingleEntityBoolCondition<T>: AnimationTriggerCondition{
+	public class SingleEntityBoolCondition<T>: GenericTriggerCondition<AnimationModel>{
 
 		// Possible delegates
 		public delegate bool ConditionExecutionDelegate(GameEntityModel model, T param);

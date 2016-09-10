@@ -9,7 +9,7 @@ namespace RetroBread{
 
 	// Condition based on the animation current frame number
 	// Right value can be a constant, or given by a getter delegate
-	public class AnimationFrameCondition: AnimationTriggerCondition{
+	public class AnimationFrameCondition: GenericTriggerCondition<AnimationModel>{
 
 		// Delegate of the getter
 		public delegate uint GetArithmeticConditionVariable(AnimationModel model);
