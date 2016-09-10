@@ -84,7 +84,7 @@ namespace RetroBread{
 			// Iterate each hud object to setup components on children
 			Transform childTransform;
 			foreach (Storage.HUDObject hudObj in hudData.objects) {
-				childTransform = hudModel.transform.FindChild(hudObj.name);
+				childTransform = hudModel.transform.FindDeepChild(hudObj.name);
 				if (hudObj.events != null && childTransform != null) {
 					childTransform.gameObject.AddComponent<HUDViewBehaviour>();
 					HUDViewBehaviour hudView = childTransform.gameObject.GetComponent<HUDViewBehaviour>();

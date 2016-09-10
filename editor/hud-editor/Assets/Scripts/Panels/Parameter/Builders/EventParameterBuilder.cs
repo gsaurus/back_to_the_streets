@@ -140,7 +140,7 @@ namespace RetroBread{
 						}
 						break;
 					default: // custom
-						text = parameter.SafeFloatToString(1);
+						text = parameter.SafeString(1);
 						break;
 				}
 				return "text(" + text + ")";

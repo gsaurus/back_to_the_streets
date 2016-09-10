@@ -71,11 +71,9 @@ namespace RetroBread.Editor{
 
 
 		public void BuildStorage( List<GenericParameter> genericParams){
-
 			foreach(ConditionalEvent e in events){
 				e.BuildStorage(genericParams);
 			}
-
 		}
 
 	}

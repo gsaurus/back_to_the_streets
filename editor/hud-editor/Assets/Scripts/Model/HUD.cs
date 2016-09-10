@@ -42,7 +42,26 @@ namespace RetroBread.Editor{
 			Storage.HUD storageHud = new Storage.HUD();
 			storageHud.mainPrefabName = rootCanvas;
 
-			// Populate animations
+
+			// Generate generic parameters, and imediately construct the rest of the data
+			// Tricky step
+			List<GenericParameter> genericParams = new List<GenericParameter>();
+			if (objects != null) {
+				foreach (HUDObject hudObj in objects) {
+					hudObj.BuildStorage(genericParams);
+				}
+			}
+
+			// Populate generic params
+			if (genericParams != null) {
+				storageHud.genericParameters = new Storage.GenericParameter[genericParams.Count];
+				for (int i = 0; i < genericParams.Count; ++i) {
+					storageHud.genericParameters[i] = genericParams[i].SaveToStorage();
+				}
+			}
+
+
+			// Populate objects
 			if (objects != null) {
 				storageHud.objects = new Storage.HUDObject[objects.Count];
 				for (int i = 0; i < objects.Count; ++i) {
