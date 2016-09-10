@@ -88,7 +88,7 @@ namespace RetroBread{
 				if (hudObj.events != null && childTransform != null) {
 					childTransform.gameObject.AddComponent<HUDViewBehaviour>();
 					HUDViewBehaviour hudView = childTransform.gameObject.GetComponent<HUDViewBehaviour>();
-
+					hudView.hudObjectData = hudObj;
 					// populate events for this object
 					hudView.events = new List<GenericEvent<HUDViewBehaviour>>();
 					GenericEvent<HUDViewBehaviour> newEvent;

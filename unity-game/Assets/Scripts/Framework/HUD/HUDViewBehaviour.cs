@@ -7,6 +7,8 @@ namespace RetroBread{
 	// HUDView is a MonoBehaviour because it interacts directly with the HUD game object
 	public class HUDViewBehaviour : MonoBehaviour{
 
+		public Storage.HUDObject hudObjectData;
+
 		public List<GenericEvent<HUDViewBehaviour>> events;
 
 

@@ -31,20 +31,20 @@ namespace RetroBread{
 		private static string[] arithmeticOptions = { "equal", "notEqual", "less", "less or equal", "greater", "greater or equal" };
 		private static string[] arithmeticOptionsShort = { "=", "!=", "<", "<=", ">", ">=" };	
 
-		private static string[] directionOptions = {"up", "down", "left", "right"};
-		private static string[] directionOptionsShort = {"↑", "↓", "←", "→"};
-
-		private static string[] inputOrientationOptions = {"horizontal", "vertical"};
-		private static string[] inputOrientationOptionsShort = {"H", "V"};
-
-		private static string[] inputButtonOptions = {"A", "B", "C", "D", "E", "F", "G"};
-		private static string[] inputButtonStateOptions = {"press", "hold", "release"};
-
-		private static string[] collisionWallDirection = {"far", "near", "left", "right"};
-		private static string[] collisionWallDirectionShort = {"↑", "↓", "←", "→"};
-
-		private static string[] collisionDirection = {"horizontal", "vertical", "along z-axis"};
-		private static string[] collisionDirectionShort = {"H", "V", "Z"};
+//		private static string[] directionOptions = {"up", "down", "left", "right"};
+//		private static string[] directionOptionsShort = {"↑", "↓", "←", "→"};
+//
+//		private static string[] inputOrientationOptions = {"horizontal", "vertical"};
+//		private static string[] inputOrientationOptionsShort = {"H", "V"};
+//
+//		private static string[] inputButtonOptions = {"A", "B", "C", "D", "E", "F", "G"};
+//		private static string[] inputButtonStateOptions = {"press", "hold", "release"};
+//
+//		private static string[] collisionWallDirection = {"far", "near", "left", "right"};
+//		private static string[] collisionWallDirectionShort = {"↑", "↓", "←", "→"};
+//
+//		private static string[] collisionDirection = {"horizontal", "vertical", "along z-axis"};
+//		private static string[] collisionDirectionShort = {"H", "V", "Z"};
 
 
 		// Condition builders indexed by type directly on array

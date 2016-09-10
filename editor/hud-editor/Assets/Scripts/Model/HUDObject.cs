@@ -12,7 +12,6 @@ namespace RetroBread.Editor{
 		public int teamId;
 		public int playerId;
 		public bool attackAndGrabDelegation;
-		public FixedFloat visibilityTime;
 		public bool usePortraitSprite;
 		public bool useCharacterText;
 
@@ -32,7 +31,6 @@ namespace RetroBread.Editor{
 			hudObj.teamId = storageHudObject.teamId;
 			hudObj.playerId = storageHudObject.playerId;
 			hudObj.attackAndGrabDelegation = storageHudObject.attackAndGrabDelegation;
-			hudObj.visibilityTime = storageHudObject.visibilityTime;
 		
 			// Populate events
 			if (storageHudObject.events != null) {
@@ -57,7 +55,6 @@ namespace RetroBread.Editor{
 			storageHudObject.teamId = teamId;
 			storageHudObject.playerId = playerId;
 			storageHudObject.attackAndGrabDelegation = attackAndGrabDelegation;
-			storageHudObject.visibilityTime = visibilityTime;
 
 			// Populate events
 			storageHudObject.events = new Storage.GenericEvent[events.Count];

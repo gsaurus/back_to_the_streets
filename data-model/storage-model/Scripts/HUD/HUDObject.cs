@@ -20,8 +20,6 @@ public sealed class HUDObject{
 	// Delegation
 	[ProtoMember(4)]
 	public bool attackAndGrabDelegation;
-	[ProtoMember(5)]
-	public FixedFloat visibilityTime;
 
 	// Events
 	[ProtoMember(8, OverwriteList=true)]

@@ -13,17 +13,14 @@ namespace RetroBread{
 		public GameObject teamObj;
 		public GameObject playerObj;
 		public GameObject attackAnchorObj;
-		public GameObject visibilityTimerObj;
 
 		InputField _teamObj;
 		InputField _playerObj;
 		Toggle _attackAnchorObj;
-		InputField _visibilityTimerObj;
 
 		void Awake(){
 			_teamObj = teamObj.GetComponent<InputField>();
 			_playerObj = playerObj.GetComponent<InputField>();
-			_visibilityTimerObj = visibilityTimerObj.GetComponent<InputField>();
 			_attackAnchorObj = attackAnchorObj.GetComponent<Toggle>();
 			HUDEditor.Instance.OnObjectChangedEvent += OnObjectChangedEvent;
 		}
@@ -39,7 +36,6 @@ namespace RetroBread{
 			if (hudObj == null) return;
 			_teamObj.text = hudObj.teamId + "";
 			_playerObj.text = hudObj.playerId + "";
-			_visibilityTimerObj.text = ((float)hudObj.visibilityTime) + "";
 			_attackAnchorObj.isOn = hudObj.attackAndGrabDelegation;
 		}
 
@@ -65,12 +61,6 @@ namespace RetroBread{
 			HUDObject hudObj = HUDEditor.Instance.CurrentObject();
 			if (hudObj == null) return;
 			hudObj.attackAndGrabDelegation = value;
-		}
-
-		public void OnVisibilityTimeChanged(string value){
-			HUDObject hudObj = HUDEditor.Instance.CurrentObject();
-			if (hudObj == null) return;
-			hudObj.visibilityTime = FixedFloat.Create(float.Parse(value));
 		}
 
 		public void OnPortraitSelectionChanged(bool value){
