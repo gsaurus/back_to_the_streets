@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace RetroBread{
 
@@ -9,8 +10,11 @@ namespace RetroBread{
 		// Event builders indexed by type directly on array
 		private delegate GenericEvent<HUDViewBehaviour> BuilderAction(Storage.GenericParameter param);
 		private static BuilderAction[] builderActions = {
-			BuildSetHUD					// 0: 'walk'
-
+			BuildPlayAnimation,					// 0: play(win)
+			BuildSetAnimationParam,				// 1: energy=23
+			BuildSetTexture,					// 2: texture(axel)
+			BuildSetText,						// 3: label(name)
+			BuildSpawnEffect					// 4: spawnFX(sparks)
 		};
 
 
@@ -55,15 +59,250 @@ namespace RetroBread{
 		}
 
 
+#region Helper Classes
+
+		// Condition that selects a different condition depending on hit/grab delegation options
+		private class HUDEventDelegationChecker:GenericEvent<HUDViewBehaviour>{
+			private GenericEvent<HUDViewBehaviour> nonDelegationEvent;
+			private GenericEvent<HUDViewBehaviour> delegationEvent;
+
+			public HUDEventDelegationChecker(GenericEvent<HUDViewBehaviour> nonDelegationEvent, GenericEvent<HUDViewBehaviour> delegationEvent){
+				this.nonDelegationEvent = nonDelegationEvent;
+				this.delegationEvent = delegationEvent;
+			}
+
+			public override void Execute(HUDViewBehaviour model){
+				Storage.HUDObject hudObj = model.hudObjectData;
+				if (hudObj.attackAndGrabDelegation) {
+					delegationEvent.Execute(model);
+				} else {
+					nonDelegationEvent.Execute(model);
+				}
+			}
+		}
+
+		// Hitten or grabbed character's delegation
+		private class HUDInteractionDelegationEvent:GenericEvent<HUDViewBehaviour>{
+			public delegate void EventExecutionDelegate(HUDViewBehaviour model, GameEntityModel entity);
+			private EventExecutionDelegate eventExecutionDelegate;
+			private ModelReference lastEntityReference = null;
+
+			public HUDInteractionDelegationEvent(EventExecutionDelegate eventDelegate){
+				eventExecutionDelegate = eventDelegate;
+			}
+
+			// Execute event trough the delegate
+			public override void Execute(HUDViewBehaviour model){
+				Storage.HUDObject hudObj = model.hudObjectData;
+				if (hudObj == null) return;
+				ModelReference exception = lastEntityReference == null ? new ModelReference() : lastEntityReference;
+				GameEntityModel entity = WorldUtils.GetInteractionEntityWithEntityFromTeam(hudObj.teamId, hudObj.playerId, exception);
+				if (entity == null && lastEntityReference != ModelReference.InvalidModelIndex) {
+					entity = StateManager.state.GetModel(lastEntityReference) as GameEntityModel;
+				}
+				lastEntityReference = entity == null ? new ModelReference() : entity.Index;
+				if (entity != null) {
+					eventExecutionDelegate(model, entity);
+				}
+			}
+
+		}
+
+#endregion
+
+
 #region Events
 
 
-		// 'walk'
-		private static GenericEvent<HUDViewBehaviour> BuildSetHUD(Storage.GenericParameter parameter){
-			//return new HUDTransitionEvent(null, parameter.SafeString(0), (float) parameter.SafeFloat(0), (uint)parameter.SafeInt(0));
-			return null;
+//		new BuildPlayAnimation(),					// 0: play(win)
+//		new BuildSetAnimationParam(),				// 1: energy=23
+//		new BuildSetTexture(),						// 2: texture(axel)
+//		new BuildSetText(),							// 3: label(name)
+//		new BuildSpawnEffect()						// 4: spawnFX(sparks)
+
+
+		// 0: play(win)
+		private static GenericEvent<HUDViewBehaviour> BuildPlayAnimation(Storage.GenericParameter parameter){
+			return new SimpleEvent<HUDViewBehaviour>(null,
+				delegate(HUDViewBehaviour model){
+					Animator animator = model.gameObject.GetComponent<Animator>();
+					if (animator == null) return;
+					animator.CrossFade(parameter.SafeString(0), (float)parameter.SafeFloat(0));
+				}
+			);
 		}
 
+
+		// 1: energy=23
+		private static GenericEvent<HUDViewBehaviour> BuildSetAnimationParam(Storage.GenericParameter parameter){
+			return new SimpleEvent<HUDViewBehaviour>(null,
+				delegate(HUDViewBehaviour model){
+					Animator animator = model.gameObject.GetComponent<Animator>();
+					if (animator == null) return;
+					animator.SetInteger(parameter.SafeString(0), parameter.SafeInt(0));
+				}
+			);
+		}
+
+
+		// 2: texture(axel)
+		private static GenericEvent<HUDViewBehaviour> BuildSetTexture(Storage.GenericParameter parameter){
+			int type = parameter.SafeInt(0);
+			switch (type) {
+				case 0: // portrait
+					return new HUDEventDelegationChecker(
+						new HUDInteractionDelegationEvent(
+							delegate(HUDViewBehaviour model, GameEntityModel entity){
+								SpriteRenderer renderer = model.gameObject.GetComponent<SpriteRenderer>();
+								if (renderer == null) return;
+								renderer.sprite = CharacterLoader.GetCharacterPortrait(entity.Index);
+							}
+						),
+						new SimpleEvent<HUDViewBehaviour>(null,
+							delegate(HUDViewBehaviour model){
+								Storage.HUDObject hudObj = model.hudObjectData;
+								if (hudObj == null) return;
+								GameEntityModel entity = WorldUtils.GetEntityFromTeam(hudObj.teamId, hudObj.playerId);
+								if (entity == null) return;
+								SpriteRenderer renderer = model.gameObject.GetComponent<SpriteRenderer>();
+								if (renderer == null) return;
+								renderer.sprite = CharacterLoader.GetCharacterPortrait(entity.Index);
+							}
+						)
+					);
+				default: // other
+					return new SimpleEvent<HUDViewBehaviour>(null,
+						delegate(HUDViewBehaviour model) {
+							SpriteRenderer renderer = model.gameObject.GetComponent<SpriteRenderer>();
+							if (renderer == null) return;
+							renderer.sprite = Resources.Load<Sprite>(parameter.SafeString(0));
+						}
+					);
+			}
+		}
+
+
+		// 3: label(name)
+		private static GenericEvent<HUDViewBehaviour> BuildSetText(Storage.GenericParameter parameter){
+			int type = parameter.SafeInt(0);
+			switch (type) {
+				case 0: // character name
+					return new HUDEventDelegationChecker(
+						new HUDInteractionDelegationEvent(
+							delegate(HUDViewBehaviour model, GameEntityModel entity){
+								GUIText text = model.gameObject.GetComponent<GUIText>();
+								if (text == null) return;
+								AnimationModel animModel = StateManager.state.GetModel(entity.animationModelId) as AnimationModel;
+								if (animModel == null) return;
+								text.text =  animModel.characterName;
+							}
+						),
+						new SimpleEvent<HUDViewBehaviour>(null,
+							delegate(HUDViewBehaviour model){
+								GUIText text = model.gameObject.GetComponent<GUIText>();
+								if (text == null) return;
+								Storage.HUDObject hudObj = model.hudObjectData;
+								if (hudObj == null) return;
+								GameEntityModel entity = WorldUtils.GetEntityFromTeam(hudObj.teamId, hudObj.playerId);
+								if (entity == null) return;
+								AnimationModel animModel = StateManager.state.GetModel(entity.animationModelId) as AnimationModel;
+								if (animModel == null) return;
+								text.text =  animModel.characterName;
+							}
+						)
+					);
+				case 1:
+					// variable
+					return new HUDEventDelegationChecker(
+						new HUDInteractionDelegationEvent(
+							delegate(HUDViewBehaviour model, GameEntityModel entity){
+								GUIText text = model.gameObject.GetComponent<GUIText>();
+								if (text == null) return;
+								int value;
+								entity.customVariables.TryGetValue(parameter.SafeString(0), out value);
+								text.text = value + "";
+							}
+						),
+						new SimpleEvent<HUDViewBehaviour>(null,
+							delegate(HUDViewBehaviour model){
+								Storage.HUDObject hudObj = model.hudObjectData;
+								if (hudObj == null) return;
+								GameEntityModel entity = WorldUtils.GetEntityFromTeam(hudObj.teamId, hudObj.playerId);
+								if (entity == null) return;
+								GUIText text = model.gameObject.GetComponent<GUIText>();
+								if (text == null) return;
+								int value;
+								entity.customVariables.TryGetValue(parameter.SafeString(0), out value);
+								text.text = value + "";
+							}
+						)
+					);
+				default: // custom
+					return new SimpleEvent<HUDViewBehaviour>(null,
+						delegate(HUDViewBehaviour model) {
+							GUIText text = model.gameObject.GetComponent<GUIText>();
+							if (text == null) return;
+							text.text = parameter.SafeString(1);
+						}
+					);
+			}
+		}
+
+
+		// 4: spawnFX(sparks)
+		private static GenericEvent<HUDViewBehaviour> BuildSpawnEffect(Storage.GenericParameter parameter){
+			FixedVector3 offset = BuildFixedVector3(parameter);
+			string prefabName = parameter.SafeString(0);
+			int locationType = parameter.SafeInt(0);
+			int lifetime = parameter.SafeInt(1);
+			bool localSpace = parameter.SafeBool(0);
+
+			// {"self", "anchor", "hit intersection", "hurt intersection"}
+			PentaEntityAnimationEvent<string, int, FixedVector3, bool, GameEntityView.ConvertGameToViewCoordinates>.EventExecutionDelegate theDelegate = null;
+			switch (locationType) {
+				case 0:
+					// HUD element
+					return new SimpleEvent<HUDViewBehaviour>(null,
+						delegate(HUDViewBehaviour model) {
+							// TODO: spawn at HUD
+							RetroBread.Debug.LogError("Spawn effect at HUD not supported yet");
+						}
+					);
+				case 1:
+					// character
+					theDelegate = GameEntityView.SpawnAtSelf;
+					break;
+				case 2:
+					// Anchor, TODO: which anchor?
+					RetroBread.Debug.LogError("Spawn at anchor not supported yet");
+					break;
+				case 3: 
+					// hit
+					theDelegate = GameEntityView.SpawnAtHitIntersection;
+					break;
+				case 4:
+					// hurt
+					theDelegate = GameEntityView.SpawnAtHurtIntersection;
+					break;
+			}
+
+			return new HUDEventDelegationChecker(
+				new HUDInteractionDelegationEvent(
+					delegate(HUDViewBehaviour model, GameEntityModel entity){
+						theDelegate(entity, prefabName, lifetime, offset, localSpace, PhysicPoint2DView.ConvertGameToViewCoordinates);
+					}
+				),
+				new SimpleEvent<HUDViewBehaviour>(null,
+					delegate(HUDViewBehaviour model){
+						Storage.HUDObject hudObj = model.hudObjectData;
+						if (hudObj == null) return;
+						GameEntityModel entity = WorldUtils.GetEntityFromTeam(hudObj.teamId, hudObj.playerId);
+						if (entity == null) return;
+						theDelegate(entity, prefabName, lifetime, offset, localSpace, PhysicPoint2DView.ConvertGameToViewCoordinates);
+					}
+				)
+			);
+		}
 
 #endregion
 

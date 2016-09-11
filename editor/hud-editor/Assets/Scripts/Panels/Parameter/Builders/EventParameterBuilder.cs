@@ -30,8 +30,8 @@ namespace RetroBread{
 
 		// Condition builders indexed by type directly on array
 		private static InternEventBuilder[] builders = {
-			new BuildPlayAnimation(),					// 0: 'walk'
-			new BuildSetAnimationParam(),				// 1: walk(speed=5)
+			new BuildPlayAnimation(),					// 0: play(win)
+			new BuildSetAnimationParam(),				// 1: energy=23
 			new BuildSetTexture(),						// 2: texture(axel)
 			new BuildSetText(),							// 3: label(name)
 			new BuildSpawnEffect()						// 4: spawnFX(sparks)
@@ -95,8 +95,7 @@ namespace RetroBread{
 				return parameter.SafeString(0) + "(" + parameter.SafeString(1) + "=" + parameter.SafeFloat(0) + ")";
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
-				StringInputFieldParam.Instantiate(parent, parameter, 0, "Animation:");
-				StringInputFieldParam.Instantiate(parent, parameter, 1, "Parameter Name:");
+				StringInputFieldParam.Instantiate(parent, parameter, 0, "Parameter Name:");
 				FloatInputFieldParam.Instantiate(parent, parameter, 0, "Value:");
 			}
 		}
