@@ -22,6 +22,7 @@ namespace RetroBread.Editor{
 		public static HUD LoadFromStorage(string bundleName, Storage.HUD storageHud){
 
 			HUD hud = new HUD(bundleName);
+			hud.rootCanvas = storageHud.mainPrefabName;
 
 			// Populate objects
 			if (storageHud.objects != null) {

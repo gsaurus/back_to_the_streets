@@ -97,7 +97,7 @@ namespace RetroBread{
 				if (hudObj == null) return;
 				ModelReference exception = lastEntityReference == null ? new ModelReference() : lastEntityReference;
 				GameEntityModel entity = WorldUtils.GetInteractionEntityWithEntityFromTeam(hudObj.teamId, hudObj.playerId, exception);
-				if (entity == null && lastEntityReference != ModelReference.InvalidModelIndex) {
+				if (entity == null && lastEntityReference != null && lastEntityReference != ModelReference.InvalidModelIndex) {
 					entity = StateManager.state.GetModel(lastEntityReference) as GameEntityModel;
 				}
 				lastEntityReference = entity == null ? new ModelReference() : entity.Index;
@@ -151,22 +151,36 @@ namespace RetroBread{
 			switch (type) {
 				case 0: // portrait
 					return new HUDEventDelegationChecker(
-						new HUDInteractionDelegationEvent(
-							delegate(HUDViewBehaviour model, GameEntityModel entity){
-								SpriteRenderer renderer = model.gameObject.GetComponent<SpriteRenderer>();
-								if (renderer == null) return;
-								renderer.sprite = CharacterLoader.GetCharacterPortrait(entity.Index);
-							}
-						),
 						new SimpleEvent<HUDViewBehaviour>(null,
 							delegate(HUDViewBehaviour model){
 								Storage.HUDObject hudObj = model.hudObjectData;
 								if (hudObj == null) return;
 								GameEntityModel entity = WorldUtils.GetEntityFromTeam(hudObj.teamId, hudObj.playerId);
 								if (entity == null) return;
-								SpriteRenderer renderer = model.gameObject.GetComponent<SpriteRenderer>();
-								if (renderer == null) return;
-								renderer.sprite = CharacterLoader.GetCharacterPortrait(entity.Index);
+								Sprite sprite = CharacterLoader.GetCharacterPortrait(entity.Index);
+								UnityEngine.UI.Image image = model.gameObject.GetComponent<UnityEngine.UI.Image>();
+								if (image != null){
+									image.sprite = sprite;
+								}else {
+									SpriteRenderer renderer = model.gameObject.GetComponent<SpriteRenderer>();
+									if (renderer != null) {
+										renderer.sprite = sprite;
+									}
+								}
+							}
+						),
+						new HUDInteractionDelegationEvent(
+							delegate(HUDViewBehaviour model, GameEntityModel entity){
+								Sprite sprite = CharacterLoader.GetCharacterPortrait(entity.Index);
+								UnityEngine.UI.Image image = model.gameObject.GetComponent<UnityEngine.UI.Image>();
+								if (image != null){
+									image.sprite = sprite;
+								}else {
+									SpriteRenderer renderer = model.gameObject.GetComponent<SpriteRenderer>();
+									if (renderer != null) {
+										renderer.sprite = sprite;
+									}
+								}
 							}
 						)
 					);
@@ -188,15 +202,6 @@ namespace RetroBread{
 			switch (type) {
 				case 0: // character name
 					return new HUDEventDelegationChecker(
-						new HUDInteractionDelegationEvent(
-							delegate(HUDViewBehaviour model, GameEntityModel entity){
-								GUIText text = model.gameObject.GetComponent<GUIText>();
-								if (text == null) return;
-								AnimationModel animModel = StateManager.state.GetModel(entity.animationModelId) as AnimationModel;
-								if (animModel == null) return;
-								text.text =  animModel.characterName;
-							}
-						),
 						new SimpleEvent<HUDViewBehaviour>(null,
 							delegate(HUDViewBehaviour model){
 								GUIText text = model.gameObject.GetComponent<GUIText>();
@@ -205,6 +210,15 @@ namespace RetroBread{
 								if (hudObj == null) return;
 								GameEntityModel entity = WorldUtils.GetEntityFromTeam(hudObj.teamId, hudObj.playerId);
 								if (entity == null) return;
+								AnimationModel animModel = StateManager.state.GetModel(entity.animationModelId) as AnimationModel;
+								if (animModel == null) return;
+								text.text =  animModel.characterName;
+							}
+						),
+						new HUDInteractionDelegationEvent(
+							delegate(HUDViewBehaviour model, GameEntityModel entity){
+								GUIText text = model.gameObject.GetComponent<GUIText>();
+								if (text == null) return;
 								AnimationModel animModel = StateManager.state.GetModel(entity.animationModelId) as AnimationModel;
 								if (animModel == null) return;
 								text.text =  animModel.characterName;
@@ -214,8 +228,12 @@ namespace RetroBread{
 				case 1:
 					// variable
 					return new HUDEventDelegationChecker(
-						new HUDInteractionDelegationEvent(
-							delegate(HUDViewBehaviour model, GameEntityModel entity){
+						new SimpleEvent<HUDViewBehaviour>(null,
+							delegate(HUDViewBehaviour model){
+								Storage.HUDObject hudObj = model.hudObjectData;
+								if (hudObj == null) return;
+								GameEntityModel entity = WorldUtils.GetEntityFromTeam(hudObj.teamId, hudObj.playerId);
+								if (entity == null) return;
 								GUIText text = model.gameObject.GetComponent<GUIText>();
 								if (text == null) return;
 								int value;
@@ -223,12 +241,8 @@ namespace RetroBread{
 								text.text = value + "";
 							}
 						),
-						new SimpleEvent<HUDViewBehaviour>(null,
-							delegate(HUDViewBehaviour model){
-								Storage.HUDObject hudObj = model.hudObjectData;
-								if (hudObj == null) return;
-								GameEntityModel entity = WorldUtils.GetEntityFromTeam(hudObj.teamId, hudObj.playerId);
-								if (entity == null) return;
+						new HUDInteractionDelegationEvent(
+							delegate(HUDViewBehaviour model, GameEntityModel entity){
 								GUIText text = model.gameObject.GetComponent<GUIText>();
 								if (text == null) return;
 								int value;
@@ -287,17 +301,17 @@ namespace RetroBread{
 			}
 
 			return new HUDEventDelegationChecker(
-				new HUDInteractionDelegationEvent(
-					delegate(HUDViewBehaviour model, GameEntityModel entity){
-						theDelegate(entity, prefabName, lifetime, offset, localSpace, PhysicPoint2DView.ConvertGameToViewCoordinates);
-					}
-				),
 				new SimpleEvent<HUDViewBehaviour>(null,
 					delegate(HUDViewBehaviour model){
 						Storage.HUDObject hudObj = model.hudObjectData;
 						if (hudObj == null) return;
 						GameEntityModel entity = WorldUtils.GetEntityFromTeam(hudObj.teamId, hudObj.playerId);
 						if (entity == null) return;
+						theDelegate(entity, prefabName, lifetime, offset, localSpace, PhysicPoint2DView.ConvertGameToViewCoordinates);
+					}
+				),
+				new HUDInteractionDelegationEvent(
+					delegate(HUDViewBehaviour model, GameEntityModel entity){
 						theDelegate(entity, prefabName, lifetime, offset, localSpace, PhysicPoint2DView.ConvertGameToViewCoordinates);
 					}
 				)

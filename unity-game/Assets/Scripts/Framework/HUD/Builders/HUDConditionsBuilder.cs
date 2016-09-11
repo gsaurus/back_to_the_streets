@@ -184,7 +184,7 @@ namespace RetroBread{
 				if (hudObj == null) return false;
 				ModelReference exception = lastEntityReference == null ? new ModelReference() : lastEntityReference;
 				GameEntityModel entity = WorldUtils.GetInteractionEntityWithEntityFromTeam(hudObj.teamId, hudObj.playerId, exception);
-				if (entity == null && lastEntityReference != ModelReference.InvalidModelIndex) {
+				if (entity == null && lastEntityReference != null && lastEntityReference != ModelReference.InvalidModelIndex) {
 					entity = StateManager.state.GetModel(lastEntityReference) as GameEntityModel;
 				}
 				lastEntityReference = entity == null ? new ModelReference() : entity.Index;
@@ -221,7 +221,7 @@ namespace RetroBread{
 				if (hudObj == null) return int.MinValue;
 				ModelReference exception = lastEntityReference == null ? new ModelReference() : lastEntityReference;
 				GameEntityModel entity = WorldUtils.GetInteractionEntityWithEntityFromTeam(hudObj.teamId, hudObj.playerId, exception);
-				if (entity == null && lastEntityReference != ModelReference.InvalidModelIndex) {
+				if (entity == null && lastEntityReference != null && lastEntityReference != ModelReference.InvalidModelIndex) {
 					entity = StateManager.state.GetModel(lastEntityReference) as GameEntityModel;
 				}
 				lastEntityReference = entity == null ? new ModelReference() : entity.Index;
@@ -246,10 +246,10 @@ namespace RetroBread{
 
 		// 0: enable / disable
 		private static GenericTriggerCondition<HUDViewBehaviour> BuildOnEnable(Storage.GenericParameter parameter){
-
+			bool enabled = !parameter.SafeBool(0); // negation because it's using the negation parameter
 			return new HUDConditionDelegationChecker(
-				new HUDEnableCondition(parameter.SafeBool(0)),
-				new HUDDelegateEnableCondition(parameter.SafeBool(0))
+				new HUDEnableCondition(enabled),
+				new HUDDelegateEnableCondition(enabled)
 			);
 		}
 

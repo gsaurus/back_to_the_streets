@@ -69,8 +69,7 @@ namespace RetroBread{
 
 			if (prefab != null) {
 				// Add hudModel to the scene
-				GameObject.Instantiate(prefab);
-				hudModel = prefab;
+				hudModel = GameObject.Instantiate(prefab) as GameObject;;
 				LoadHudEvents();
 			}else{
 				Debug.LogError("Failed to load hud canvas " + hudData.mainPrefabName + " from bundle " + url);
@@ -86,8 +85,7 @@ namespace RetroBread{
 			foreach (Storage.HUDObject hudObj in hudData.objects) {
 				childTransform = hudModel.transform.FindDeepChild(hudObj.name);
 				if (hudObj.events != null && childTransform != null) {
-					childTransform.gameObject.AddComponent<HUDViewBehaviour>();
-					HUDViewBehaviour hudView = childTransform.gameObject.GetComponent<HUDViewBehaviour>();
+					HUDViewBehaviour hudView = childTransform.gameObject.AddComponent<HUDViewBehaviour>();
 					hudView.hudObjectData = hudObj;
 					// populate events for this object
 					hudView.events = new List<GenericEvent<HUDViewBehaviour>>();

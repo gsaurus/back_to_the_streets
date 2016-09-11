@@ -45,6 +45,7 @@ namespace RetroBread{
 			foreach (GameObject obj in allCanvasObjects) {
 				optionData = new Dropdown.OptionData(obj.name);
 				_canvasDropdown.options.Add(optionData);
+				Debug.Log("HUDEditor.Instance.hud.rootCanvas: " + HUDEditor.Instance.hud.rootCanvas);
 				if (obj.name == HUDEditor.Instance.hud.rootCanvas){
 					_canvasDropdown.value = index;
 				}
