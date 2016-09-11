@@ -22,16 +22,16 @@ namespace RetroBread{
 	// Compare two values. Values are obtained via getter delegates
 	// Delegates should be obtained from controllers
 	// Right value can be a constant
-	public class ArithmeticCondition<T>: GenericTriggerCondition<AnimationModel> where T:IComparable<T>{
+	public class ArithmeticCondition<U, V>: GenericTriggerCondition<U> where V:IComparable<V>{
 
 		// Delegate of the getters
-		public delegate T GetArithmeticConditionVariable(AnimationModel model);
+		public delegate V GetArithmeticConditionVariable(U model);
 
 		// Left and right value getters delegates
 		protected GetArithmeticConditionVariable getLeftVariableDelegate;
 		protected GetArithmeticConditionVariable getRightVariableDelegate;
 		// A constant for the right value
-		protected T rightValue;
+		protected V rightValue;
 
 		// Condition operator
 		protected ArithmeticConditionOperatorType conditionOperator;
@@ -56,7 +56,7 @@ namespace RetroBread{
 		public ArithmeticCondition(
 			ArithmeticConditionOperatorType operatorType,
 			GetArithmeticConditionVariable leftVariableDelegate,
-			T rightValue
+			V rightValue
 		){
 			this.conditionOperator = operatorType;
 			this.getLeftVariableDelegate = leftVariableDelegate;
@@ -65,10 +65,10 @@ namespace RetroBread{
 
 
 		// Evaluate the condition
-		public bool Evaluate(AnimationModel model){
+		public bool Evaluate(U model){
 
 			// obtain left & right values
-			T lvalue, rvalue;
+			V lvalue, rvalue;
 			lvalue = getLeftVariableDelegate(model);
 			if (getRightVariableDelegate != null) {
 				rvalue = getRightVariableDelegate(model);

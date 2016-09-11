@@ -93,7 +93,7 @@ namespace RetroBread{
 					hudView.events = new List<GenericEvent<HUDViewBehaviour>>();
 					GenericEvent<HUDViewBehaviour> newEvent;
 					foreach (Storage.GenericEvent storageEvent in hudObj.events) {
-						newEvent = ReadEvent(hudData, storageEvent);
+						newEvent = ReadEvent(hudData, hudObj, storageEvent);
 						if (newEvent != null) {
 							hudView.events.Add(newEvent);
 						}
@@ -105,9 +105,9 @@ namespace RetroBread{
 
 
 
-		private static GenericEvent<HUDViewBehaviour> ReadEvent(Storage.HUD hud, Storage.GenericEvent storageEvent){
+		private static GenericEvent<HUDViewBehaviour> ReadEvent(Storage.HUD hud, Storage.HUDObject hudObj, Storage.GenericEvent storageEvent){
 			// Build event
-			GenericTriggerCondition<HUDViewBehaviour> condition = HUDConditionsBuilder.Build(hud, storageEvent.conditionIds);
+			GenericTriggerCondition<HUDViewBehaviour> condition = HUDConditionsBuilder.Build(hud, hudObj, storageEvent.conditionIds);
 			GenericEvent<HUDViewBehaviour> e = HudEventsBuilder.Build(hud, storageEvent.eventIds);
 			e.condition = condition;
 			return e;

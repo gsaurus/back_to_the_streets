@@ -63,7 +63,7 @@ namespace RetroBread{
 
 
 	// Arithmetics over entity model
-	public class EntityArithmeticCondition<T>: ArithmeticCondition<T> where T:IComparable<T>{
+	public class EntityArithmeticCondition<T>: ArithmeticCondition<AnimationModel, T> where T:IComparable<T>{
 		
 		// Possible delegates
 		public delegate T ConditionExecutionDelegate(GameEntityModel model);

@@ -93,7 +93,7 @@ namespace RetroBread{
 	}
 
 
-	public class InputAxisComponentCondition: ArithmeticCondition<FixedFloat>{
+	public class InputAxisComponentCondition: ArithmeticCondition<AnimationModel, FixedFloat>{
 
 		// Get the horizontal axis component
 		private FixedFloat HorizontalAxis(AnimationModel model){
