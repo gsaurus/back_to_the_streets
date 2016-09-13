@@ -41,6 +41,8 @@ namespace RetroBread{
 		// Types of entity references
 //		private static string[] entityReferenceType = {"anchored", "parent", "colliding", "hitten", "hitter"};
 
+		private static string[] variableFromOptions = {"Variable", "Custom"};
+
 		private static string[] textureFromOptions = {"Character Portrait", "Custom"};
 
 		private static string[] textFromOptions = {"Character Name", "Variable", "Custom"};
@@ -88,15 +90,26 @@ namespace RetroBread{
 		}
 
 
-		// walk(energy=4)
+		// energy=4
 		private class BuildSetAnimationParam: InternEventBuilder{
 			public BuildSetAnimationParam():base("Set Animation Parameter"){}
 			public override string ToString(GenericParameter parameter){
-				return parameter.SafeString(0) + "(" + parameter.SafeString(1) + "=" + parameter.SafeFloat(0) + ")";
+				switch (parameter.SafeInt(0)) {
+					case 0: // variable
+						return "'" + parameter.SafeString(0) + "'='" + parameter.SafeString(0) + "'[" + parameter.SafeInt(1) + "-" + parameter.SafeInt(2) + "]";
+					default: // custom
+						return "'" + parameter.SafeString(0) + "'=" + parameter.SafeFloat(0);
+				}
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
 				StringInputFieldParam.Instantiate(parent, parameter, 0, "Parameter Name:");
-				FloatInputFieldParam.Instantiate(parent, parameter, 0, "Value:");
+				IntDropdownParam.Instantiate(parent, parameter, 0, "From:", variableFromOptions);
+				StringInputFieldParam.Instantiate(parent, parameter, 1, "From variable:");
+				IntInputFieldParam.Instantiate(parent, parameter, 1, "Variable minimum value:");
+				IntInputFieldParam.Instantiate(parent, parameter, 2, "Variable maximum value:");
+				FloatInputFieldParam.Instantiate(parent, parameter, 0, "Custom Value:");
+				FloatInputFieldParam.Instantiate(parent, parameter, 1, "Delay time (seconds):");
+				FloatInputFieldParam.Instantiate(parent, parameter, 2, "Interpolation time (seconds):");
 			}
 		}
 

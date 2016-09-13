@@ -175,6 +175,8 @@ public class VersusWorldController:Controller<WorldModel>{
 				GameEntityModel playerEntity = (GameEntityModel)playerModel;
 				playerEntity.isFacingRight = initialPosition.X < 0;
 				model.players[playerId] = StateManager.state.AddModel(playerModel);
+				// hardcoded energy
+				playerEntity.customVariables["energy"] = 100;
 				teamsManagerModel.teams[1 + playerId % 2].entities.Add(model.players[playerId]);
 
 			}

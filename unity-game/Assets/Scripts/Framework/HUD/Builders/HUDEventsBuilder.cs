@@ -135,13 +135,32 @@ namespace RetroBread{
 
 		// 1: energy=23
 		private static GenericEvent<HUDViewBehaviour> BuildSetAnimationParam(Storage.GenericParameter parameter){
-			return new SimpleEvent<HUDViewBehaviour>(null,
-				delegate(HUDViewBehaviour model){
-					Animator animator = model.gameObject.GetComponent<Animator>();
-					if (animator == null) return;
-					animator.SetInteger(parameter.SafeString(0), parameter.SafeInt(0));
-				}
-			);
+			string paramName = parameter.SafeString(0);
+			float delay = (float) parameter.SafeFloat(1);
+			float duration = (float) parameter.SafeFloat(2);
+			switch (parameter.SafeInt(0)) {
+				case 0: // variable
+					return new SimpleEvent<HUDViewBehaviour>(null,
+						delegate(HUDViewBehaviour model){
+							Storage.HUDObject hudObj = model.hudObjectData;
+							if (hudObj == null) return;
+							GameEntityModel entity = WorldUtils.GetEntityFromTeam(hudObj.teamId, hudObj.playerId);
+							if (entity == null) return;
+							int variableValue;
+							if (entity.customVariables.TryGetValue(parameter.SafeString(1), out variableValue)){
+								int minVal = parameter.SafeInt(1);
+								float interpolationValue = (float)(variableValue - minVal) / (float) (parameter.SafeInt(2) - minVal);
+								model.ScheduleVariableUpdate(paramName, interpolationValue , delay, duration);
+							}
+						}
+					);
+				default: // custom
+					return new SimpleEvent<HUDViewBehaviour>(null,
+						delegate(HUDViewBehaviour model){
+							model.ScheduleVariableUpdate(paramName, (float) parameter.SafeFloat(0), delay, duration);
+						}
+					);
+			}
 		}
 
 
