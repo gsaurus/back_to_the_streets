@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace RetroBread{
 
@@ -15,8 +16,8 @@ namespace RetroBread{
 		private static BuilderAction[] builderActions = {
 			BuildOnEnable,			// 0: enable / disable
 			BuildOnVariableChange,	// 1: changed(energy)
-			BuildOnVariableValue	// 2: energy >= 4
-
+			BuildOnVariableValue,	// 2: energy >= 4
+			BuildOnAnimationPlaying // 3: animation(getUp)
 		};
 			
 
@@ -157,8 +158,9 @@ namespace RetroBread{
 				int newValue;
 				if (entity != null && entity.customVariables.TryGetValue(variableName, out newValue)) {
 					if (previousValue != newValue) {
+						bool firstTime = previousValue == int.MinValue;
 						previousValue = newValue;
-						return true;
+						return !firstTime; // Note: discarding first time, use enable instead..
 					}
 					return false;
 				}
@@ -287,6 +289,26 @@ namespace RetroBread{
 					comparisonValue
 				),
 				new HUDDelegateVariableArithmeticsCondition(type, variableName, comparisonValue)
+			);
+		}
+
+
+		// 3: animation(getUp)
+		private static GenericTriggerCondition<HUDViewBehaviour> BuildOnAnimationPlaying(Storage.GenericParameter parameter){
+			return new BoolCondition<HUDViewBehaviour>(
+				delegate(HUDViewBehaviour model){
+					Animator animator = model.gameObject.GetComponent<Animator>();
+					if (animator == null) return false;
+					AnimatorStateInfo stateInfo;
+					// Get current animation (if transiting we consider next as current)
+					if (animator.IsInTransition(0)){
+						stateInfo = animator.GetNextAnimatorStateInfo(0);
+					}else {
+						stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+					}
+					return stateInfo.IsName(parameter.SafeString(0));
+				},
+				true
 			);
 		}
 

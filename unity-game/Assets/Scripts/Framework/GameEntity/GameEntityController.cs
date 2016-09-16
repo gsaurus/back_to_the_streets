@@ -279,7 +279,16 @@ namespace RetroBread{
 				// None, nothing to do
 			}
 
-			// TODO: Damage!
+			// Damage!
+			if (damagePercentage != 0 && model.customVariables.ContainsKey("energy")) {
+				GameEntityController controller = model.Controller() as GameEntityController;
+				foreach (HitInformation hitInfo in controller.lastHurts) {
+					int damageValue = (int)(hitInfo.hitData.damage * damagePercentage);
+					if (damageValue == 0) damageValue = 1;
+					model.customVariables["energy"] -= damageValue;
+				}
+			}
+
 		}
 
 		public static void HurtBasedOnHitData(GameEntityModel model, FixedFloat damagePercentage){

@@ -140,19 +140,33 @@ namespace RetroBread{
 			float duration = (float) parameter.SafeFloat(2);
 			switch (parameter.SafeInt(0)) {
 				case 0: // variable
-					return new SimpleEvent<HUDViewBehaviour>(null,
-						delegate(HUDViewBehaviour model){
-							Storage.HUDObject hudObj = model.hudObjectData;
-							if (hudObj == null) return;
-							GameEntityModel entity = WorldUtils.GetEntityFromTeam(hudObj.teamId, hudObj.playerId);
-							if (entity == null) return;
-							int variableValue;
-							if (entity.customVariables.TryGetValue(parameter.SafeString(1), out variableValue)){
-								int minVal = parameter.SafeInt(1);
-								float interpolationValue = (float)(variableValue - minVal) / (float) (parameter.SafeInt(2) - minVal);
-								model.ScheduleVariableUpdate(paramName, interpolationValue , delay, duration);
+					return new HUDEventDelegationChecker(
+						new SimpleEvent<HUDViewBehaviour>(null,
+							delegate(HUDViewBehaviour model){
+								Storage.HUDObject hudObj = model.hudObjectData;
+								if (hudObj == null) return;
+								GameEntityModel entity = WorldUtils.GetEntityFromTeam(hudObj.teamId, hudObj.playerId);
+								if (entity == null) return;
+								int variableValue;
+								if (entity.customVariables.TryGetValue(parameter.SafeString(1), out variableValue)){
+									int minVal = parameter.SafeInt(1);
+									float interpolationValue = (float)(variableValue - minVal) / (float) (parameter.SafeInt(2) - minVal);
+									interpolationValue = Mathf.Clamp(interpolationValue, 0, 1);
+									model.ScheduleVariableUpdate(paramName, interpolationValue , delay, duration);
+								}
 							}
-						}
+						),
+						new HUDInteractionDelegationEvent(
+							delegate(HUDViewBehaviour model, GameEntityModel entity){
+								int variableValue;
+								if (entity.customVariables.TryGetValue(parameter.SafeString(1), out variableValue)){
+									int minVal = parameter.SafeInt(1);
+									float interpolationValue = (float)(variableValue - minVal) / (float) (parameter.SafeInt(2) - minVal);
+									interpolationValue = Mathf.Clamp(interpolationValue, 0, 1);
+									model.ScheduleVariableUpdate(paramName, interpolationValue , delay, duration);
+								}
+							}
+						)
 					);
 				default: // custom
 					return new SimpleEvent<HUDViewBehaviour>(null,
@@ -223,7 +237,7 @@ namespace RetroBread{
 					return new HUDEventDelegationChecker(
 						new SimpleEvent<HUDViewBehaviour>(null,
 							delegate(HUDViewBehaviour model){
-								GUIText text = model.gameObject.GetComponent<GUIText>();
+								UnityEngine.UI.Text text = model.gameObject.GetComponent<UnityEngine.UI.Text>();
 								if (text == null) return;
 								Storage.HUDObject hudObj = model.hudObjectData;
 								if (hudObj == null) return;
@@ -236,7 +250,7 @@ namespace RetroBread{
 						),
 						new HUDInteractionDelegationEvent(
 							delegate(HUDViewBehaviour model, GameEntityModel entity){
-								GUIText text = model.gameObject.GetComponent<GUIText>();
+								UnityEngine.UI.Text text = model.gameObject.GetComponent<UnityEngine.UI.Text>();
 								if (text == null) return;
 								AnimationModel animModel = StateManager.state.GetModel(entity.animationModelId) as AnimationModel;
 								if (animModel == null) return;
@@ -253,7 +267,7 @@ namespace RetroBread{
 								if (hudObj == null) return;
 								GameEntityModel entity = WorldUtils.GetEntityFromTeam(hudObj.teamId, hudObj.playerId);
 								if (entity == null) return;
-								GUIText text = model.gameObject.GetComponent<GUIText>();
+								UnityEngine.UI.Text text = model.gameObject.GetComponent<UnityEngine.UI.Text>();
 								if (text == null) return;
 								int value;
 								entity.customVariables.TryGetValue(parameter.SafeString(0), out value);
@@ -262,7 +276,7 @@ namespace RetroBread{
 						),
 						new HUDInteractionDelegationEvent(
 							delegate(HUDViewBehaviour model, GameEntityModel entity){
-								GUIText text = model.gameObject.GetComponent<GUIText>();
+								UnityEngine.UI.Text text = model.gameObject.GetComponent<UnityEngine.UI.Text>();
 								if (text == null) return;
 								int value;
 								entity.customVariables.TryGetValue(parameter.SafeString(0), out value);
@@ -273,7 +287,7 @@ namespace RetroBread{
 				default: // custom
 					return new SimpleEvent<HUDViewBehaviour>(null,
 						delegate(HUDViewBehaviour model) {
-							GUIText text = model.gameObject.GetComponent<GUIText>();
+							UnityEngine.UI.Text text = model.gameObject.GetComponent<UnityEngine.UI.Text>();
 							if (text == null) return;
 							text.text = parameter.SafeString(1);
 						}

@@ -96,7 +96,7 @@ namespace RetroBread{
 			public override string ToString(GenericParameter parameter){
 				switch (parameter.SafeInt(0)) {
 					case 0: // variable
-						return "'" + parameter.SafeString(0) + "'='" + parameter.SafeString(0) + "'[" + parameter.SafeInt(1) + "-" + parameter.SafeInt(2) + "]";
+						return "'" + parameter.SafeString(0) + "'='" + parameter.SafeString(1) + "'[" + parameter.SafeInt(1) + "-" + parameter.SafeInt(2) + "]";
 					default: // custom
 						return "'" + parameter.SafeString(0) + "'=" + parameter.SafeFloat(0);
 				}

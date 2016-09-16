@@ -51,7 +51,8 @@ namespace RetroBread{
 		private static InternConditionBuilder[] builders = {
 			new BuildOnEnable(),			// 0: enable / disable
 			new BuildOnVariableChange(),	// 1: changed(energy)
-			new BuildOnVariableValue()		// 2: energy >= 4
+			new BuildOnVariableValue(),		// 2: energy >= 4
+			new BuildPlayingAnimation()		// 3: playing(idle)
 		};
 
 
@@ -137,6 +138,18 @@ namespace RetroBread{
 				StringInputFieldParam.Instantiate(parent, parameter, 0, "Variable:");
 				InstantiateArithmeticField(parent, parameter, 1);
 				IntInputFieldParam.Instantiate(parent, parameter, 0, "Compare with value:", 0);
+			}
+		}
+
+		// 3: playing(idle)	
+		private class BuildPlayingAnimation: InternConditionBuilder{
+			public BuildPlayingAnimation():base("Animation playing"){}
+			public override string ToString(GenericParameter parameter){
+				return FilterNegationString(parameter, "playing(" + parameter.SafeString(0) + ")");
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				InstantiateNegation(parent, parameter);
+				StringInputFieldParam.Instantiate(parent, parameter, 0, "Animation:");
 			}
 		}
 

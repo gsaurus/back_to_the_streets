@@ -34,7 +34,7 @@ namespace RetroBread{
 				}
 			}
 
-			if (interactionReference == ModelReference.InvalidModelIndex && originalEntity.parentEntity != exception) {
+			if (originalEntity.parentEntity != null && interactionReference == ModelReference.InvalidModelIndex && originalEntity.parentEntity != exception) {
 				interactionReference = originalEntity.parentEntity;
 			}
 			if (interactionReference == ModelReference.InvalidModelIndex){

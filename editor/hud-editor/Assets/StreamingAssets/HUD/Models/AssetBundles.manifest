@@ -1,10 +1,10 @@
 ManifestFileVersion: 0
-CRC: 2752604985
+CRC: 3214019919
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: hud_bundle
+      Name: abundle
       Dependencies: {}
     Info_1:
-      Name: abundle
+      Name: hud_bundle
       Dependencies: {}
