@@ -20,6 +20,14 @@ namespace RetroBread{
 		public static readonly string inputVelocityAffector = "input_vel_affector";
 
 
+		public enum InclusionType{
+			none		= 0,
+			contains	= 1,
+			only		= 2,
+			except		= 3
+		};
+
+
 		// Information carried during the update
 		// Hits and hurts information
 		// This information is updated through the teams manager and is consulted later by animations execution (conditions)
@@ -327,6 +335,75 @@ namespace RetroBread{
 			GameEntityController controller = model.Controller() as GameEntityController;
 			return controller.lastHurts.Count; 
 		}
+
+
+		// Return true if cycle must stop, output variable does the comparison and must be used as result
+		private static bool InclusionCheck(InclusionType inclusionType, int original, int other, out bool inclusion){
+			switch (inclusionType) {
+				case InclusionType.none:{
+					inclusion = true;
+					return true;
+				}
+				case InclusionType.contains:{
+					inclusion = original == other;
+					if (inclusion) return true;
+				} break;
+				case InclusionType.except:{
+					inclusion = original != other;
+					if (!inclusion) return true;
+				} break;
+				case InclusionType.only:{
+					inclusion = original == other;
+					if (!inclusion) return true;
+				} break;
+			}
+			inclusion = false;
+			return false;
+		}
+
+		// Generic entity-entity collision with team check
+		public static bool IsCollidingWithTeam(GameEntityModel model, InclusionType teamInclusionType, int teamId){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			if (controller.lastCollisionEntityId == ModelReference.InvalidModelIndex) return false;
+			bool isValid;
+			InclusionCheck(teamInclusionType, WorldUtils.GetEntityTeam(controller.lastCollisionEntityId), teamId, out isValid);
+			return isValid;
+		}
+
+		// Successful hits a team
+		public static bool HitTeam(GameEntityModel model, InclusionType teamInclusionType, int teamId, InclusionType typeInclusionType, int type){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			if (controller.lastHits.Count == 0) return false;
+			bool isValid = false;
+			// Check team
+			foreach (HitInformation hit in controller.lastHits) {
+				if (InclusionCheck(teamInclusionType, WorldUtils.GetEntityTeam(hit.entityId), teamId, out isValid)) {
+					break;
+				}
+			}
+			if (!isValid) return false;
+
+			// Check type
+			foreach (HitInformation hit in controller.lastHits) {
+				if (InclusionCheck(typeInclusionType, (int) hit.hitData.type, type, out isValid)) {
+					break;
+				}
+			}
+			return isValid;
+		}
+
+		// Hitters count
+		public static bool HurtFromTeam(GameEntityModel model, int teamId){
+			GameEntityController controller = model.Controller() as GameEntityController;
+			if (controller.lastHurts.Count == 0) return false;
+			foreach (HitInformation hurt in controller.lastHurts) {
+				if (WorldUtils.GetEntityTeam(hurt.entityId) == teamId) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 
 		public static bool HurtContainsType(GameEntityModel model, HitData.HitType type){
 			GameEntityController controller = model.Controller() as GameEntityController;

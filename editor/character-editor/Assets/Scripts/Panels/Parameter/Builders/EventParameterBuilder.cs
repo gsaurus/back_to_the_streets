@@ -52,7 +52,9 @@ namespace RetroBread{
 			new BuildResetImpulse(),					// 19: reset(impulse)
 			new BuildConsumeInput(),					// 20: consumeInput(B)
 			new BuildGetHurt(),							// 21: getHurt(10%)
-			new BuildSpawnEffect()						// 22: spawnFX(sparks)
+			new BuildSpawnEffect(),						// 22: spawnFX(sparks)
+			new BuildOwnEntity(),						// 23: own(anchored, 2)
+			new BuildReleaseOwnership()					// 24: releaseOwnership
 		};
 
 
@@ -351,7 +353,7 @@ namespace RetroBread{
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
 				IntDropdownParam.Instantiate(parent, parameter, 0, "Grabbing Anchor:", GetAnchorsNames());
-				StringDropdownParam.Instantiate(parent, parameter, 0, "Animation:", GetAnimationsNames());
+				StringInputFieldParam.Instantiate(parent, parameter, 0, "Animation:");
 			}
 		}
 
@@ -435,6 +437,33 @@ namespace RetroBread{
 				FloatInputFieldParam.Instantiate(parent, parameter, 0, "Offset X:");
 				FloatInputFieldParam.Instantiate(parent, parameter, 1, "Offset Y:");
 				FloatInputFieldParam.Instantiate(parent, parameter, 2, "Offset Z:");
+			}
+		}
+
+		// 23: own(anchored, 2) (take ownership of an entity)
+		private class BuildOwnEntity: InternEventBuilder{
+			public BuildOwnEntity():base("Own entity"){}
+			public override string ToString(GenericParameter parameter){
+				return "own("
+					+ SafeToString(entityReferenceType, parameter.SafeInt(0), "entityRef")
+					+ ")"
+				;
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Entity Reference:", entityReferenceType);
+				IntDropdownParam.Instantiate(parent, parameter, 1, "Grabbing Anchor:", GetAnchorsNames());
+			}
+		}
+
+	
+		// 24: releaseOwnership (the item itself gets free from his owner)
+		private class BuildReleaseOwnership: InternEventBuilder{
+			public BuildReleaseOwnership():base("Release Ownership"){}
+			public override string ToString(GenericParameter parameter){
+				return "releaseOwnership";
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				// No parameters
 			}
 		}
 

@@ -31,7 +31,9 @@ namespace RetroBread{
 			BuildResetImpulse,					// 19: reset(impulse)
 			BuildConsuleInput,					// 20: consumeInput(A)
 			BuildGetHurt,						// 21: getHurt(10%)
-			BuildSpawnEffect					// 22: spawnFX(sparks)
+			BuildSpawnEffect,					// 22: spawnFX(sparks)
+			BuildOwnEntity,						// 23: own(anchored, 2)
+			BuildReleaseOwnership,				// 24: releaseOwnership
 
 		};
 
@@ -80,21 +82,22 @@ namespace RetroBread{
 		// Build an entity delegator
 		static GameEntityReferenceDelegator BuildEntityDelegator(Storage.GenericParameter parameter, int startIntIndex = 0){
 			EntityDelegatorType delegatorType = (EntityDelegatorType)parameter.SafeInt(startIntIndex);
+			int customParameter = parameter.SafeInt(startIntIndex + 1);
 			switch (delegatorType){
 				case EntityDelegatorType.anchor:{
-					return new AnchoredEntityDelegator(parameter.SafeInt(startIntIndex + 1));
+					return new AnchoredEntityDelegator(customParameter);
 				}
 				case EntityDelegatorType.parent:{
 					return new ParentEntityDelegator();
 				}
 				case EntityDelegatorType.collision:{
-					return new CollisionEntityDelegator();
+					return new CollisionEntityDelegator(customParameter);
 				}
 				case EntityDelegatorType.hitten:{
-					return new HittenEntityDelegator();
+					return new HittenEntityDelegator(customParameter);
 				}
 				case EntityDelegatorType.hitter:{
-					return new HitterEntityDelegator();
+					return new HitterEntityDelegator(customParameter);
 				}
 			}
 			return null;
@@ -363,6 +366,20 @@ namespace RetroBread{
 				PhysicPoint2DView.ConvertGameToViewCoordinates // TODO: store this delegate at a setup file, so it's easier to configure
 			);
 
+		}
+
+
+		// own(anchored, 2)
+		private static GenericEvent<AnimationModel> BuildOwnEntity(Storage.GenericParameter parameter){
+			GameEntityReferenceDelegator delegator = BuildEntityDelegator(parameter);
+			return new SingleEntityAnimationEvent<GameEntityReferenceDelegator>(
+				null, GameEntityAnchoringOperations.OwnEntity, delegator
+			);
+		}
+
+		// releaseOwnership
+		private static GenericEvent<AnimationModel> BuildReleaseOwnership(Storage.GenericParameter parameter){
+			return new SimpleEntityAnimationEvent(null, GameEntityAnchoringOperations.ReleaseOwnership);
 		}
 
 

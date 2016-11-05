@@ -111,6 +111,39 @@ public class VersusWorldController:Controller<WorldModel>{
 			playerEntity.customVariables["energy"] = 100;
 			teamsManagerModel.teams[2].entities.Add(StateManager.state.AddModel(playerModel));
 
+
+			// Create some weapon
+			initialPosition = new FixedVector3(0, 8, 2);
+			playerModel = new GameEntityModel(
+				StateManager.state,
+				physicsModel,
+				new PhysicPointModel(
+					null,
+					initialPosition,
+					new FixedVector3(0, 0.5, 0),
+					DefaultVCFactoryIds.PhysicPointControllerFactoryId,
+					SorVCFactories.Point2DViewFactoryId,
+					DefaultUpdateOrder.PhysicsUpdateOrder
+				),
+				new AnimationModel(
+					null,
+					"Bat_HD",
+					"bat_standing",
+					CharacterLoader.GetCharacterSkinName("Bat_HD", 0)
+				),
+				null, // no input
+				DefaultVCFactoryIds.GameEntityControllerFactoryId,
+				SorVCFactories.Entity2DViewFactoryId,
+				DefaultUpdateOrder.EntitiesUpdateOrder
+			);
+//			// Model initial state
+//			playerEntity = (GameEntityModel)playerModel;
+//			playerEntity.isFacingRight = initialPosition.X < 0;
+//			// hardcoded energy
+//			playerEntity.customVariables["energy"] = 100;
+			// Goodies going on team 0
+			teamsManagerModel.teams[0].entities.Add(StateManager.state.AddModel(playerModel));
+
 		} else {
 			teamsManagerModel = StateManager.state.GetModel(model.teamsModelId) as TeamsManagerModel;
 		}
@@ -232,6 +265,7 @@ public class VersusWorldController:Controller<WorldModel>{
 		mainModel.players.Remove(key);
 
 		// Remove from the team
+		// TODO: remove from correct team...
 		TeamsManagerModel teamsManagerModel = StateManager.state.GetModel(mainModel.teamsModelId) as TeamsManagerModel;
 		teamsManagerModel.teams[0].entities.Remove(model.Index);
 	}
@@ -277,6 +311,7 @@ public class VersusWorldController:Controller<WorldModel>{
 
 		// TODO: setup based on players added
 		CharacterLoader.LoadCharacter("Axel_HD");
+		CharacterLoader.LoadCharacter("Bat_HD");
 		CharacterLoader.LoadCharacter("happy char");
 		CharacterLoader.LoadCharacter("Axel_px");
 

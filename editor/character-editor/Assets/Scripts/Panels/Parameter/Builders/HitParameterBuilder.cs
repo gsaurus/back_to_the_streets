@@ -18,7 +18,7 @@ namespace RetroBread{
 		private static string[] typesList = { "Standard" };
 
 		public static string[] facingOptions = {"location", "inverse location", "orientation", "inverse orientation", "none"};
-		public static string[] hitTypeOptions = {"contact", "K.O.", "grab", "electrocution", "burn", "freeze"};
+		public static string[] hitTypeOptions = {"contact", "K.O.", "grab", "electrocution", "burn", "freeze", "other"};
 
 		public override string[] TypesList(){
 			return typesList;

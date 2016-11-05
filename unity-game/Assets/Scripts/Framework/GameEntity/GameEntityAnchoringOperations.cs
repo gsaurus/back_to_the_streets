@@ -129,7 +129,26 @@ namespace RetroBread{
 					anchoredAnimController.ForceAnimation(anchoredAnimationModel, animationName);
 				}
 			}
-		} 
+		}
+
+
+		// Take ownership of a model, obtained from a selector
+		public static void OwnEntity(GameEntityModel model, GameEntityReferenceDelegator ownedRefDelegator){
+			GameEntityModel modelToBeOwned = GameEntityController.GetEntityFromDelegator(ownedRefDelegator, model);
+			if (modelToBeOwned != null){
+				modelToBeOwned.ownerEntity = model.Index;
+				model.anchoredEntities.Add(modelToBeOwned.Index);
+			}
+		}
+
+
+		// Get freedom from owner entity
+		public static void ReleaseOwnership(GameEntityModel model){
+			if (model.ownerEntity != null && model.ownerEntity != ModelReference.InvalidModelIndex) {
+				GameEntityModel owner = StateManager.state.GetModel(model.ownerEntity) as GameEntityModel;
+				owner.ownedEntities.Remove(model.Index);
+			}
+		}
 			
 
 		#endregion

@@ -46,6 +46,8 @@ namespace RetroBread{
 		private static string[] collisionDirection = {"horizontal", "vertical", "along z-axis"};
 		private static string[] collisionDirectionShort = {"H", "V", "Z"};
 
+		private static string[] inclusionType = {"none", "contains", "only", "except"};
+
 
 		// Condition builders indexed by type directly on array
 		private static InternConditionBuilder[] builders = {
@@ -270,6 +272,8 @@ namespace RetroBread{
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
 				InstantiateNegation(parent, parameter);
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Team options:", inclusionType);
+				IntInputFieldParam.Instantiate(parent, parameter, 1, "team paramenter");
 			}
 		}
 
@@ -284,6 +288,10 @@ namespace RetroBread{
 			}
 			public override void Build(GameObject parent, GenericParameter parameter){
 				InstantiateNegation(parent, parameter);
+				IntDropdownParam.Instantiate(parent, parameter, 0, "Team options:", inclusionType);
+				IntInputFieldParam.Instantiate(parent, parameter, 1, "team paramenter");
+				IntDropdownParam.Instantiate(parent, parameter, 2, "Type options:", inclusionType);
+				IntDropdownParam.Instantiate(parent, parameter, 3, "Type:", getHurtOptions());
 			}
 		}
 

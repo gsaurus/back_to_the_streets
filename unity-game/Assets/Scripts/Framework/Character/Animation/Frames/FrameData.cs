@@ -68,7 +68,8 @@ namespace RetroBread{
 			grab			= 2,
 			electrocution	= 3,
 			burn			= 4,
-			freeze			= 5
+			freeze			= 5,
+			other			= 6
 		}
 
 		public enum HitFacing{

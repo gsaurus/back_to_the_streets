@@ -200,14 +200,34 @@ namespace RetroBread{
 		// entity collision
 		private static GenericTriggerCondition<AnimationModel> BuildEntityEntityCollisionCheck(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
-			return new EntityBoolCondition(GameEntityController.IsCollidingWithOthers);
+			GameEntityController.InclusionType teamInclusionType = (GameEntityController.InclusionType) parameter.SafeInt(0);
+			int teamId = parameter.SafeInt(1);
+			if (teamInclusionType == GameEntityController.InclusionType.none) {
+				return new EntityBoolCondition(GameEntityController.IsCollidingWithOthers);
+			} else {
+				return new EntityBoolCondition(delegate(GameEntityModel model){
+					return GameEntityController.IsCollidingWithTeam(model, teamInclusionType, teamId);
+				});
+			}
 		}
 
 
 		// on hit
 		private static GenericTriggerCondition<AnimationModel> BuildOnHit(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 			keyFrame = invalidKeyframe;
-			return new EntityArithmeticCondition<int>(ArithmeticConditionOperatorType.greater, GameEntityController.HitTargetsCount, 0);
+			GameEntityController.InclusionType teamInclusionType = (GameEntityController.InclusionType) parameter.SafeInt(0);
+			int teamId = parameter.SafeInt(1);
+			GameEntityController.InclusionType typeInclusionType = (GameEntityController.InclusionType) parameter.SafeInt(2);
+			int type = parameter.SafeInt(3);
+			if (teamInclusionType == GameEntityController.InclusionType.none && typeInclusionType == GameEntityController.InclusionType.none) {
+				return new EntityArithmeticCondition<int>(ArithmeticConditionOperatorType.greater, GameEntityController.HitTargetsCount, 0);
+			} else {
+				return new EntityBoolCondition(
+					delegate(GameEntityModel model) {
+						return GameEntityController.HitTeam(model, teamInclusionType, teamId, typeInclusionType, type);
+					}
+				);
+			}
 		}
 
 										
