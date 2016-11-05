@@ -113,7 +113,7 @@ public class VersusWorldController:Controller<WorldModel>{
 
 
 			// Create some weapon
-			initialPosition = new FixedVector3(0, 8, 2);
+			initialPosition = new FixedVector3(2, 8, 3);
 			playerModel = new GameEntityModel(
 				StateManager.state,
 				physicsModel,

@@ -36,7 +36,14 @@ namespace RetroBread{
 					if (entity1Controller != null) {
 						foreach (ModelReference team2EntityRef in team2Refs) {
 							entity2 = gameState.GetModel(team2EntityRef) as GameEntityModel;
-							if (entity2 != null && entity2 != entity1 && entity1Controller.CollisionCollisionCheck(entity1, entity2)){
+							if (entity2 != null
+								&& entity2 != entity1
+								&& (entity2.parentEntity == null || entity2.parentEntity != entity1.Index)
+								&& (entity1.parentEntity == null || entity1.parentEntity != entity2.Index)
+								&& (entity2.ownerEntity == null || entity2.ownerEntity != entity1.Index)
+								&& (entity1.ownerEntity == null || entity1.ownerEntity != entity2.Index)
+								&& entity1Controller.CollisionCollisionCheck(entity1, entity2)
+							){
 								// collision detected for this entity, no need for further checks
 								break;
 							} // if collision check
@@ -61,7 +68,13 @@ namespace RetroBread{
 					if (entity1Controller != null) {
 						foreach (ModelReference team2EntityRef in team2Refs) {
 							entity2 = gameState.GetModel(team2EntityRef) as GameEntityModel;
-							if (entity2 != null && entity2 != entity1){
+							if (entity2 != null
+								&& entity2 != entity1
+								&& (entity2.parentEntity == null || entity2.parentEntity != entity1.Index)
+								&& (entity1.parentEntity == null || entity1.parentEntity != entity2.Index)
+								&& (entity2.ownerEntity == null || entity2.ownerEntity != entity1.Index)
+								&& (entity1.ownerEntity == null || entity1.ownerEntity != entity2.Index)
+							){
 								entity1Controller.HitCollisionCheck(entity1, entity2);
 							} // if entity2 != null
 						} // foreach team2 entity

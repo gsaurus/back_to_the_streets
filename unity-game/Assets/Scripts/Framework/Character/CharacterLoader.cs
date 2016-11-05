@@ -41,8 +41,9 @@ namespace RetroBread{
 			AnimationModel animModel = StateManager.state.GetModel(model.animationModelId) as AnimationModel;
 			if (animModel == null) return null;
 			if (!loadedCharacters.TryGetValue(animModel.characterName, out storageCharacter)) return null;
+			if (string.IsNullOrEmpty(storageCharacter.shadowName)) return null;
 			Transform shadow = root.transform.FindChild(storageCharacter.shadowName);
-			if (shadow == null) return null;
+			if (shadow == null || shadow == root.transform) return null;
 			return shadow.gameObject;
 		}
 

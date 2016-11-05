@@ -43,7 +43,7 @@ public class Entity2DView: GameEntityView {
 		base.Update(model, deltaTime);
 
 		// Post transformation into 2D
-		if (model.parentEntity == null) {
+		if (model.parentEntity == null || model.parentEntity == ModelReference.InvalidModelIndex) {
 			GameObject entityObject = UnityObjectsPool.Instance.GetGameObject(model.Index);
 			if (entityObject == null)
 				return; // can't work without a game object

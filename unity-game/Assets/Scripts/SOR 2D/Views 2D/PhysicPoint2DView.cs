@@ -34,7 +34,7 @@ namespace RetroBread{
 			Vector3 pos3D = model.position.AsVector3();
 			Vector2 oldPos = AsPosition2D(model.lastPosition.AsVector3());
 			Vector2 targetPos = AsPosition2D(model.position.AsVector3());
-			Vector2 currentPos = new Vector2(obj.transform.localPosition.x, obj.transform.localPosition.z);
+			Vector2 currentPos = new Vector2(obj.transform.position.x, obj.transform.position.z);
 			Vector2 finalTarget;
 
 			// Decide on interpolation based on the last position variation against current object position

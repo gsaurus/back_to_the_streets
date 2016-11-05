@@ -196,7 +196,7 @@ namespace RetroBread{
 		// Is anchoring something
 		public static bool IsAnchoring(GameEntityModel model, int anchorId){
 			if (model.anchoredEntities == null || model.anchoredEntities.Count <= anchorId) return false;
-			return model.anchoredEntities[anchorId] != null;
+			return model.anchoredEntities[anchorId] != null && model.anchoredEntities[anchorId] != ModelReference.InvalidModelIndex;
 		}
 
 
