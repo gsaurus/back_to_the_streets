@@ -23,9 +23,9 @@ public class VersusWorldController:Controller<WorldModel>{
 
 	private static bool[,] teamsHitMatrix = new bool[,]
 		{
-			{ false, false, false },
-			{ false, false, true  },
-			{ false, true,  false }
+			{ false, true, true },
+			{ true, false, true  },
+			{ true, true,  false }
 		};
 
 	static VersusWorldController(){
@@ -128,7 +128,7 @@ public class VersusWorldController:Controller<WorldModel>{
 				new AnimationModel(
 					null,
 					"Bat_HD",
-					"bat_standing",
+					"bat_air",
 					CharacterLoader.GetCharacterSkinName("Bat_HD", 0)
 				),
 				null, // no input

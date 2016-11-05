@@ -43,15 +43,18 @@ public class Entity2DView: GameEntityView {
 		base.Update(model, deltaTime);
 
 		// Post transformation into 2D
+		if (model.parentEntity == null) {
+			GameObject entityObject = UnityObjectsPool.Instance.GetGameObject(model.Index);
+			if (entityObject == null)
+				return; // can't work without a game object
 
-		GameObject entityObject = UnityObjectsPool.Instance.GetGameObject(model.Index);
-		if (entityObject == null) return; // can't work without a game object
+			Vector3 originalRotation = entityObject.transform.eulerAngles;
+			entityObject.transform.eulerAngles = new Vector3(90, originalRotation.y, originalRotation.z);
 
-		Vector3 originalRotation = entityObject.transform.eulerAngles;
-		entityObject.transform.eulerAngles = new Vector3(90, originalRotation.y, originalRotation.z);
+			// Shadow
+			UpdateShadow(model, entityObject);
+		}
 
-		// Shadow
-		UpdateShadow(model, entityObject);
 	}
 	
 	public override bool IsCompatible(GameEntityModel originalModel, GameEntityModel newModel){

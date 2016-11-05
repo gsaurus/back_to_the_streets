@@ -356,8 +356,11 @@ namespace RetroBread{
 					inclusion = original == other;
 					if (!inclusion) return true;
 				} break;
+				default:{
+					inclusion = false;
+					break;
+				}
 			}
-			inclusion = false;
 			return false;
 		}
 

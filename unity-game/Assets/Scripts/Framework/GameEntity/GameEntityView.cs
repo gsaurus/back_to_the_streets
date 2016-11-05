@@ -31,7 +31,8 @@ namespace RetroBread{
 									GameObject parentAnchorObj = UnityObjectsPool.Instance.GetAnchorObject(model.parentEntity, anchorId);
 									if (parentAnchorObj != null){
 										obj.transform.SetParent(parentAnchorObj.transform);
-										obj.transform.rotation = Quaternion.identity;
+										obj.transform.localPosition = Vector3.zero;
+										obj.transform.localRotation = Quaternion.identity;
 										obj.transform.localScale = Vector3.one;
 									}
 								}
