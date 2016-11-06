@@ -154,6 +154,17 @@ namespace RetroBread{
 				model.animationName = model.nextAnimation;
 				// clear hitten entities
 				model.hittenEntitiesByHitId = null;
+				GameEntityModel anchoredModel;
+				AnimationModel anchoredAnimationModel;
+				foreach (ModelReference anchoredRef in entityModel.anchoredEntities) {
+					if (anchoredRef != null && anchoredRef != ModelReference.InvalidModelIndex) {
+						anchoredModel = StateManager.state.GetModel(anchoredRef) as GameEntityModel;
+						if (anchoredModel == null) continue;
+						anchoredAnimationModel = StateManager.state.GetModel(anchoredModel.animationModelId) as AnimationModel;
+						if (anchoredAnimationModel == null) continue;
+						anchoredAnimationModel.hittenEntitiesByHitId = null;
+					}
+				}
 				model.InvalidateVC();
 				// Clear combo animation flag
 				entityModel.customVariables[CharacterConditionsBuilder.comboAnimationClearFlag] = 0;

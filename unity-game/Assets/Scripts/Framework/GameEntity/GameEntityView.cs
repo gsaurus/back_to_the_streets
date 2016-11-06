@@ -49,10 +49,12 @@ namespace RetroBread{
 			}
 
 			// TODO: flip that works for all rotation angles
-			if (obj.transform.rotation.y != 0) {
-				obj.transform.localScale = new Vector3(obj.transform.localScale.x, obj.transform.localScale.y, Mathf.Abs(obj.transform.localScale.z) * (model.isFacingRight ? 1 : -1));
-			}else {
-				obj.transform.localScale = new Vector3(Mathf.Abs(obj.transform.localScale.x) * (model.isFacingRight ? 1 : -1), obj.transform.localScale.y, obj.transform.localScale.z);
+			if (model.parentEntity == null) {
+				if (obj.transform.rotation.y != 0) {
+					obj.transform.localScale = new Vector3(obj.transform.localScale.x, obj.transform.localScale.y, Mathf.Abs(obj.transform.localScale.z) * (model.isFacingRight ? 1 : -1));
+				} else {
+					obj.transform.localScale = new Vector3(Mathf.Abs(obj.transform.localScale.x) * (model.isFacingRight ? 1 : -1), obj.transform.localScale.y, obj.transform.localScale.z);
+				}
 			}
 			
 		}

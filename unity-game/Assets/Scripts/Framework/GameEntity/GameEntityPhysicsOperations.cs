@@ -122,19 +122,19 @@ namespace RetroBread{
 		public static FixedFloat CollisionVerticalForce(GameEntityModel model){
 			PhysicPointModel pointModel = GameEntityController.GetPointModel(model);
 			if (pointModel == null) return FixedFloat.Zero;
-			return pointModel.collisionInpact.Y;
+			return FixedFloat.Abs(pointModel.collisionInpact.Y);
 		}
 
 		public static FixedFloat CollisionHorizontalForce(GameEntityModel model){
 			PhysicPointModel pointModel = GameEntityController.GetPointModel(model);
 			if (pointModel == null) return FixedFloat.Zero;
-			return pointModel.collisionInpact.X;
+			return FixedFloat.Abs(pointModel.collisionInpact.X);
 		}
 
 		public static FixedFloat CollisionZForce(GameEntityModel model){
 			PhysicPointModel pointModel = GameEntityController.GetPointModel(model);
 			if (pointModel == null) return FixedFloat.Zero;
-			return pointModel.collisionInpact.Z;
+			return FixedFloat.Abs(pointModel.collisionInpact.Z);
 		}
 
 

@@ -131,6 +131,7 @@ namespace RetroBread{
 			ownedEntities = new List<ModelReference>();
 			customVariables = new Dictionary<string, int>();
 			customTimers = new Dictionary<string, int>();
+			isFacingRight = true; // default face objects to the right
 		}
 
 
