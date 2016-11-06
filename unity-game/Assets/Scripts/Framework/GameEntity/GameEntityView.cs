@@ -49,11 +49,11 @@ namespace RetroBread{
 			}
 
 			// TODO: flip that works for all rotation angles
-			if (model.parentEntity == null) {
+			if (model.parentEntity == null || model.parentEntity == ModelReference.InvalidModelIndex) {
 				if (obj.transform.rotation.y != 0) {
-					obj.transform.localScale = new Vector3(obj.transform.localScale.x, obj.transform.localScale.y, Mathf.Abs(obj.transform.localScale.z) * (model.isFacingRight ? 1 : -1));
+					obj.transform.localScale = new Vector3(obj.transform.localScale.x, obj.transform.localScale.y, Mathf.Abs(obj.transform.localScale.z) * (model.IsFacingRight() ? 1 : -1));
 				} else {
-					obj.transform.localScale = new Vector3(Mathf.Abs(obj.transform.localScale.x) * (model.isFacingRight ? 1 : -1), obj.transform.localScale.y, obj.transform.localScale.z);
+					obj.transform.localScale = new Vector3(Mathf.Abs(obj.transform.localScale.x) * (model.IsFacingRight() ? 1 : -1), obj.transform.localScale.y, obj.transform.localScale.z);
 				}
 			}
 			
@@ -99,7 +99,7 @@ namespace RetroBread{
 			foreach (HitInformation info in hits) {
 				GameEntityModel otherModel = StateManager.state.GetModel(info.entityId) as GameEntityModel;
 				if (otherModel != null) {
-					spawnAtLeft = !otherModel.isFacingRight;
+					spawnAtLeft = !otherModel.IsFacingRight();
 					randomValue = UnityEngine.Random.Range(0f, 1f);
 					randomValue = randomValue * randomValue * randomValue;
 					if (spawnAtLeft) {

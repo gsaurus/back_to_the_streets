@@ -24,7 +24,7 @@ namespace RetroBread{
 
 		// flag telling if the character is facing left or right
 		[ProtoMember(4)]
-		public bool isFacingRight;
+		public bool mIsFacingRight;
 
 		// flag telling that the character can flip automatically depending on animation velocity
 		[ProtoMember(5)]
@@ -131,7 +131,7 @@ namespace RetroBread{
 			ownedEntities = new List<ModelReference>();
 			customVariables = new Dictionary<string, int>();
 			customTimers = new Dictionary<string, int>();
-			isFacingRight = true; // default face objects to the right
+			mIsFacingRight = true; // default face objects to the right
 		}
 
 
@@ -160,6 +160,7 @@ namespace RetroBread{
 			ownedEntities = new List<ModelReference>();
 			customVariables = new Dictionary<string, int>();
 			customTimers = new Dictionary<string, int>();
+			mIsFacingRight = true;
 		}
 
 		// TODO: simplify arguments with a builder object?

@@ -35,7 +35,7 @@ namespace RetroBread{
 		public static bool IsOwnerFacingRight(AnimationModel model){
 			GameEntityModel ownerModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
 			if (ownerModel == null) return false;
-			return ownerModel.isFacingRight;
+			return ownerModel.IsFacingRight();
 		}
 		
 	}

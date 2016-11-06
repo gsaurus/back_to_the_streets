@@ -9,6 +9,18 @@ namespace RetroBread{
 		ModelReference GetEntityReference(GameEntityModel model);
 	}
 
+	public static class GameEntityModelExtensions{
+	
+		public static bool IsFacingRight(this GameEntityModel model){
+			if (model.parentEntity != null && model.parentEntity != ModelReference.InvalidModelIndex) {
+				GameEntityModel parentModel = StateManager.state.GetModel(model.parentEntity) as GameEntityModel;
+				return parentModel.mIsFacingRight;
+			}
+			return model.mIsFacingRight;
+		}
+			
+	}
+
 
 	// Controls mostly hits, flips, and any other specific things of entities
 	public class GameEntityController: Controller<GameEntityModel> {
@@ -78,13 +90,8 @@ namespace RetroBread{
 				// Anchored, use parent position
 				GameEntityModel parentModel = StateManager.state.GetModel(model.parentEntity) as GameEntityModel;
 				FixedVector3 parentPosition = GetRealPosition(parentModel);
-//				Debug.Log("Model old position: " + (StateManager.state.GetModel(model.physicsModelId) as PhysicPointModel).position
-//					+ "\nModel parent position: " + parentPosition
-//					+ "\nModel new position: " + parentPosition + " + " + model.positionRelativeToParent + " = " + (parentPosition + model.positionRelativeToParent)
-//				);
-				return parentPosition + model.positionRelativeToParent;
+				return parentPosition + new FixedVector3((parentModel.IsFacingRight() ? 1 : -1) * model.positionRelativeToParent.X, model.positionRelativeToParent.Y, model.positionRelativeToParent.Z);
 			}
-
 		}
 
 
@@ -95,7 +102,7 @@ namespace RetroBread{
 			AnimationController animController = animModel.Controller() as AnimationController;
 			FixedVector3 position = GetRealPosition(model);
 			FixedVector3 otherPosition = GetRealPosition(otherModel);
-			if (animController.CollisionCollisionCheck(animModel, position, model.isFacingRight, otherAnimModel, otherPosition, otherModel.isFacingRight)) {
+			if (animController.CollisionCollisionCheck(animModel, position, model.IsFacingRight(), otherAnimModel, otherPosition, otherModel.IsFacingRight())) {
 				// Both entities get knowing they hit each other
 				GameEntityController otherController = otherModel.Controller() as GameEntityController;
 				otherController.lastCollisionEntityId = model.Index;
@@ -115,8 +122,8 @@ namespace RetroBread{
 			FixedVector3 position = GetRealPosition(model);
 			FixedVector3 otherPosition = GetRealPosition(otherModel);
 			HitInformation hitInformation = animController.HitCollisionCheck(
-				animModel, position, model.isFacingRight,
-				otherAnimModel, otherPosition, otherModel.isFacingRight
+				animModel, position, model.IsFacingRight(),
+				otherAnimModel, otherPosition, otherModel.IsFacingRight()
 			);
 			if (hitInformation != null) {
 				// Both entities get knowing one hit the other
@@ -213,7 +220,7 @@ namespace RetroBread{
 				PhysicPointModel pointModel = GetPointModel(model);
 				if (pointModel == null) return;
 				FixedVector3 inputVelocity = pointModel.velocityAffectors[inputVelocityAffector];
-				if (inputVelocity.X != 0  && (inputVelocity.X > 0 != model.isFacingRight)){
+				if (inputVelocity.X != 0  && (inputVelocity.X > 0 != model.IsFacingRight())){
 					Flip(model);
 				}
 			}
@@ -227,7 +234,7 @@ namespace RetroBread{
 
 		// Flip the character on the X axis
 		public static void Flip(GameEntityModel model){
-			model.isFacingRight = !model.isFacingRight;
+			model.mIsFacingRight = !model.mIsFacingRight;
 		}
 
 		// Set automatic flip (to flip automatically based on animation velocity)
@@ -253,9 +260,9 @@ namespace RetroBread{
 				if (hitter != null) {
 					PhysicPointModel hitterPoint = GameEntityController.GetPointModel(hitter);
 					if (hitterPoint != null) {
-						model.isFacingRight = pointModel.position.X < hitterPoint.position.X;
+						model.mIsFacingRight = pointModel.position.X < hitterPoint.position.X;
 						if (oppositeFacing) {
-							model.isFacingRight = !model.isFacingRight;
+							model.mIsFacingRight = !model.mIsFacingRight;
 						}
 					}
 				}
@@ -269,9 +276,9 @@ namespace RetroBread{
 			if (pointModel != null && controller.lastHurts.Count > 0) {
 				HitInformation info = controller.lastHurts[0];
 				GameEntityModel hitter = StateManager.state.GetModel(info.entityId) as GameEntityModel;
-				model.isFacingRight = hitter.isFacingRight;
+				model.mIsFacingRight = hitter.IsFacingRight();
 				if (oppositeFacing) {
-					model.isFacingRight = !model.isFacingRight;
+					model.mIsFacingRight = !model.IsFacingRight();
 				}
 			}
 		}
@@ -423,7 +430,7 @@ namespace RetroBread{
 			PhysicPointModel modelPoint = GameEntityController.GetPointModel(model);
 			PhysicPointModel hitterPoint = GameEntityController.GetPointModel(hitter);
 			bool isFrontal;
-			if (model.isFacingRight) isFrontal = hitterPoint.position.X >= modelPoint.position.X;
+			if (model.IsFacingRight()) isFrontal = hitterPoint.position.X >= modelPoint.position.X;
 			else isFrontal = hitterPoint.position.X <= modelPoint.position.X;
 			return isFrontal == frontal;
 		}

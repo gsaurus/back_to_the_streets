@@ -106,7 +106,7 @@ public class VersusWorldController:Controller<WorldModel>{
 			);
 			// Model initial state
 			GameEntityModel playerEntity = (GameEntityModel)playerModel;
-			playerEntity.isFacingRight = initialPosition.X < 0;
+			playerEntity.mIsFacingRight = initialPosition.X < 0;
 			// hardcoded energy
 			playerEntity.customVariables["energy"] = 100;
 			teamsManagerModel.teams[2].entities.Add(StateManager.state.AddModel(playerModel));
@@ -208,7 +208,7 @@ public class VersusWorldController:Controller<WorldModel>{
             	);
 				// Model initial state
 				GameEntityModel playerEntity = (GameEntityModel)playerModel;
-				playerEntity.isFacingRight = initialPosition.X < 0;
+				playerEntity.mIsFacingRight = initialPosition.X < 0;
 				model.players[playerId] = StateManager.state.AddModel(playerModel);
 				// hardcoded energy
 				playerEntity.customVariables["energy"] = 100;

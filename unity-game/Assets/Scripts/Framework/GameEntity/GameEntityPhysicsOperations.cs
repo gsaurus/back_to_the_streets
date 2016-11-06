@@ -15,7 +15,7 @@ namespace RetroBread{
 		public static void SetAnimationVelocity(GameEntityModel model, FixedVector3 velocity){
 			PhysicPointModel pointModel = GameEntityController.GetPointModel(model);
 			if (pointModel == null) return;
-			if (!model.isFacingRight){
+			if (!model.IsFacingRight()){
 				velocity.X *= -1;
 			}
 			pointModel.velocityAffectors[GameEntityController.animVelocityAffector] = velocity;
@@ -25,12 +25,13 @@ namespace RetroBread{
 		public static void AddImpulse(GameEntityModel model, FixedVector3 impulse){
 			PhysicPointModel pointModel = GameEntityController.GetPointModel(model);
 			if (pointModel == null) return;
-			if (!model.isFacingRight){
+			if (!model.IsFacingRight()){
 				impulse.X *= -1;
 			}
 			//			FixedVector3 collisionVelocity;
 			//			pointModel.velocityAffectors.TryGetValue(PhysicPointController.collisionVelocityAffectorName, out collisionVelocity);
-			pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName] += impulse; //collisionVelocity + impulse;
+			pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName] += new FixedVector3(0, impulse.Y, 0); //collisionVelocity + impulse;
+			pointModel.velocityAffectors[GameEntityController.animVelocityAffector] += new FixedVector3(impulse.X, 0, impulse.Z);
 		}
 
 
@@ -47,7 +48,6 @@ namespace RetroBread{
 		// Apply a force on the physics velocity affector of a referenced entity
 		// Note: there could be generic templated methods receiving delegate methods... 
 		public static void AddImpulse(GameEntityModel model, GameEntityReferenceDelegator refDelegator, FixedVector3 impulse){
-			if (!model.isFacingRight) impulse.X *= -1;
 			GameEntityModel refModel = GameEntityController.GetEntityFromDelegator(refDelegator, model);
 			if (refModel != null){
 				AddImpulse(refModel, impulse);
@@ -64,7 +64,7 @@ namespace RetroBread{
 
 		// Safelly set position relative to self (e.g. vault), taking physics collisions in consideration
 		public static void MoveEntity(GameEntityModel model, FixedVector3 relativePosition){
-			if (!model.isFacingRight) relativePosition.X *= -1;
+			if (!model.IsFacingRight()) relativePosition.X *= -1;
 			PhysicPointModel pointModel = GameEntityController.GetPointModel(model);
 			if (pointModel != null){
 				PhysicPointController pointController = pointModel.Controller() as PhysicPointController;
@@ -82,7 +82,7 @@ namespace RetroBread{
 
 
 		public static bool IsFacingRight(GameEntityModel model){
-			return model.isFacingRight;
+			return model.mIsFacingRight;
 		}
 
 

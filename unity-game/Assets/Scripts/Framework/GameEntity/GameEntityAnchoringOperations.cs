@@ -28,7 +28,7 @@ namespace RetroBread{
 			if (pointModel != null && anchoredPointModel != null){
 				PhysicPointController pointController = pointModel.Controller() as PhysicPointController;
 				if (pointController != null){
-					if (!model.isFacingRight) deltaPosRelativeToAnched.X *= -1;
+					if (!model.IsFacingRight()) deltaPosRelativeToAnched.X *= -1;
 					FixedVector3 deltaPos = (anchoredPointModel.position + deltaPosRelativeToAnched) - pointModel.position;
 					pointController.SetVelocityAffector(pointModel, PhysicPointController.setPositionffectorName, deltaPos);
 				}
@@ -96,7 +96,7 @@ namespace RetroBread{
 					if (pointController != null && parentPointModel != null){
 						// Set position directly
 						pointModel.position = parentPointModel.position;
-						if (!model.isFacingRight) anchoredEntityModel.positionRelativeToParent.X *= -1;
+						if (!model.IsFacingRight()) anchoredEntityModel.positionRelativeToParent.X *= -1;
 						pointController.SetVelocityAffector(pointModel, PhysicPointController.setPositionffectorName, anchoredEntityModel.positionRelativeToParent);
 						anchoredEntityModel.positionRelativeToParent = FixedVector3.Zero;
 					}
