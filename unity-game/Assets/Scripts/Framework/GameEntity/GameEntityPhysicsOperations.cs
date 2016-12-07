@@ -28,10 +28,9 @@ namespace RetroBread{
 			if (!model.IsFacingRight()){
 				impulse.X *= -1;
 			}
-			//			FixedVector3 collisionVelocity;
-			//			pointModel.velocityAffectors.TryGetValue(PhysicPointController.collisionVelocityAffectorName, out collisionVelocity);
-			pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName] += new FixedVector3(0, impulse.Y, 0); //collisionVelocity + impulse;
-			pointModel.velocityAffectors[GameEntityController.animVelocityAffector] += new FixedVector3(impulse.X, 0, impulse.Z);
+			pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName] += impulse;
+//			pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName] += new FixedVector3(0, impulse.Y, 0);
+//			pointModel.velocityAffectors[GameEntityController.animVelocityAffector] += new FixedVector3(impulse.X, 0, impulse.Z);
 		}
 
 
@@ -39,8 +38,10 @@ namespace RetroBread{
 		public static void ResetPlanarImpulse(GameEntityModel model){
 			PhysicPointModel pointModel = GameEntityController.GetPointModel(model);
 			if (pointModel == null) return;
+			FixedVector3 originalImpulse;
+			pointModel.velocityAffectors.TryGetValue(PhysicPointModel.defaultVelocityAffectorName, out originalImpulse)
 			pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName] =
-				new FixedVector3(0, pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName].Y, 0)
+				new FixedVector3(0, originalImpulseY.Y, 0)
 			;
 		}
 

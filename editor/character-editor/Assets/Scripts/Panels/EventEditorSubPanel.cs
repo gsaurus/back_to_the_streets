@@ -9,8 +9,12 @@ namespace RetroBread{
 
 	public class EventEditorSubPanel : MonoBehaviour {
 
+		public enum EventType{
+			typeSubject, typeCondition, typeEvent
+		}
+
 		// one for conditions, other for events
-		public bool isCondition;
+		public EventType eventType;
 
 		public GameObject paramsList;
 		public GameObject removeButton;
@@ -40,12 +44,20 @@ namespace RetroBread{
 				conditionalEvent = CharacterEditor.Instance.CurrentEvent();
 			}
 
-			if (isCondition) {
-				parameterBuilder = ConditionParameterBuilder.Instance;
-				parameters = conditionalEvent.conditions;
-			} else {
-				parameterBuilder = EventParameterBuilder.Instance;
-				parameters = conditionalEvent.events;
+			switch(eventType) {
+				case EventType.typeSubject:
+					parameterBuilder = SubjectParameterBuilder.Instance;
+					parameters = conditionalEvent.conditions;
+					break;
+				case EventType.typeCondition:
+					parameterBuilder = ConditionParameterBuilder.Instance;
+					parameters = conditionalEvent.conditions;
+					break;
+				
+				case EventType.typeEvent:
+					parameterBuilder = EventParameterBuilder.Instance;
+					parameters = conditionalEvent.events;
+					break;
 			}
 			UpdateParamsList();
 			UpdateTypesDropdown();

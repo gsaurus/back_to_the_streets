@@ -17,13 +17,18 @@ public sealed class GenericEvent{
 	[ProtoMember(2)]
 	public int[] eventIds;
 
+	// Pointers to GenericParameters
+	[ProtoMember(3)]
+	public int[] subjectIds;
+
 	// Default Constructor
 	public GenericEvent(){
 		// Nothing to do
 	}
 
 	// Constructor
-	public GenericEvent(int[] conditionIds, int[] eventIds){
+	public GenericEvent(int[] subjectIds, int[] conditionIds, int[] eventIds){
+		this.subjectIds = subjectIds;
 		this.conditionIds = conditionIds;
 		this.eventIds = eventIds;
 	}

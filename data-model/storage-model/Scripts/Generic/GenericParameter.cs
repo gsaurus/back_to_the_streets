@@ -4,6 +4,29 @@ using ProtoBuf;
 
 namespace RetroBread.Storage{
 
+
+// Int Array Wrapper
+[ProtoContract]
+public sealed class GenericIntsList{
+	[ProtoMember(1, OverwriteList=true)]
+	public int[] list;
+
+	public GenericIntsList(int[] list){
+		this.list = list;
+	}
+}
+
+// String Array Wrapper
+[ProtoContract]
+public sealed class GenericStringsList{
+	[ProtoMember(1, OverwriteList=true)]
+	public string[] list;
+
+	public GenericStringsList(string[] list){
+		this.list = list;
+	}
+}
+
 // Something parametherised with a type and arguments of various possible types
 [ProtoContract]
 public sealed class GenericParameter{
@@ -22,6 +45,12 @@ public sealed class GenericParameter{
 
 	[ProtoMember(5, OverwriteList=true)]
 	public bool[] boolsList;
+
+	[ProtoMember(6, OverwriteList=true)]
+	public GenericIntsList[] intsListList;
+
+	[ProtoMember(7, OverwriteList=true)]
+	public GenericStringsList[] stringsListList;
 
 	// Default Constructor
 	public GenericParameter(){

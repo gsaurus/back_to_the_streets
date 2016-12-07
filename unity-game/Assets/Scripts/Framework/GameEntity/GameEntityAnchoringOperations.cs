@@ -137,7 +137,7 @@ namespace RetroBread{
 			GameEntityModel modelToBeOwned = GameEntityController.GetEntityFromDelegator(ownedRefDelegator, model);
 			if (modelToBeOwned != null){
 				modelToBeOwned.ownerEntity = model.Index;
-				model.anchoredEntities.Add(modelToBeOwned.Index);
+				model.ownedEntities.Add(modelToBeOwned.Index);
 			}
 		}
 
@@ -147,6 +147,7 @@ namespace RetroBread{
 			if (model.ownerEntity != null && model.ownerEntity != ModelReference.InvalidModelIndex) {
 				GameEntityModel owner = StateManager.state.GetModel(model.ownerEntity) as GameEntityModel;
 				owner.ownedEntities.Remove(model.Index);
+				model.ownerEntity = new ModelReference(ModelReference.InvalidModelIndex);
 			}
 		}
 			

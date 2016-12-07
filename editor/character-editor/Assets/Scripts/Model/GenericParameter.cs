@@ -13,6 +13,8 @@ namespace RetroBread.Editor{
 		public List<FixedFloat> floatsList;
 		public List<string> stringsList;
 		public List<bool> boolsList;
+		public List<List<int>> intsListList;
+		public List<List<string>> stringsListList;
 
 
 
@@ -22,6 +24,8 @@ namespace RetroBread.Editor{
 			this.floatsList = new List<FixedFloat>();
 			this.stringsList = new List<string>();
 			this.boolsList = new List<bool>();
+			this.intsListList = new List<List<int>>();
+			this.stringsListList = new List<List<string>>();
 		}
 
 		public GenericParameter Clone(){
@@ -48,6 +52,16 @@ namespace RetroBread.Editor{
 			foreach (bool b in boolsList) {
 				hash = hash * 199933 + b.GetHashCode();
 			}
+			foreach (List<int> intsListListItem in intsListList) {
+				foreach (int i in intsListListItem) {
+					hash = hash * 6619 + i.GetHashCode();
+				}
+			}
+			foreach (List<string> stringsListListItem in stringsListList) {
+				foreach (string s in stringsListListItem) {
+					hash = hash * 7919 + s.GetHashCode();
+				}
+			}
 			return hash;
 		}
 
@@ -58,6 +72,8 @@ namespace RetroBread.Editor{
 			this.floatsList = floatsList != null ? new List<FixedFloat>(floatsList) : new List<FixedFloat>();
 			this.stringsList = stringsList != null ? new List<string>(stringsList) : new List<string>();
 			this.boolsList = boolsList != null ? new List<bool>(boolsList) : new List<bool>();
+			this.intsListList = new List<List<int>>();
+			this.stringsListList = new List<List<string>>();
 		}
 
 
@@ -84,7 +100,7 @@ namespace RetroBread.Editor{
 			if (stringsList != null){
 				if (stringsList.Count != other.stringsList.Count) return false;
 				for (int i = 0 ; i < stringsList.Count ; ++i){
-					if (stringsList[i] != other.stringsList[i]) return false;
+					if (!stringsList[i].Equals(other.stringsList[i])) return false;
 				}
 			}
 			if (boolsList != null){
@@ -93,12 +109,72 @@ namespace RetroBread.Editor{
 					if (boolsList[i] != other.boolsList[i]) return false;
 				}
 			}
+			if (intsListList != null) {
+				if (intsListList.Count != other.intsListList.Count) return false;
+				for (int i = 0 ; i < intsListList.Count ; ++i){
+					if (intsListList[i].Count != other.intsListList[i].Count) return false;
+					for (int j = 0; j < intsListList[i].Count; ++j) {
+						if (intsListList[i][j] != other.intsListList[i][j]) return false;
+					}
+				}
+			}
+			if (stringsListList != null) {
+				if (stringsListList.Count != other.stringsListList.Count) return false;
+				for (int i = 0 ; i < stringsListList.Count ; ++i){
+					if (stringsListList[i].Count != other.stringsListList[i].Count) return false;
+					for (int j = 0; j < stringsListList[i].Count; ++j) {
+						if (!stringsListList[i][j].Equals(other.stringsListList[i][j])) return false;
+					}
+				}
+			}
 			return true;
 		}
 
 
+		private static List<List<int>> StorageToGenericIntsList(Storage.GenericIntsList[] storage){
+            if (storage == null) return new List<List<int>>();
+			List<List<int>> res = new List<List<int>>(storage.Length);
+			foreach (Storage.GenericIntsList storageIntsList in storage) {
+				res.Add(new List<int>(storageIntsList.list));
+			}
+			return res;
+		}
+
+		private static List<List<string>> StorageToGenericStringsList(Storage.GenericStringsList[] storage){
+            if (storage == null) return new List<List<string>>();
+			List<List<string>> res = new List<List<string>>(storage.Length);
+			foreach (Storage.GenericStringsList storageStringsList in storage) {
+				res.Add(new List<string>(storageStringsList.list));
+			}
+			return res;
+		}
+
+
 		public static GenericParameter LoadFromStorage(Storage.GenericParameter storageBox){
-			return new GenericParameter(storageBox.type, storageBox.intsList, storageBox.floatsList, storageBox.stringsList, storageBox.boolsList);
+			GenericParameter newParam = new GenericParameter(storageBox.type, storageBox.intsList, storageBox.floatsList, storageBox.stringsList, storageBox.boolsList);
+			newParam.intsListList = StorageToGenericIntsList(storageBox.intsListList);
+			newParam.stringsListList = StorageToGenericStringsList(storageBox.stringsListList);
+			return newParam;
+		}
+
+		private Storage.GenericIntsList[] GenericIntsListToStorage(){
+			Storage.GenericIntsList[] res = new Storage.GenericIntsList[intsListList.Count];
+			List<int> intsList;
+			for (int i = 0 ; i < intsListList.Count ; ++i) {
+				intsList = intsListList[i];
+				res[i].list = intsList.ToArray();
+			}
+			return res;
+		}
+
+		private Storage.GenericStringsList[] GenericStringsListToStorage(){
+			Storage.GenericStringsList[] res = new Storage.GenericStringsList[stringsListList.Count];
+			List<string> stringsList;
+			for (int i = 0 ; i < stringsListList.Count ; ++i) {
+				stringsList = stringsListList[i];
+				res[i].list = stringsList.ToArray();
+			}
+			return res;
 		}
 
 		public Storage.GenericParameter SaveToStorage(){
@@ -107,6 +183,8 @@ namespace RetroBread.Editor{
 			param.floatsList = floatsList.ToArray();
 			param.stringsList = stringsList.ToArray();
 			param.boolsList = boolsList.ToArray();
+			param.intsListList = GenericIntsListToStorage();
+			param.stringsListList = GenericStringsListToStorage();
 			return param;
 		}
 
@@ -130,6 +208,48 @@ namespace RetroBread.Editor{
 				boolsList.Add(defaultValue);
 			}
 		}
+		public void EnsureIntsListItem(int itemId){
+			while (intsListList.Count <= itemId) {
+				intsListList.Add(new List<int>());
+			}
+		}
+		public void EnsureStringsListItem(int itemId){
+			while (stringsListList.Count <= itemId) {
+				stringsListList.Add(new List<string>());
+			}
+		}
+
+		public void SetIntsListFromString(int itemId, string text, char separator = ','){
+			EnsureIntsListItem(itemId);
+			List<int> items = intsListList[itemId];
+			items.Clear();
+			text = text.Replace(" ", string.Empty);
+			char[] separators = {separator};
+			string[] components = text.Split(separators);
+			int intItem;
+			foreach (string component in components) {
+				if (int.TryParse(component, out intItem)){
+					items.Add(intItem);
+				}
+			}
+		}
+
+
+		public void SetStringsListFromString(int itemId, string text, char separator = ','){
+			EnsureStringsListItem(itemId);
+			List<string> items = stringsListList[itemId];
+			items.Clear();
+			char[] separators = {separator};
+			string[] components = text.Split(separators);
+			string stringItem = null;
+			foreach (string component in components) {
+				stringItem = component.Trim();
+				if (stringItem != null && stringItem.Length > 0) {
+					items.Add(stringItem);
+				}
+			}
+		}
+
 
 	}
 

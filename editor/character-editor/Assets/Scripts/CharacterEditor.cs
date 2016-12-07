@@ -55,6 +55,8 @@ namespace RetroBread{
 		public GameObject intInputFieldParam;
 		public GameObject stringDropdownParam;
 		public GameObject stringInputFieldParam;
+		public GameObject intListInputFieldParam;
+		public GameObject stringListInputFieldParam;
 
 
 		// Events when something changes
