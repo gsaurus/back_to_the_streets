@@ -94,9 +94,10 @@ public class ConditionParameterBuilder: ParameterBuilder {
 
     private static void InstantiateNumeratorVar(GameObject parent, GenericParameter parameter, int numeratorParamId, int varParamId){
         string[] subjects = CharacterEditor.Instance.AvailableSubjects();
-        string[] subjectsPlusNone = new string[subjects.Length + 1];
+        string[] subjectsPlusNone = new string[subjects.Length + 2];
         subjectsPlusNone[0] = "none";
-        subjects.CopyTo(subjectsPlusNone, 1);
+        subjectsPlusNone[1] = "global variable";
+        subjects.CopyTo(subjectsPlusNone, 2);
         IntDropdownParam.Instantiate(parent, parameter, numeratorParamId, "Numerator Subject:", subjectsPlusNone);
         StringInputFieldParam.Instantiate(parent, parameter, varParamId, "Numerator Variable:");
     }
@@ -120,6 +121,21 @@ public class ConditionParameterBuilder: ParameterBuilder {
         else return "(" + SafeToString(CharacterEditor.Instance.AvailableSubjects(), subjectId, "Subject") + ")";
     }
 
+    private static string NumeratorString(GenericParameter parameter, int numeratorParamId, int varParamId, string noneStringReplacement){
+        int numeratorId = parameter.SafeInt(numeratorParamId);
+        if (numeratorId == 0){
+            return noneStringReplacement;
+        } else{
+            string numeratorString;
+            if (numeratorId == 1){
+                numeratorString = "global";
+            } else{
+                numeratorString = SafeToString(CharacterEditor.Instance.AvailableSubjects(), numeratorId - 2, "Numerator Subject");
+            }
+            return parameter.SafeString(varParamId) + "(" + numeratorString + ")";
+        }
+    }
+
 
 #endregion
 
@@ -133,18 +149,12 @@ public class ConditionParameterBuilder: ParameterBuilder {
     private class BuildFrame: InternConditionBuilder{
         public BuildFrame():base("Frame"){}
 		public override string ToString(GenericParameter parameter){
-            int numeratorOption = parameter.SafeInt(2);
-            string operationName = "frame" + SubjectString(parameter, 0) + " ";
-            if (numeratorOption == 0){
-                return operationName + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator") + " " + parameter.SafeInt(3);
-            } else{
-                return operationName
-                    + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
-                    + " "
-                    + parameter.SafeString(0)
-                    + "(" + SafeToString(CharacterEditor.Instance.AvailableSubjects(), numeratorOption - 1, "Numerator Subject") + ")"
-                ;
-            }
+            string operationName = "frame" + SubjectString(parameter, 0);
+            string numeratorString = NumeratorString(parameter, 2, 0, parameter.SafeInt(3) + "");
+            return operationName
+                + " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
+                + " " + numeratorString
+            ;
         }
 		public override void Build(GameObject parent, GenericParameter parameter){
             InstantiateSubject(parent, parameter, 0);
