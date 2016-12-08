@@ -11,6 +11,11 @@ public sealed class GenericIntsList{
 	[ProtoMember(1, OverwriteList=true)]
 	public int[] list;
 
+	// Default Constructor
+	public GenericIntsList(){
+		// Nothing to do
+	}
+
 	public GenericIntsList(int[] list){
 		this.list = list;
 	}
@@ -21,6 +26,11 @@ public sealed class GenericIntsList{
 public sealed class GenericStringsList{
 	[ProtoMember(1, OverwriteList=true)]
 	public string[] list;
+
+	// Default Constructor
+	public GenericStringsList(){
+		// Nothing to do
+	}
 
 	public GenericStringsList(string[] list){
 		this.list = list;
