@@ -32,16 +32,11 @@ public class SubjectParameterBuilder: ParameterBuilder {
 	private static string[] orientationOptions = {"any", "from back", "from front"};
 
     public static int numPredefinedSubjects = 4;
-    public static string[] subjectsList = {
+    public static string[] predefinedSubjectsList = {
         "self",             // 0
         "owner",            // 1
         "owner or self",    // 2
-        "parent",           // 3
-        "grabs",
-        "hitters",
-        "hittens",
-        "colliding",
-        "all"
+        "parent"            // 3
     };
 
 

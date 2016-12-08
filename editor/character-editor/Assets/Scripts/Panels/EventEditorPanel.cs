@@ -7,17 +7,16 @@ using RetroBread.Editor;
 namespace RetroBread{
 
 
-	public class EventEditorPanel : MonoBehaviour {
+public class EventEditorPanel : MonoBehaviour {
 
-		public static ConditionalEvent eventToEdit = null;
+	public static ConditionalEvent eventToEdit = null;
 
-		public void Close(){
-			gameObject.SetActive(false);
-			CharacterEditor.Instance.RefreshEvents();
-		}
-	
-
+	public void Close(){
+		gameObject.SetActive(false);
+		CharacterEditor.Instance.RefreshEvents();
 	}
+
+}
 
 
 }

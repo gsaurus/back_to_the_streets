@@ -104,16 +104,24 @@ public class ConditionalEvent {
         }
 
         // Populate conditions
-        newEvent.conditions = new List<GenericParameter>(storageEvent.conditionIds.Length);
-        foreach (int conditionId in storageEvent.conditionIds){
-            newEvent.conditions.Add(GenericParameter.LoadFromStorage(storageCharacter.genericParameters[conditionId]));
+        if (storageEvent.conditionIds != null){
+            newEvent.conditions = new List<GenericParameter>(storageEvent.conditionIds.Length);
+            foreach (int conditionId in storageEvent.conditionIds){
+                newEvent.conditions.Add(GenericParameter.LoadFromStorage(storageCharacter.genericParameters[conditionId]));
+            }
+        } else{
+            newEvent.conditions = new List<GenericParameter>();
         }
 
 		// Populate events
-		newEvent.events = new List<GenericParameter>(storageEvent.eventIds.Length);
-		foreach (int eventId in storageEvent.eventIds){
-			newEvent.events.Add(GenericParameter.LoadFromStorage(storageCharacter.genericParameters[eventId]));
-		}
+        if (storageEvent.eventIds != null){
+            newEvent.events = new List<GenericParameter>(storageEvent.eventIds.Length);
+            foreach (int eventId in storageEvent.eventIds){
+                newEvent.events.Add(GenericParameter.LoadFromStorage(storageCharacter.genericParameters[eventId]));
+            }
+        } else{
+            newEvent.events = new List<GenericParameter>();
+        }
 
 		return newEvent;
 	}
@@ -161,6 +169,15 @@ public class ConditionalEvent {
 			storageEvent.eventIds[i] = paramIndex;
 		}
 	}
+
+    public string[] SubjectsToString(){
+        if (subjects == null || subjects.Count == 0) return null;
+        string[] res = new string[subjects.Count];
+        for (int i = 0; i < subjects.Count ; ++i){
+            res[i] = SubjectParameterBuilder.Instance.ToString(subjects[i]);
+        }
+        return res;
+    }
 
 	public override string ToString(){
 		string finalString = "";

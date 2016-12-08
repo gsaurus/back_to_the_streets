@@ -4,398 +4,324 @@ using RetroBread.Editor;
 
 namespace RetroBread{
 	
-	public class ConditionParameterBuilder: ParameterBuilder {
+public class ConditionParameterBuilder: ParameterBuilder {
+	
+	private static ParameterBuilder instance;
+	public static ParameterBuilder Instance {
+		get{
+			if (instance == null) {
+				instance = new ConditionParameterBuilder();
+			}
+			return instance;
+		}
+	}
+
+	private abstract class InternConditionBuilder{
 		
-		private static ParameterBuilder instance;
-		public static ParameterBuilder Instance {
-			get{
-				if (instance == null) {
-					instance = new ConditionParameterBuilder();
-				}
-				return instance;
-			}
+		public string typeName { get; private set; }
+
+		public abstract string ToString(GenericParameter parameter);
+		public abstract void Build(GameObject parent, GenericParameter parameter);
+
+		public InternConditionBuilder(string typeName){
+			this.typeName = typeName;
 		}
+	}
 
-		private abstract class InternConditionBuilder{
-			
-			public string typeName { get; private set; }
+	private static string[] arithmeticOptions = { "equal", "notEqual", "less", "less or equal", "greater", "greater or equal" };
+	private static string[] arithmeticOptionsShort = { "=", "!=", "<", "<=", ">", ">=" };	
 
-			public abstract string ToString(GenericParameter parameter);
-			public abstract void Build(GameObject parent, GenericParameter parameter);
+	private static string[] directionOptions = {"horizontal", "vertical", "any"};
+	private static string[] directionOptionsShort = {"H", "V", ""};
 
-			public InternConditionBuilder(string typeName){
-				this.typeName = typeName;
-			}
+	private static string[] inputButtonOptions = {"A", "B", "C", "D", "E", "F", "G"};
+	private static string[] inputButtonStateOptions = {"press", "hold", "release"};
+
+    private static string[] collisionDirection = {"horizontal", "along z-axis", "vertical"};
+	private static string[] collisionDirectionShort = {"H", "Z", "V"};
+
+	private static string[] teamType = {"any of", "all but", "same as self"};
+    private static string[] listType = {"any of", "all but"};
+
+
+	// Condition builders indexed by type directly on array
+	private static InternConditionBuilder[] builders = {
+		new BuildFrame(),				            // 0: frame >= 4
+		new BuildInputVelocity(),                   // 1: moveH >= 3
+		new BuildInputButton(),						// 2: press D
+		new BuildGrounded(),				        // 3: grounded
+		new BuildFacingRight(),				        // 4: facing right
+		new BuildCollisionImpact(),	                // 5: collide_H >= 4.3
+		new BuildVariable(),    					// 6: combo >= 3
+        new BuildGlobalVariable(),                  // 7: p1_lives >= 3
+        new BuildPhysicsVelocity(),					// 8: velocityV <= 2
+        new BuildExists(),                          // 9: exists(owner)
+        new BuildTeam(),                            // 10: team([3, 4])
+        new BuildName(),                            // 11: name(grabbed, ["bat", "sword"])
+        new BuildAnimationName()                    // 12: anim_name(parent, ["walk, run"])
+	};
+
+
+
+	public override string[] TypesList(){
+		string[] types = new string[builders.Length];
+		for (int i = 0 ; i < builders.Length ; ++i) {
+			types[i] = builders[i].typeName;
 		}
+		return types;
+	}
 
-		private static string[] arithmeticOptions = { "equal", "notEqual", "less", "less or equal", "greater", "greater or equal" };
-		private static string[] arithmeticOptionsShort = { "=", "!=", "<", "<=", ">", ">=" };	
-
-		private static string[] directionOptions = {"up", "down", "left", "right"};
-		private static string[] directionOptionsShort = {"↑", "↓", "←", "→"};
-
-		private static string[] inputOrientationOptions = {"horizontal", "vertical"};
-		private static string[] inputOrientationOptionsShort = {"H", "V"};
-
-		private static string[] inputButtonOptions = {"A", "B", "C", "D", "E", "F", "G"};
-		private static string[] inputButtonStateOptions = {"press", "hold", "release"};
-
-		private static string[] collisionWallDirection = {"far", "near", "left", "right"};
-		private static string[] collisionWallDirectionShort = {"↑", "↓", "←", "→"};
-
-		private static string[] collisionDirection = {"horizontal", "vertical", "along z-axis"};
-		private static string[] collisionDirectionShort = {"H", "V", "Z"};
-
-		private static string[] inclusionType = {"none", "contains", "only", "except"};
-
-
-		// Condition builders indexed by type directly on array
-		private static InternConditionBuilder[] builders = {
-			new BuildKeyFrame(),						// 0: frame = 4
-			new BuildFrameArithmetics(),				// 1: frame >= 4
-			new BuildInputAxisMoving(),					// 2: moving
-			new BuildInputAxisMovingDominance(),        // 3: move left
-			new BuildInputAxisComponentArithmetics(),   // 4: speed_H >= 5.2
-			new BuildInputButton(),						// 5: press D
-			new BuildEntityIsGrounded(),				// 6: grounded
-			new BuildEntityIsFacingRight(),				// 7: facing right
-			new BuildEntityHittingWall(),				// 8: collide left wall
-			new BuildEntityCollisionForceArithmetics(),	// 9: collide_H >= 4.3
-			new BuildEntityCollision(),					// 10: entity collision
-			new BuildEntityHit(),						// 11: hit
-			new BuildEntityHurt(),						// 12: hurt(K.O)
-			new BuildEntityHurtDirection(),				// 13: hurt_from(front)
-			new BuildComboCounter(),					// 14: combo >= 3
-			new BuildComboTimer(),						// 15: combo timer <= 10
-			new BuildGrabbed(),							// 16: grabbed
-			new BuildGrabbing(),						// 17: grabbing(2)
-			new BuildVerticalImpulse()					// 18: impulseV <= 2
-			// TODO: everything else, including custom values List<int>, List<FixedFloat>, List<int> timers for combo counter etc
-		};
-
-
-
-		public override string[] TypesList(){
-			string[] types = new string[builders.Length];
-			for (int i = 0 ; i < builders.Length ; ++i) {
-				types[i] = builders[i].typeName;
-			}
-			return types;
+	public override string ToString(GenericParameter parameter){
+		if (parameter.type >= 0 && parameter.type < builders.Length) {
+			return builders[parameter.type].ToString(parameter);
 		}
+		return "Unknown condition";
+	}
 
-		public override string ToString(GenericParameter parameter){
-			if (parameter.type >= 0 && parameter.type < builders.Length) {
-				return builders[parameter.type].ToString(parameter);
-			}
-			return "Unknown condition";
+
+	public override void Build(GameObject parent, GenericParameter parameter){
+		if (parameter.type >= 0 && parameter.type < builders.Length) {
+			builders[parameter.type].Build(parent, parameter);
 		}
-
-
-		public override void Build(GameObject parent, GenericParameter parameter){
-			if (parameter.type >= 0 && parameter.type < builders.Length) {
-				builders[parameter.type].Build(parent, parameter);
-			}
-		}
+	}
 
 #region helper methods
 
 
-		private static void InstantiateNegation(GameObject parent, GenericParameter parameter){
-			BoolToggleParam.Instantiate(parent, parameter, 0, "Negate");
-		}
+    private static void InstantiateSubject(GameObject parent, GenericParameter parameter, int paramId){
+        IntDropdownParam.Instantiate(parent, parameter, paramId, "Subject", CharacterEditor.Instance.AvailableSubjects());
+    }
 
-		private static void InstantiateArithmeticField(GameObject parent, GenericParameter parameter, int paramId){
-			IntDropdownParam.Instantiate(parent, parameter, paramId, "Operator:", arithmeticOptions);
-		}
-			
+    private static void InstantiateNumeratorVar(GameObject parent, GenericParameter parameter, int numeratorParamId, int varParamId){
+        string[] subjects = CharacterEditor.Instance.AvailableSubjects();
+        string[] subjectsPlusNone = new string[subjects.Length + 1];
+        subjectsPlusNone[0] = "none";
+        subjects.CopyTo(subjectsPlusNone, 1);
+        IntDropdownParam.Instantiate(parent, parameter, numeratorParamId, "Numerator Subject:", subjectsPlusNone);
+        StringInputFieldParam.Instantiate(parent, parameter, varParamId, "Numerator Variable:");
+    }
 
-		private static string FilterNegationString(GenericParameter parameter, string conditionText){
-			return parameter.SafeBool(0) ? "!(" + conditionText + ")" : conditionText;
-		}
+	private static void InstantiateNegation(GameObject parent, GenericParameter parameter){
+		BoolToggleParam.Instantiate(parent, parameter, 0, "Negate");
+	}
+
+	private static void InstantiateArithmeticField(GameObject parent, GenericParameter parameter, int paramId){
+		IntDropdownParam.Instantiate(parent, parameter, paramId, "Operator:", arithmeticOptions);
+	}
+		
+
+	private static string FilterNegationString(GenericParameter parameter, string conditionText){
+		return parameter.SafeBool(0) ? "!(" + conditionText + ")" : conditionText;
+	}
+
+    private static string SubjectString(GenericParameter parameter, int paramId){
+        int subjectId = parameter.SafeInt(paramId);
+        if (subjectId == 0) return "";
+        else return "(" + SafeToString(CharacterEditor.Instance.AvailableSubjects(), subjectId, "Subject") + ")";
+    }
 
 
 #endregion
 
 
 
-			
+		
 #region Builder Classes
 
 
-		// frame = 4
-		private class BuildKeyFrame: InternConditionBuilder{
-			public BuildKeyFrame():base("Frame #"){}
-			public override string ToString(GenericParameter parameter){
-				int frameNum = parameter.SafeInt(0);
-				if (frameNum == 0) {
-					return "first frame";
-				} else if (frameNum > 0) {
-					return "frame " + frameNum;
-				}
-				return "last frame";
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				IntInputFieldParam.Instantiate(parent, parameter, 0, "At frame:");
-			}
+	// frame >= 4
+    private class BuildFrame: InternConditionBuilder{
+        public BuildFrame():base("Frame"){}
+		public override string ToString(GenericParameter parameter){
+            int numeratorOption = parameter.SafeInt(2);
+            string operationName = "frame" + SubjectString(parameter, 0) + " ";
+            if (numeratorOption == 0){
+                return operationName + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator") + " " + parameter.SafeInt(3);
+            } else{
+                return operationName
+                    + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
+                    + " "
+                    + parameter.SafeString(0)
+                    + "(" + SafeToString(CharacterEditor.Instance.AvailableSubjects(), numeratorOption - 1, "Numerator Subject") + ")"
+                ;
+            }
+        }
+		public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateSubject(parent, parameter, 0);
+			InstantiateArithmeticField(parent, parameter, 1);
+            InstantiateNumeratorVar(parent, parameter, 2, 0);
+			IntInputFieldParam.Instantiate(parent, parameter, 3, "Or compare with frame:");
 		}
+	}
 
 
-		// frame >= 4
-		private class BuildFrameArithmetics: InternConditionBuilder{
-			public BuildFrameArithmetics():base("Frame comparison"){}
-			public override string ToString(GenericParameter parameter){
-				return "frame " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator") + " " + parameter.SafeInt(0);
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateArithmeticField(parent, parameter, 1);
-				IntInputFieldParam.Instantiate(parent, parameter, 0, "Compare with frame:", 0);
-			}
+	// move_H >= 5.2
+    private class BuildInputVelocity: InternConditionBuilder{
+        public BuildInputVelocity():base("Input velocity"){}
+		public override string ToString(GenericParameter parameter){
+            return "move_" + SafeToString(directionOptionsShort, parameter.SafeInt(0), "orientation")
+				+ " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
+				+ " " + parameter.SafeFloatToString(0)
+			;
 		}
-
-
-		// moving
-		private class BuildInputAxisMoving: InternConditionBuilder{
-			public BuildInputAxisMoving():base("Input have movement"){}
-			public override string ToString(GenericParameter parameter){
-				return FilterNegationString(parameter, "move");
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateNegation(parent, parameter);
-			}
+		public override void Build(GameObject parent, GenericParameter parameter){
+            IntDropdownParam.Instantiate(parent, parameter, 0, "Orientation:", directionOptions);
+			InstantiateArithmeticField(parent, parameter, 1);
+			FloatInputFieldParam.Instantiate(parent, parameter, 0, "Velocity:");
 		}
+	}
 
 
-		// move left
-		private class BuildInputAxisMovingDominance: InternConditionBuilder{
-			public BuildInputAxisMovingDominance():base("Input direction"){}
-			public override string ToString(GenericParameter parameter){
-				return FilterNegationString(parameter, "move " + SafeToString(directionOptionsShort, parameter.SafeInt(0), "direction"));
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateNegation(parent, parameter);
-				IntDropdownParam.Instantiate(parent, parameter, 0, "Direction:", directionOptions);
-			}
+	// press D
+	private class BuildInputButton: InternConditionBuilder{
+		public BuildInputButton():base("Input button"){}
+		public override string ToString(GenericParameter parameter){
+			return FilterNegationString(parameter, SafeToString(inputButtonStateOptions, parameter.SafeInt(0), "button state") + " " + SafeToString(inputButtonOptions, parameter.SafeInt(1), "button"));
 		}
-
-
-		// move_H >= 5.2
-		private class BuildInputAxisComponentArithmetics: InternConditionBuilder{
-			public BuildInputAxisComponentArithmetics():base("Input velocity"){}
-			public override string ToString(GenericParameter parameter){
-				return "move_" + SafeToString(inputOrientationOptionsShort, parameter.SafeInt(0), "orientation")
-					+ " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
-					+ " " + parameter.SafeFloatToString(0)
-				;
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				IntDropdownParam.Instantiate(parent, parameter, 0, "Orientation:", inputOrientationOptions);
-				InstantiateArithmeticField(parent, parameter, 1);
-				FloatInputFieldParam.Instantiate(parent, parameter, 0, "Velocity:");
-			}
+		public override void Build(GameObject parent, GenericParameter parameter){
+			InstantiateNegation(parent, parameter);
+			IntDropdownParam.Instantiate(parent, parameter, 1, "Button:", inputButtonOptions);
+			IntDropdownParam.Instantiate(parent, parameter, 0, "State:", inputButtonStateOptions);
 		}
+	}
 
 
-		// press D
-		private class BuildInputButton: InternConditionBuilder{
-			public BuildInputButton():base("Input button"){}
-			public override string ToString(GenericParameter parameter){
-				return FilterNegationString(parameter, SafeToString(inputButtonStateOptions, parameter.SafeInt(0), "button state") + " " + SafeToString(inputButtonOptions, parameter.SafeInt(1), "button"));
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateNegation(parent, parameter);
-				IntDropdownParam.Instantiate(parent, parameter, 1, "Button:", inputButtonOptions);
-				IntDropdownParam.Instantiate(parent, parameter, 0, "State:", inputButtonStateOptions);
-			}
+	// grounded
+    private class BuildGrounded: InternConditionBuilder{
+        public BuildGrounded():base("Grounded"){}
+		public override string ToString(GenericParameter parameter){
+			return FilterNegationString(parameter, "grounded");
 		}
-
-
-		// grounded
-		private class BuildEntityIsGrounded: InternConditionBuilder{
-			public BuildEntityIsGrounded():base("Grounded"){}
-			public override string ToString(GenericParameter parameter){
-				return FilterNegationString(parameter, "grounded");
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateNegation(parent, parameter);
-			}
+		public override void Build(GameObject parent, GenericParameter parameter){
+			InstantiateNegation(parent, parameter);
 		}
+	}
 
 
-		// facing right
-		private class BuildEntityIsFacingRight: InternConditionBuilder{
-			public BuildEntityIsFacingRight():base("Facing right"){}
-			public override string ToString(GenericParameter parameter){
-				return "facing " + (parameter.SafeBool(0) ? "←" : "→");
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateNegation(parent, parameter);
-			}
+	// facing right
+	private class BuildFacingRight: InternConditionBuilder{
+        public BuildFacingRight():base("Facing right"){}
+		public override string ToString(GenericParameter parameter){
+			return "facing " + (parameter.SafeBool(0) ? "←" : "→");
 		}
-
-
-		// collide left wall
-		private class BuildEntityHittingWall: InternConditionBuilder{
-			public BuildEntityHittingWall():base("Collision against wall"){}
-			public override string ToString(GenericParameter parameter){
-				return FilterNegationString(parameter, "wall " + SafeToString(collisionWallDirectionShort, parameter.SafeInt(0), "wall"));
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateNegation(parent, parameter);
-				IntDropdownParam.Instantiate(parent, parameter, 0, "Wall:", collisionWallDirection);
-			}
+		public override void Build(GameObject parent, GenericParameter parameter){
+			InstantiateNegation(parent, parameter);
 		}
+	}
+        
 
-
-		// collideH >= 4.3
-		private class BuildEntityCollisionForceArithmetics: InternConditionBuilder{
-			public BuildEntityCollisionForceArithmetics():base("Collision impact"){}
-			public override string ToString(GenericParameter parameter){
-				return "collide_" + SafeToString(collisionDirectionShort, parameter.SafeInt(0), "impact orientation")
-					+ " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
-					+ " " + parameter.SafeFloatToString(0)
-				;
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				IntDropdownParam.Instantiate(parent, parameter, 0, "Orientation:", collisionDirection);
-				InstantiateArithmeticField(parent, parameter, 1);
-				FloatInputFieldParam.Instantiate(parent, parameter, 0, "impact velocity:");
-			}
+	// collideH >= 4.3
+	private class BuildCollisionImpact: InternConditionBuilder{
+		public BuildCollisionImpact():base("Collision impact"){}
+		public override string ToString(GenericParameter parameter){
+			return "collide_" + SafeToString(collisionDirectionShort, parameter.SafeInt(0), "impact orientation")
+				+ " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
+				+ " " + parameter.SafeFloatToString(0)
+			;
 		}
-
-
-
-		// entity collision
-		private class BuildEntityCollision: InternConditionBuilder{
-			public BuildEntityCollision():base("Collision with other entity"){}
-			public override string ToString(GenericParameter parameter){
-				return FilterNegationString(parameter, "entity collision");
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateNegation(parent, parameter);
-				IntDropdownParam.Instantiate(parent, parameter, 0, "Team options:", inclusionType);
-				IntInputFieldParam.Instantiate(parent, parameter, 1, "team paramenter");
-			}
+		public override void Build(GameObject parent, GenericParameter parameter){
+			IntDropdownParam.Instantiate(parent, parameter, 0, "Orientation:", collisionDirection);
+			InstantiateArithmeticField(parent, parameter, 1);
+			FloatInputFieldParam.Instantiate(parent, parameter, 0, "impact velocity:");
 		}
+	}
+       
 
 
-
-		// hit
-		// TODO: more options depending on hit type or id?
-		private class BuildEntityHit: InternConditionBuilder{
-			public BuildEntityHit():base("Hit"){}
-			public override string ToString(GenericParameter parameter){
-				return FilterNegationString(parameter, "hit");
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateNegation(parent, parameter);
-				IntDropdownParam.Instantiate(parent, parameter, 0, "Team options:", inclusionType);
-				IntInputFieldParam.Instantiate(parent, parameter, 1, "team paramenter");
-				IntDropdownParam.Instantiate(parent, parameter, 2, "Type options:", inclusionType);
-				IntDropdownParam.Instantiate(parent, parameter, 3, "Type:", getHurtOptions());
-			}
+	// combo >= 4
+	private class BuildVariable: InternConditionBuilder{
+        public BuildVariable():base("Variable"){}
+		public override string ToString(GenericParameter parameter){
+			return "combo " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator") + " " + parameter.SafeInt(0);
 		}
-
-
-
-		private static string[] getHurtOptions(){
-			string[] hurtOptions = new string[HitParameterBuilder.hitTypeOptions.Length + 1];
-			for (int i = 0; i < HitParameterBuilder.hitTypeOptions.Length; ++i) {
-				hurtOptions[i] = HitParameterBuilder.hitTypeOptions[i];
-			}
-			hurtOptions[HitParameterBuilder.hitTypeOptions.Length] = "any";
-			return hurtOptions;
+		public override void Build(GameObject parent, GenericParameter parameter){
+			InstantiateArithmeticField(parent, parameter, 1);
+			IntInputFieldParam.Instantiate(parent, parameter, 0, "Combo value:", 0);
 		}
+	}
 
-		// hurt(K.O.)
-		private class BuildEntityHurt: InternConditionBuilder{
-			public BuildEntityHurt():base("Hurt"){}
-			public override string ToString(GenericParameter parameter){
-				return FilterNegationString(parameter, "hurt(" + SafeToString(getHurtOptions(), parameter.SafeInt(0), "direction") + ")");
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateNegation(parent, parameter);
-				IntDropdownParam.Instantiate(parent, parameter, 0, "Type:", getHurtOptions());
-			}
+
+    // pl1_lives >= 4
+    private class BuildGlobalVariable: InternConditionBuilder{
+        public BuildGlobalVariable():base("Global Variable"){}
+        public override string ToString(GenericParameter parameter){
+            return "combo " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator") + " " + parameter.SafeInt(0);
+        }
+        public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateArithmeticField(parent, parameter, 1);
+            IntInputFieldParam.Instantiate(parent, parameter, 0, "Combo value:", 0);
+        }
+    }
+
+
+    // physics_vel_H >= 4
+    private class BuildPhysicsVelocity: InternConditionBuilder{
+        public BuildPhysicsVelocity():base("Physics Velocity"){}
+		public override string ToString(GenericParameter parameter){
+			return "impulseV " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(0), "operator") + " " + parameter.SafeFloat(0);
 		}
-
-
-		// hurt_from(front)
-		private class BuildEntityHurtDirection: InternConditionBuilder{
-			public BuildEntityHurtDirection():base("Hurt orientation"){}
-			public override string ToString(GenericParameter parameter){
-				return "hurt_from(" + SafeToString(new string[]{"front", "back"}, parameter.SafeInt(0), "direction") + ")";
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				IntDropdownParam.Instantiate(parent, parameter, 0, "From:", new string[]{"front", "back"});
-			}
+		public override void Build(GameObject parent, GenericParameter parameter){
+			InstantiateArithmeticField(parent, parameter, 0);
+			FloatInputFieldParam.Instantiate(parent, parameter, 0, "Compare with impulse:", 0);
 		}
+	}
 
 
-		// combo >= 4
-		private class BuildComboCounter: InternConditionBuilder{
-			public BuildComboCounter():base("Combo counter"){}
-			public override string ToString(GenericParameter parameter){
-				return "combo " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator") + " " + parameter.SafeInt(0);
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateArithmeticField(parent, parameter, 1);
-				IntInputFieldParam.Instantiate(parent, parameter, 0, "Combo value:", 0);
-			}
-		}
+    // exists(parent)
+    private class BuildExists: InternConditionBuilder{
+        public BuildExists():base("Exists"){}
+        public override string ToString(GenericParameter parameter){
+            return "impulseV " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(0), "operator") + " " + parameter.SafeFloat(0);
+        }
+        public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateArithmeticField(parent, parameter, 0);
+            FloatInputFieldParam.Instantiate(parent, parameter, 0, "Compare with impulse:", 0);
+        }
+    }
 
 
-		// combo timer >= 4
-		private class BuildComboTimer: InternConditionBuilder{
-			public BuildComboTimer():base("Combo timer"){}
-			public override string ToString(GenericParameter parameter){
-				return "combo timer " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator") + " " + parameter.SafeInt(0);
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateArithmeticField(parent, parameter, 1);
-				IntInputFieldParam.Instantiate(parent, parameter, 0, "Timer value:", 0);
-			}
-		}
+    // team(parent, same_as_self)
+    private class BuildTeam: InternConditionBuilder{
+        public BuildTeam():base("Team"){}
+        public override string ToString(GenericParameter parameter){
+            return "impulseV " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(0), "operator") + " " + parameter.SafeFloat(0);
+        }
+        public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateArithmeticField(parent, parameter, 0);
+            FloatInputFieldParam.Instantiate(parent, parameter, 0, "Compare with impulse:", 0);
+        }
+    }
 
 
-		// grabbed
-		private class BuildGrabbed: InternConditionBuilder{
-			public BuildGrabbed():base("Being grabbed"){}
-			public override string ToString(GenericParameter parameter){
-				return "grabbed";
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateNegation(parent, parameter);
-			}
-		}
-			
+    // name(parent, ["bat", "sword"])
+    private class BuildName: InternConditionBuilder{
+        public BuildName():base("Name"){}
+        public override string ToString(GenericParameter parameter){
+            return "impulseV " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(0), "operator") + " " + parameter.SafeFloat(0);
+        }
+        public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateArithmeticField(parent, parameter, 0);
+            FloatInputFieldParam.Instantiate(parent, parameter, 0, "Compare with impulse:", 0);
+        }
+    }
 
-		// grabbing(3)
-		private class BuildGrabbing: InternConditionBuilder{
-			public BuildGrabbing():base("Grabbing entity"){}
-			public override string ToString(GenericParameter parameter){
-				return FilterNegationString(parameter, "grabbing(" + parameter.SafeInt(0) + ")");
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateNegation(parent, parameter);
-				IntInputFieldParam.Instantiate(parent, parameter, 0, "AnchorID:", 0);
-			}
-		}
 
-		private class BuildVerticalImpulse: InternConditionBuilder{
-			public BuildVerticalImpulse():base("Vertical Impulse"){}
-			public override string ToString(GenericParameter parameter){
-				return "impulseV " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(0), "operator") + " " + parameter.SafeFloat(0);
-			}
-			public override void Build(GameObject parent, GenericParameter parameter){
-				InstantiateArithmeticField(parent, parameter, 0);
-				FloatInputFieldParam.Instantiate(parent, parameter, 0, "Compare with impulse:", 0);
-			}
-		}
+    // anim_name(parent, all\["walk"])
+    private class BuildAnimationName: InternConditionBuilder{
+        public BuildAnimationName():base("Animation Name"){}
+        public override string ToString(GenericParameter parameter){
+            return "impulseV " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(0), "operator") + " " + parameter.SafeFloat(0);
+        }
+        public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateArithmeticField(parent, parameter, 0);
+            FloatInputFieldParam.Instantiate(parent, parameter, 0, "Compare with impulse:", 0);
+        }
+    }
 
 
 #endregion
 
 
-	}
+}
 
 }
