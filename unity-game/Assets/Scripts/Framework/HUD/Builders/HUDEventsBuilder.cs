@@ -71,19 +71,19 @@ namespace RetroBread{
 				this.delegationEvent = delegationEvent;
 			}
 
-			public override void Execute(HUDViewBehaviour model){
+		public override void Execute(HUDViewBehaviour model, List<GenericEventSubject<HUDViewBehaviour>> subjects){
 				Storage.HUDObject hudObj = model.hudObjectData;
 				if (hudObj.attackAndGrabDelegation) {
-					delegationEvent.Execute(model);
+					delegationEvent.Execute(model, subjects);
 				} else {
-					nonDelegationEvent.Execute(model);
+					nonDelegationEvent.Execute(model, subjects);
 				}
 			}
 		}
 
 		// Hitten or grabbed character's delegation
 		private class HUDInteractionDelegationEvent:GenericEvent<HUDViewBehaviour>{
-			public delegate void EventExecutionDelegate(HUDViewBehaviour model, GameEntityModel entity);
+		public delegate void EventExecutionDelegate(HUDViewBehaviour model, List<GenericEventSubject<HUDViewBehaviour>> subjects, GameEntityModel entity);
 			private EventExecutionDelegate eventExecutionDelegate;
 			private ModelReference lastEntityReference = null;
 
@@ -92,7 +92,7 @@ namespace RetroBread{
 			}
 
 			// Execute event trough the delegate
-			public override void Execute(HUDViewBehaviour model){
+		public override void Execute(HUDViewBehaviour model, List<GenericEventSubject<HUDViewBehaviour>> subjects){
 				Storage.HUDObject hudObj = model.hudObjectData;
 				if (hudObj == null) return;
 				ModelReference exception = lastEntityReference == null ? new ModelReference() : lastEntityReference;
@@ -102,7 +102,7 @@ namespace RetroBread{
 				}
 				lastEntityReference = entity == null ? new ModelReference() : entity.Index;
 				if (entity != null) {
-					eventExecutionDelegate(model, entity);
+					eventExecutionDelegate(model, subjects, entity);
 				}
 			}
 

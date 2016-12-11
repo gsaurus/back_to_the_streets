@@ -88,21 +88,7 @@ public class ConditionParameterBuilder: ParameterBuilder {
 #region helper methods
 
 
-    private static void InstantiateSubject(GameObject parent, GenericParameter parameter, int paramId){
-        IntDropdownParam.Instantiate(parent, parameter, paramId, "Subject", CharacterEditor.Instance.AvailableSubjects());
-    }
-
-    private static void InstantiateNumeratorVar(GameObject parent, GenericParameter parameter, int numeratorParamId, int varParamId){
-        string[] subjects = CharacterEditor.Instance.AvailableSubjects();
-        string[] subjectsPlusNone = new string[subjects.Length + 2];
-        subjectsPlusNone[0] = "none";
-        subjectsPlusNone[1] = "global variable";
-        subjects.CopyTo(subjectsPlusNone, 2);
-        IntDropdownParam.Instantiate(parent, parameter, numeratorParamId, "Numerator Subject:", subjectsPlusNone);
-        StringInputFieldParam.Instantiate(parent, parameter, varParamId, "Numerator Variable:");
-    }
-
-	private static void InstantiateNegation(GameObject parent, GenericParameter parameter){
+    private static void InstantiateNegation(GameObject parent, GenericParameter parameter){
 		BoolToggleParam.Instantiate(parent, parameter, 0, "Negate");
 	}
 
@@ -114,27 +100,6 @@ public class ConditionParameterBuilder: ParameterBuilder {
 	private static string FilterNegationString(GenericParameter parameter, string conditionText){
 		return parameter.SafeBool(0) ? "!(" + conditionText + ")" : conditionText;
 	}
-
-    private static string SubjectString(GenericParameter parameter, int paramId){
-        int subjectId = parameter.SafeInt(paramId);
-        if (subjectId == 0) return "";
-        else return "(" + SafeToString(CharacterEditor.Instance.AvailableSubjects(), subjectId, "Subject") + ")";
-    }
-
-    private static string NumeratorString(GenericParameter parameter, int numeratorParamId, int varParamId, string noneStringReplacement){
-        int numeratorId = parameter.SafeInt(numeratorParamId);
-        if (numeratorId == 0){
-            return noneStringReplacement;
-        } else{
-            string numeratorString;
-            if (numeratorId == 1){
-                numeratorString = "global";
-            } else{
-                numeratorString = SafeToString(CharacterEditor.Instance.AvailableSubjects(), numeratorId - 2, "Numerator Subject");
-            }
-            return parameter.SafeString(varParamId) + "(" + numeratorString + ")";
-        }
-    }
 
 
 #endregion
@@ -151,6 +116,11 @@ public class ConditionParameterBuilder: ParameterBuilder {
 		public override string ToString(GenericParameter parameter){
             string operationName = "frame" + SubjectString(parameter, 0);
             string numeratorString = NumeratorString(parameter, 2, 0, parameter.SafeInt(3) + "");
+            if (numeratorString.Equals("-1")){
+                numeratorString = "last";
+            }else if (numeratorString.Equals("0")){
+                numeratorString = "first";
+            }
             return operationName
                 + " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
                 + " " + numeratorString

@@ -192,10 +192,10 @@ namespace RetroBread{
 		}
 
 
-		private static GenericEvent<AnimationModel> ReadEvent(Storage.Character charData, Storage.GenericEvent storageEvent, out int keyFrame, Storage.CharacterAnimation animation){
+		private static GenericEvent<GameEntityModel> ReadEvent(Storage.Character charData, Storage.GenericEvent storageEvent, out int keyFrame, Storage.CharacterAnimation animation){
 			// Build event
-			GenericTriggerCondition<AnimationModel> condition = CharacterConditionsBuilder.Build(charData, storageEvent.conditionIds, out keyFrame, animation);
-			GenericEvent<AnimationModel> e = CharacterEventsBuilder.Build(charData, storageEvent.eventIds);
+			GenericTriggerCondition<GameEntityModel> condition = CharacterConditionsBuilder.Build(charData, storageEvent.conditionIds, out keyFrame, animation);
+			GenericEvent<GameEntityModel> e = CharacterEventsBuilder.Build(charData, storageEvent.eventIds);
 			e.condition = condition;
 			return e;
 		}
@@ -211,7 +211,7 @@ namespace RetroBread{
 
 			// Setup each animation
 			AnimationController controller;
-			GenericEvent<AnimationModel> animEvent;
+			GenericEvent<GameEntityModel> animEvent;
 			int keyFrame;
 
 			foreach(Storage.CharacterAnimation animation in charData.animations){

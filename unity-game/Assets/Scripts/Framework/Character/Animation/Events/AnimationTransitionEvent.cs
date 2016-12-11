@@ -7,34 +7,35 @@ using System.Collections.Generic;
 namespace RetroBread{
 
 
-	// Parameterless event
-	public class AnimationTransitionEvent: GenericEvent<AnimationModel>{
-		
-		private string nextAnimation;
+// Parameterless event
+public class AnimationTransitionEvent: GenericEvent<GameEntityModel>{
+	
+	private string nextAnimation;
 
-		private float transitionTime;
+	private float transitionTime;
 
-		private uint initialFrame;
+	private uint initialFrame;
 
-		// Constructor
-		public AnimationTransitionEvent(GenericTriggerCondition<AnimationModel> condition, string nextAnimation, float transitionTime = 0.2f , uint initialFrame = 0)
-		:base(condition)
-		{
-			this.nextAnimation = nextAnimation;
-			this.transitionTime = transitionTime;
-			this.initialFrame = initialFrame;
-		}
+	// Constructor
+	public AnimationTransitionEvent(GenericTriggerCondition<GameEntityModel> condition, string nextAnimation, float transitionTime = 0.2f , uint initialFrame = 0)
+	:base(condition)
+	{
+		this.nextAnimation = nextAnimation;
+		this.transitionTime = transitionTime;
+		this.initialFrame = initialFrame;
+	}
 
-		
-		// Set model's next animation and inform view of transition timing
-		public override void Execute(AnimationModel model){
-			model.SetNextAnimation(nextAnimation, initialFrame);
-			AnimationView view = model.View() as AnimationView;
-			if (view != null){
-				view.transitionTime = transitionTime;
-			}
+	
+	// Set model's next animation and inform view of transition timing
+	public override void Execute(GameEntityModel entityModel, List<GenericEventSubject<GameEntityModel>> subjects){
+		AnimationModel animModel = StateManager.state.GetModel(entityModel.animationModelId) as AnimationModel;
+		animModel.SetNextAnimation(nextAnimation, initialFrame);
+		AnimationView view = animModel.View() as AnimationView;
+		if (view != null){
+			view.transitionTime = transitionTime;
 		}
 	}
+}
 
 
 }

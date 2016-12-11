@@ -8,173 +8,173 @@ namespace RetroBread{
 
 
 
-	#region movement detection
+#region movement detection
 
-	// Check if there is any axis movement happening
-	public class InputAxisMovingCondition: GenericTriggerCondition<AnimationModel>{
+// Check if there is any axis movement happening
+public class InputAxisMovingCondition: GenericTriggerCondition<GameEntityModel>{
 
-		public bool Evaluate(AnimationModel model){
-			FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
-			return axis.Magnitude > 0;
-		}
-
+	public bool Evaluate(GameEntityModel model, List<GenericEventSubject<GameEntityModel>> subjects){
+		FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
+		return axis.Magnitude > 0;
 	}
 
-	// Check if character is mostly moving forward
-	public class InputAxisForwardDominanceCondition: GenericTriggerCondition<AnimationModel>{
-		
-		public bool Evaluate(AnimationModel model){
-			FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
-			bool isFacingRight = InputConditionsHelper.IsOwnerFacingRight(model);
-			if ((isFacingRight && axis.X <= 0) || (!isFacingRight && axis.X >= 0)){
-				// moving backward
-				return false;
-			}
-			return FixedFloat.Abs(axis.X) / axis.Magnitude >= InputConditionsHelper.AxisDominanceFactor;
+}
+
+// Check if character is mostly moving forward
+public class InputAxisForwardDominanceCondition: GenericTriggerCondition<GameEntityModel>{
+	
+	public bool Evaluate(GameEntityModel model, List<GenericEventSubject<GameEntityModel>> subjects){
+		FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
+		bool isFacingRight = model.IsFacingRight();
+		if ((isFacingRight && axis.X <= 0) || (!isFacingRight && axis.X >= 0)){
+			// moving backward
+			return false;
 		}
-		
+		return FixedFloat.Abs(axis.X) / axis.Magnitude >= InputConditionsHelper.AxisDominanceFactor;
+	}
+	
+}
+
+
+// Check if character is mostly moving backward
+public class InputAxisBackwardDominanceCondition: GenericTriggerCondition<GameEntityModel>{
+	
+	public bool Evaluate(GameEntityModel model, List<GenericEventSubject<GameEntityModel>> subjects){
+		FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
+		bool isFacingRight = model.IsFacingRight();
+		if ((isFacingRight && axis.X >= 0) || (!isFacingRight && axis.X <= 0)){
+			// moving forward
+			return false;
+		}
+		return FixedFloat.Abs(axis.X) / axis.Magnitude >= InputConditionsHelper.AxisDominanceFactor;
+	}
+	
+}
+
+
+// Check if character is mostly moving up
+public class InputAxisUpDominanceCondition: GenericTriggerCondition<GameEntityModel>{
+	
+	public bool Evaluate(GameEntityModel model, List<GenericEventSubject<GameEntityModel>> subjects){
+		FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
+		if (axis.Z <= 0){
+			// moving down
+			return false;
+		}
+		return FixedFloat.Abs(axis.Z) / axis.Magnitude >= InputConditionsHelper.AxisDominanceFactor;
+	}
+	
+}
+
+
+// Check if character is mostly moving down
+public class InputAxisDownDominanceCondition: GenericTriggerCondition<GameEntityModel>{
+	
+	public bool Evaluate(GameEntityModel model, List<GenericEventSubject<GameEntityModel>> subjects){
+		FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
+		if (axis.Z >= 0){
+			// moving up
+			return false;
+		}
+		return FixedFloat.Abs(axis.Z) / axis.Magnitude >= InputConditionsHelper.AxisDominanceFactor;
+	}
+	
+}
+
+
+#endregion
+
+
+#region axis arithmetics
+
+public enum InputAxisComponentType{
+	horizontal,
+	vertical
+}
+
+
+public class InputAxisComponentCondition: ArithmeticCondition<GameEntityModel, FixedFloat>{
+
+	// Get the horizontal axis component
+	private FixedFloat HorizontalAxis(GameEntityModel model){
+		FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
+		return axis.X;
+	}
+
+	// Get the vertical axis component
+	private FixedFloat VerticalAxis(GameEntityModel model){
+		FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
+		return axis.Z;
+	}
+
+	private void SetupAxisType(InputAxisComponentType type){
+		switch(type){
+			case InputAxisComponentType.horizontal:{
+				getLeftVariableDelegate = HorizontalAxis;
+			}break;
+			case InputAxisComponentType.vertical:{
+				getLeftVariableDelegate = VerticalAxis;
+			}break;
+		}
 	}
 
 
-	// Check if character is mostly moving backward
-	public class InputAxisBackwardDominanceCondition: GenericTriggerCondition<AnimationModel>{
-		
-		public bool Evaluate(AnimationModel model){
-			FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
-			bool isFacingRight = InputConditionsHelper.IsOwnerFacingRight(model);
-			if ((isFacingRight && axis.X >= 0) || (!isFacingRight && axis.X <= 0)){
-				// moving forward
-				return false;
-			}
-			return FixedFloat.Abs(axis.X) / axis.Magnitude >= InputConditionsHelper.AxisDominanceFactor;
-		}
-		
+	// Redefine constructor as private
+	public InputAxisComponentCondition(
+		ArithmeticConditionOperatorType operatorType,
+		InputAxisComponentType type,
+		GetArithmeticConditionVariable rightVariableDelegate
+	){
+		this.getRightVariableDelegate = rightVariableDelegate;
+		this.conditionOperator = operatorType;
+		SetupAxisType(type);
+	}
+	
+	// Redefine constructor as private
+	public InputAxisComponentCondition(
+		ArithmeticConditionOperatorType operatorType,
+		InputAxisComponentType type,
+		FixedFloat rightValue
+	){
+		this.rightValue = rightValue;
+		this.conditionOperator = operatorType;
+		SetupAxisType(type);
 	}
 
 
-	// Check if character is mostly moving up
-	public class InputAxisUpDominanceCondition: GenericTriggerCondition<AnimationModel>{
-		
-		public bool Evaluate(AnimationModel model){
-			FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
-			if (axis.Z <= 0){
-				// moving down
-				return false;
-			}
-			return FixedFloat.Abs(axis.Z) / axis.Magnitude >= InputConditionsHelper.AxisDominanceFactor;
-		}
-		
+	// Static builders
+
+	public static InputAxisComponentCondition HorizontalAxisCondition(
+		ArithmeticConditionOperatorType operatorType,
+		GetArithmeticConditionVariable rightVariableDelegate
+	){
+		return new InputAxisComponentCondition(operatorType, InputAxisComponentType.horizontal, rightVariableDelegate);
 	}
 
-
-	// Check if character is mostly moving down
-	public class InputAxisDownDominanceCondition: GenericTriggerCondition<AnimationModel>{
-		
-		public bool Evaluate(AnimationModel model){
-			FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
-			if (axis.Z >= 0){
-				// moving up
-				return false;
-			}
-			return FixedFloat.Abs(axis.Z) / axis.Magnitude >= InputConditionsHelper.AxisDominanceFactor;
-		}
-		
+	public static InputAxisComponentCondition VerticalAxisCondition(
+		ArithmeticConditionOperatorType operatorType,
+		GetArithmeticConditionVariable rightVariableDelegate
+	){
+		return new InputAxisComponentCondition(operatorType, InputAxisComponentType.vertical, rightVariableDelegate);
 	}
 
-
-	#endregion
-
-
-	#region axis arithmetics
-
-	public enum InputAxisComponentType{
-		horizontal,
-		vertical
+	public static InputAxisComponentCondition HorizontalAxisCondition(
+		ArithmeticConditionOperatorType operatorType,
+		FixedFloat rightValue
+	){
+		return new InputAxisComponentCondition(operatorType, InputAxisComponentType.horizontal, rightValue);
 	}
 
-
-	public class InputAxisComponentCondition: ArithmeticCondition<AnimationModel, FixedFloat>{
-
-		// Get the horizontal axis component
-		private FixedFloat HorizontalAxis(AnimationModel model){
-			FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
-			return axis.X;
-		}
-
-		// Get the vertical axis component
-		private FixedFloat VerticalAxis(AnimationModel model){
-			FixedVector3 axis = InputConditionsHelper.GetInputAxis(model);
-			return axis.Z;
-		}
-
-		private void SetupAxisType(InputAxisComponentType type){
-			switch(type){
-				case InputAxisComponentType.horizontal:{
-					getLeftVariableDelegate = HorizontalAxis;
-				}break;
-				case InputAxisComponentType.vertical:{
-					getLeftVariableDelegate = VerticalAxis;
-				}break;
-			}
-		}
-
-
-		// Redefine constructor as private
-		public InputAxisComponentCondition(
-			ArithmeticConditionOperatorType operatorType,
-			InputAxisComponentType type,
-			GetArithmeticConditionVariable rightVariableDelegate
-		){
-			this.getRightVariableDelegate = rightVariableDelegate;
-			this.conditionOperator = operatorType;
-			SetupAxisType(type);
-		}
-		
-		// Redefine constructor as private
-		public InputAxisComponentCondition(
-			ArithmeticConditionOperatorType operatorType,
-			InputAxisComponentType type,
-			FixedFloat rightValue
-		){
-			this.rightValue = rightValue;
-			this.conditionOperator = operatorType;
-			SetupAxisType(type);
-		}
-
-
-		// Static builders
-
-		public static InputAxisComponentCondition HorizontalAxisCondition(
-			ArithmeticConditionOperatorType operatorType,
-			GetArithmeticConditionVariable rightVariableDelegate
-		){
-			return new InputAxisComponentCondition(operatorType, InputAxisComponentType.horizontal, rightVariableDelegate);
-		}
-
-		public static InputAxisComponentCondition VerticalAxisCondition(
-			ArithmeticConditionOperatorType operatorType,
-			GetArithmeticConditionVariable rightVariableDelegate
-		){
-			return new InputAxisComponentCondition(operatorType, InputAxisComponentType.vertical, rightVariableDelegate);
-		}
-
-		public static InputAxisComponentCondition HorizontalAxisCondition(
-			ArithmeticConditionOperatorType operatorType,
-			FixedFloat rightValue
-		){
-			return new InputAxisComponentCondition(operatorType, InputAxisComponentType.horizontal, rightValue);
-		}
-
-		public static InputAxisComponentCondition VerticalAxisCondition(
-			ArithmeticConditionOperatorType operatorType,
-			FixedFloat rightValue
-		){
-			return new InputAxisComponentCondition(operatorType, InputAxisComponentType.vertical, rightValue);
-		}
-
+	public static InputAxisComponentCondition VerticalAxisCondition(
+		ArithmeticConditionOperatorType operatorType,
+		FixedFloat rightValue
+	){
+		return new InputAxisComponentCondition(operatorType, InputAxisComponentType.vertical, rightValue);
 	}
 
-	#endregion
+}
+
+#endregion
 
 
 

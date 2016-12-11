@@ -41,6 +41,49 @@ public abstract class ParameterBuilder{
 		return character.viewAnchors.ToArray();
 	}
 
+
+    #region helper methods
+
+
+    protected static void InstantiateSubject(GameObject parent, GenericParameter parameter, int paramId, string description = "Subject:"){
+        IntDropdownParam.Instantiate(parent, parameter, paramId, description, CharacterEditor.Instance.AvailableSubjects());
+    }
+
+    protected static void InstantiateNumeratorVar(GameObject parent, GenericParameter parameter, int numeratorParamId, int varParamId){
+        string[] subjects = CharacterEditor.Instance.AvailableSubjects();
+        string[] subjectsPlusNone = new string[subjects.Length + 2];
+        subjectsPlusNone[0] = "none";
+        subjectsPlusNone[1] = "global variable";
+        subjects.CopyTo(subjectsPlusNone, 2);
+        IntDropdownParam.Instantiate(parent, parameter, numeratorParamId, "Numerator Subject:", subjectsPlusNone);
+        StringInputFieldParam.Instantiate(parent, parameter, varParamId, "Numerator Variable:");
+    }
+        
+
+    protected static string SubjectString(GenericParameter parameter, int paramId){
+        int subjectId = parameter.SafeInt(paramId);
+        if (subjectId == 0) return "";
+        else return "[" + SafeToString(CharacterEditor.Instance.AvailableSubjects(), subjectId, "Subject") + "]";
+    }
+
+    protected static string NumeratorString(GenericParameter parameter, int numeratorParamId, int varParamId, string noneStringReplacement){
+        int numeratorId = parameter.SafeInt(numeratorParamId);
+        if (numeratorId == 0){
+            return noneStringReplacement;
+        } else{
+            string numeratorString;
+            if (numeratorId == 1){
+                numeratorString = "global";
+            } else{
+                numeratorString = SafeToString(CharacterEditor.Instance.AvailableSubjects(), numeratorId - 2, "Numerator Subject");
+            }
+            return parameter.SafeString(varParamId) + "[" + numeratorString + "]";
+        }
+    }
+
+
+    #endregion
+
 }
 
 
