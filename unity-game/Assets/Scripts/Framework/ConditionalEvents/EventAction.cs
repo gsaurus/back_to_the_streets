@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace RetroBread{
 
 
-// A condition applied to a certain subject
+// An action applied to a certain subject
 public class EventAction<T>{
 	public delegate void ExecutionDelegate(T model, List<T>[] subjectModels);
 

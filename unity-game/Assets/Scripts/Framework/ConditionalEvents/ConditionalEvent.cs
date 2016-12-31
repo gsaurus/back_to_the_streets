@@ -11,7 +11,7 @@ namespace RetroBread{
 public class ConditionalEvent<T>{
 
 	// Subjects to obtain the models in evaluation
-	private EventSubject<T>[] subjects;
+	private List<EventSubject<T>> subjects;
 
 	// List of conditions
 	private List<EventCondition<T>> conditions;
@@ -22,7 +22,7 @@ public class ConditionalEvent<T>{
 
 	// Constructor, takes the full data
 	public ConditionalEvent(
-		EventSubject<T>[] subjects,
+		List<EventSubject<T>> subjects,
 		List<EventCondition<T>> conditions,
 		List<EventAction<T>> actions
 	){
@@ -33,8 +33,8 @@ public class ConditionalEvent<T>{
 
 	public void Evaluate(T model){
 		// First get the lists of subjects
-		List<T>[] allSubjectsModels = new List<T>[subjects.Length];
-		for (int i = 0 ; i < subjects.Length; ++i) {
+		List<T>[] allSubjectsModels = new List<T>[subjects.Count];
+		for (int i = 0 ; i < subjects.Count; ++i) {
 			allSubjectsModels[i] = subjects[i].GetSubjects(model);
 		}
 
@@ -67,7 +67,7 @@ public class ConditionalEvent<T>{
 
 		// If we got here, conditions are met for some models
 		// Reevaluate subjects
-		for (int i = 0; i < subjects.Length; ++i){
+		for (int i = 0; i < subjects.Count; ++i){
 			subjects[i].ReevaluateSubjects(allSubjectsModels[i]);
 		}
 

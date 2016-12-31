@@ -10,10 +10,10 @@ namespace RetroBread{
 public class AnimationController:Controller<AnimationModel>{
 
 	// Events associated to keyframes (evaluated once)
-	private Dictionary<uint, List<GenericEvent<GameEntityModel>>> keyframeEvents;
+	private Dictionary<uint, List<ConditionalEvent<GameEntityModel>>> keyframeEvents;
 
 	// General events, evaluated every frame
-	private List<GenericEvent<GameEntityModel>> generalEvents;
+	private List<ConditionalEvent<GameEntityModel>> generalEvents;
 
 
 	// Collision and hits information
@@ -21,22 +21,22 @@ public class AnimationController:Controller<AnimationModel>{
 
 
 	public AnimationController(){
-		keyframeEvents = new Dictionary<uint, List<GenericEvent<GameEntityModel>>>();
-		generalEvents = new List<GenericEvent<GameEntityModel>>();
+		keyframeEvents = new Dictionary<uint, List<ConditionalEvent<GameEntityModel>>>();
+		generalEvents = new List<ConditionalEvent<GameEntityModel>>();
 	}
 
 	// Add frame based events
-	public void AddKeyframeEvent(uint keyframe, GenericEvent<GameEntityModel> e){
-		List<GenericEvent<GameEntityModel>> frameEvents;
+	public void AddKeyframeEvent(uint keyframe, ConditionalEvent<GameEntityModel> e){
+		List<ConditionalEvent<GameEntityModel>> frameEvents;
 		if (!keyframeEvents.TryGetValue(keyframe, out frameEvents)){
-			frameEvents = new List<GenericEvent<GameEntityModel>>(1);
+			frameEvents = new List<ConditionalEvent<GameEntityModel>>(1);
 			keyframeEvents.Add(keyframe, frameEvents);
 		}
 		frameEvents.Add(e);
 	}
 
 	// Add general event
-	public void AddGeneralEvent(GenericEvent<GameEntityModel> e){
+	public void AddGeneralEvent(ConditionalEvent<GameEntityModel> e){
 		generalEvents.Add(e);
 	}
 
@@ -97,9 +97,9 @@ public class AnimationController:Controller<AnimationModel>{
 	// Process any events for this keyframe
 	private void ProcessKeyframeEvents(AnimationModel model, GameEntityModel entityModel){
 		if (keyframeEvents != null){
-			List<GenericEvent<GameEntityModel>> currentFrameEvents;
+			List<ConditionalEvent<GameEntityModel>> currentFrameEvents;
 			if (keyframeEvents.TryGetValue(model.currentFrame, out currentFrameEvents)){
-				foreach (GenericEvent<GameEntityModel> e in currentFrameEvents){
+				foreach (ConditionalEvent<GameEntityModel> e in currentFrameEvents){
 					e.Evaluate(entityModel);
 				}
 			}
@@ -108,7 +108,7 @@ public class AnimationController:Controller<AnimationModel>{
 
 	// Process general animation events
 	private void ProcessGeneralEvents(AnimationModel model, GameEntityModel entityModel){
-		foreach (GenericEvent<GameEntityModel> e in generalEvents){
+		foreach (ConditionalEvent<GameEntityModel> e in generalEvents){
 			e.Evaluate(entityModel);
 		}
 	}

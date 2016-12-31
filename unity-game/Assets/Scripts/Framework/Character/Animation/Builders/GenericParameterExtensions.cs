@@ -23,11 +23,11 @@ public static class GenericParameterExtensions{
 	}
 
 	public static int[] SafeIntsList(this Storage.GenericParameter parameter, int index){
-		return parameter.intsListList != null && index >= 0 && index < parameter.intsListList.Length ? parameter.intsListList[index] : null;
+		return parameter.intsListList != null && index >= 0 && index < parameter.intsListList.Length ? parameter.intsListList[index].list : null;
 	}
 
 	public static string[] SafeStringsList(this Storage.GenericParameter parameter, int index){
-		return parameter.stringsListList != null && index >= 0 && index < parameter.stringsListList.Length ? parameter.stringsListList[index] : null;
+		return parameter.stringsListList != null && index >= 0 && index < parameter.stringsListList.Length ? parameter.stringsListList[index].list : null;
 	}
 
 }
