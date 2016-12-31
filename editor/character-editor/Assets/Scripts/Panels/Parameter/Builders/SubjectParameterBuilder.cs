@@ -150,13 +150,10 @@ public class SubjectParameterBuilder: ParameterBuilder {
 	private class BuildCollidingSubject: InternSubjectBuilder{
 		public BuildCollidingSubject():base("Colliding"){}
 		public override string ToString(GenericParameter parameter){
-            string boxes = ParseOptionsList(parameter.SafeIntsListToString(0), parameter.SafeInt(0) == 0);
-            return "Colliding(" + boxes + ")";
+            return "Colliding";
 		}
 		public override void Build(GameObject parent, GenericParameter parameter){
-            IntDropdownParam.Instantiate(parent, parameter, 0, "Box IDs Options", listingOptions);
-            IntListInputFieldParam.Instantiate(parent, parameter, 0, "Box IDs");
-            BoolToggleParam.Instantiate(parent, parameter, 0, "Single Subject");
+            // No parameters, currently only one entity colliding at any collision box is supported
 		}
 	}
 
