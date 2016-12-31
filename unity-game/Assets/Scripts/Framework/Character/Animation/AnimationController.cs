@@ -9,6 +9,12 @@ namespace RetroBread{
 // Execute animation events and perform transitions automatically
 public class AnimationController:Controller<AnimationModel>{
 
+//	// Combo counts sequences of animations
+//	public static readonly string comboCustomVariableName = "combo";
+	// Combo can only be incremented once per animation, thus store if it was already incremented on a variable
+	public static readonly string comboAnimationClearFlag = "comboAnimClearFlag";
+
+
 	// Events associated to keyframes (evaluated once)
 	private Dictionary<uint, List<ConditionalEvent<GameEntityModel>>> keyframeEvents;
 
@@ -167,7 +173,7 @@ public class AnimationController:Controller<AnimationModel>{
 			}
 			model.InvalidateVC();
 			// Clear combo animation flag
-			entityModel.customVariables[CharacterConditionsBuilder.comboAnimationClearFlag] = 0;
+			entityModel.customVariables[AnimationController.comboAnimationClearFlag] = 0;
 		}
 
 		if (!haveNewNextFrame && !haveNewAnimation){
