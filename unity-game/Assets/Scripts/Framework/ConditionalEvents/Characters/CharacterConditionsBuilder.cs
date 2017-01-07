@@ -71,7 +71,6 @@ public static class CharacterConditionsBuilder {
 				// No delegate, fixed keyFrame only
 				return null;
 			}
-			evaluationDelegate = FilterNegation(evaluationDelegate, parameter);
 			subjectId = GetSubjectId(parameter);
 			return new EventCondition<GameEntityModel>(evaluationDelegate, subjectId);
 		}
@@ -83,17 +82,6 @@ public static class CharacterConditionsBuilder {
 	// Get subjectId from parameter
 	private static int GetSubjectId(Storage.GenericParameter parameter) {
 		return parameter.SafeInt(0);
-	}
-
-
-	// Negation delegate
-	private static EventCondition<GameEntityModel>.EvaluationDelegate FilterNegation(EventCondition<GameEntityModel>.EvaluationDelegate evaluationDelegate, Storage.GenericParameter parameter){
-		if (parameter.SafeBool(0)){
-			return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-				return !evaluationDelegate(model, subjectModels);
-			};
-		}
-		return evaluationDelegate;
 	}
 
 
@@ -243,10 +231,11 @@ public static class CharacterConditionsBuilder {
 	// Input Button
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildInputButton(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 		keyFrame = InvalidKeyframe;
-		// Read subject, button, state
+		// Read subject, button, state, negation
 		CharacterSubjectsBuilder.SubjectOption subjectId = (CharacterSubjectsBuilder.SubjectOption)parameter.SafeInt(0);
 		uint buttonId = (uint) parameter.SafeInt(1);
 		ButtonState buttonState = (ButtonState)parameter.SafeInt(2);
+		bool positiveCheck = !parameter.SafeBool(0);
 
 		// Return delegate
 		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
@@ -267,16 +256,50 @@ public static class CharacterConditionsBuilder {
 					case ButtonState.press:		verifies = inputController.IsButtonPressed(inputModel, buttonId);	break;
 					case ButtonState.release:	verifies = inputController.IsButtonReleased(inputModel, buttonId);	break;
 				}
-				if (!verifies) return false;
+				if (verifies != positiveCheck) return false;
 			}
 			// all verified, return true
 			return true;
 		};
 	}
 
+
+
+
+
+
+
+	// Grounded
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildGrounded(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
-		return null;
+		keyFrame = InvalidKeyframe;
+		// Read subject, negation
+		CharacterSubjectsBuilder.SubjectOption subjectId = (CharacterSubjectsBuilder.SubjectOption)parameter.SafeInt(0);
+		bool positiveCheck = !parameter.SafeBool(0);
+
+		// Return delegate
+		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
+			List<GameEntityModel> mainSubject;
+			mainSubject	= ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)subjectId);
+			if (mainSubject == null) return false;
+			PhysicPointModel pointModel;
+			// verify each model
+			foreach (GameEntityModel mainModel in mainSubject) {
+				pointModel = StateManager.state.GetModel(mainModel.physicsModelId) as PhysicPointModel;
+				if (PhysicPointController.IsGrounded(pointModel) != positiveCheck) {
+					return false;
+				}
+			}
+			// all verified, return true
+			return true;
+		};
 	}
+
+
+
+
+
+
+
 
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildFacingRight(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 		return null;

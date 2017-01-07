@@ -185,9 +185,10 @@ public class ConditionParameterBuilder: ParameterBuilder {
     private class BuildGrounded: InternConditionBuilder{
         public BuildGrounded():base("Grounded"){}
 		public override string ToString(GenericParameter parameter){
-			return FilterNegationString(parameter, "grounded");
+            return FilterNegationString(parameter, "grounded" + SubjectString(parameter, 0));
 		}
 		public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateSubject(parent, parameter, 0);
 			InstantiateNegation(parent, parameter);
 		}
 	}
