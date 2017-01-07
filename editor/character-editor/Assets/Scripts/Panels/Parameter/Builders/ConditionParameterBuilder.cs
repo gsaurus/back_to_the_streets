@@ -135,19 +135,32 @@ public class ConditionParameterBuilder: ParameterBuilder {
 	}
 
 
-	// move_H >= 5.2
+	// |move_H| >= 5.2
     private class BuildInputVelocity: InternConditionBuilder{
         public BuildInputVelocity():base("Input velocity"){}
 		public override string ToString(GenericParameter parameter){
-            return "move_" + SafeToString(directionOptionsShort, parameter.SafeInt(0), "orientation")
-				+ " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
-				+ " " + parameter.SafeFloatToString(0)
-			;
+            string orientationString = "";
+            switch (parameter.SafeInt(1)){
+                case 0: orientationString = "H"; break;
+                case 1: orientationString = "V"; break;
+                default: orientationString = ""; break;
+            }
+            string operationName = "inputVel" + orientationString + SubjectString(parameter, 0);
+            string numeratorString = NumeratorString(parameter, 3, 0, parameter.SafeFloat(0) + "");
+            if (parameter.SafeBool(1)){
+                operationName = "|" + operationName + "|";
+            }
+            return operationName
+                + " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(2), "operator")
+                + " " + numeratorString;
 		}
 		public override void Build(GameObject parent, GenericParameter parameter){
-            IntDropdownParam.Instantiate(parent, parameter, 0, "Orientation:", directionOptions);
-			InstantiateArithmeticField(parent, parameter, 1);
-			FloatInputFieldParam.Instantiate(parent, parameter, 0, "Velocity:");
+            InstantiateSubject(parent, parameter, 0);
+            IntDropdownParam.Instantiate(parent, parameter, 1, "Orientation:", directionOptions);
+			InstantiateArithmeticField(parent, parameter, 2);
+            InstantiateNumeratorVar(parent, parameter, 3, 0);
+			FloatInputFieldParam.Instantiate(parent, parameter, 0, "Or compare with value:");
+            BoolToggleParam.Instantiate(parent, parameter, 1, "Use absolute value");
 		}
 	}
 

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 namespace RetroBread{
@@ -15,7 +16,7 @@ public static class ConditionUtils<T>{
 	}
 			
 
-	public static bool Compare(ComparisonOperation operation, int left, int right){
+	public static bool Compare<U>(ComparisonOperation operation, U left, U right) where U: IComparable<U>{
 		// compare them
 		int result = left.CompareTo(right);
 		switch (operation){
