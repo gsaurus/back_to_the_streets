@@ -11,7 +11,8 @@ public static class CharacterConditionsBuilder {
 	private enum Orientation {
 		horizontal	= 0,
 		vertical	= 1,
-		any			= 2
+		any			= 2,
+		z			= 3
 	}
 
 	private enum ButtonState {
@@ -32,6 +33,7 @@ public static class CharacterConditionsBuilder {
 		BuildFacingRight,
 		BuildCollisionImpact,
 		BuildVariable,
+		BuildGlobalVariable,
 		BuildVelocity,
 		BuildExistence,
 		BuildTeam,
@@ -154,16 +156,17 @@ public static class CharacterConditionsBuilder {
 
 	// Auxiliar method to get Oriented Axis
 	private static FixedFloat getOrientedAxisValue(FixedVector3 axis, Orientation orientation, bool useModule){
-		FixedFloat inputAxisValue = FixedFloat.Zero;
+		FixedFloat axisValue = FixedFloat.Zero;
 		switch(orientation){
-			case Orientation.horizontal: inputAxisValue = axis.X; break;
-			case Orientation.vertical:   inputAxisValue = axis.Y; break;
-			case Orientation.any:		 inputAxisValue = axis.Magnitude; break;
+			case Orientation.horizontal: axisValue = axis.X; break;
+			case Orientation.vertical:   axisValue = axis.Y; break;
+			case Orientation.z:			 axisValue = axis.Z; break;
+			case Orientation.any:		 axisValue = axis.Magnitude; break;
 		}
 		if (useModule) {
-			inputAxisValue = FixedFloat.Abs(inputAxisValue);
+			axisValue = FixedFloat.Abs(axisValue);
 		}
-		return inputAxisValue;
+		return axisValue;
 	}
 		
 	// Input Velocity
@@ -372,12 +375,97 @@ public static class CharacterConditionsBuilder {
 
 
 
+	// Global Variable
+	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildGlobalVariable(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		keyFrame = InvalidKeyframe;
+		// Read var name, operator, numerator subject, numerator var, number, is timer
+		string varName = parameter.SafeString(0);
+		ConditionUtils<GameEntityModel>.ComparisonOperation comparisonOperator = (ConditionUtils<GameEntityModel>.ComparisonOperation)parameter.SafeInt(1);
+		int			numeratorSubjectId		= parameter.SafeInt(2);
+		string		numeratorSubjectVarName	= parameter.SafeString(1);
+		int			staticComparisonValue	= parameter.SafeInt(3);
 
-
-
-	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildVelocity(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
-		return null;
+		// return delegate
+		return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
+			int varValue = 0;
+			// WARNING: TODO: get global variable from world model
+			// *********** WorldModel worldModel = StateManager.state. ...... ****************
+			//************ worldModel.customVariables.TryGetValue(varName, out varValue); **************
+			if (numeratorSubjectId != (int)CharacterSubjectsBuilder.PredefinedSubjects.none){
+				List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)numeratorSubjectId);
+				if (comparisonSubject == null) return false;
+				// compare each model's impact with each comparison subject variable, return true if all pass
+				int comparisonVarValue;
+				foreach (GameEntityModel comparisonModel in comparisonSubject) {
+					if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out comparisonVarValue)) {
+						return false;
+					}
+					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, varValue, comparisonVarValue)){
+						return false;
+					}
+				}
+			}else {
+				// compare model's impact with static velocity number
+				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, varValue, staticComparisonValue)){
+					return false;
+				}
+			}
+			return true;
+		};
 	}
+
+
+
+
+
+
+
+
+
+	// Velocity
+	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildVelocity(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
+		keyFrame = InvalidKeyframe;
+		// Read orientation, operator, numerator subject, numerator var, number, module
+		Orientation	orientation = (Orientation)parameter.SafeInt(1);
+		ConditionUtils<GameEntityModel>.ComparisonOperation comparisonOperator = (ConditionUtils<GameEntityModel>.ComparisonOperation)parameter.SafeInt(2);
+		int			numeratorSubjectId		= parameter.SafeInt(3);
+		string		numeratorSubjectVarName	= parameter.SafeString(0);
+		FixedFloat	staticComparisonValue	= parameter.SafeFloat(0);
+		bool		useModule				= parameter.SafeBool(1);
+
+		// return delegate
+		return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
+			PhysicPointModel pointModel = StateManager.state.GetModel(mainModel.physicsModelId) as PhysicPointModel;
+			if (pointModel == null) return false;
+			FixedFloat velocityValue = getOrientedAxisValue(pointModel.GetVelocity(), orientation, useModule);
+			if (numeratorSubjectId != (int)CharacterSubjectsBuilder.PredefinedSubjects.none){
+				List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)numeratorSubjectId);
+				if (comparisonSubject == null) return false;
+				// compare each model's velocity with each comparison subject variable, return true if all pass
+				int variableValue;
+				foreach (GameEntityModel comparisonModel in comparisonSubject) {
+					if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
+						return false;
+					}
+					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, velocityValue, (FixedFloat) variableValue)){
+						return false;
+					}
+				}
+			}else {
+				// compare model's input velocity with static velocity number
+				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, velocityValue, staticComparisonValue)){
+					return false;
+				}
+			}
+			return true;
+		};
+	}
+
+
+
+
+
+
 
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildExistence(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 		return null;

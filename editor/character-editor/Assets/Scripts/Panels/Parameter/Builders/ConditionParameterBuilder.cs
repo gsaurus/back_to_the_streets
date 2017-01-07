@@ -31,14 +31,12 @@ public class ConditionParameterBuilder: ParameterBuilder {
 	private static string[] arithmeticOptions = { "equal", "notEqual", "less", "less or equal", "greater", "greater or equal" };
 	private static string[] arithmeticOptionsShort = { "=", "!=", "<", "<=", ">", ">=" };	
 
-	private static string[] directionOptions = {"horizontal", "vertical", "any"};
-	private static string[] directionOptionsShort = {"H", "V", ""};
+	private static string[] directionOptions2D = {"horizontal", "vertical", "any"};
+    private static string[] directionOptions3D = {"horizontal", "vertical", "any", "along z-axis"};
+	private static string[] directionOptionsShort = {"H", "V", "", "Z"};
 
 	private static string[] inputButtonOptions = {"A", "B", "C", "D", "E", "F", "G"};
 	private static string[] inputButtonStateOptions = {"press", "hold", "release"};
-
-    private static string[] collisionDirection = {"horizontal", "along z-axis", "vertical"};
-	private static string[] collisionDirectionShort = {"H", "Z", "V"};
 
 	private static string[] teamType = {"any of", "all but", "same as self"};
     private static string[] listType = {"any of", "all but"};
@@ -139,12 +137,7 @@ public class ConditionParameterBuilder: ParameterBuilder {
     private class BuildInputVelocity: InternConditionBuilder{
         public BuildInputVelocity():base("Input Axis"){}
 		public override string ToString(GenericParameter parameter){
-            string orientationString = "";
-            switch (parameter.SafeInt(1)){
-                case 0: orientationString = "H"; break;
-                case 1: orientationString = "V"; break;
-                default: orientationString = ""; break;
-            }
+            string orientationString = directionOptionsShort[parameter.SafeInt(1)];
             string operationName = "axis" + orientationString + SubjectString(parameter, 0);
             string numeratorString = NumeratorString(parameter, 3, 0, parameter.SafeFloat(0) + "");
             if (parameter.SafeBool(1)){
@@ -156,7 +149,7 @@ public class ConditionParameterBuilder: ParameterBuilder {
 		}
 		public override void Build(GameObject parent, GenericParameter parameter){
             InstantiateSubject(parent, parameter, 0);
-            IntDropdownParam.Instantiate(parent, parameter, 1, "Orientation:", directionOptions);
+            IntDropdownParam.Instantiate(parent, parameter, 1, "Orientation:", directionOptions2D);
 			InstantiateArithmeticField(parent, parameter, 2);
             InstantiateNumeratorVar(parent, parameter, 3, 0);
 			FloatInputFieldParam.Instantiate(parent, parameter, 0, "Or compare with value:");
@@ -210,12 +203,7 @@ public class ConditionParameterBuilder: ParameterBuilder {
 	private class BuildCollisionImpact: InternConditionBuilder{
         public BuildCollisionImpact():base("Collision Impact"){}
         public override string ToString(GenericParameter parameter){
-            string orientationString = "";
-            switch (parameter.SafeInt(1)){
-                case 0: orientationString = "H"; break;
-                case 1: orientationString = "V"; break;
-                default: orientationString = ""; break;
-            }
+            string orientationString = directionOptionsShort[parameter.SafeInt(1)];
             string operationName = "collide" + orientationString + SubjectString(parameter, 0);
             string numeratorString = NumeratorString(parameter, 3, 0, parameter.SafeFloat(0) + "");
             if (parameter.SafeBool(1)){
@@ -227,7 +215,7 @@ public class ConditionParameterBuilder: ParameterBuilder {
         }
         public override void Build(GameObject parent, GenericParameter parameter){
             InstantiateSubject(parent, parameter, 0);
-            IntDropdownParam.Instantiate(parent, parameter, 1, "Orientation:", directionOptions);
+            IntDropdownParam.Instantiate(parent, parameter, 1, "Orientation:", directionOptions3D);
             InstantiateArithmeticField(parent, parameter, 2);
             InstantiateNumeratorVar(parent, parameter, 3, 0);
             FloatInputFieldParam.Instantiate(parent, parameter, 0, "Or compare with value:");
@@ -264,11 +252,21 @@ public class ConditionParameterBuilder: ParameterBuilder {
     private class BuildGlobalVariable: InternConditionBuilder{
         public BuildGlobalVariable():base("Global Variable"){}
         public override string ToString(GenericParameter parameter){
-            return "combo " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator") + " " + parameter.SafeInt(0);
+            string varName = parameter.SafeString(0);
+            string varString = "globalVar";
+            string operationName = varString + "(" + varName + ")" + SubjectString(parameter, 0);
+            string numeratorString = NumeratorString(parameter, 2, 1, parameter.SafeInt(3) + "");
+
+            return operationName
+                + " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
+                + " " + numeratorString;
         }
         public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateSubject(parent, parameter, 0);
+            StringInputFieldParam.Instantiate(parent, parameter, 0, "Global variable name:");
             InstantiateArithmeticField(parent, parameter, 1);
-            IntInputFieldParam.Instantiate(parent, parameter, 0, "Combo value:", 0);
+            InstantiateNumeratorVar(parent, parameter, 2, 1);
+            IntInputFieldParam.Instantiate(parent, parameter, 3, "Or compare with value:");
         }
     }
 
@@ -276,13 +274,25 @@ public class ConditionParameterBuilder: ParameterBuilder {
     // physics_vel_H >= 4
     private class BuildPhysicsVelocity: InternConditionBuilder{
         public BuildPhysicsVelocity():base("Physics Velocity"){}
-		public override string ToString(GenericParameter parameter){
-			return "impulseV " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(0), "operator") + " " + parameter.SafeFloat(0);
-		}
-		public override void Build(GameObject parent, GenericParameter parameter){
-			InstantiateArithmeticField(parent, parameter, 0);
-			FloatInputFieldParam.Instantiate(parent, parameter, 0, "Compare with impulse:", 0);
-		}
+        public override string ToString(GenericParameter parameter){
+            string orientationString = directionOptionsShort[parameter.SafeInt(1)];
+            string operationName = "axis" + orientationString + SubjectString(parameter, 0);
+            string numeratorString = NumeratorString(parameter, 3, 0, parameter.SafeFloat(0) + "");
+            if (parameter.SafeBool(1)){
+                operationName = "|" + operationName + "|";
+            }
+            return operationName
+                + " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(2), "operator")
+                + " " + numeratorString;
+        }
+        public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateSubject(parent, parameter, 0);
+            IntDropdownParam.Instantiate(parent, parameter, 1, "Orientation:", directionOptions3D);
+            InstantiateArithmeticField(parent, parameter, 2);
+            InstantiateNumeratorVar(parent, parameter, 3, 0);
+            FloatInputFieldParam.Instantiate(parent, parameter, 0, "Or compare with value:");
+            BoolToggleParam.Instantiate(parent, parameter, 1, "Use absolute value");
+        }
 	}
 
 
