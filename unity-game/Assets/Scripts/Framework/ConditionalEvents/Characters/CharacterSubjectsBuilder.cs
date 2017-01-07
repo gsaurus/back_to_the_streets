@@ -7,17 +7,12 @@ namespace RetroBread{
 
 public static class CharacterSubjectsBuilder {
 
-	public enum SubjectOption {
+	public enum PredefinedSubjects {
 		none			= -1,
 		self			= 0,
 		owner			= 1,
 		ownerOrSelf		= 2,
 		parent			= 3,
-		grabbed			= 4,
-		hitters			= 5,
-		hittens			= 6,
-		colliding		= 7,
-		all				= 8
 	}
 
 	private enum AnyOrAllOptions{

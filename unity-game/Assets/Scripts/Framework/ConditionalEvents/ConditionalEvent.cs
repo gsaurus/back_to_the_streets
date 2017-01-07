@@ -31,6 +31,10 @@ public class ConditionalEvent<T>{
 		this.actions = actions;
 	}
 
+	// Strategy: on each condition, subjects are filtered
+	// Conditions order matters as one filters subjects to the next
+	// e.g. first filter which grabbed entities are being evaluated
+	//		next check if (filtered) grabbed entity conforms to certain condition
 	public void Evaluate(T model){
 		// First get the lists of subjects
 		List<T>[] allSubjectsModels = new List<T>[subjects.Count];

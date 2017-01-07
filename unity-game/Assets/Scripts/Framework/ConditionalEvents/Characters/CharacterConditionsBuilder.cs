@@ -100,51 +100,44 @@ public static class CharacterConditionsBuilder {
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildFrame(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 		keyFrame = InvalidKeyframe;
 		// Read subject, operator, numerator subject, numerator variable, frame number
-		CharacterSubjectsBuilder.SubjectOption subjectId = (CharacterSubjectsBuilder.SubjectOption)parameter.SafeInt(0);
+		int subjectId = parameter.SafeInt(0);
 		ConditionUtils<GameEntityModel>.ComparisonOperation comparisonOperator = (ConditionUtils<GameEntityModel>.ComparisonOperation)parameter.SafeInt(1);
-		CharacterSubjectsBuilder.SubjectOption numeratorSubjectId = (CharacterSubjectsBuilder.SubjectOption)parameter.SafeInt(2);
+		int numeratorSubjectId = parameter.SafeInt(2);
 		string numeratorSubjectVarName = parameter.SafeString(0);
 		int staticComparisonFrame = parameter.SafeInt(3);
 
 		// If it's equal to a static frame, no delegate required, return frame directly
-		if (subjectId == CharacterSubjectsBuilder.SubjectOption.self
+		if (subjectId == (int)CharacterSubjectsBuilder.PredefinedSubjects.self
 			&& comparisonOperator == ConditionUtils<GameEntityModel>.ComparisonOperation.equal
-		    && numeratorSubjectId == CharacterSubjectsBuilder.SubjectOption.none
+			&& numeratorSubjectId == (int)CharacterSubjectsBuilder.PredefinedSubjects.none
 		){
-			keyFrame = parameter.SafeInt(1);
+			keyFrame = staticComparisonFrame;
 			if (keyFrame < 0)
 				keyFrame = animation.numFrames;
 			return null;
 		}
+
 		// Else return delegate
-		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-			List<GameEntityModel> mainSubject;
-			mainSubject	= ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)subjectId);
-			if (mainSubject == null) return false;
-			AnimationModel animModel;
-			if (numeratorSubjectId != CharacterSubjectsBuilder.SubjectOption.none){
+		return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
+			AnimationModel animModel = StateManager.state.GetModel(mainModel.animationModelId) as AnimationModel;
+			if (animModel == null) return false;
+			if (numeratorSubjectId != (int)CharacterSubjectsBuilder.PredefinedSubjects.none){
 				List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)numeratorSubjectId);
 				if (comparisonSubject == null) return false;
-				// compare each model's frame with each comparison subject variable, return true if all pass
+				// compare model frame with each comparison subject variable, return true if all pass
 				int variableValue;
-				foreach (GameEntityModel mainModel in mainSubject) {
-					animModel = StateManager.state.GetModel(mainModel.animationModelId) as AnimationModel;
-					foreach (GameEntityModel comparisonModel in comparisonSubject) {
-						if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
-							return false;
-						}
-						if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, (int)animModel.currentFrame, variableValue)){
-							return false;
-						}
+				foreach (GameEntityModel comparisonModel in comparisonSubject) {
+					if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
+						return false;
+					}
+					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, (int)animModel.currentFrame, variableValue)){
+						return false;
 					}
 				}
 			}else {
-				// compare each model's frame with static frame number, return true if all pass
-				foreach (GameEntityModel mainModel in mainSubject) {
-					animModel = StateManager.state.GetModel(mainModel.animationModelId) as AnimationModel;
-					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, (int)animModel.currentFrame, staticComparisonFrame)){
-						return false;
-					}
+				// compare model's frame with static frame number
+				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, (int)animModel.currentFrame, staticComparisonFrame)){
+					return false;
 				}
 			}
 			return true;
@@ -176,47 +169,37 @@ public static class CharacterConditionsBuilder {
 	// Input Velocity
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildInputVelocity(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 		keyFrame = InvalidKeyframe;
-		// Read subject, orientation, operator, numerator subject, numerator var, number, module
-		CharacterSubjectsBuilder.SubjectOption subjectId = (CharacterSubjectsBuilder.SubjectOption)parameter.SafeInt(0);
-		Orientation orientation = (Orientation)parameter.SafeInt(1);
+		// Read orientation, operator, numerator subject, numerator var, number, module
+		Orientation	orientation = (Orientation)parameter.SafeInt(1);
 		ConditionUtils<GameEntityModel>.ComparisonOperation comparisonOperator = (ConditionUtils<GameEntityModel>.ComparisonOperation)parameter.SafeInt(2);
-		CharacterSubjectsBuilder.SubjectOption numeratorSubjectId = (CharacterSubjectsBuilder.SubjectOption)parameter.SafeInt(3);
-		string numeratorSubjectVarName = parameter.SafeString(0);
-		FixedFloat staticComparisonValue = parameter.SafeFloat(0);
-		bool useModule = parameter.SafeBool(1);
+		int			numeratorSubjectId		= parameter.SafeInt(3);
+		string		numeratorSubjectVarName	= parameter.SafeString(0);
+		FixedFloat	staticComparisonValue	= parameter.SafeFloat(0);
+		bool		useModule				= parameter.SafeBool(1);
 
 		// return delegate
-		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-			List<GameEntityModel> mainSubject;
-			mainSubject	= ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)subjectId);
-			if (mainSubject == null) return false;
-			FixedFloat inputAxisValue;
-			PlayerInputModel inputModel;
-			if (numeratorSubjectId != CharacterSubjectsBuilder.SubjectOption.none){
+		return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
+			PlayerInputModel inputModel = StateManager.state.GetModel(mainModel.inputModelId) as PlayerInputModel;
+			if (inputModel == null) return false;
+			FixedFloat inputAxisValue = getOrientedAxisValue(inputModel.axis, orientation, useModule);
+			if (numeratorSubjectId != (int)CharacterSubjectsBuilder.PredefinedSubjects.none){
 				List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)numeratorSubjectId);
 				if (comparisonSubject == null) return false;
 				// compare each model's velocity with each comparison subject variable, return true if all pass
 				int variableValue;
-				foreach (GameEntityModel mainModel in mainSubject) {
-					inputModel = StateManager.state.GetModel(mainModel.inputModelId) as PlayerInputModel;
-					foreach (GameEntityModel comparisonModel in comparisonSubject) {
-						if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
-							return false;
-						}
-						inputAxisValue = getOrientedAxisValue(inputModel.axis, orientation, useModule);
-						if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, inputAxisValue, (FixedFloat) variableValue)){
-							return false;
-						}
+				foreach (GameEntityModel comparisonModel in comparisonSubject) {
+					if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
+						return false;
+					}
+
+					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, inputAxisValue, (FixedFloat) variableValue)){
+						return false;
 					}
 				}
 			}else {
-				// compare each model's input velocity with static velocity number, return true if all pass
-				foreach (GameEntityModel mainModel in mainSubject) {
-					inputModel = StateManager.state.GetModel(mainModel.inputModelId) as PlayerInputModel;
-					inputAxisValue = getOrientedAxisValue(inputModel.axis, orientation, useModule);
-					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, inputAxisValue, staticComparisonValue)){
-						return false;
-					}
+				// compare model's input velocity with static velocity number
+				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, inputAxisValue, staticComparisonValue)){
+					return false;
 				}
 			}
 			return true;
@@ -231,35 +214,25 @@ public static class CharacterConditionsBuilder {
 	// Input Button
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildInputButton(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 		keyFrame = InvalidKeyframe;
-		// Read subject, button, state, negation
-		CharacterSubjectsBuilder.SubjectOption subjectId = (CharacterSubjectsBuilder.SubjectOption)parameter.SafeInt(0);
-		uint buttonId = (uint) parameter.SafeInt(1);
-		ButtonState buttonState = (ButtonState)parameter.SafeInt(2);
-		bool positiveCheck = !parameter.SafeBool(0);
+		// Read button, state, negation
+		uint		buttonId		= (uint) parameter.SafeInt(1);
+		ButtonState	buttonState		= (ButtonState)parameter.SafeInt(2);
+		bool		positiveCheck	= !parameter.SafeBool(0);
 
 		// Return delegate
-		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-			List<GameEntityModel> mainSubject;
-			mainSubject	= ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)subjectId);
-			if (mainSubject == null) return false;
-			PlayerInputModel inputModel;
-			PlayerInputController inputController;
-			bool verifies;
-			// verify each model's button state
-			foreach (GameEntityModel mainModel in mainSubject) {
-				inputModel = StateManager.state.GetModel(mainModel.inputModelId) as PlayerInputModel;
-				inputController = inputModel.Controller() as PlayerInputController;
-				if (inputController == null) return false;
-				verifies = false;
-				switch(buttonState) {
-					case ButtonState.hold:		verifies = inputController.IsButtonHold(inputModel, buttonId);		break;
-					case ButtonState.press:		verifies = inputController.IsButtonPressed(inputModel, buttonId);	break;
-					case ButtonState.release:	verifies = inputController.IsButtonReleased(inputModel, buttonId);	break;
-				}
-				if (verifies != positiveCheck) return false;
+		return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
+			PlayerInputModel inputModel = StateManager.state.GetModel(mainModel.inputModelId) as PlayerInputModel;
+			if (inputModel == null) return false;
+			PlayerInputController inputController = inputModel.Controller() as PlayerInputController;
+			if (inputController == null) return false;
+			bool verifies = false;
+			// verify model's button state
+			switch(buttonState) {
+				case ButtonState.hold:		verifies = inputController.IsButtonHold(inputModel, buttonId);		break;
+				case ButtonState.press:		verifies = inputController.IsButtonPressed(inputModel, buttonId);	break;
+				case ButtonState.release:	verifies = inputController.IsButtonReleased(inputModel, buttonId);	break;
 			}
-			// all verified, return true
-			return true;
+			return verifies == positiveCheck;
 		};
 	}
 
@@ -272,25 +245,15 @@ public static class CharacterConditionsBuilder {
 	// Grounded
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildGrounded(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 		keyFrame = InvalidKeyframe;
-		// Read subject, negation
-		CharacterSubjectsBuilder.SubjectOption subjectId = (CharacterSubjectsBuilder.SubjectOption)parameter.SafeInt(0);
+		// Read negation
 		bool positiveCheck = !parameter.SafeBool(0);
 
 		// Return delegate
-		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-			List<GameEntityModel> mainSubject;
-			mainSubject	= ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)subjectId);
-			if (mainSubject == null) return false;
+		return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
 			PhysicPointModel pointModel;
-			// verify each model
-			foreach (GameEntityModel mainModel in mainSubject) {
-				pointModel = StateManager.state.GetModel(mainModel.physicsModelId) as PhysicPointModel;
-				if (PhysicPointController.IsGrounded(pointModel) != positiveCheck) {
-					return false;
-				}
-			}
-			// all verified, return true
-			return true;
+			pointModel = StateManager.state.GetModel(mainModel.physicsModelId) as PhysicPointModel;
+			if (pointModel == null) return false;
+			return PhysicPointController.IsGrounded(pointModel) == positiveCheck;
 		};
 	}
 
