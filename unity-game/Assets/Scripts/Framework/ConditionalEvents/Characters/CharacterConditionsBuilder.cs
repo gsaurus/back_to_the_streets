@@ -191,7 +191,6 @@ public static class CharacterConditionsBuilder {
 					if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
 						return false;
 					}
-
 					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, inputAxisValue, (FixedFloat) variableValue)){
 						return false;
 					}
@@ -205,6 +204,7 @@ public static class CharacterConditionsBuilder {
 			return true;
 		};
 	}
+
 
 
 
@@ -242,6 +242,7 @@ public static class CharacterConditionsBuilder {
 
 
 
+
 	// Grounded
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildGrounded(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 		keyFrame = InvalidKeyframe;
@@ -256,6 +257,7 @@ public static class CharacterConditionsBuilder {
 			return PhysicPointController.IsGrounded(pointModel) == positiveCheck;
 		};
 	}
+
 
 
 
@@ -280,9 +282,53 @@ public static class CharacterConditionsBuilder {
 
 
 
+
+
+	// Collision Impact
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildCollisionImpact(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
-		return null;
+		keyFrame = InvalidKeyframe;
+		// Read orientation, operator, numerator subject, numerator var, number, module
+		Orientation	orientation = (Orientation)parameter.SafeInt(1);
+		ConditionUtils<GameEntityModel>.ComparisonOperation comparisonOperator = (ConditionUtils<GameEntityModel>.ComparisonOperation)parameter.SafeInt(2);
+		int			numeratorSubjectId		= parameter.SafeInt(3);
+		string		numeratorSubjectVarName	= parameter.SafeString(0);
+		FixedFloat	staticComparisonValue	= parameter.SafeFloat(0);
+		bool		useModule				= parameter.SafeBool(1);
+
+		// return delegate
+		return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
+			PhysicPointModel pointModel = StateManager.state.GetModel(mainModel.physicsModelId) as PhysicPointModel;
+			if (pointModel == null) return false;
+			FixedFloat impactValue = getOrientedAxisValue(pointModel.collisionInpact, orientation, useModule);
+			if (numeratorSubjectId != (int)CharacterSubjectsBuilder.PredefinedSubjects.none){
+				List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)numeratorSubjectId);
+				if (comparisonSubject == null) return false;
+				// compare each model's impact with each comparison subject variable, return true if all pass
+				int variableValue;
+				foreach (GameEntityModel comparisonModel in comparisonSubject) {
+					if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
+						return false;
+					}
+					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, impactValue, (FixedFloat) variableValue)){
+						return false;
+					}
+				}
+			}else {
+				// compare model's impact with static velocity number
+				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, impactValue, staticComparisonValue)){
+					return false;
+				}
+			}
+			return true;
+		};
 	}
+
+
+
+
+
+
+
 
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildVariable(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 		return null;

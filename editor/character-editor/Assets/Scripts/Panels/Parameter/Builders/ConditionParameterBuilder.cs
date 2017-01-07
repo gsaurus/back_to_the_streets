@@ -137,7 +137,7 @@ public class ConditionParameterBuilder: ParameterBuilder {
 
 	// |move_H| >= 5.2
     private class BuildInputVelocity: InternConditionBuilder{
-        public BuildInputVelocity():base("Input velocity"){}
+        public BuildInputVelocity():base("Input Axis"){}
 		public override string ToString(GenericParameter parameter){
             string orientationString = "";
             switch (parameter.SafeInt(1)){
@@ -145,7 +145,7 @@ public class ConditionParameterBuilder: ParameterBuilder {
                 case 1: orientationString = "V"; break;
                 default: orientationString = ""; break;
             }
-            string operationName = "inputVel" + orientationString + SubjectString(parameter, 0);
+            string operationName = "axis" + orientationString + SubjectString(parameter, 0);
             string numeratorString = NumeratorString(parameter, 3, 0, parameter.SafeFloat(0) + "");
             if (parameter.SafeBool(1)){
                 operationName = "|" + operationName + "|";
@@ -167,7 +167,7 @@ public class ConditionParameterBuilder: ParameterBuilder {
 
 	// press D
 	private class BuildInputButton: InternConditionBuilder{
-		public BuildInputButton():base("Input button"){}
+		public BuildInputButton():base("Input Button"){}
 		public override string ToString(GenericParameter parameter){
             string operationName = "button" + SubjectString(parameter, 0);
             return FilterNegationString(parameter, operationName + SafeToString(inputButtonStateOptions, parameter.SafeInt(0), "button state") + " " + SafeToString(inputButtonOptions, parameter.SafeInt(1), "button"));
@@ -206,20 +206,33 @@ public class ConditionParameterBuilder: ParameterBuilder {
 	}
         
 
-	// collideH >= 4.3
+    // |collideH| >= 3.2
 	private class BuildCollisionImpact: InternConditionBuilder{
-		public BuildCollisionImpact():base("Collision impact"){}
-		public override string ToString(GenericParameter parameter){
-			return "collide_" + SafeToString(collisionDirectionShort, parameter.SafeInt(0), "impact orientation")
-				+ " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
-				+ " " + parameter.SafeFloatToString(0)
-			;
-		}
-		public override void Build(GameObject parent, GenericParameter parameter){
-			IntDropdownParam.Instantiate(parent, parameter, 0, "Orientation:", collisionDirection);
-			InstantiateArithmeticField(parent, parameter, 1);
-			FloatInputFieldParam.Instantiate(parent, parameter, 0, "impact velocity:");
-		}
+        public BuildCollisionImpact():base("Collision Impact"){}
+        public override string ToString(GenericParameter parameter){
+            string orientationString = "";
+            switch (parameter.SafeInt(1)){
+                case 0: orientationString = "H"; break;
+                case 1: orientationString = "V"; break;
+                default: orientationString = ""; break;
+            }
+            string operationName = "collide" + orientationString + SubjectString(parameter, 0);
+            string numeratorString = NumeratorString(parameter, 3, 0, parameter.SafeFloat(0) + "");
+            if (parameter.SafeBool(1)){
+                operationName = "|" + operationName + "|";
+            }
+            return operationName
+                + " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(2), "operator")
+                + " " + numeratorString;
+        }
+        public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateSubject(parent, parameter, 0);
+            IntDropdownParam.Instantiate(parent, parameter, 1, "Orientation:", directionOptions);
+            InstantiateArithmeticField(parent, parameter, 2);
+            InstantiateNumeratorVar(parent, parameter, 3, 0);
+            FloatInputFieldParam.Instantiate(parent, parameter, 0, "Or compare with value:");
+            BoolToggleParam.Instantiate(parent, parameter, 1, "Use absolute value");
+        }
 	}
        
 
