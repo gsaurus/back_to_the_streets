@@ -198,7 +198,7 @@ public class ConditionParameterBuilder: ParameterBuilder {
 	private class BuildFacingRight: InternConditionBuilder{
         public BuildFacingRight():base("Facing right"){}
 		public override string ToString(GenericParameter parameter){
-			return "facing " + (parameter.SafeBool(0) ? "←" : "→");
+            return "facing" + SubjectString(parameter, 0) + " " + (parameter.SafeBool(0) ? "←" : "→");
 		}
 		public override void Build(GameObject parent, GenericParameter parameter){
 			InstantiateNegation(parent, parameter);

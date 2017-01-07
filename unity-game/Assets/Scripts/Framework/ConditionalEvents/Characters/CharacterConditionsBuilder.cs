@@ -263,10 +263,22 @@ public static class CharacterConditionsBuilder {
 
 
 
-
+	// Facing right
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildFacingRight(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
-		return null;
+		keyFrame = InvalidKeyframe;
+		// Read negation
+		bool positiveCheck = !parameter.SafeBool(0);
+
+		// Return delegate
+		return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
+			return mainModel.IsFacingRight() == positiveCheck;
+		};
 	}
+
+
+
+
+
 
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildCollisionImpact(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 		return null;
