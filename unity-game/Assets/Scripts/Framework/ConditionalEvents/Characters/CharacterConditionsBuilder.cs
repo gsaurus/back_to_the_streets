@@ -329,10 +329,51 @@ public static class CharacterConditionsBuilder {
 
 
 
-
+	// Variable
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildVariable(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
-		return null;
+		keyFrame = InvalidKeyframe;
+		// Read var name, operator, numerator subject, numerator var, number, is timer
+		string varName = parameter.SafeString(0);
+		ConditionUtils<GameEntityModel>.ComparisonOperation comparisonOperator = (ConditionUtils<GameEntityModel>.ComparisonOperation)parameter.SafeInt(1);
+		int			numeratorSubjectId		= parameter.SafeInt(2);
+		string		numeratorSubjectVarName	= parameter.SafeString(1);
+		int			staticComparisonValue	= parameter.SafeInt(3);
+
+		// return delegate
+		return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
+			int varValue;
+			mainModel.customVariables.TryGetValue(varName, out varValue);
+			if (numeratorSubjectId != (int)CharacterSubjectsBuilder.PredefinedSubjects.none){
+				List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)numeratorSubjectId);
+				if (comparisonSubject == null) return false;
+				// compare each model's impact with each comparison subject variable, return true if all pass
+				int comparisonVarValue;
+				foreach (GameEntityModel comparisonModel in comparisonSubject) {
+					if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out comparisonVarValue)) {
+						return false;
+					}
+					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, varValue, comparisonVarValue)){
+						return false;
+					}
+				}
+			}else {
+				// compare model's impact with static velocity number
+				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, varValue, staticComparisonValue)){
+					return false;
+				}
+			}
+			return true;
+		};
 	}
+
+
+
+
+
+
+
+
+
 
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildVelocity(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 		return null;

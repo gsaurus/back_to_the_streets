@@ -237,16 +237,26 @@ public class ConditionParameterBuilder: ParameterBuilder {
        
 
 
-	// combo >= 4
+    // var(energy)
 	private class BuildVariable: InternConditionBuilder{
         public BuildVariable():base("Variable"){}
-		public override string ToString(GenericParameter parameter){
-			return "combo " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator") + " " + parameter.SafeInt(0);
-		}
-		public override void Build(GameObject parent, GenericParameter parameter){
-			InstantiateArithmeticField(parent, parameter, 1);
-			IntInputFieldParam.Instantiate(parent, parameter, 0, "Combo value:", 0);
-		}
+        public override string ToString(GenericParameter parameter){
+            string varName = parameter.SafeString(0);
+            string varString = "var";
+            string operationName = varString + "(" + varName + ")" + SubjectString(parameter, 0);
+            string numeratorString = NumeratorString(parameter, 2, 1, parameter.SafeInt(3) + "");
+
+            return operationName
+                + " " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(1), "operator")
+                + " " + numeratorString;
+        }
+        public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateSubject(parent, parameter, 0);
+            StringInputFieldParam.Instantiate(parent, parameter, 0, "Variable name:");
+            InstantiateArithmeticField(parent, parameter, 1);
+            InstantiateNumeratorVar(parent, parameter, 2, 1);
+            IntInputFieldParam.Instantiate(parent, parameter, 3, "Or compare with value:");
+        }
 	}
 
 
