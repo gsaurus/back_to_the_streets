@@ -169,12 +169,14 @@ public class ConditionParameterBuilder: ParameterBuilder {
 	private class BuildInputButton: InternConditionBuilder{
 		public BuildInputButton():base("Input button"){}
 		public override string ToString(GenericParameter parameter){
-			return FilterNegationString(parameter, SafeToString(inputButtonStateOptions, parameter.SafeInt(0), "button state") + " " + SafeToString(inputButtonOptions, parameter.SafeInt(1), "button"));
+            string operationName = "button" + SubjectString(parameter, 0);
+            return FilterNegationString(parameter, operationName + SafeToString(inputButtonStateOptions, parameter.SafeInt(0), "button state") + " " + SafeToString(inputButtonOptions, parameter.SafeInt(1), "button"));
 		}
 		public override void Build(GameObject parent, GenericParameter parameter){
-			InstantiateNegation(parent, parameter);
+            InstantiateSubject(parent, parameter, 0);
 			IntDropdownParam.Instantiate(parent, parameter, 1, "Button:", inputButtonOptions);
-			IntDropdownParam.Instantiate(parent, parameter, 0, "State:", inputButtonStateOptions);
+			IntDropdownParam.Instantiate(parent, parameter, 2, "State:", inputButtonStateOptions);
+            InstantiateNegation(parent, parameter);
 		}
 	}
 

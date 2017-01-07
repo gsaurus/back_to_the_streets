@@ -14,6 +14,12 @@ public static class CharacterConditionsBuilder {
 		any			= 2
 	}
 
+	private enum ButtonState {
+		press	= 0,
+		hold	= 1,
+		release	= 2
+	}
+
 
 	// Condition evaluation delegate builders indexed by type directly on array
 	// Receives animation just to pre-process special cases such as last frame (currently the only situation)
@@ -92,7 +98,15 @@ public static class CharacterConditionsBuilder {
 
 
 
+
+
+
+
 #region Conditions
+
+
+
+
 
 	// Frame
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildFrame(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
@@ -149,8 +163,16 @@ public static class CharacterConditionsBuilder {
 		};
 	}
 
+
+
+
+
+
+
+
+
 	// Auxiliar method to get Oriented Axis
-	private static FixedFloat getOrientedAxisValue(FixedVector3 axis, CharacterConditionsBuilder.Orientation orientation, bool useModule){
+	private static FixedFloat getOrientedAxisValue(FixedVector3 axis, Orientation orientation, bool useModule){
 		FixedFloat inputAxisValue = FixedFloat.Zero;
 		switch(orientation){
 			case Orientation.horizontal: inputAxisValue = axis.X; break;
@@ -162,14 +184,13 @@ public static class CharacterConditionsBuilder {
 		}
 		return inputAxisValue;
 	}
-
-
+		
 	// Input Velocity
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildInputVelocity(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 		keyFrame = InvalidKeyframe;
 		// Read subject, orientation, operator, numerator subject, numerator var, number, module
 		CharacterSubjectsBuilder.SubjectOption subjectId = (CharacterSubjectsBuilder.SubjectOption)parameter.SafeInt(0);
-		CharacterConditionsBuilder.Orientation orientation = (CharacterConditionsBuilder.Orientation)parameter.SafeInt(1);
+		Orientation orientation = (Orientation)parameter.SafeInt(1);
 		ConditionUtils<GameEntityModel>.ComparisonOperation comparisonOperator = (ConditionUtils<GameEntityModel>.ComparisonOperation)parameter.SafeInt(2);
 		CharacterSubjectsBuilder.SubjectOption numeratorSubjectId = (CharacterSubjectsBuilder.SubjectOption)parameter.SafeInt(3);
 		string numeratorSubjectVarName = parameter.SafeString(0);
@@ -201,7 +222,7 @@ public static class CharacterConditionsBuilder {
 					}
 				}
 			}else {
-				// compare each model's frame with static frame number, return true if all pass
+				// compare each model's input velocity with static velocity number, return true if all pass
 				foreach (GameEntityModel mainModel in mainSubject) {
 					inputModel = StateManager.state.GetModel(mainModel.inputModelId) as PlayerInputModel;
 					inputAxisValue = getOrientedAxisValue(inputModel.axis, orientation, useModule);
@@ -214,8 +235,43 @@ public static class CharacterConditionsBuilder {
 		};
 	}
 
+
+
+
+
+
+	// Input Button
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildInputButton(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
-		return null;
+		keyFrame = InvalidKeyframe;
+		// Read subject, button, state
+		CharacterSubjectsBuilder.SubjectOption subjectId = (CharacterSubjectsBuilder.SubjectOption)parameter.SafeInt(0);
+		uint buttonId = (uint) parameter.SafeInt(1);
+		ButtonState buttonState = (ButtonState)parameter.SafeInt(2);
+
+		// Return delegate
+		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
+			List<GameEntityModel> mainSubject;
+			mainSubject	= ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)subjectId);
+			if (mainSubject == null) return false;
+			PlayerInputModel inputModel;
+			PlayerInputController inputController;
+			bool verifies;
+			// verify each model's button state
+			foreach (GameEntityModel mainModel in mainSubject) {
+				inputModel = StateManager.state.GetModel(mainModel.inputModelId) as PlayerInputModel;
+				inputController = inputModel.Controller() as PlayerInputController;
+				if (inputController == null) return false;
+				verifies = false;
+				switch(buttonState) {
+					case ButtonState.hold:		verifies = inputController.IsButtonHold(inputModel, buttonId);		break;
+					case ButtonState.press:		verifies = inputController.IsButtonPressed(inputModel, buttonId);	break;
+					case ButtonState.release:	verifies = inputController.IsButtonReleased(inputModel, buttonId);	break;
+				}
+				if (!verifies) return false;
+			}
+			// all verified, return true
+			return true;
+		};
 	}
 
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildGrounded(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
