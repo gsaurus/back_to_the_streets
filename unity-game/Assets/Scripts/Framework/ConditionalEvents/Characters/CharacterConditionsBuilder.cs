@@ -123,26 +123,7 @@ public static class CharacterConditionsBuilder {
 		return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
 			AnimationModel animModel = StateManager.state.GetModel(mainModel.animationModelId) as AnimationModel;
 			if (animModel == null) return false;
-			if (numeratorSubjectId != (int)CharacterSubjectsBuilder.PredefinedSubjects.none){
-				List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)numeratorSubjectId);
-				if (comparisonSubject == null) return false;
-				// compare model frame with each comparison subject variable, return true if all pass
-				int variableValue;
-				foreach (GameEntityModel comparisonModel in comparisonSubject) {
-					if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
-						return false;
-					}
-					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, (int)animModel.currentFrame, variableValue)){
-						return false;
-					}
-				}
-			}else {
-				// compare model's frame with static frame number
-				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, (int)animModel.currentFrame, staticComparisonFrame)){
-					return false;
-				}
-			}
-			return true;
+			return CompareWithNumerator(numeratorSubjectId, numeratorSubjectVarName, (int)animModel.currentFrame, staticComparisonFrame, comparisonOperator, subjectModels);
 		};
 	}
 
@@ -185,26 +166,7 @@ public static class CharacterConditionsBuilder {
 			PlayerInputModel inputModel = StateManager.state.GetModel(mainModel.inputModelId) as PlayerInputModel;
 			if (inputModel == null) return false;
 			FixedFloat inputAxisValue = getOrientedAxisValue(inputModel.axis, orientation, useModule);
-			if (numeratorSubjectId != (int)CharacterSubjectsBuilder.PredefinedSubjects.none){
-				List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)numeratorSubjectId);
-				if (comparisonSubject == null) return false;
-				// compare each model's velocity with each comparison subject variable, return true if all pass
-				int variableValue;
-				foreach (GameEntityModel comparisonModel in comparisonSubject) {
-					if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
-						return false;
-					}
-					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, inputAxisValue, (FixedFloat) variableValue)){
-						return false;
-					}
-				}
-			}else {
-				// compare model's input velocity with static velocity number
-				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, inputAxisValue, staticComparisonValue)){
-					return false;
-				}
-			}
-			return true;
+			return CompareWithNumerator(numeratorSubjectId, numeratorSubjectVarName, inputAxisValue, staticComparisonValue, comparisonOperator, subjectModels);
 		};
 	}
 
@@ -303,26 +265,7 @@ public static class CharacterConditionsBuilder {
 			PhysicPointModel pointModel = StateManager.state.GetModel(mainModel.physicsModelId) as PhysicPointModel;
 			if (pointModel == null) return false;
 			FixedFloat impactValue = getOrientedAxisValue(pointModel.collisionInpact, orientation, useModule);
-			if (numeratorSubjectId != (int)CharacterSubjectsBuilder.PredefinedSubjects.none){
-				List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)numeratorSubjectId);
-				if (comparisonSubject == null) return false;
-				// compare each model's impact with each comparison subject variable, return true if all pass
-				int variableValue;
-				foreach (GameEntityModel comparisonModel in comparisonSubject) {
-					if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
-						return false;
-					}
-					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, impactValue, (FixedFloat) variableValue)){
-						return false;
-					}
-				}
-			}else {
-				// compare model's impact with static velocity number
-				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, impactValue, staticComparisonValue)){
-					return false;
-				}
-			}
-			return true;
+			return CompareWithNumerator(numeratorSubjectId, numeratorSubjectVarName, impactValue, staticComparisonValue, comparisonOperator, subjectModels);
 		};
 	}
 
@@ -346,26 +289,7 @@ public static class CharacterConditionsBuilder {
 		return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
 			int varValue;
 			mainModel.customVariables.TryGetValue(varName, out varValue);
-			if (numeratorSubjectId != (int)CharacterSubjectsBuilder.PredefinedSubjects.none){
-				List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)numeratorSubjectId);
-				if (comparisonSubject == null) return false;
-				// compare each model's impact with each comparison subject variable, return true if all pass
-				int comparisonVarValue;
-				foreach (GameEntityModel comparisonModel in comparisonSubject) {
-					if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out comparisonVarValue)) {
-						return false;
-					}
-					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, varValue, comparisonVarValue)){
-						return false;
-					}
-				}
-			}else {
-				// compare model's impact with static velocity number
-				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, varValue, staticComparisonValue)){
-					return false;
-				}
-			}
-			return true;
+			return CompareWithNumerator(numeratorSubjectId, numeratorSubjectVarName, varValue, staticComparisonValue, comparisonOperator, subjectModels);
 		};
 	}
 
@@ -391,26 +315,7 @@ public static class CharacterConditionsBuilder {
 			// WARNING: TODO: get global variable from world model
 			// *********** WorldModel worldModel = StateManager.state. ...... ****************
 			//************ worldModel.customVariables.TryGetValue(varName, out varValue); **************
-			if (numeratorSubjectId != (int)CharacterSubjectsBuilder.PredefinedSubjects.none){
-				List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)numeratorSubjectId);
-				if (comparisonSubject == null) return false;
-				// compare each model's impact with each comparison subject variable, return true if all pass
-				int comparisonVarValue;
-				foreach (GameEntityModel comparisonModel in comparisonSubject) {
-					if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out comparisonVarValue)) {
-						return false;
-					}
-					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, varValue, comparisonVarValue)){
-						return false;
-					}
-				}
-			}else {
-				// compare model's impact with static velocity number
-				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, varValue, staticComparisonValue)){
-					return false;
-				}
-			}
-			return true;
+			return CompareWithNumerator(numeratorSubjectId, numeratorSubjectVarName, varValue, staticComparisonValue, comparisonOperator, subjectModels);
 		};
 	}
 
@@ -438,26 +343,7 @@ public static class CharacterConditionsBuilder {
 			PhysicPointModel pointModel = StateManager.state.GetModel(mainModel.physicsModelId) as PhysicPointModel;
 			if (pointModel == null) return false;
 			FixedFloat velocityValue = getOrientedAxisValue(pointModel.GetVelocity(), orientation, useModule);
-			if (numeratorSubjectId != (int)CharacterSubjectsBuilder.PredefinedSubjects.none){
-				List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, (int)numeratorSubjectId);
-				if (comparisonSubject == null) return false;
-				// compare each model's velocity with each comparison subject variable, return true if all pass
-				int variableValue;
-				foreach (GameEntityModel comparisonModel in comparisonSubject) {
-					if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
-						return false;
-					}
-					if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, velocityValue, (FixedFloat) variableValue)){
-						return false;
-					}
-				}
-			}else {
-				// compare model's input velocity with static velocity number
-				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, velocityValue, staticComparisonValue)){
-					return false;
-				}
-			}
-			return true;
+			return CompareWithNumerator(numeratorSubjectId, numeratorSubjectVarName, velocityValue, staticComparisonValue, comparisonOperator, subjectModels);
 		};
 	}
 
@@ -466,10 +352,23 @@ public static class CharacterConditionsBuilder {
 
 
 
-
+	// TODO: actually want to know existance of subject's parent, anchored, etc, not to check from other subjects
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildExistence(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
-		return null;
+		keyFrame = InvalidKeyframe;
+		// Read target subject, negation
+		int targerSubjectId	= parameter.SafeInt(1);
+		bool positiveCheck	= !parameter.SafeBool(0);
+
+		// Return delegate
+		return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
+			return subjectModels[targerSubjectId] != null && subjectModels[targerSubjectId].Count > 0;
+		};
 	}
+
+
+
+
+
 
 	private static EventCondition<GameEntityModel>.EvaluationDelegate BuildTeam(Storage.GenericParameter parameter, out int keyFrame, Storage.CharacterAnimation animation){
 		return null;
@@ -485,6 +384,85 @@ public static class CharacterConditionsBuilder {
 
 
 
+
+#endregion
+
+
+
+
+#region Auxiliar methods
+
+	// CompareWithNumerator, int version
+	// Comes in duplicate due to conversion FixedFloat to int not working with parameterized types
+	private static bool CompareWithNumerator(
+		int numeratorSubjectId,
+		string numeratorSubjectVarName,
+		int comparisonValue,
+		int staticComparisonValue,
+		ConditionUtils<GameEntityModel>.ComparisonOperation comparisonOperator,
+		List<GameEntityModel>[] subjectModels
+	){
+		// no subject
+		if (numeratorSubjectId == 0){
+			return ConditionUtils<GameEntityModel>.Compare(comparisonOperator, comparisonValue, staticComparisonValue);
+		}
+		// global variable
+		if (numeratorSubjectId == 1){
+			// TODO: get global variable
+			int globalVariableValue = 0;
+			return ConditionUtils<GameEntityModel>.Compare(comparisonOperator, comparisonValue, globalVariableValue);
+		}
+		// subject variable
+		numeratorSubjectId -= 2;
+		List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, numeratorSubjectId);
+		if (comparisonSubject == null || comparisonSubject.Count == 0) return false;
+		// compare each model's velocity with each comparison subject variable, return true if all pass
+		int variableValue;
+		foreach (GameEntityModel comparisonModel in comparisonSubject) {
+			if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
+				return false;
+			}
+			if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, comparisonValue, variableValue)){
+				return false;
+			}
+		}
+		return true;
+	}
+	// CompareWithNumerator, FixedFloat version
+	private static bool CompareWithNumerator(
+		int numeratorSubjectId,
+		string numeratorSubjectVarName,
+		FixedFloat comparisonValue,
+		FixedFloat staticComparisonValue,
+		ConditionUtils<GameEntityModel>.ComparisonOperation comparisonOperator,
+		List<GameEntityModel>[] subjectModels
+	){
+		// no subject
+		if (numeratorSubjectId == 0){
+			return ConditionUtils<GameEntityModel>.Compare(comparisonOperator, comparisonValue, staticComparisonValue);
+		}
+		// global variable
+		if (numeratorSubjectId == 1){
+			// TODO: get global variable
+			int globalVariableValue = 0;
+			return ConditionUtils<GameEntityModel>.Compare(comparisonOperator, comparisonValue, (FixedFloat) globalVariableValue);
+		}
+		// subject variable
+		numeratorSubjectId -= 2;
+		List<GameEntityModel> comparisonSubject = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, numeratorSubjectId);
+		if (comparisonSubject == null || comparisonSubject.Count == 0) return false;
+		// compare each model's velocity with each comparison subject variable, return true if all pass
+		int variableValue;
+		foreach (GameEntityModel comparisonModel in comparisonSubject) {
+			if (!comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
+				return false;
+			}
+			if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, comparisonValue, (FixedFloat) variableValue)){
+				return false;
+			}
+		}
+		return true;
+	}
 
 #endregion
 
