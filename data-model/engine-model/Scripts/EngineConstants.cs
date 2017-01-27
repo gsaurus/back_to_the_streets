@@ -38,7 +38,8 @@ namespace RetroBread{
 		public const string AnimationViewFactoryId				= "_rb_av";
 		public const string GameEntityControllerFactoryId		= "_rb_gec";
 		public const string GameEntityViewFactoryId				= "_rb_gev";
-		
+		public const string WorldControllerFactoryId			= "_rb_wdc";
+		public const string WorldViewFactoryId					= "_rb_wdv";
 	}
 
 	public class SerializationConstants{

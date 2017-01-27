@@ -39,7 +39,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Scripts\WorldModel.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Scripts\NetworkSorPlayerData.cs" />
   </ItemGroup>

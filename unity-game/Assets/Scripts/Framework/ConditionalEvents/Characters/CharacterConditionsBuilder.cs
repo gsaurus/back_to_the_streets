@@ -312,9 +312,8 @@ public static class CharacterConditionsBuilder {
 		// return delegate
 		return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
 			int varValue = 0;
-			// WARNING: TODO: get global variable from world model
-			// *********** WorldModel worldModel = StateManager.state. ...... ****************
-			//************ worldModel.customVariables.TryGetValue(varName, out varValue); **************
+			WorldModel worldModel = StateManager.state.MainModel as WorldModel;
+			worldModel.globalVariables.TryGetValue(varName, out varValue);
 			return CompareWithNumerator(numeratorSubjectId, numeratorSubjectVarName, varValue, staticComparisonValue, comparisonOperator, subjectModels);
 		};
 	}
@@ -408,8 +407,9 @@ public static class CharacterConditionsBuilder {
 		}
 		// global variable
 		if (numeratorSubjectId == 1){
-			// TODO: get global variable
 			int globalVariableValue = 0;
+			WorldModel worldModel = StateManager.state.MainModel as WorldModel;
+			worldModel.globalVariables.TryGetValue(numeratorSubjectVarName, out globalVariableValue);
 			return ConditionUtils<GameEntityModel>.Compare(comparisonOperator, comparisonValue, globalVariableValue);
 		}
 		// subject variable
@@ -443,8 +443,9 @@ public static class CharacterConditionsBuilder {
 		}
 		// global variable
 		if (numeratorSubjectId == 1){
-			// TODO: get global variable
 			int globalVariableValue = 0;
+			WorldModel worldModel = StateManager.state.MainModel as WorldModel;
+			worldModel.globalVariables.TryGetValue(numeratorSubjectVarName, out globalVariableValue);
 			return ConditionUtils<GameEntityModel>.Compare(comparisonOperator, comparisonValue, (FixedFloat) globalVariableValue);
 		}
 		// subject variable
