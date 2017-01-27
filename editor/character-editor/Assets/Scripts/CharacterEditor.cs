@@ -384,13 +384,13 @@ public class CharacterEditor : SingletonMonoBehaviour<CharacterEditor> {
 
 #region Handy getters/setters
 
-
-    public string[] AvailableSubjects(){
+    // TODO: pass a maxCount to avoid previous subjects to referenciate later subjects
+    public string[] AvailableSubjects(int maxCount = -1){
         ConditionalEvent eventToEdit = EventEditorPanel.eventToEdit;
         if (eventToEdit == null) eventToEdit = CurrentEvent();
         if (eventToEdit == null) return null;
         string[] defaultSubjects = SubjectParameterBuilder.predefinedSubjectsList;
-        string[] extraSubjects = eventToEdit.SubjectsToString();
+        string[] extraSubjects = eventToEdit.SubjectsToString(maxCount);
         string[] res = defaultSubjects;
         if (extraSubjects != null && extraSubjects.Length > 0){
             res = new string[defaultSubjects.Length + extraSubjects.Length];

@@ -23,6 +23,8 @@ public static class CharacterSubjectsBuilder {
 		fromFront = 2
 	}
 
+	// Default subject delegation delegate
+	private delegate void DefaultSubjectDelegatioDelegate(GameEntityModel model, List<GameEntityModel> subjects);
 	
 	// Subjects getter delegate builders indexed by type directly on array
 	private delegate EventSubject<GameEntityModel>.GetSubjectsDelegate BuilderAction(Storage.GenericParameter param);
@@ -102,6 +104,29 @@ public static class CharacterSubjectsBuilder {
 
 
 
+	// Default Subject Delegation
+	private static EventSubject<GameEntityModel>.GetSubjectsDelegate DefaultDelegation(int subjectId, DefaultSubjectDelegatioDelegate subjectDelegation){
+		// Create the delegate
+		return delegate(GameEntityModel selfModel, List<GameEntityModel>[] subjectModels){
+			List<GameEntityModel> models;
+			if (subjectId == (int)PredefinedSubjects.self){
+				models = new List<GameEntityModel>();
+				models.Add(selfModel);
+			}else {
+				models = subjectModels[subjectId];
+			}
+			if (models == null || models.Count == 0) return null;
+			List<GameEntityModel> subjects = new List<GameEntityModel>(models.Count);
+			foreach (GameEntityModel model in models){
+				subjectDelegation(model, subjects);
+			}
+			return subjects;
+		};
+	}
+
+
+
+
 #region Default Subjects
 
 	// 0: GetSelf
@@ -115,48 +140,35 @@ public static class CharacterSubjectsBuilder {
 	// 1: GetOwner
 	private static EventSubject<GameEntityModel>.GetSubjectsDelegate GetOwner(Storage.GenericParameter parameter){
 		int subjectId = parameter.SafeInt(0);
-		// Create the delegate
-		return delegate(GameEntityModel selfModel, List<GameEntityModel>[] subjectModels){
-			// TODO: extract function
-			List<GameEntityModel> models;
-			if (subjectId == (int)PredefinedSubjects.self){
-				models = new List<GameEntityModel>();
-				models.Add(selfModel);
-			}else {
-				models = subjectModels[subjectId];
+		return DefaultDelegation(subjectId, delegate(GameEntityModel model, List<GameEntityModel> subjects){
+			GameEntityModel ownerModel = StateManager.state.GetModel(model.ownerEntity) as GameEntityModel;
+			if (ownerModel != null){
+				subjects.Add(ownerModel);
 			}
-			if (models == null || models.Count == 0) return null;
-			List<GameEntityModel> subjects = new List<GameEntityModel>(models.Count);
-			foreach (GameEntityModel model in models){
-				GameEntityModel ownerModel = StateManager.state.GetModel(model.ownerEntity) as GameEntityModel;
-				if (ownerModel != null){
-					subjects.Add(ownerModel);
-				}
-			}
-			return subjects;
-		};
+		});
 	}
 
 	// 2: GetOwnerOrSelf
 	private static EventSubject<GameEntityModel>.GetSubjectsDelegate GetOwnerOrSelf(Storage.GenericParameter parameter){
-		// Create the delegate
-		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
+		int subjectId = parameter.SafeInt(0);
+		return DefaultDelegation(subjectId, delegate(GameEntityModel model, List<GameEntityModel> subjects){
 			GameEntityModel ownerOrSelfModel = StateManager.state.GetModel(model.ownerEntity) as GameEntityModel;
 			if (ownerOrSelfModel == null){
 				ownerOrSelfModel = model;
 			}
-			return CreateSubjectsWithSubject(ownerOrSelfModel);
-		};
+			subjects.Add(ownerOrSelfModel);
+		});
 	}
 
 	// 3: GetParent
 	private static EventSubject<GameEntityModel>.GetSubjectsDelegate GetParent(Storage.GenericParameter parameter){
-		// Create the delegate
-		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
+		int subjectId = parameter.SafeInt(0);
+		return DefaultDelegation(subjectId, delegate(GameEntityModel model, List<GameEntityModel> subjects){
 			GameEntityModel parentModel = StateManager.state.GetModel(model.parentEntity) as GameEntityModel;
-			if (parentModel == null) return null;
-			return CreateSubjectsWithSubject(parentModel);
-		};
+			if (parentModel != null){
+				subjects.Add(parentModel);
+			}
+		});
 	}
 
 #endregion
@@ -169,10 +181,9 @@ public static class CharacterSubjectsBuilder {
 		// Read anchor options, anchor IDs and if it's a single subject
 		AnyOrAllOptions anchorOptions = (AnyOrAllOptions)parameter.SafeInt(1);
 		int[] anchorIds = parameter.SafeIntsList(0);
+		int subjectId = parameter.SafeInt(0);
 
-		// Create the delegate
-		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-			List<GameEntityModel> subjects = new List<GameEntityModel>();
+		return DefaultDelegation(subjectId, delegate(GameEntityModel model, List<GameEntityModel> subjects){
 			List<ModelReference> anchoredEntities = model.anchoredEntities;
 			if (anchorOptions == AnyOrAllOptions.anyOf) {
 				// Add all from given anchors
@@ -189,8 +200,7 @@ public static class CharacterSubjectsBuilder {
 					}
 				}
 			}
-			return subjects;
-		};
+		});
 	}
 
 	// 5: GetHitters
@@ -201,10 +211,9 @@ public static class CharacterSubjectsBuilder {
 		int[] types = parameter.SafeIntsList(0);
 		AnyOrAllOptions collisionIdsOptions = (AnyOrAllOptions)parameter.SafeInt(3);
 		int[] collisionIds = parameter.SafeIntsList(1);
+		int subjectId = parameter.SafeInt(0);
 
-		// Create the delegate
-		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-			List<GameEntityModel> subjects = new List<GameEntityModel>();
+		return DefaultDelegation(subjectId, delegate(GameEntityModel model, List<GameEntityModel> subjects){
 			GameEntityController controller = model.Controller() as GameEntityController;
 			List<HitInformation> hurts = controller.lastHurts;
 			GameEntityModel subject;
@@ -218,8 +227,8 @@ public static class CharacterSubjectsBuilder {
 					}
 				}
 			}
-			return subjects;
-		};
+		});
+			
 	}
 
 	// 6: GetHittens
@@ -229,10 +238,9 @@ public static class CharacterSubjectsBuilder {
 		int[] types = parameter.SafeIntsList(0);
 		AnyOrAllOptions hitIdsOptions = (AnyOrAllOptions)parameter.SafeInt(2);
 		int[] hitIds = parameter.SafeIntsList(1);
+		int subjectId = parameter.SafeInt(0);
 
-		// Create the delegate
-		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-			List<GameEntityModel> subjects = new List<GameEntityModel>();
+		return DefaultDelegation(subjectId, delegate(GameEntityModel model, List<GameEntityModel> subjects){
 			GameEntityController controller = model.Controller() as GameEntityController;
 			List<HitInformation> hits = controller.lastHits;
 			GameEntityModel subject;
@@ -244,20 +252,19 @@ public static class CharacterSubjectsBuilder {
 					subjects.Add(subject);
 				}
 			}
-			return subjects;
-		};
+		});
 	}
 
 	// 7: GetColliding
 	private static EventSubject<GameEntityModel>.GetSubjectsDelegate GetColliding(Storage.GenericParameter parameter){
-		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
+		int subjectId = parameter.SafeInt(0);
+		return DefaultDelegation(subjectId, delegate(GameEntityModel model, List<GameEntityModel> subjects){
 			GameEntityController controller = model.Controller() as GameEntityController;
 			if (controller.lastCollisionEntityId != null && controller.lastCollisionEntityId != ModelReference.InvalidModelIndex){
 				GameEntityModel collidingEntity = StateManager.state.GetModel(controller.lastCollisionEntityId) as GameEntityModel;
-				return CreateSubjectsWithSubject(collidingEntity);
+				subjects.Add(collidingEntity);
 			}
-			return null;
-		};
+		});
 	}
 
 	// 8: GetAll

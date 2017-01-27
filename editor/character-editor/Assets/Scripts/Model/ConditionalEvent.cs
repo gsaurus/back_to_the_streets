@@ -170,10 +170,10 @@ public class ConditionalEvent {
 		}
 	}
 
-    public string[] SubjectsToString(){
+    public string[] SubjectsToString(int maxCount){
         if (subjects == null || subjects.Count == 0) return null;
         string[] res = new string[subjects.Count];
-        for (int i = 0; i < subjects.Count ; ++i){
+        for (int i = 0; i < subjects.Count && i != maxCount; ++i){
             res[i] = SubjectParameterBuilder.Instance.ToString(subjects[i]);
         }
         return res;
