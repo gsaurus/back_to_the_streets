@@ -39,7 +39,7 @@ public class ConditionalEvent<T>{
 		// First get the lists of subjects
 		List<T>[] allSubjectsModels = new List<T>[subjects.Count];
 		for (int i = 0 ; i < subjects.Count; ++i) {
-			allSubjectsModels[i] = subjects[i].GetSubjects(model);
+			allSubjectsModels[i] = subjects[i].GetSubjects(model, allSubjectsModels);
 		}
 
 		// Evaluate conditions

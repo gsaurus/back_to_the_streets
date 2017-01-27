@@ -6,7 +6,7 @@ namespace RetroBread{
 
 // Obtains a list of models in evaluation (of type T)
 public class EventSubject<T>{
-	public delegate List<T> GetSubjectsDelegate(T model);
+	public delegate List<T> GetSubjectsDelegate(T model, List<T>[] subjectModels);
 	public delegate List<T> ReevaluateSubjectsDelegate(List<T> subjects);
 
 	private GetSubjectsDelegate getSubjectsDelegate;
@@ -17,8 +17,8 @@ public class EventSubject<T>{
 		this.reevaluateSubjectsDelegate = reevaluateSubjectsDelegate;
 	}
 
-	public List<T> GetSubjects(T model){
-		return getSubjectsDelegate(model);
+	public List<T> GetSubjects(T model, List<T>[] subjectModels){
+		return getSubjectsDelegate(model, subjectModels);
 	}
 
 	public List<T> ReevaluateSubjects(List<T> subjects){

@@ -228,7 +228,7 @@ public static class CharacterLoader{
 			if (animation.events != null) {
 				foreach (Storage.GenericEvent e in animation.events) {
 					animEvent = ReadEvent(charData, e, out keyFrame, animation);
-					if (keyFrame != CharacterConditionsBuilder.invalidKeyframe) {
+					if (keyFrame != CharacterConditionsBuilder.InvalidKeyframe) {
 						controller.AddKeyframeEvent((uint)keyFrame, animEvent);
 					} else {
 						controller.AddGeneralEvent(animEvent);

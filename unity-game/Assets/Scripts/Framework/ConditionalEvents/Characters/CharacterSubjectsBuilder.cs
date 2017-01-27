@@ -9,10 +9,7 @@ public static class CharacterSubjectsBuilder {
 
 	public enum PredefinedSubjects {
 		none			= -1,
-		self			= 0,
-		owner			= 1,
-		ownerOrSelf		= 2,
-		parent			= 3,
+		self			= 0
 	}
 
 	private enum AnyOrAllOptions{
@@ -32,10 +29,10 @@ public static class CharacterSubjectsBuilder {
 	private static BuilderAction[] builderActions = {
 		// Default, always present
 		GetSelf,
+		// Custom, added if necessary, parameterised
 		GetOwner,
 		GetOwnerOrSelf,
 		GetParent,
-		// Custom, added if necessary, parameterised
 		GetGrabbed,
 		GetHitters,
 		GetHittens,
@@ -51,9 +48,6 @@ public static class CharacterSubjectsBuilder {
 
 		// Build default subjects
 		subjects.Add(BuildDefaultSubject(GetSelf));
-		subjects.Add(BuildDefaultSubject(GetOwner));
-		subjects.Add(BuildDefaultSubject(GetOwnerOrSelf));
-		subjects.Add(BuildDefaultSubject(GetParent));
 		int numDefaultSubjects = subjects.Count;
 
 		// Build custom subjects
@@ -113,25 +107,40 @@ public static class CharacterSubjectsBuilder {
 	// 0: GetSelf
 	private static EventSubject<GameEntityModel>.GetSubjectsDelegate GetSelf(Storage.GenericParameter parameter){
 		// Create the delegate
-		return delegate(GameEntityModel model){
+		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
 			return CreateSubjectsWithSubject(model);
 		};
 	}
 
 	// 1: GetOwner
 	private static EventSubject<GameEntityModel>.GetSubjectsDelegate GetOwner(Storage.GenericParameter parameter){
+		int subjectId = parameter.SafeInt(0);
 		// Create the delegate
-		return delegate(GameEntityModel model){
-			GameEntityModel ownerModel = StateManager.state.GetModel(model.ownerEntity) as GameEntityModel;
-			if (ownerModel == null) return null;
-			return CreateSubjectsWithSubject(ownerModel);
+		return delegate(GameEntityModel selfModel, List<GameEntityModel>[] subjectModels){
+			// TODO: extract function
+			List<GameEntityModel> models;
+			if (subjectId == (int)PredefinedSubjects.self){
+				models = new List<GameEntityModel>();
+				models.Add(selfModel);
+			}else {
+				models = subjectModels[subjectId];
+			}
+			if (models == null || models.Count == 0) return null;
+			List<GameEntityModel> subjects = new List<GameEntityModel>(models.Count);
+			foreach (GameEntityModel model in models){
+				GameEntityModel ownerModel = StateManager.state.GetModel(model.ownerEntity) as GameEntityModel;
+				if (ownerModel != null){
+					subjects.Add(ownerModel);
+				}
+			}
+			return subjects;
 		};
 	}
 
 	// 2: GetOwnerOrSelf
 	private static EventSubject<GameEntityModel>.GetSubjectsDelegate GetOwnerOrSelf(Storage.GenericParameter parameter){
 		// Create the delegate
-		return delegate(GameEntityModel model){
+		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
 			GameEntityModel ownerOrSelfModel = StateManager.state.GetModel(model.ownerEntity) as GameEntityModel;
 			if (ownerOrSelfModel == null){
 				ownerOrSelfModel = model;
@@ -143,7 +152,7 @@ public static class CharacterSubjectsBuilder {
 	// 3: GetParent
 	private static EventSubject<GameEntityModel>.GetSubjectsDelegate GetParent(Storage.GenericParameter parameter){
 		// Create the delegate
-		return delegate(GameEntityModel model){
+		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
 			GameEntityModel parentModel = StateManager.state.GetModel(model.parentEntity) as GameEntityModel;
 			if (parentModel == null) return null;
 			return CreateSubjectsWithSubject(parentModel);
@@ -158,11 +167,11 @@ public static class CharacterSubjectsBuilder {
 	// 4: GetGrabbed
 	private static EventSubject<GameEntityModel>.GetSubjectsDelegate GetGrabbed(Storage.GenericParameter parameter){
 		// Read anchor options, anchor IDs and if it's a single subject
-		AnyOrAllOptions anchorOptions = (AnyOrAllOptions)parameter.SafeInt(0);
+		AnyOrAllOptions anchorOptions = (AnyOrAllOptions)parameter.SafeInt(1);
 		int[] anchorIds = parameter.SafeIntsList(0);
 
 		// Create the delegate
-		return delegate(GameEntityModel model){
+		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
 			List<GameEntityModel> subjects = new List<GameEntityModel>();
 			List<ModelReference> anchoredEntities = model.anchoredEntities;
 			if (anchorOptions == AnyOrAllOptions.anyOf) {
@@ -187,14 +196,14 @@ public static class CharacterSubjectsBuilder {
 	// 5: GetHitters
 	private static EventSubject<GameEntityModel>.GetSubjectsDelegate GetHitters(Storage.GenericParameter parameter){
 		// Read orientation options, types options, list of types, collision ids options, collision ids list
-		OrientationOptions orientationOptions = (OrientationOptions)parameter.SafeInt(0);
-		AnyOrAllOptions typesOptions = (AnyOrAllOptions)parameter.SafeInt(1);
+		OrientationOptions orientationOptions = (OrientationOptions)parameter.SafeInt(1);
+		AnyOrAllOptions typesOptions = (AnyOrAllOptions)parameter.SafeInt(2);
 		int[] types = parameter.SafeIntsList(0);
-		AnyOrAllOptions collisionIdsOptions = (AnyOrAllOptions)parameter.SafeInt(2);
+		AnyOrAllOptions collisionIdsOptions = (AnyOrAllOptions)parameter.SafeInt(3);
 		int[] collisionIds = parameter.SafeIntsList(1);
 
 		// Create the delegate
-		return delegate(GameEntityModel model){
+		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
 			List<GameEntityModel> subjects = new List<GameEntityModel>();
 			GameEntityController controller = model.Controller() as GameEntityController;
 			List<HitInformation> hurts = controller.lastHurts;
@@ -216,13 +225,13 @@ public static class CharacterSubjectsBuilder {
 	// 6: GetHittens
 	private static EventSubject<GameEntityModel>.GetSubjectsDelegate GetHittens(Storage.GenericParameter parameter){
 		// Read types options, list of types, hit ids options, hit ids list
-		AnyOrAllOptions typesOptions = (AnyOrAllOptions)parameter.SafeInt(0);
+		AnyOrAllOptions typesOptions = (AnyOrAllOptions)parameter.SafeInt(1);
 		int[] types = parameter.SafeIntsList(0);
-		AnyOrAllOptions hitIdsOptions = (AnyOrAllOptions)parameter.SafeInt(1);
+		AnyOrAllOptions hitIdsOptions = (AnyOrAllOptions)parameter.SafeInt(2);
 		int[] hitIds = parameter.SafeIntsList(1);
 
 		// Create the delegate
-		return delegate(GameEntityModel model){
+		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
 			List<GameEntityModel> subjects = new List<GameEntityModel>();
 			GameEntityController controller = model.Controller() as GameEntityController;
 			List<HitInformation> hits = controller.lastHits;
@@ -241,7 +250,7 @@ public static class CharacterSubjectsBuilder {
 
 	// 7: GetColliding
 	private static EventSubject<GameEntityModel>.GetSubjectsDelegate GetColliding(Storage.GenericParameter parameter){
-		return delegate(GameEntityModel model){
+		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
 			GameEntityController controller = model.Controller() as GameEntityController;
 			if (controller.lastCollisionEntityId != null && controller.lastCollisionEntityId != ModelReference.InvalidModelIndex){
 				GameEntityModel collidingEntity = StateManager.state.GetModel(controller.lastCollisionEntityId) as GameEntityModel;
@@ -253,7 +262,7 @@ public static class CharacterSubjectsBuilder {
 
 	// 8: GetAll
 	private static EventSubject<GameEntityModel>.GetSubjectsDelegate GetAll(Storage.GenericParameter parameter){
-		return delegate(GameEntityModel model){
+		return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
 			List<GameEntityModel> subjects = new List<GameEntityModel>();
 			GameEntityModel subject;
 			WorldModel world = StateManager.state.MainModel as WorldModel;
