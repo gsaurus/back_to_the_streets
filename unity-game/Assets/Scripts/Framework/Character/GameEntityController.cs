@@ -163,24 +163,6 @@ namespace RetroBread{
 				}
 			}
 
-			// Update all custom timers
-			Dictionary<string, int> newTimerValues = new Dictionary<string, int>();
-			foreach (KeyValuePair<string, int> timer in model.customTimers){
-				if (timer.Value > 0){
-					int newTimer = timer.Value - 1;
-					// if there is a corresponding variable, automatically reset it
-					// TODO: is this the intended behaviour?...
-					if (newTimer == 0 && model.customVariables.ContainsKey(timer.Key)){
-						model.customVariables[timer.Key] = 0;
-					}
-					newTimerValues[timer.Key] = newTimer;
-				}
-			}
-			// consolidation
-			foreach (KeyValuePair<string, int> timer in newTimerValues) {
-				model.customTimers[timer.Key] = timer.Value;
-			}
-
 		}
 
 

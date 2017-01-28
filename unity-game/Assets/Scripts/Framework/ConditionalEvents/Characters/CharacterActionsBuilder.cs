@@ -9,32 +9,24 @@ public static class CharacterActionsBuilder {
 	// Action execution delegate builders indexed by type directly on array
 	private delegate EventAction<GameEntityModel>.ExecutionDelegate BuilderAction(Storage.GenericParameter param);
 	private static BuilderAction[] builderActions = {
-		BuildSetAnimation					// 0: 'walk'
-//		BuildZeroAnimationVelocity,			// 1: vel(zero)
-//		BuildSetAnimationVelocity,			// 2: vel(2.3, 1.5, 0.0)
-//		BuildZeroMaxInputVelocity,			// 3: inputVel(zero)
-//		BuildSetMaxInputVelocity,			// 4: inputVel(2.3, 1.5)
-//		BuildAddAnimationVerticalImpulse,	// 5: impulseV(1.5)
-//		BuildFlip,							// 6: flip
-//		BuildAutoFlip,						// 7: autoFlip(false)
-//		BuildPause,							// 8: pause(10)
-//		BuildIncrementCombo,				// 9: ++combo
-//		BuildResetCombo,					// 10: reset(combo)
-//		BuildInstantMove,					// 11: instantMove(2.1, 4.2, 5.3)
-//		BuildAnchorWithMove,				// 12: grab(hitten, 2, (2.1, 4.2, 5.3))
-//		BuildAnchor,						// 13: grab(hitten, 2)
-//		BuildReleaseAll,					// 14: release(all)
-//		BuildRelease,						// 15: release(2)
-//		BuildSetAnchoredPos,				// 16: grabbedPos(2, (2.1, 4.2, 5.3))
-//		BuildSetAnchoredAnim,				// 17: grabbedAnim(2, jump)
-//		BuildAddRefImpulse,					// 18: impulse(grabbed, 0, (2.1, 4.2, 5.3))
-//		BuildResetImpulse,					// 19: reset(impulse)
-//		BuildConsuleInput,					// 20: consumeInput(A)
-//		BuildGetHurt,						// 21: getHurt(10%)
-//		BuildSpawnEffect,					// 22: spawnFX(sparks)
-//		BuildOwnEntity,						// 23: own(anchored, 2)
-//		BuildReleaseOwnership,				// 24: releaseOwnership
-
+		BuildConsumeInput,
+		BuildSetAnimation,
+		BuildSetDeltaPosition,
+		BuildSetVelocity,
+		BuildSetMaxInputVelocity,
+		BuildFlip,
+		BuildSetAutoFlip,
+		BuildPausePhysics,
+		BuildSetVariable,
+		BuildSetGlobalVariable,
+		BuildGrab,
+		BuildReleaseGrab,
+		BuildGetHurt,
+		BuildOwnSubject,
+		BuildReleaseOwnership,
+		BuildSpawnEntity,
+		BuildSpawnEffect,
+		BuildDestroy
 	};
 
 
