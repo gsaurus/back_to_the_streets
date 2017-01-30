@@ -58,7 +58,7 @@ public class EventParameterBuilder: ParameterBuilder {
 
 	private static string[] hurtFacingOptions = {"inherit hit", "location", "inverse location", "orientation", "inverse orientation", "none"};
 
-	private static string[] spawnLocation = {"self", "anchor", "hit intersection", "hurt intersection"};
+	private static string[] spawnLocation = {"origin", "anchor", "hit intersection", "hurt intersection"};
 
     private static string[] maskOptions = { "X", "Y", "Z", "XY", "XZ", "YZ", "XYZ" };
 
@@ -355,13 +355,20 @@ public class EventParameterBuilder: ParameterBuilder {
 	private class BuildGetHurt: InternEventBuilder{
 		public BuildGetHurt():base("Get Hurt"){}
 		public override string ToString(GenericParameter parameter){
-			int value = parameter.SafeInt(0);
-			if (value == 100) return "getHurt";
-			return "getHurt(" + value + "%)";
+			int value = parameter.SafeInt(3);
+            string valueString = "";
+            if (value != 100){
+                valueString = ", " + value + "%";
+            }
+            return "getHurt" + SubjectString(parameter, 0)
+                + "(" + SubjectString(parameter, 1) + valueString + ")";
 		}
 		public override void Build(GameObject parent, GenericParameter parameter){
-			IntInputFieldParam.Instantiate(parent, parameter, 0, "Damage percentage");
-			IntDropdownParam.Instantiate(parent, parameter, 1, "Facing options", hurtFacingOptions);
+            InstantiateSubject(parent, parameter, 0);
+            InstantiateSubject(parent, parameter, 1, "Hitters:");
+            InstantiateNumeratorVar(parent, parameter, 2, 0);
+			IntInputFieldParam.Instantiate(parent, parameter, 3, "Damage percentage:");
+			IntDropdownParam.Instantiate(parent, parameter, 4, "Facing options:", hurtFacingOptions);
 		}
 	}
 
@@ -370,14 +377,11 @@ public class EventParameterBuilder: ParameterBuilder {
     private class BuildOwnEntity: InternEventBuilder{
         public BuildOwnEntity():base("Own entity"){}
         public override string ToString(GenericParameter parameter){
-            return "own("
-                + SafeToString(entityReferenceType, parameter.SafeInt(0), "entityRef")
-                + ")"
-                ;
+            return "own" + SubjectString(parameter, 0) + "(" + SubjectString(parameter, 1) + ")";
         }
         public override void Build(GameObject parent, GenericParameter parameter){
-            IntDropdownParam.Instantiate(parent, parameter, 0, "Entity Reference:", entityReferenceType);
-            IntDropdownParam.Instantiate(parent, parameter, 1, "Grabbing Anchor:", GetAnchorsNames());
+            InstantiateSubject(parent, parameter, 0);
+            InstantiateSubject(parent, parameter, 1, "Subject to be Owned:");
         }
     }
 
@@ -386,10 +390,11 @@ public class EventParameterBuilder: ParameterBuilder {
     private class BuildReleaseOwnership: InternEventBuilder{
         public BuildReleaseOwnership():base("Release Ownership"){}
         public override string ToString(GenericParameter parameter){
-            return "releaseOwnership";
+            return "releaseOwnership" + SubjectString(parameter, 0) + "(" + SubjectString(parameter, 1) + ")";
         }
         public override void Build(GameObject parent, GenericParameter parameter){
-            // No parameters
+            InstantiateSubject(parent, parameter, 0);
+            InstantiateSubject(parent, parameter, 1, "Subject to be release:");
         }
     }
 
@@ -398,9 +403,22 @@ public class EventParameterBuilder: ParameterBuilder {
     private class BuildSpawnEntity: InternEventBuilder{
         public BuildSpawnEntity():base("Spawn Entity"){}
         public override string ToString(GenericParameter parameter){
-            return "spawn";
+            return "spawn" + SubjectString(parameter, 0) + "(" + parameter.SafeString(0) + ")";
         }
         public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateSubject(parent, parameter, 0);
+            StringInputFieldParam.Instantiate(parent, parameter, 0, "Entity to spawn:");
+            IntDropdownParam.Instantiate(parent, parameter, 1, "Localtion:", spawnLocation);
+            IntInputFieldParam.Instantiate(parent, parameter, 2, "Location anchor ID:");
+            StringInputFieldParam.Instantiate(parent, parameter, 1, "Initial animation:");
+            IntInputFieldParam.Instantiate(parent, parameter, 3, "Team ID (-1 for same team):");
+            BoolToggleParam.Instantiate(parent, parameter, 0, "Own:");
+            StringListInputFieldParam.Instantiate(parent, parameter, 0, "Variable keys:");
+            IntListInputFieldParam.Instantiate(parent, parameter, 0, "Variable values:");
+            IntDropdownParam.Instantiate(parent, parameter, 4, "Facing options:", hurtFacingOptions);
+            FloatInputFieldParam.Instantiate(parent, parameter, 0, "Offset X:");
+            FloatInputFieldParam.Instantiate(parent, parameter, 1, "Offset Y:");
+            FloatInputFieldParam.Instantiate(parent, parameter, 2, "Offset Z:");
         }
     }
 
@@ -409,13 +427,15 @@ public class EventParameterBuilder: ParameterBuilder {
 	private class BuildSpawnEffect: InternEventBuilder{
 		public BuildSpawnEffect():base("Spawn Effect"){}
 		public override string ToString(GenericParameter parameter){
-			return "spawn(" + parameter.SafeString(0) + ")";
+            return "spawnFX" + SubjectString(parameter, 0) + "(" + parameter.SafeString(0) + ")";
 		}
 		public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateSubject(parent, parameter, 0);
 			StringInputFieldParam.Instantiate(parent, parameter, 0, "Effect");
-			IntDropdownParam.Instantiate(parent, parameter, 0, "Location", spawnLocation);
-			IntInputFieldParam.Instantiate(parent, parameter, 1, "Lifetime");
-			BoolToggleParam.Instantiate(parent, parameter, 0, "Local space");
+            IntDropdownParam.Instantiate(parent, parameter, 1, "Localtion:", spawnLocation);
+            IntInputFieldParam.Instantiate(parent, parameter, 2, "Location anchor ID:");
+            BoolToggleParam.Instantiate(parent, parameter, 0, "Local Space:");
+            IntDropdownParam.Instantiate(parent, parameter, 3, "Facing options:", hurtFacingOptions);
 			FloatInputFieldParam.Instantiate(parent, parameter, 0, "Offset X:");
 			FloatInputFieldParam.Instantiate(parent, parameter, 1, "Offset Y:");
 			FloatInputFieldParam.Instantiate(parent, parameter, 2, "Offset Z:");
@@ -427,9 +447,10 @@ public class EventParameterBuilder: ParameterBuilder {
     private class BuildDestroy: InternEventBuilder{
         public BuildDestroy():base("Destroy"){}
         public override string ToString(GenericParameter parameter){
-            return "destroy";
+            return "destroy" + SubjectString(parameter, 0);
         }
         public override void Build(GameObject parent, GenericParameter parameter){
+            InstantiateSubject(parent, parameter, 0);
         }
     }
 

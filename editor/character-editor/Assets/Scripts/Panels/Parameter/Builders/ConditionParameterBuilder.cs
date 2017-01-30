@@ -311,11 +311,10 @@ public class ConditionParameterBuilder: ParameterBuilder {
     private class BuildExists: InternConditionBuilder{
         public BuildExists():base("Exists"){}
         public override string ToString(GenericParameter parameter){
-            return "exists" + "(" + SafeToString(CharacterEditor.Instance.AvailableSubjects(), parameter.SafeInt(1) + ")" + SubjectString(parameter, 0), "Subject");
+            return "exists" + SubjectString(parameter, 0);
         }
         public override void Build(GameObject parent, GenericParameter parameter){
-            InstantiateSubject(parent, parameter, 0, "Main subject");
-            InstantiateSubject(parent, parameter, 1, "Subject to check existance");
+            InstantiateSubject(parent, parameter, 0);
         }
     }
 
@@ -333,8 +332,11 @@ public class ConditionParameterBuilder: ParameterBuilder {
 //                options = "in " + ParseOptionsList(parameter.SafeIntsListToString(0), parameter.SafeInt(1) == 0);
 //            }
 //            return "team" + SubjectString(parameter, 0) + " " + options;
+            // TODO
+            return null;
         }
         public override void Build(GameObject parent, GenericParameter parameter){
+            // TODO
 //            InstantiateSubject(parent, parameter, 0);
 //            IntDropdownParam.Instantiate(parent, parameter, 1, "Team option: ", teamType);
 //            IntListInputFieldParam.Instantiate(parent, parameter, 0, "Team IDs:");
@@ -349,8 +351,8 @@ public class ConditionParameterBuilder: ParameterBuilder {
             return "impulseV " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(0), "operator") + " " + parameter.SafeFloat(0);
         }
         public override void Build(GameObject parent, GenericParameter parameter){
-            InstantiateArithmeticField(parent, parameter, 0);
-            FloatInputFieldParam.Instantiate(parent, parameter, 0, "Compare with impulse:", 0);
+            InstantiateSubject(parent, parameter, 0);
+            // TODO
         }
     }
 
@@ -362,8 +364,8 @@ public class ConditionParameterBuilder: ParameterBuilder {
             return "impulseV " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(0), "operator") + " " + parameter.SafeFloat(0);
         }
         public override void Build(GameObject parent, GenericParameter parameter){
-            InstantiateArithmeticField(parent, parameter, 0);
-            FloatInputFieldParam.Instantiate(parent, parameter, 0, "Compare with impulse:", 0);
+            InstantiateSubject(parent, parameter, 0);
+            // TODO
         }
     }
 
