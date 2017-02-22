@@ -200,15 +200,11 @@ namespace RetroBread{
 
 		}
 
-
+		private bool press = true;
 		private void ProcessButtons(){
-
-			for (uint i = 0 ; i < buttonNames.Length ; ++i){
-				if (Input.GetButtonDown(buttonNames[i])) {
-					StateManager.Instance.AddEvent(new ButtonInputEvent(i,true));
-				}else if (Input.GetButtonUp(buttonNames[i])) {
-					StateManager.Instance.AddEvent(new ButtonInputEvent(i,false));
-				}
+			if (UnityEngine.Random.Range(0,10) == 0) {
+				StateManager.Instance.AddEvent(new ButtonInputEvent(0,press));
+				press = !press;
 			}
 		
 		}

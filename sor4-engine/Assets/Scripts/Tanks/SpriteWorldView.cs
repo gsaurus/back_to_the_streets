@@ -95,6 +95,7 @@ public class SpriteWorldView:View<WorldModel>{
 						mapViews[i].GetComponent<FireAndForgetBehaviour>().lifetime = 0.5f;
 						particles.Play();
 						mapViews[i].GetComponent<SpriteRenderer>().enabled = false;
+						mapViews[i].transform.position = new Vector3(mapViews[i].transform.position.x, mapViews[i].transform.position.y, playgroundZ);
 						mapViews[i] = null;
 					}else {
 						GameObject.Destroy(mapViews[i]);
