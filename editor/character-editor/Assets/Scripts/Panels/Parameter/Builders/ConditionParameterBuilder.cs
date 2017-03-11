@@ -310,10 +310,10 @@ public class ConditionParameterBuilder: ParameterBuilder {
     private class BuildExists: InternConditionBuilder{
         public BuildExists():base("Exists"){}
         public override string ToString(GenericParameter parameter){
-			return FilterNegationString(parameter, "exists" + SubjectString(parameter, 0));
+			return FilterNegationString(parameter, "exists" + SubjectString(parameter, 1));
         }
         public override void Build(GameObject parent, GenericParameter parameter){
-            InstantiateSubject(parent, parameter, 0);
+            InstantiateSubject(parent, parameter, 1); // Use 1 because not willing to referenciate condition subject
 			InstantiateNegation(parent, parameter);
         }
     }
