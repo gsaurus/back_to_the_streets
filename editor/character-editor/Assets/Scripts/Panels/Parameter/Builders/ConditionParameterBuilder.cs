@@ -37,8 +37,7 @@ public class ConditionParameterBuilder: ParameterBuilder {
 
 	private static string[] inputButtonOptions = {"A", "B", "C", "D", "E", "F", "G"};
 	private static string[] inputButtonStateOptions = {"press", "hold", "release"};
-
-	private static string[] teamType = {"any of", "all but", "same as self"};
+	
     private static string[] listType = {"any of", "all but"};
 
 
@@ -54,9 +53,8 @@ public class ConditionParameterBuilder: ParameterBuilder {
         new BuildGlobalVariable(),                  // 7: p1_lives >= 3
         new BuildPhysicsVelocity(),					// 8: velocityV <= 2
         new BuildExists(),                          // 9: exists(owner)
-        new BuildTeam(),                            // 10: team([3, 4])
-        new BuildName(),                            // 11: name(grabbed, ["bat", "sword"])
-        new BuildAnimationName()                    // 12: anim_name(parent, ["walk, run"])
+        new BuildName(),                            // 10: name(grabbed, ["bat", "sword"])
+        new BuildAnimationName()                    // 11: anim_name(parent, ["walk, run"])
 	};
 
 
@@ -205,6 +203,7 @@ public class ConditionParameterBuilder: ParameterBuilder {
             return "facing" + SubjectString(parameter, 0) + " " + (parameter.SafeBool(0) ? "←" : "→");
 		}
 		public override void Build(GameObject parent, GenericParameter parameter){
+			InstantiateSubject(parent, parameter, 0);
 			InstantiateNegation(parent, parameter);
 		}
 	}
@@ -311,62 +310,43 @@ public class ConditionParameterBuilder: ParameterBuilder {
     private class BuildExists: InternConditionBuilder{
         public BuildExists():base("Exists"){}
         public override string ToString(GenericParameter parameter){
-            return "exists" + SubjectString(parameter, 0);
+			return FilterNegationString(parameter, "exists" + SubjectString(parameter, 0));
         }
         public override void Build(GameObject parent, GenericParameter parameter){
             InstantiateSubject(parent, parameter, 0);
+			InstantiateNegation(parent, parameter);
         }
     }
-
-
-    // team(parent, same_as_self)
-    // TODO: team IS a variable, remove this
-    private class BuildTeam: InternConditionBuilder{
-        public BuildTeam():base("Team"){}
-        public override string ToString(GenericParameter parameter){
-//            string options;
-//            int optionNum = parameter.SafeInt(1);
-//            if (optionNum == 2){
-//                options = "same";
-//            } else{
-//                options = "in " + ParseOptionsList(parameter.SafeIntsListToString(0), parameter.SafeInt(1) == 0);
-//            }
-//            return "team" + SubjectString(parameter, 0) + " " + options;
-            // TODO
-            return null;
-        }
-        public override void Build(GameObject parent, GenericParameter parameter){
-            // TODO
-//            InstantiateSubject(parent, parameter, 0);
-//            IntDropdownParam.Instantiate(parent, parameter, 1, "Team option: ", teamType);
-//            IntListInputFieldParam.Instantiate(parent, parameter, 0, "Team IDs:");
-        }
-    }
+			
 
 
     // name(parent, ["bat", "sword"])
     private class BuildName: InternConditionBuilder{
         public BuildName():base("Name"){}
         public override string ToString(GenericParameter parameter){
-            return "impulseV " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(0), "operator") + " " + parameter.SafeFloat(0);
+			string namesList = ParseOptionsList(parameter.SafeStringsListToString(0), parameter.SafeInt(1) == 0);
+			return "name" + SubjectString(parameter, 0) + " in " + namesList;
         }
         public override void Build(GameObject parent, GenericParameter parameter){
             InstantiateSubject(parent, parameter, 0);
-            // TODO
+			IntDropdownParam.Instantiate(parent, parameter, 1, "Is:", listType);
+			StringListInputFieldParam.Instantiate(parent, parameter, 0, "Names list");
         }
     }
 
 
     // anim_name(parent, all\["walk"])
     private class BuildAnimationName: InternConditionBuilder{
-        public BuildAnimationName():base("Animation Name"){}
-        public override string ToString(GenericParameter parameter){
-            return "impulseV " + SafeToString(arithmeticOptionsShort, parameter.SafeInt(0), "operator") + " " + parameter.SafeFloat(0);
-        }
-        public override void Build(GameObject parent, GenericParameter parameter){
-            InstantiateSubject(parent, parameter, 0);
-            // TODO
-        }
+			public BuildAnimationName():base("Animation Name"){}
+			public override string ToString(GenericParameter parameter){
+				string namesList = ParseOptionsList(parameter.SafeStringsListToString(0), parameter.SafeInt(1) == 0);
+				return "animName" + SubjectString(parameter, 0) + " in " + namesList;
+			}
+			public override void Build(GameObject parent, GenericParameter parameter){
+				InstantiateSubject(parent, parameter, 0);
+				IntDropdownParam.Instantiate(parent, parameter, 1, "Is:", listType);
+				StringListInputFieldParam.Instantiate(parent, parameter, 0, "Animations list");
+			}
     }
 
 
