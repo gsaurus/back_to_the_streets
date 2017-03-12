@@ -45,8 +45,8 @@ public static class CharacterSubjectsBuilder {
 
 	// The public builder method
 	public static List<EventSubject<GameEntityModel>> Build(Storage.Character charData, int[] subjectIds){
-		List<EventSubject<GameEntityModel>> subjects = new List<EventSubject<GameEntityModel>>(subjectIds.Length);
-		EventSubject<GameEntityModel> subject;
+		if (subjectIds == null) return new List<EventSubject<GameEntityModel>>();
+		List<EventSubject<GameEntityModel>> subjects = new List<EventSubject<GameEntityModel>>(subjectIds.Length);EventSubject<GameEntityModel> subject;
 
 		// Build default subjects
 		subjects.Add(BuildDefaultSubject(GetSelf));

@@ -25,6 +25,7 @@ namespace RetroBread{
 
 
 		public static implicit operator uint(ModelReference modelRef){
+			if (modelRef == null) return InvalidModelIndex;
 			return modelRef.index;
 		}
 

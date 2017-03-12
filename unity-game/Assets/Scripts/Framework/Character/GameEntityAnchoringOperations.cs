@@ -10,15 +10,7 @@ namespace RetroBread{
 
 
 		#region affectors (events)
-
-
-		// Anchor a model to it, obtained from a selector, and optionally move the parent relative to the entity being anchored (e.g. move back a little when grabbing)
-		public static void AnchorEntity(GameEntityModel model, GameEntityReferenceDelegator anchoringRefDelegator, int anchorId, FixedVector3 deltaPosRelativeToAnched){
-			GameEntityModel modelToBeAnchored = GameEntityController.GetEntityFromDelegator(anchoringRefDelegator, model);
-			if (modelToBeAnchored != null){
-				AnchorEntity(model, modelToBeAnchored, anchorId, deltaPosRelativeToAnched);
-			}
-		}
+	
 
 		// Anchor a model to it, and optionally move the parent relative to the entity being anchored (e.g. move back a little when grabbing)
 		public static void AnchorEntity(GameEntityModel model, GameEntityModel modelToBeAnchored, int anchorId, FixedVector3 deltaPosRelativeToAnched){
@@ -34,15 +26,7 @@ namespace RetroBread{
 				}
 			}
 		}
-
-
-		// Anchor a model to it, obtained from a selector
-		public static void AnchorEntity(GameEntityModel model, GameEntityReferenceDelegator anchoringRefDelegator, int anchorId){
-			GameEntityModel modelToBeAnchored = GameEntityController.GetEntityFromDelegator(anchoringRefDelegator, model);
-			if (modelToBeAnchored != null){
-				AnchorEntity(model, modelToBeAnchored, anchorId);
-			}
-		}
+			
 
 		// Anchor a model to it
 		public static void AnchorEntity(GameEntityModel model, GameEntityModel modelToBeAnchored, int anchorId){
@@ -106,6 +90,38 @@ namespace RetroBread{
 		}
 
 
+		// Release event may be accompained by a set animation event and set anchored position.
+		// It safely releases at the relative position to parent, taking physics in consideration
+		public static void ReleaseAnchoredEntity(GameEntityModel model, GameEntityModel anchoredEntityModel){
+			int anchorId = -1;
+			for (int i = 0; i < model.anchoredEntities.Count ; ++i){
+				if (model.anchoredEntities[i] == anchoredEntityModel.Index){
+					anchorId = i;
+					break;
+				}
+			}
+			if (anchorId == -1){
+				// entity is not grabbed, return
+				return;
+			}
+			anchoredEntityModel.parentEntity = new ModelReference();
+			PhysicPointModel pointModel = GameEntityController.GetPointModel(anchoredEntityModel);
+			if (pointModel != null){
+				pointModel.isActive = true;
+				PhysicPointModel parentPointModel = GameEntityController.GetPointModel(model);
+				PhysicPointController pointController = pointModel.Controller() as PhysicPointController;
+				if (pointController != null && parentPointModel != null){
+					// Set position directly
+					pointModel.position = parentPointModel.position;
+					if (!model.IsFacingRight()) anchoredEntityModel.positionRelativeToParent.X *= -1;
+					pointController.SetVelocityAffector(pointModel, PhysicPointController.setPositionffectorName, anchoredEntityModel.positionRelativeToParent);
+					anchoredEntityModel.positionRelativeToParent = FixedVector3.Zero;
+				}
+			}
+			model.anchoredEntities[anchorId] = new ModelReference();
+		}
+
+
 		// Set anchored entity position relatively to it's parent
 		public static void SetAnchoredEntityRelativePosition(GameEntityModel model, int anchorId, FixedVector3 relativePosition){
 			if (model.anchoredEntities == null || model.anchoredEntities.Count <= anchorId) return;
@@ -133,8 +149,7 @@ namespace RetroBread{
 
 
 		// Take ownership of a model, obtained from a selector
-		public static void OwnEntity(GameEntityModel model, GameEntityReferenceDelegator ownedRefDelegator){
-			GameEntityModel modelToBeOwned = GameEntityController.GetEntityFromDelegator(ownedRefDelegator, model);
+		public static void OwnEntity(GameEntityModel model, GameEntityModel modelToBeOwned){
 			if (modelToBeOwned != null){
 				modelToBeOwned.ownerEntity = model.Index;
 				model.ownedEntities.Add(modelToBeOwned.Index);

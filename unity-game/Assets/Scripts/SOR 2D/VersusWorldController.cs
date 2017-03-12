@@ -307,7 +307,7 @@ public class VersusWorldController:Controller<WorldModel>{
 	private static void SetupGameData(){
 
 		// TODO: setup based on level info
-		HUDLoader.LoadHud("hud_bundle");
+//		HUDLoader.LoadHud("hud_bundle");
 
 		// TODO: setup based on players added
 		CharacterLoader.LoadCharacter("Axel_HD");

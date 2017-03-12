@@ -46,16 +46,6 @@ namespace RetroBread{
 		}
 
 
-		// Apply a force on the physics velocity affector of a referenced entity
-		// Note: there could be generic templated methods receiving delegate methods... 
-		public static void AddImpulse(GameEntityModel model, GameEntityReferenceDelegator refDelegator, FixedVector3 impulse){
-			GameEntityModel refModel = GameEntityController.GetEntityFromDelegator(refDelegator, model);
-			if (refModel != null){
-				AddImpulse(refModel, impulse);
-			}
-		}
-
-
 		// Set the maximum velocity applied by input axis
 		public static void SetMaxInputVelocity(GameEntityModel model, FixedVector3 maxVel){
 			model.maxInputVelocity = maxVel;

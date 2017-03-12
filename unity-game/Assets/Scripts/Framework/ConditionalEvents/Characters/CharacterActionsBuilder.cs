@@ -79,7 +79,7 @@ namespace RetroBread{
 
 
 		private static EventAction<GameEntityModel>.ExecutionDelegate BuildConsumeInput(Storage.GenericParameter parameter){
-			int buttonId = parameter.SafeInt(1);
+			uint buttonId = (uint) parameter.SafeInt(1);
 			bool consumeRelease = parameter.SafeBool(0);
 
 			return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
@@ -107,7 +107,7 @@ namespace RetroBread{
 				animModel.SetNextAnimation(animationName, 0);
 				AnimationView view = animModel.View() as AnimationView;
 				if (view != null){
-					view.transitionTime = transitionTime;
+					view.transitionTime = (float) transitionTime;
 				}
 			};
 		}
@@ -123,14 +123,14 @@ namespace RetroBread{
 				if (refSubjects == null || refSubjects.Count == 0) return;
 				// Select one randomly
 				GameEntityModel refModel = refSubjects[StateManager.state.Random.NextInt(0, refSubjects.Count-1)];
-				FixedFloat realDelta;
+				FixedVector3 realDelta;
 				if (!refModel.IsFacingRight()) deltaPos.X *= -1;
 				PhysicPointModel mainPoint = StateManager.state.GetModel(model.physicsModelId) as PhysicPointModel;
 				if (mainPoint == null) return;
 				if (refModel != model){
 					PhysicPointModel refPoint = StateManager.state.GetModel(refModel.physicsModelId) as PhysicPointModel;
 					if (refPoint == null) return;
-					realDelta = (refPoint + deltaPos) - mainPoint;
+					realDelta = (refPoint.position + deltaPos) - mainPoint.position;
 				}else{
 					realDelta = deltaPos;
 				}
@@ -177,7 +177,14 @@ namespace RetroBread{
 				if (pointModel == null) return;
 				FixedVector3 finalImpulse = impulse;
 				if (asPercentage) {
-					finalImpulse *= pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName];
+					finalImpulse = pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName];
+					finalImpulse = new FixedVector3(
+						finalImpulse.X * impulse.X,
+						finalImpulse.Y * impulse.Y,
+						finalImpulse.Z * impulse.Z
+					);
+				}else {
+					finalImpulse = impulse;
 				}
 				pointModel.velocityAffectors[PhysicPointModel.defaultVelocityAffectorName] += finalImpulse;
 			};
@@ -219,11 +226,11 @@ namespace RetroBread{
 			int numeratorSubjectId = parameter.SafeInt(1);
 			string numeratorVariableName = parameter.SafeString(0);
 			int defaultValue = parameter.SafeInt(2);
-			FixedFloat percentage = (numeratorSubjectId == 0 || defaultValue == 0) ? 1 : defaultValue / new FixedFloat(100);
+			FixedFloat percentage = (numeratorSubjectId == 0 || defaultValue == 0) ? 1 : ((FixedFloat)defaultValue) / 100;
 
 			return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
 				int numeratorValue = GetNumeratorValue(model, numeratorSubjectId, numeratorVariableName, defaultValue, subjectModels);
-				int pauseValue = numeratorValue * percentage;
+				int pauseValue = (int)(numeratorValue * percentage);
 				if (pauseValue > 0) {
 					GameEntityController.PausePhysics(model, pauseValue);
 				}
@@ -233,81 +240,178 @@ namespace RetroBread{
 
 
 		private static EventAction<GameEntityModel>.ExecutionDelegate BuildSetVariable(Storage.GenericParameter parameter){
+			string variableName = parameter.SafeString(0);
+			int setMode = parameter.SafeInt(1);
+			int numeratorSubjectId = parameter.SafeInt(2);
+			string numeratorVariableName = parameter.SafeString(1);
+			int defaultValue = parameter.SafeInt(3);
+			FixedFloat percentage = (numeratorSubjectId == 0 || defaultValue == 0) ? 1 : ((FixedFloat)defaultValue) / 100;
 
 			return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-
+				int variableValue = GetNumeratorValue(model, numeratorSubjectId, numeratorVariableName, defaultValue, subjectModels);
+				variableValue = (int)(variableValue * percentage);
+				switch (setMode){
+					case 1: // add
+						if (model.customVariables.ContainsKey(variableName)){
+							model.customVariables[variableName] += variableValue;
+						}else {
+							model.customVariables[variableName] = variableValue;
+						}
+						break;
+					default: // set
+						model.customVariables[variableName] = variableValue;
+						break;
+				}
 			};
 		}
 			
 
 
 		private static EventAction<GameEntityModel>.ExecutionDelegate BuildSetGlobalVariable(Storage.GenericParameter parameter){
+			string variableName = parameter.SafeString(0);
+			int setMode = parameter.SafeInt(1);
+			int numeratorSubjectId = parameter.SafeInt(2);
+			string numeratorVariableName = parameter.SafeString(1);
+			int defaultValue = parameter.SafeInt(3);
+			FixedFloat percentage = (numeratorSubjectId == 0 || defaultValue == 0) ? 1 : ((FixedFloat)defaultValue) / 100;
 
 			return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
+				int variableValue = GetNumeratorValue(model, numeratorSubjectId, numeratorVariableName, defaultValue, subjectModels);
+				variableValue = (int) (variableValue * percentage);
 
+				// Global variable may have references to a team ID, character name, player number, etc
+				numeratorVariableName = CharacterConditionsBuilder.ParseVariableValuesInGlobalName(model, numeratorVariableName);
+				WorldModel worldModel = StateManager.state.MainModel as WorldModel;
+				switch (setMode){
+					case 1: // add
+						if (worldModel.globalVariables.ContainsKey(variableName)){
+							worldModel.globalVariables[variableName] += variableValue;
+						}else {
+							worldModel.globalVariables[variableName] = variableValue;
+						}
+						break;
+					default: // set
+						worldModel.globalVariables[variableName] = variableValue;
+						break;
+				}
 			};
 		}
 
 
 	
 		private static EventAction<GameEntityModel>.ExecutionDelegate BuildGrab(Storage.GenericParameter parameter){
+			int subjectId = parameter.SafeInt(1);
+			int anchorId = parameter.SafeInt(2);
 
 			return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-
+				List<GameEntityModel> refSubjects = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, subjectId);
+				if (refSubjects == null || refSubjects.Count == 0) return;
+				GameEntityModel refModel = refSubjects[StateManager.state.Random.NextInt(0, refSubjects.Count-1)];
+				GameEntityAnchoringOperations.AnchorEntity(model, refModel, anchorId);
 			};
 		}
 
 
 
 		private static EventAction<GameEntityModel>.ExecutionDelegate BuildReleaseGrab(Storage.GenericParameter parameter){
+			int subjectId = parameter.SafeInt(1);
 
 			return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-
+				List<GameEntityModel> refSubjects = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, subjectId);
+				if (refSubjects == null || refSubjects.Count == 0) return;
+				foreach (GameEntityModel refSubject in refSubjects){
+					GameEntityAnchoringOperations.ReleaseAnchoredEntity(model, refSubject);
+				}
 			};
 		}
 
 
 
 		private static EventAction<GameEntityModel>.ExecutionDelegate BuildGetHurt(Storage.GenericParameter parameter){
+			int hittersSubjectId = parameter.SafeInt(1);
+			int numeratorSubjectId = parameter.SafeInt(2);
+			string numeratorVariableName = parameter.SafeString(0);
+			int defaultPercentage = parameter.SafeInt(3);
+			int facingOptions = parameter.SafeInt(4);
 
 			return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
+				List<GameEntityModel> hitterSubjects = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, hittersSubjectId);
+				if (hitterSubjects == null || hitterSubjects.Count == 0) return;
+				FixedFloat percentage = GetNumeratorValue(model, numeratorSubjectId, numeratorVariableName, defaultPercentage, subjectModels);
+				percentage /= 100;
 
+				switch (facingOptions){
+					case -1:
+						// Use hit data
+						GameEntityController.HurtBasedOnHitData(model, percentage, hitterSubjects);
+						break;
+					default:
+						// Use given facing options
+						GameEntityController.HurtBasedOnFacingOptions(model, (HitData.HitFacing) facingOptions, percentage, hitterSubjects);
+						break;
+				}
 			};
 		}
 			
 
 
 		private static EventAction<GameEntityModel>.ExecutionDelegate BuildOwnSubject(Storage.GenericParameter parameter){
+			int subjectId = parameter.SafeInt(1);
 
 			return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-
+				List<GameEntityModel> subjectToBeOwned = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, subjectId);
+				if (subjectToBeOwned == null || subjectToBeOwned.Count == 0) return;
+				foreach (GameEntityModel entityToBeOwned in subjectToBeOwned){
+					GameEntityAnchoringOperations.OwnEntity(model, entityToBeOwned);
+				}
 			};
 		}
 
 
 
 		private static EventAction<GameEntityModel>.ExecutionDelegate BuildReleaseOwnership(Storage.GenericParameter parameter){
+			int subjectId = parameter.SafeInt(1);
 
 			return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-
+				List<GameEntityModel> subjectToBeReleased = ConditionUtils<GameEntityModel>.GetNonEmptySubjectOrNil(subjectModels, subjectId);
+				if (subjectToBeReleased == null || subjectToBeReleased.Count == 0) return;
+				foreach (GameEntityModel entityToBeReleased in subjectToBeReleased){
+					GameEntityAnchoringOperations.ReleaseOwnership(entityToBeReleased);
+				}
 			};
 		}
 			
 
 
 		private static EventAction<GameEntityModel>.ExecutionDelegate BuildSpawnEntity(Storage.GenericParameter parameter){
+			string entityName = parameter.SafeString(0);
+			int locationType = parameter.SafeInt(1);
+			int localtionAnchorId = parameter.SafeInt(2);
+			string initialAnimation = parameter.SafeString(1);
+			int teamId = parameter.SafeInt(3);
+			bool own = parameter.SafeBool(0);
+			string[] variableNames = parameter.SafeStringsList(0);
+			int[] variableValues = parameter.SafeIntsList(0); // what if using referenced values from something else?, [energy] etc
+			int facingOptions = parameter.SafeInt(4);
+			FixedVector3 offset = BuildFixedVector3(parameter, 0);
 
 			return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-
+				// TODO
 			};
 		}
 
 	
 
 		private static EventAction<GameEntityModel>.ExecutionDelegate BuildSpawnEffect(Storage.GenericParameter parameter){
+			FixedVector3 offset = BuildFixedVector3(parameter, 0);
+			string prefabName = parameter.SafeString(0);
+			int locationType = parameter.SafeInt(1);
+			int localtionAnchorId = parameter.SafeInt(2);
+			int facingOptions = parameter.SafeInt(3);
+			bool localSpace = parameter.SafeBool(0);
 
 			return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-
+				// TODO
 			};
 		}
 
@@ -316,223 +420,54 @@ namespace RetroBread{
 		private static EventAction<GameEntityModel>.ExecutionDelegate BuildDestroy(Storage.GenericParameter parameter){
 
 			return delegate(GameEntityModel model, List<GameEntityModel>[] subjectModels){
-
+				// TODO
 			};
 		}
 
 
 
 
+//		private static GenericEvent<GameEntityModel> BuildSpawnEffect(Storage.GenericParameter parameter){
+//			FixedVector3 offset = BuildFixedVector3(parameter);
+//			string prefabName = parameter.SafeString(0);
+//			int locationType = parameter.SafeInt(0);
+//			int lifetime = parameter.SafeInt(1);
+//			bool localSpace = parameter.SafeBool(0);
+//	
+//			// {"self", "anchor", "hit intersection", "hurt intersection"}
+//			PentaEntityAnimationEvent<string, int, FixedVector3, bool, GameEntityView.ConvertGameToViewCoordinates>.EventExecutionDelegate theDelegate = null;
+//			switch (locationType) {
+//				case 0:
+//					// self
+//					theDelegate = GameEntityView.SpawnAtSelf;
+//					break;
+//				case 1:
+//					// Anchor, TODO: which anchor?
+//					RetroBread.Debug.LogError("Spawn at anchor not supported yet");
+//					break;
+//				case 2: 
+//					// hit
+//					theDelegate = GameEntityView.SpawnAtHitIntersection;
+//					break;
+//				case 3:
+//					// hurt
+//					theDelegate = GameEntityView.SpawnAtHurtIntersection;
+//					break;
+//			}
+//	
+//			return new PentaEntityAnimationEvent<string, int, FixedVector3, bool, GameEntityView.ConvertGameToViewCoordinates>(
+//				null,
+//				theDelegate,
+//				prefabName,
+//				lifetime,
+//				offset,
+//				localSpace,
+//				PhysicPoint2DView.ConvertGameToViewCoordinates // TODO: store this delegate at a setup file, so it's easier to configure
+//			);
+//	
+//		}
+	
 
-	//	// pause(10)
-	//	private static GenericEvent<GameEntityModel> BuildPause(Storage.GenericParameter parameter){
-	//		return new SingleEntityAnimationEvent<int>(null, GameEntityController.PausePhysics, parameter.SafeInt(0));
-	//	}
-	//
-	//	// ++combo
-	//	private static GenericEvent<GameEntityModel> BuildIncrementCombo(Storage.GenericParameter parameter){
-	//		return new SingleEntityAnimationEvent<int>(null,
-	//			delegate(GameEntityModel model, int comboTimer){
-	//				// Do not increment combo more than once per animation
-	//				int comboAnimFlag;
-	//				model.customVariables.TryGetValue(CharacterConditionsBuilder.comboAnimationClearFlag, out comboAnimFlag);
-	//				if (comboAnimFlag == 0) {
-	//					int currentCombo;
-	//					model.customVariables.TryGetValue(CharacterConditionsBuilder.comboCustomVariableName, out currentCombo);
-	//					model.customVariables[CharacterConditionsBuilder.comboCustomVariableName] = currentCombo + 1;
-	//					model.customTimers[CharacterConditionsBuilder.comboCustomVariableName] = comboTimer;
-	//					model.customVariables[CharacterConditionsBuilder.comboAnimationClearFlag] = 1;
-	//				}
-	//			},
-	//			parameter.SafeInt(0));
-	//	}
-	//
-	//	// reset(combo)
-	//	private static GenericEvent<GameEntityModel> BuildResetCombo(Storage.GenericParameter parameter){
-	//		return new SimpleEntityAnimationEvent(
-	//			null,
-	//			delegate(GameEntityModel model){
-	//				model.customVariables[CharacterConditionsBuilder.comboCustomVariableName] = 0;
-	//				model.customTimers[CharacterConditionsBuilder.comboCustomVariableName] = 0;
-	//			}
-	//		);
-	//	}
-	//
-	//
-	//
-	//	// instantMove(2.1, 4.2, 5.3)
-	//	private static GenericEvent<GameEntityModel> BuildInstantMove(Storage.GenericParameter parameter){
-	//		FixedVector3 vel = BuildFixedVector3(parameter);
-	//		return new SingleEntityAnimationEvent<FixedVector3>(
-	//			null, GameEntityPhysicsOperations.MoveEntity, vel
-	//		);
-	//	}
-	//
-	//
-	//#region Anchoring
-	//
-	//
-	//	// grab(hitten, 2, (2.1, 4.2, 5.3))
-	//	private static GenericEvent<GameEntityModel> BuildAnchorWithMove(Storage.GenericParameter parameter){
-	//
-	//		GameEntityReferenceDelegator delegator = BuildEntityDelegator(parameter);
-	//		int anchorId = parameter.SafeInt(2);
-	//		FixedVector3 movement = BuildFixedVector3(parameter);
-	//		return new TrippleEntityAnimationEvent<GameEntityReferenceDelegator, int, FixedVector3>(
-	//			null, GameEntityAnchoringOperations.AnchorEntity,
-	//			delegator, anchorId, movement
-	//		);
-	//
-	//	}
-	//
-	//	// grab(hitten, 2)
-	//	private static GenericEvent<GameEntityModel> BuildAnchor(Storage.GenericParameter parameter){
-	//		GameEntityReferenceDelegator delegator = BuildEntityDelegator(parameter);
-	//		int anchorId = parameter.SafeInt(2);
-	//		return new DoubleEntityAnimationEvent<GameEntityReferenceDelegator, int>(
-	//			null, GameEntityAnchoringOperations.AnchorEntity, delegator, anchorId
-	//		);
-	//	}
-	//
-	//	// release(all)
-	//	private static GenericEvent<GameEntityModel> BuildReleaseAll(Storage.GenericParameter parameter){
-	//		return new SimpleEntityAnimationEvent(null, GameEntityAnchoringOperations.ReleaseAllAnchoredEntities);
-	//	}
-	//
-	//	// release(2)
-	//	private static GenericEvent<GameEntityModel> BuildRelease(Storage.GenericParameter parameter){
-	//		int anchorId = parameter.SafeInt(0);
-	//		return new SingleEntityAnimationEvent<int>(null, GameEntityAnchoringOperations.ReleaseAnchoredEntity, anchorId);
-	//	}
-	//
-	//	// grabbedPos(2, (2.1, 4.2, 5.3))
-	//	private static GenericEvent<GameEntityModel> BuildSetAnchoredPos(Storage.GenericParameter parameter){
-	//		int anchorId = parameter.SafeInt(0);
-	//		FixedVector3 pos = BuildFixedVector3(parameter);
-	//		return new DoubleEntityAnimationEvent<int, FixedVector3>(
-	//			null, GameEntityAnchoringOperations.SetAnchoredEntityRelativePosition,
-	//			anchorId, pos
-	//		);
-	//	}
-	//
-	//
-	//	// grabbedAnim(2, jump)
-	//	private static GenericEvent<GameEntityModel> BuildSetAnchoredAnim(Storage.GenericParameter parameter){
-	//		int anchorId = parameter.SafeInt(0);
-	//		string animName = parameter.SafeString(0);
-	//		return new DoubleEntityAnimationEvent<int, string>(
-	//			null, GameEntityAnchoringOperations.SetAnchoredEntityAnimation,
-	//			anchorId, animName
-	//		);
-	//	}
-	//
-	//
-	//#endregion
-	//
-	//
-	//	// impulse(grabbed, (2.1, 4.2, 5.3))
-	//	private static GenericEvent<GameEntityModel> BuildAddRefImpulse(Storage.GenericParameter parameter){
-	//		GameEntityReferenceDelegator delegator = BuildEntityDelegator(parameter);
-	//		FixedVector3 impulse = BuildFixedVector3(parameter);
-	//		return new DoubleEntityAnimationEvent<GameEntityReferenceDelegator, FixedVector3>(
-	//			null, GameEntityPhysicsOperations.AddImpulse,
-	//			delegator, impulse
-	//		);
-	//	}
-	//
-	//	// reset(impulse)
-	//	private static GenericEvent<GameEntityModel> BuildResetImpulse(Storage.GenericParameter parameter){
-	//		return new SimpleEntityAnimationEvent(
-	//			null, GameEntityPhysicsOperations.ResetPlanarImpulse
-	//		);
-	//	}
-	//
-	//	// consumeInput(A)
-	//	private static GenericEvent<GameEntityModel> BuildConsuleInput(Storage.GenericParameter parameter){
-	//		bool isRelease = parameter.SafeBool(0);
-	//		uint buttonId = (uint) parameter.SafeInt(0);
-	//		if (isRelease){
-	//			return new SingleEvent<AnimationModel, uint>(null, InputButtonOperations.ConsumeRelease, buttonId);
-	//		}else{
-	//			return new SingleEvent<AnimationModel, uint>(null, InputButtonOperations.ConsumePress, buttonId);
-	//		}
-	//	}
-	//
-	//	// getHurt(10%)
-	//	private static GenericEvent<GameEntityModel> BuildGetHurt(Storage.GenericParameter parameter){
-	//		FixedFloat damagePercentage = parameter.SafeInt(0) * 0.01f;
-	//		int facingOptions = parameter.SafeInt(1);
-	//		facingOptions -= 1;
-	//		if (facingOptions < 0) {
-	//			// inherit from hitter data
-	//			return new SingleEntityAnimationEvent<FixedFloat>(
-	//				null,
-	//				GameEntityController.HurtBasedOnHitData,
-	//				damagePercentage
-	//			);
-	//		} else {
-	//			return new DoubleEntityAnimationEvent<HitData.HitFacing, FixedFloat>(
-	//				null,
-	//				GameEntityController.HurtBasedOnFacingOptions,
-	//				(HitData.HitFacing)facingOptions,
-	//				damagePercentage
-	//			);
-	//		}
-	//	}
-	//
-	//	private static GenericEvent<GameEntityModel> BuildSpawnEffect(Storage.GenericParameter parameter){
-	//		FixedVector3 offset = BuildFixedVector3(parameter);
-	//		string prefabName = parameter.SafeString(0);
-	//		int locationType = parameter.SafeInt(0);
-	//		int lifetime = parameter.SafeInt(1);
-	//		bool localSpace = parameter.SafeBool(0);
-	//
-	//		// {"self", "anchor", "hit intersection", "hurt intersection"}
-	//		PentaEntityAnimationEvent<string, int, FixedVector3, bool, GameEntityView.ConvertGameToViewCoordinates>.EventExecutionDelegate theDelegate = null;
-	//		switch (locationType) {
-	//			case 0:
-	//				// self
-	//				theDelegate = GameEntityView.SpawnAtSelf;
-	//				break;
-	//			case 1:
-	//				// Anchor, TODO: which anchor?
-	//				RetroBread.Debug.LogError("Spawn at anchor not supported yet");
-	//				break;
-	//			case 2: 
-	//				// hit
-	//				theDelegate = GameEntityView.SpawnAtHitIntersection;
-	//				break;
-	//			case 3:
-	//				// hurt
-	//				theDelegate = GameEntityView.SpawnAtHurtIntersection;
-	//				break;
-	//		}
-	//
-	//		return new PentaEntityAnimationEvent<string, int, FixedVector3, bool, GameEntityView.ConvertGameToViewCoordinates>(
-	//			null,
-	//			theDelegate,
-	//			prefabName,
-	//			lifetime,
-	//			offset,
-	//			localSpace,
-	//			PhysicPoint2DView.ConvertGameToViewCoordinates // TODO: store this delegate at a setup file, so it's easier to configure
-	//		);
-	//
-	//	}
-	//
-	//
-	//	// own(anchored, 2)
-	//	private static GenericEvent<GameEntityModel> BuildOwnEntity(Storage.GenericParameter parameter){
-	//		GameEntityReferenceDelegator delegator = BuildEntityDelegator(parameter);
-	//		return new SingleEntityAnimationEvent<GameEntityReferenceDelegator>(
-	//			null, GameEntityAnchoringOperations.OwnEntity, delegator
-	//		);
-	//	}
-	//
-	//	// releaseOwnership
-	//	private static GenericEvent<GameEntityModel> BuildReleaseOwnership(Storage.GenericParameter parameter){
-	//		return new SimpleEntityAnimationEvent(null, GameEntityAnchoringOperations.ReleaseOwnership);
-	//	}
 
 
 	#endregion

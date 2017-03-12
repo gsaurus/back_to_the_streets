@@ -1,13 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace RetroBread{
-
-	// Interface for objects that provides an entity reference for events
-	public interface GameEntityReferenceDelegator{
-		ModelReference GetEntityReference(GameEntityModel model);
-	}
 
 	public static class GameEntityModelExtensions{
 	
@@ -70,15 +66,7 @@ namespace RetroBread{
 		public static Model GetInputProvider(GameEntityModel model){
 			return StateManager.state.GetModel(model.inputModelId);
 		}
-
-		// Get an entity from an entity provider delegate
-		public static GameEntityModel GetEntityFromDelegator(GameEntityReferenceDelegator refDelegator, GameEntityModel model){
-			ModelReference reference = refDelegator.GetEntityReference(model);
-			if (reference != null){
-				return StateManager.state.GetModel(reference) as GameEntityModel;
-			}
-			return null;
-		}
+			
 
 		// Get Position used in collision checks
 		public static FixedVector3 GetRealPosition(GameEntityModel model){
@@ -265,7 +253,7 @@ namespace RetroBread{
 			}
 		}
 
-		public static void HurtBasedOnFacingOptions(GameEntityModel model, HitData.HitFacing facingOptions, FixedFloat damagePercentage){
+		public static void HurtBasedOnFacingOptions(GameEntityModel model, HitData.HitFacing facingOptions, FixedFloat damagePercentage, List<GameEntityModel> hitterSubjects = null){
 
 			// Facing
 			if (facingOptions == HitData.HitFacing.hitterLocation || facingOptions == HitData.HitFacing.inverseHitterLocation) {
@@ -280,19 +268,21 @@ namespace RetroBread{
 			if (damagePercentage != 0 && model.customVariables.ContainsKey("energy")) {
 				GameEntityController controller = model.Controller() as GameEntityController;
 				foreach (HitInformation hitInfo in controller.lastHurts) {
-					int damageValue = (int)(hitInfo.hitData.damage * damagePercentage);
-					if (damageValue == 0) damageValue = 1;
-					model.customVariables["energy"] -= damageValue;
+					if (hitterSubjects == null || hitterSubjects.Find(x => x.Index == hitInfo.entityId) != null){
+						int damageValue = (int)(hitInfo.hitData.damage * damagePercentage);
+						if (damageValue == 0) damageValue = 1;
+						model.customVariables["energy"] -= damageValue;
+					}
 				}
 			}
 
 		}
 
-		public static void HurtBasedOnHitData(GameEntityModel model, FixedFloat damagePercentage){
+		public static void HurtBasedOnHitData(GameEntityModel model, FixedFloat damagePercentage, List<GameEntityModel> hitterSubjects = null){
 			GameEntityController controller = model.Controller() as GameEntityController;
 			if (controller.lastHurts.Count > 0) {
 				HitData hitData = controller.lastHurts[0].hitData;
-				HurtBasedOnFacingOptions(model, hitData.facingOptions, damagePercentage);
+				HurtBasedOnFacingOptions(model, hitData.facingOptions, damagePercentage, hitterSubjects);
 			}
 		}
 

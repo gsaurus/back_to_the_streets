@@ -22,7 +22,7 @@ public static class SorVCFactories{
 	// World
 	private static void RegisterWorldVCFactoriesForVersusMode(){
 		VCFactoriesManager.Instance.RegisterControllerFactory<WorldModel>(
-			WorldModel.WorldControllerFactoryId,
+			DefaultVCFactoryIds.WorldControllerFactoryId,
 			delegate(WorldModel model){
 				return new VersusWorldController();
 			}
