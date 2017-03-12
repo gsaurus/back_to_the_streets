@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace RetroBread{
 
@@ -9,6 +10,7 @@ namespace RetroBread{
 		public static int InvalidKeyframe = -1;
 
 		private const string defaultVariableTeam = "team";
+		private const string defaultVariableCharacterNumber = "character";
 
 		private enum Orientation {
 			horizontal	= 0,
@@ -129,7 +131,7 @@ namespace RetroBread{
 			return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
 				AnimationModel animModel = StateManager.state.GetModel(mainModel.animationModelId) as AnimationModel;
 				if (animModel == null) return false;
-				return CompareWithNumerator(numeratorSubjectId, numeratorSubjectVarName, (int)animModel.currentFrame, staticComparisonFrame, comparisonOperator, subjectModels);
+				return CompareWithNumerator(mainModel, numeratorSubjectId, numeratorSubjectVarName, (int)animModel.currentFrame, staticComparisonFrame, comparisonOperator, subjectModels);
 			};
 		}
 
@@ -172,7 +174,7 @@ namespace RetroBread{
 				PlayerInputModel inputModel = StateManager.state.GetModel(mainModel.inputModelId) as PlayerInputModel;
 				if (inputModel == null) return false;
 				FixedFloat inputAxisValue = getOrientedAxisValue(inputModel.axis, orientation, useModule);
-				return CompareWithNumerator(numeratorSubjectId, numeratorSubjectVarName, inputAxisValue, staticComparisonValue, comparisonOperator, subjectModels);
+				return CompareWithNumerator(mainModel, numeratorSubjectId, numeratorSubjectVarName, inputAxisValue, staticComparisonValue, comparisonOperator, subjectModels);
 			};
 		}
 
@@ -271,7 +273,7 @@ namespace RetroBread{
 				PhysicPointModel pointModel = StateManager.state.GetModel(mainModel.physicsModelId) as PhysicPointModel;
 				if (pointModel == null) return false;
 				FixedFloat impactValue = getOrientedAxisValue(pointModel.collisionInpact, orientation, useModule);
-				return CompareWithNumerator(numeratorSubjectId, numeratorSubjectVarName, impactValue, staticComparisonValue, comparisonOperator, subjectModels);
+				return CompareWithNumerator(mainModel, numeratorSubjectId, numeratorSubjectVarName, impactValue, staticComparisonValue, comparisonOperator, subjectModels);
 			};
 		}
 
@@ -294,11 +296,10 @@ namespace RetroBread{
 			// return delegate
 			return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
 				int varValue;
-
-				if (!TryGetDefaultVariableValue(mainModel, varName, out varValue)){
-					mainModel.customVariables.TryGetValue(varName, out varValue);
+				if (!TryGetVariableValue(mainModel, varName, out varValue)){
+					return false;
 				}
-				return CompareWithNumerator(numeratorSubjectId, numeratorSubjectVarName, varValue, staticComparisonValue, comparisonOperator, subjectModels);
+				return CompareWithNumerator(mainModel, numeratorSubjectId, numeratorSubjectVarName, varValue, staticComparisonValue, comparisonOperator, subjectModels);
 			};
 		}
 
@@ -323,7 +324,7 @@ namespace RetroBread{
 				int varValue = 0;
 				WorldModel worldModel = StateManager.state.MainModel as WorldModel;
 				worldModel.globalVariables.TryGetValue(varName, out varValue);
-				return CompareWithNumerator(numeratorSubjectId, numeratorSubjectVarName, varValue, staticComparisonValue, comparisonOperator, subjectModels);
+				return CompareWithNumerator(mainModel, numeratorSubjectId, numeratorSubjectVarName, varValue, staticComparisonValue, comparisonOperator, subjectModels);
 			};
 		}
 
@@ -351,7 +352,7 @@ namespace RetroBread{
 				PhysicPointModel pointModel = StateManager.state.GetModel(mainModel.physicsModelId) as PhysicPointModel;
 				if (pointModel == null) return false;
 				FixedFloat velocityValue = getOrientedAxisValue(pointModel.GetVelocity(), orientation, useModule);
-				return CompareWithNumerator(numeratorSubjectId, numeratorSubjectVarName, velocityValue, staticComparisonValue, comparisonOperator, subjectModels);
+				return CompareWithNumerator(mainModel, numeratorSubjectId, numeratorSubjectVarName, velocityValue, staticComparisonValue, comparisonOperator, subjectModels);
 			};
 		}
 
@@ -424,10 +425,29 @@ namespace RetroBread{
 
 	#region Auxiliar methods
 
-		private static bool TryGetDefaultVariableValue(GameEntityModel model, string varName, out int varValue){
+		// TODO: move to somwhere handling global variables
+		public static string ParseVariableValuesInGlobalName(GameEntityModel model, string text){
+			GroupCollection groups = Regex.Match(text, @"\[(.*?)\]").Groups;
+			int variableValue;
+			string resultingText = text;
+			foreach (Group g in groups) {
+				if (TryGetVariableValue(model, g.Value, out variableValue)){
+					resultingText.Replace(g.Value, variableValue + "");
+				}
+			}
+			return resultingText;
+		}
+
+		// TODO: move to some utils
+		public static bool TryGetVariableValue(GameEntityModel model, string varName, out int varValue){
+			// Look at default variables
 			if (varName.Equals(defaultVariableTeam)) {
 				// team
 				varValue = WorldUtils.GetEntityTeam(model.Index);
+				return true;
+			}
+			// Look at model variables
+			if (model.customVariables.TryGetValue (varName, out varValue)){
 				return true;
 			}
 			varValue = -1;
@@ -437,6 +457,7 @@ namespace RetroBread{
 		// CompareWithNumerator, int version
 		// Comes in duplicate due to conversion FixedFloat to int not working with parameterized types
 		private static bool CompareWithNumerator(
+			GameEntityModel mainModel,
 			int numeratorSubjectId,
 			string numeratorSubjectVarName,
 			int comparisonValue,
@@ -450,6 +471,10 @@ namespace RetroBread{
 			}
 			// global variable
 			if (numeratorSubjectId == 1){
+
+				// Global variable may have references to a team ID, character name, player number, etc
+				numeratorSubjectVarName = ParseVariableValuesInGlobalName(mainModel, numeratorSubjectVarName);
+
 				int globalVariableValue = 0;
 				WorldModel worldModel = StateManager.state.MainModel as WorldModel;
 				worldModel.globalVariables.TryGetValue(numeratorSubjectVarName, out globalVariableValue);
@@ -463,7 +488,7 @@ namespace RetroBread{
 			int variableValue;
 			foreach (GameEntityModel comparisonModel in comparisonSubject) {
 
-				if (!TryGetDefaultVariableValue(comparisonModel, numeratorSubjectVarName, out variableValue) && !comparisonModel.customVariables.TryGetValue(numeratorSubjectVarName, out variableValue)) {
+				if (!TryGetVariableValue(comparisonModel, numeratorSubjectVarName, out variableValue)) {
 					return false;
 				}
 				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, comparisonValue, variableValue)){
@@ -474,6 +499,7 @@ namespace RetroBread{
 		}
 		// CompareWithNumerator, FixedFloat version
 		private static bool CompareWithNumerator(
+			GameEntityModel mainModel,
 			int numeratorSubjectId,
 			string numeratorSubjectVarName,
 			FixedFloat comparisonValue,
@@ -487,6 +513,10 @@ namespace RetroBread{
 			}
 			// global variable
 			if (numeratorSubjectId == 1){
+
+				// Global variable may have references to a team ID, character name, player number, etc
+				numeratorSubjectVarName = ParseVariableValuesInGlobalName(mainModel, numeratorSubjectVarName);
+
 				int globalVariableValue = 0;
 				WorldModel worldModel = StateManager.state.MainModel as WorldModel;
 				worldModel.globalVariables.TryGetValue(numeratorSubjectVarName, out globalVariableValue);
