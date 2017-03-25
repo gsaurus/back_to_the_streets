@@ -1,7 +1,7 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "assets-packer", "Assembly-CSharp-Editor.csproj", "{EDCFA435-997C-D3BA-A98B-07B04931A920}"
+# Visual Studio 2008
+
+Project("{1B66D828-AACF-991B-4666-02797EA3B4A1}") = "assets-packer", "Assembly-CSharp-Editor.csproj", "{EDCFA435-997C-D3BA-A98B-07B04931A920}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
