@@ -20,7 +20,7 @@ public class CreateAssetBundles{
 		GenerateClipLengths();
 		AssetDatabase.Refresh();
 		AssetDatabase.RemoveUnusedAssetBundleNames();
-		BuildPipeline.BuildAssetBundles(outputFolder);
+		BuildPipeline.BuildAssetBundles(outputFolder, BuildAssetBundleOptions.None, BuildTarget.StandaloneOSXUniversal);
 		ClearTempFiles();
 	}
 

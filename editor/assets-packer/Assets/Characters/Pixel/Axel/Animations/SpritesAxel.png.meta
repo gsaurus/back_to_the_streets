@@ -122,7 +122,7 @@ TextureImporter:
   textureFormat: -2
   maxTextureSize: 2048
   textureSettings:
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: -1
     wrapMode: 1
@@ -130,7 +130,6 @@ TextureImporter:
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
-  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
@@ -139,6 +138,7 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 15
   alphaIsTransparency: 1
+  spriteTessellationDetail: -1
   textureType: 8
   buildTargetSettings:
   - buildTarget: iPhone
@@ -147,8 +147,10 @@ TextureImporter:
     compressionQuality: 50
     allowsAlphaSplitting: 0
   spriteSheet:
+    serializedVersion: 2
     sprites:
-    - name: stand_0
+    - serializedVersion: 2
+      name: stand_0
       rect:
         serializedVersion: 2
         x: 0
@@ -158,18 +160,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -7, y: 79}
-        - {x: -21, y: 75}
-        - {x: -23, y: 58}
-        - {x: -23, y: 32}
-        - {x: -20, y: -2}
-        - {x: 12, y: -2}
-        - {x: 18, y: 0}
-        - {x: 23, y: 35}
-        - {x: 23, y: 67}
-        - {x: 16, y: 79}
-    - name: stand_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: stand_1
       rect:
         serializedVersion: 2
         x: 128
@@ -179,16 +173,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 21, y: 77}
-        - {x: -10, y: 77}
-        - {x: -22, y: 64}
-        - {x: -22, y: -2}
-        - {x: 14, y: -2}
-        - {x: 17, y: 2}
-        - {x: 20, y: 8}
-        - {x: 21, y: 19}
-    - name: stand_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: stand_2
       rect:
         serializedVersion: 2
         x: 256
@@ -198,18 +186,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 6, y: 75}
-        - {x: -9, y: 75}
-        - {x: -19, y: 73}
-        - {x: -23, y: 59}
-        - {x: -23, y: 15}
-        - {x: -20, y: -2}
-        - {x: 10, y: -2}
-        - {x: 17, y: 2}
-        - {x: 20, y: 37}
-        - {x: 20, y: 64}
-    - name: walk_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: walk_0
       rect:
         serializedVersion: 2
         x: 384
@@ -219,14 +199,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -11, y: 83}
-        - {x: -17, y: 56}
-        - {x: -17, y: -1}
-        - {x: 14, y: -1}
-        - {x: 17, y: 2}
-        - {x: 17, y: 83}
-    - name: walk_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: walk_1
       rect:
         serializedVersion: 2
         x: 512
@@ -236,13 +212,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -17, y: 83}
-        - {x: -17, y: -1}
-        - {x: 16, y: -1}
-        - {x: 16, y: 71}
-        - {x: 10, y: 83}
-    - name: walk_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: walk_2
       rect:
         serializedVersion: 2
         x: 640
@@ -252,17 +225,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 13, y: 82}
-        - {x: -17, y: 82}
-        - {x: -25, y: 60}
-        - {x: -25, y: 0}
-        - {x: -23, y: -1}
-        - {x: 23, y: -1}
-        - {x: 25, y: 2}
-        - {x: 25, y: 20}
-        - {x: 15, y: 80}
-    - name: walk_3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: walk_3
       rect:
         serializedVersion: 2
         x: 768
@@ -272,15 +238,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -12, y: 83}
-        - {x: -17, y: 72}
-        - {x: -17, y: -1}
-        - {x: 13, y: -1}
-        - {x: 15, y: 0}
-        - {x: 15, y: 81}
-        - {x: 12, y: 83}
-    - name: walk_4
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: walk_4
       rect:
         serializedVersion: 2
         x: 896
@@ -290,16 +251,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -8, y: 83}
-        - {x: -14, y: 80}
-        - {x: -16, y: 58}
-        - {x: -16, y: -1}
-        - {x: 12, y: -1}
-        - {x: 16, y: 0}
-        - {x: 16, y: 71}
-        - {x: 10, y: 83}
-    - name: walk_5
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: walk_5
       rect:
         serializedVersion: 2
         x: 1024
@@ -309,20 +264,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 12, y: 78}
-        - {x: 6, y: 82}
-        - {x: -6, y: 82}
-        - {x: -15, y: 65}
-        - {x: -14, y: 49}
-        - {x: -24, y: 14}
-        - {x: -24, y: 1}
-        - {x: -21, y: -1}
-        - {x: 20, y: -1}
-        - {x: 25, y: 2}
-        - {x: 25, y: 11}
-        - {x: 18, y: 50}
-    - name: crouched
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: crouched
       rect:
         serializedVersion: 2
         x: 0
@@ -332,16 +277,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 15, y: 63}
-        - {x: -14, y: 63}
-        - {x: -18, y: 52}
-        - {x: -18, y: -2}
-        - {x: 13, y: -2}
-        - {x: 26, y: 10}
-        - {x: 26, y: 41}
-        - {x: 22, y: 57}
-    - name: jump
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: jump
       rect:
         serializedVersion: 2
         x: 128
@@ -351,17 +290,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 23, y: 88}
-        - {x: -9, y: 88}
-        - {x: -18, y: 84}
-        - {x: -18, y: -1}
-        - {x: -16, y: -2}
-        - {x: 11, y: -2}
-        - {x: 23, y: 24}
-        - {x: 24, y: 37}
-        - {x: 24, y: 87}
-    - name: fall
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fall
       rect:
         serializedVersion: 2
         x: 256
@@ -371,14 +303,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -25, y: 81}
-        - {x: -25, y: 3}
-        - {x: -4, y: -1}
-        - {x: 12, y: -1}
-        - {x: 25, y: 22}
-        - {x: 25, y: 81}
-    - name: vault_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: vault_0
       rect:
         serializedVersion: 2
         x: 384
@@ -388,16 +316,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -38, y: 33}
-        - {x: -50, y: 8}
-        - {x: -50, y: -29}
-        - {x: -47, y: -40}
-        - {x: -30, y: -40}
-        - {x: 10, y: -4}
-        - {x: 10, y: 15}
-        - {x: -14, y: 33}
-    - name: vault_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: vault_1
       rect:
         serializedVersion: 2
         x: 512
@@ -407,17 +329,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -44, y: 78}
-        - {x: -46, y: 79}
-        - {x: -57, y: 79}
-        - {x: -57, y: 41}
-        - {x: -29, y: 0}
-        - {x: -21, y: -2}
-        - {x: 8, y: -2}
-        - {x: 8, y: 4}
-        - {x: 0, y: 29}
-    - name: vault_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: vault_2
       rect:
         serializedVersion: 2
         x: 640
@@ -427,15 +342,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -7, y: 98}
-        - {x: -17, y: 86}
-        - {x: -17, y: 11}
-        - {x: -12, y: 0}
-        - {x: -11, y: -2}
-        - {x: 15, y: -2}
-        - {x: 15, y: 98}
-    - name: grab_front
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: grab_front
       rect:
         serializedVersion: 2
         x: 1024
@@ -445,13 +355,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -8, y: 82}
-        - {x: -24, y: 60}
-        - {x: -24, y: -1}
-        - {x: 34, y: -1}
-        - {x: 34, y: 82}
-    - name: grab_back
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: grab_back
       rect:
         serializedVersion: 2
         x: 0
@@ -461,12 +368,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -18, y: 84}
-        - {x: -18, y: -1}
-        - {x: 26, y: -1}
-        - {x: 26, y: 84}
-    - name: grabbed_front
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: grabbed_front
       rect:
         serializedVersion: 2
         x: 128
@@ -476,16 +381,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -6, y: 66}
-        - {x: -16, y: 55}
-        - {x: -17, y: 42}
-        - {x: -17, y: -1}
-        - {x: 22, y: -1}
-        - {x: 26, y: 13}
-        - {x: 26, y: 64}
-        - {x: 25, y: 66}
-    - name: grabbed_back
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: grabbed_back
       rect:
         serializedVersion: 2
         x: 256
@@ -495,13 +394,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -10, y: 82}
-        - {x: -17, y: 78}
-        - {x: -17, y: -1}
-        - {x: 14, y: -1}
-        - {x: 14, y: 82}
-    - name: grab_hit_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: grab_hit_0
       rect:
         serializedVersion: 2
         x: 384
@@ -511,19 +407,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 20, y: 66}
-        - {x: -10, y: 66}
-        - {x: -25, y: 63}
-        - {x: -25, y: 33}
-        - {x: -3, y: 1}
-        - {x: 2, y: -2}
-        - {x: 14, y: -2}
-        - {x: 23, y: 0}
-        - {x: 24, y: 1}
-        - {x: 24, y: 55}
-        - {x: 23, y: 64}
-    - name: grab_hit_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: grab_hit_1
       rect:
         serializedVersion: 2
         x: 512
@@ -533,19 +420,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 18, y: 66}
-        - {x: -12, y: 66}
-        - {x: -27, y: 63}
-        - {x: -27, y: 33}
-        - {x: -5, y: 1}
-        - {x: 0, y: -2}
-        - {x: 12, y: -2}
-        - {x: 21, y: 0}
-        - {x: 22, y: 1}
-        - {x: 22, y: 55}
-        - {x: 21, y: 64}
-    - name: hit_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: hit_0
       rect:
         serializedVersion: 2
         x: 640
@@ -555,17 +433,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -17, y: 79}
-        - {x: -25, y: 63}
-        - {x: -25, y: 28}
-        - {x: -20, y: -1}
-        - {x: -17, y: -2}
-        - {x: 24, y: -2}
-        - {x: 29, y: 14}
-        - {x: 29, y: 69}
-        - {x: 11, y: 79}
-    - name: hit_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: hit_1
       rect:
         serializedVersion: 2
         x: 768
@@ -575,17 +446,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -19, y: 79}
-        - {x: -27, y: 63}
-        - {x: -27, y: 28}
-        - {x: -22, y: -1}
-        - {x: -19, y: -2}
-        - {x: 22, y: -2}
-        - {x: 27, y: 14}
-        - {x: 27, y: 69}
-        - {x: 9, y: 79}
-    - name: knocked_down
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: knocked_down
       rect:
         serializedVersion: 2
         x: 896
@@ -595,22 +459,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 29, y: 49}
-        - {x: 24, y: 58}
-        - {x: 17, y: 58}
-        - {x: 16, y: 57}
-        - {x: -12, y: 58}
-        - {x: -31, y: 58}
-        - {x: -34, y: 57}
-        - {x: -34, y: 43}
-        - {x: -30, y: 28}
-        - {x: 1, y: 7}
-        - {x: 27, y: 1}
-        - {x: 37, y: 1}
-        - {x: 37, y: 15}
-        - {x: 28, y: 34}
-    - name: lying_down
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: lying_down
       rect:
         serializedVersion: 2
         x: 1024
@@ -620,13 +472,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -42, y: 30}
-        - {x: -42, y: -2}
-        - {x: 49, y: -2}
-        - {x: 49, y: 29}
-        - {x: 42, y: 30}
-    - name: stand_up_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: stand_up_0
       rect:
         serializedVersion: 2
         x: 0
@@ -636,18 +485,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 9, y: 34}
-        - {x: -4, y: 42}
-        - {x: -27, y: 42}
-        - {x: -32, y: 39}
-        - {x: -32, y: -2}
-        - {x: 20, y: -2}
-        - {x: 41, y: -1}
-        - {x: 42, y: 1}
-        - {x: 42, y: 6}
-        - {x: 15, y: 34}
-    - name: stand_up_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: stand_up_1
       rect:
         serializedVersion: 2
         x: 128
@@ -657,15 +498,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -12, y: 53}
-        - {x: -14, y: 52}
-        - {x: -26, y: 35}
-        - {x: -26, y: -2}
-        - {x: 23, y: -2}
-        - {x: 23, y: 27}
-        - {x: 12, y: 53}
-    - name: electrocuted
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: electrocuted
       rect:
         serializedVersion: 2
         x: 256
@@ -675,15 +511,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -41, y: 63}
-        - {x: -41, y: 34}
-        - {x: -26, y: 1}
-        - {x: -11, y: -2}
-        - {x: 42, y: -2}
-        - {x: 42, y: 58}
-        - {x: 24, y: 63}
-    - name: thrown_down
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: thrown_down
       rect:
         serializedVersion: 2
         x: 384
@@ -693,15 +524,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -37, y: 55}
-        - {x: -37, y: 11}
-        - {x: -31, y: -2}
-        - {x: 33, y: -2}
-        - {x: 34, y: -1}
-        - {x: 34, y: 24}
-        - {x: 8, y: 55}
-    - name: thrown
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: thrown
       rect:
         serializedVersion: 2
         x: 512
@@ -711,14 +537,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -24, y: 66}
-        - {x: -24, y: -2}
-        - {x: 15, y: -2}
-        - {x: 25, y: 8}
-        - {x: 25, y: 34}
-        - {x: 0, y: 66}
-    - name: back_throw_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: back_throw_0
       rect:
         serializedVersion: 2
         x: 640
@@ -728,17 +550,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 3, y: 69}
-        - {x: -11, y: 52}
-        - {x: -16, y: 21}
-        - {x: -16, y: 0}
-        - {x: -15, y: -1}
-        - {x: 12, y: -1}
-        - {x: 20, y: 1}
-        - {x: 29, y: 16}
-        - {x: 29, y: 69}
-    - name: back_throw_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: back_throw_1
       rect:
         serializedVersion: 2
         x: 768
@@ -748,21 +563,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 23, y: 13}
-        - {x: 23, y: 54}
-        - {x: 22, y: 63}
-        - {x: 0, y: 66}
-        - {x: -34, y: 66}
-        - {x: -34, y: 48}
-        - {x: -32, y: 43}
-        - {x: -10, y: 2}
-        - {x: -8, y: -1}
-        - {x: 22, y: -1}
-        - {x: 23, y: 2}
-        - {x: 22, y: 5}
-        - {x: 19, y: 6}
-    - name: back_throw_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: back_throw_2
       rect:
         serializedVersion: 2
         x: 896
@@ -772,17 +576,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -15, y: 58}
-        - {x: -35, y: 58}
-        - {x: -38, y: 48}
-        - {x: -38, y: 3}
-        - {x: -35, y: -1}
-        - {x: 20, y: -1}
-        - {x: 23, y: 11}
-        - {x: 23, y: 30}
-        - {x: -3, y: 54}
-    - name: back_throw_3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: back_throw_3
       rect:
         serializedVersion: 2
         x: 1024
@@ -792,14 +589,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -50, y: 36}
-        - {x: -50, y: -1}
-        - {x: 19, y: -1}
-        - {x: 22, y: 7}
-        - {x: 22, y: 33}
-        - {x: 20, y: 36}
-    - name: slam_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: slam_0
       rect:
         serializedVersion: 2
         x: 0
@@ -809,17 +602,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 7, y: 90}
-        - {x: -14, y: 90}
-        - {x: -14, y: -1}
-        - {x: 29, y: -1}
-        - {x: 29, y: 74}
-        - {x: 28, y: 89}
-        - {x: 25, y: 90}
-        - {x: 11, y: 90}
-        - {x: 10, y: 89}
-    - name: slam_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: slam_1
       rect:
         serializedVersion: 2
         x: 128
@@ -829,18 +615,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -51, y: 45}
-        - {x: -36, y: 40}
-        - {x: -32, y: 41}
-        - {x: -11, y: -1}
-        - {x: 24, y: -1}
-        - {x: 24, y: 18}
-        - {x: 5, y: 79}
-        - {x: -31, y: 79}
-        - {x: -54, y: 70}
-        - {x: -54, y: 47}
-    - name: slam_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: slam_2
       rect:
         serializedVersion: 2
         x: 256
@@ -850,16 +628,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -41, y: 11}
-        - {x: -20, y: 5}
-        - {x: -2, y: 0}
-        - {x: 30, y: 0}
-        - {x: 30, y: 29}
-        - {x: 16, y: 64}
-        - {x: -36, y: 64}
-        - {x: -41, y: 37}
-    - name: slam_3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: slam_3
       rect:
         serializedVersion: 2
         x: 384
@@ -869,19 +641,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -18, y: 82}
-        - {x: -18, y: 43}
-        - {x: -13, y: 39}
-        - {x: -8, y: 40}
-        - {x: -12, y: 39}
-        - {x: -18, y: 33}
-        - {x: -18, y: 17}
-        - {x: -2, y: -2}
-        - {x: 13, y: -2}
-        - {x: 13, y: 66}
-        - {x: 6, y: 82}
-    - name: slam_4
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: slam_4
       rect:
         serializedVersion: 2
         x: 512
@@ -891,16 +654,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 2, y: 69}
-        - {x: -26, y: 69}
-        - {x: -26, y: 31}
-        - {x: -8, y: -2}
-        - {x: 25, y: -2}
-        - {x: 26, y: -1}
-        - {x: 26, y: 49}
-        - {x: 18, y: 66}
-    - name: slam_5
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: slam_5
       rect:
         serializedVersion: 2
         x: 640
@@ -910,17 +667,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 10, y: 62}
-        - {x: -9, y: 62}
-        - {x: -26, y: 45}
-        - {x: -26, y: 26}
-        - {x: -17, y: -2}
-        - {x: 17, y: -2}
-        - {x: 24, y: 13}
-        - {x: 24, y: 55}
-        - {x: 22, y: 59}
-    - name: static_jump_attack_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: static_jump_attack_0
       rect:
         serializedVersion: 2
         x: 768
@@ -930,16 +680,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -16, y: 92}
-        - {x: -20, y: 84}
-        - {x: -20, y: 34}
-        - {x: -11, y: 2}
-        - {x: 11, y: 2}
-        - {x: 20, y: 52}
-        - {x: 20, y: 91}
-        - {x: 16, y: 92}
-    - name: static_jump_attack_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: static_jump_attack_1
       rect:
         serializedVersion: 2
         x: 896
@@ -949,16 +693,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -9, y: 85}
-        - {x: -18, y: 70}
-        - {x: -18, y: 11}
-        - {x: -10, y: 0}
-        - {x: 18, y: 0}
-        - {x: 33, y: 46}
-        - {x: 33, y: 56}
-        - {x: 10, y: 85}
-    - name: static_jump_attacl_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: static_jump_attacl_2
       rect:
         serializedVersion: 2
         x: 1024
@@ -968,24 +706,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -2, y: 90}
-        - {x: -19, y: 73}
-        - {x: -19, y: 33}
-        - {x: -14, y: 32}
-        - {x: -10, y: 32}
-        - {x: -8, y: 34}
-        - {x: -6, y: 38}
-        - {x: -6, y: 40}
-        - {x: -6, y: 30}
-        - {x: -9, y: 22}
-        - {x: -17, y: 13}
-        - {x: -18, y: 0}
-        - {x: -16, y: -2}
-        - {x: -2, y: -2}
-        - {x: 38, y: 54}
-        - {x: 38, y: 90}
-    - name: jump_attack_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: jump_attack_0
       rect:
         serializedVersion: 2
         x: 0
@@ -995,17 +719,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -13, y: 81}
-        - {x: -31, y: 79}
-        - {x: -34, y: 74}
-        - {x: -34, y: 63}
-        - {x: -19, y: -2}
-        - {x: 8, y: -2}
-        - {x: 26, y: 39}
-        - {x: 26, y: 66}
-        - {x: 14, y: 81}
-    - name: jump_attack_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: jump_attack_1
       rect:
         serializedVersion: 2
         x: 128
@@ -1015,13 +732,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -25, y: 74}
-        - {x: -25, y: 17}
-        - {x: 63, y: 17}
-        - {x: 63, y: 55}
-        - {x: 50, y: 74}
-    - name: jump_down_attack
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: jump_down_attack
       rect:
         serializedVersion: 2
         x: 256
@@ -1031,13 +745,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -21, y: 66}
-        - {x: -21, y: -2}
-        - {x: 26, y: -2}
-        - {x: 26, y: 54}
-        - {x: 22, y: 66}
-    - name: attack_0_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: attack_0_0
       rect:
         serializedVersion: 2
         x: 384
@@ -1047,20 +758,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 42, y: 62}
-        - {x: 40, y: 66}
-        - {x: 16, y: 78}
-        - {x: -12, y: 78}
-        - {x: -23, y: 66}
-        - {x: -23, y: 16}
-        - {x: -18, y: -2}
-        - {x: 6, y: -2}
-        - {x: 13, y: 0}
-        - {x: 17, y: 2}
-        - {x: 14, y: 33}
-        - {x: 42, y: 54}
-    - name: attack_1_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: attack_1_0
       rect:
         serializedVersion: 2
         x: 512
@@ -1070,17 +771,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 13, y: 79}
-        - {x: -7, y: 79}
-        - {x: -18, y: 51}
-        - {x: -18, y: -1}
-        - {x: -13, y: -2}
-        - {x: 15, y: -2}
-        - {x: 20, y: 0}
-        - {x: 26, y: 32}
-        - {x: 26, y: 72}
-    - name: attack_1_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: attack_1_1
       rect:
         serializedVersion: 2
         x: 640
@@ -1090,18 +784,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 50, y: 68}
-        - {x: 37, y: 77}
-        - {x: -8, y: 77}
-        - {x: -9, y: 75}
-        - {x: -21, y: 22}
-        - {x: -21, y: -2}
-        - {x: 11, y: -2}
-        - {x: 13, y: -1}
-        - {x: 15, y: 6}
-        - {x: 50, y: 34}
-    - name: attack_2_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: attack_2_0
       rect:
         serializedVersion: 2
         x: 768
@@ -1111,17 +797,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 22, y: 81}
-        - {x: -12, y: 81}
-        - {x: -21, y: 77}
-        - {x: -21, y: 35}
-        - {x: -12, y: -2}
-        - {x: 13, y: -2}
-        - {x: 15, y: 1}
-        - {x: 14, y: 4}
-        - {x: 22, y: 10}
-    - name: attack_2_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: attack_2_1
       rect:
         serializedVersion: 2
         x: 896
@@ -1131,17 +810,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -2, y: 78}
-        - {x: -11, y: 78}
-        - {x: -24, y: 68}
-        - {x: -24, y: 22}
-        - {x: -19, y: -2}
-        - {x: 11, y: -2}
-        - {x: 17, y: 24}
-        - {x: 23, y: 49}
-        - {x: 23, y: 61}
-    - name: attack_2_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: attack_2_2
       rect:
         serializedVersion: 2
         x: 1024
@@ -1151,19 +823,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 55, y: 39}
-        - {x: 55, y: 55}
-        - {x: 0, y: 70}
-        - {x: -28, y: 70}
-        - {x: -30, y: 68}
-        - {x: -30, y: 25}
-        - {x: -20, y: -2}
-        - {x: 33, y: -2}
-        - {x: 34, y: 3}
-        - {x: 30, y: 5}
-        - {x: 51, y: 32}
-    - name: attack_2_3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: attack_2_3
       rect:
         serializedVersion: 2
         x: 0
@@ -1173,18 +836,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 53, y: 68}
-        - {x: 46, y: 70}
-        - {x: -21, y: 70}
-        - {x: -37, y: 51}
-        - {x: -37, y: 4}
-        - {x: -25, y: -2}
-        - {x: 24, y: -2}
-        - {x: 24, y: 1}
-        - {x: 23, y: 4}
-        - {x: 53, y: 46}
-    - name: grab_knee
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: grab_knee
       rect:
         serializedVersion: 2
         x: 128
@@ -1194,15 +849,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 8, y: 81}
-        - {x: 0, y: 64}
-        - {x: 0, y: -2}
-        - {x: 41, y: -2}
-        - {x: 44, y: 6}
-        - {x: 44, y: 68}
-        - {x: 27, y: 81}
-    - name: grab_double_knee_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: grab_double_knee_0
       rect:
         serializedVersion: 2
         x: 256
@@ -1212,15 +862,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 4, y: 80}
-        - {x: -16, y: 62}
-        - {x: -16, y: -3}
-        - {x: 24, y: -3}
-        - {x: 35, y: 10}
-        - {x: 35, y: 72}
-        - {x: 26, y: 80}
-    - name: grab_double_knee_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: grab_double_knee_1
       rect:
         serializedVersion: 2
         x: 384
@@ -1230,17 +875,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 48, y: 58}
-        - {x: 20, y: 77}
-        - {x: -2, y: 77}
-        - {x: -2, y: -2}
-        - {x: 25, y: -2}
-        - {x: 31, y: -1}
-        - {x: 32, y: 1}
-        - {x: 31, y: 5}
-        - {x: 48, y: 40}
-    - name: def_special_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: def_special_0
       rect:
         serializedVersion: 2
         x: 512
@@ -1250,16 +888,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -17, y: 56}
-        - {x: -36, y: 51}
-        - {x: -38, y: 33}
-        - {x: -47, y: 20}
-        - {x: -47, y: -2}
-        - {x: 15, y: -2}
-        - {x: 15, y: 53}
-        - {x: 14, y: 56}
-    - name: def_special_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: def_special_1
       rect:
         serializedVersion: 2
         x: 640
@@ -1269,24 +901,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 17, y: 35}
-        - {x: 32, y: 41}
-        - {x: 22, y: 25}
-        - {x: 23, y: 21}
-        - {x: 64, y: 28}
-        - {x: 64, y: 56}
-        - {x: 28, y: 80}
-        - {x: 8, y: 80}
-        - {x: -23, y: 61}
-        - {x: -25, y: 36}
-        - {x: -25, y: -2}
-        - {x: 7, y: -2}
-        - {x: 14, y: -1}
-        - {x: 9, y: 6}
-        - {x: 22, y: 23}
-        - {x: 22, y: 28}
-    - name: def_special_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: def_special_2
       rect:
         serializedVersion: 2
         x: 768
@@ -1296,19 +914,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -22, y: 84}
-        - {x: -16, y: 82}
-        - {x: -23, y: 77}
-        - {x: -30, y: 55}
-        - {x: -30, y: -2}
-        - {x: 47, y: -2}
-        - {x: 47, y: 79}
-        - {x: 36, y: 98}
-        - {x: 12, y: 104}
-        - {x: -20, y: 104}
-        - {x: -21, y: 100}
-    - name: def_special_3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: def_special_3
       rect:
         serializedVersion: 2
         x: 896
@@ -1318,22 +927,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -24, y: 105}
-        - {x: -40, y: 86}
-        - {x: -40, y: 61}
-        - {x: -38, y: 57}
-        - {x: -22, y: 57}
-        - {x: -20, y: 61}
-        - {x: -16, y: 27}
-        - {x: -11, y: 3}
-        - {x: -7, y: -2}
-        - {x: 21, y: -2}
-        - {x: 28, y: -1}
-        - {x: 33, y: 14}
-        - {x: 33, y: 86}
-        - {x: 24, y: 105}
-    - name: def_special_4
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: def_special_4
       rect:
         serializedVersion: 2
         x: 1024
@@ -1343,30 +940,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 10, y: 32}
-        - {x: 15, y: 31}
-        - {x: 18, y: 40}
-        - {x: 12, y: 65}
-        - {x: -6, y: 74}
-        - {x: -11, y: 74}
-        - {x: -18, y: 70}
-        - {x: -23, y: 57}
-        - {x: -29, y: 65}
-        - {x: -41, y: 74}
-        - {x: -63, y: 74}
-        - {x: -63, y: 51}
-        - {x: -60, y: 44}
-        - {x: -46, y: 36}
-        - {x: -28, y: 27}
-        - {x: -41, y: 12}
-        - {x: -41, y: 1}
-        - {x: -38, y: -2}
-        - {x: 30, y: -2}
-        - {x: 32, y: 2}
-        - {x: 32, y: 4}
-        - {x: 13, y: 29}
-    - name: def_special_5
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: def_special_5
       rect:
         serializedVersion: 2
         x: 0
@@ -1376,16 +953,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -6, y: 62}
-        - {x: -17, y: 58}
-        - {x: -34, y: 27}
-        - {x: -34, y: -2}
-        - {x: 34, y: -2}
-        - {x: 64, y: 18}
-        - {x: 64, y: 48}
-        - {x: 42, y: 62}
-    - name: def_special_6
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: def_special_6
       rect:
         serializedVersion: 2
         x: 128
@@ -1395,36 +966,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 64, y: 28}
-        - {x: 63, y: 30}
-        - {x: 59, y: 34}
-        - {x: 58, y: 34}
-        - {x: 56, y: 32}
-        - {x: 54, y: 27}
-        - {x: 55, y: 24}
-        - {x: 52, y: 27}
-        - {x: 54, y: 29}
-        - {x: 55, y: 31}
-        - {x: 31, y: 62}
-        - {x: -11, y: 62}
-        - {x: -34, y: 20}
-        - {x: -34, y: 0}
-        - {x: -33, y: -2}
-        - {x: 25, y: -2}
-        - {x: 27, y: 3}
-        - {x: 23, y: 5}
-        - {x: 64, y: 19}
-      - - {x: 60, y: 43}
-        - {x: 56, y: 43}
-        - {x: 54, y: 42}
-        - {x: 54, y: 40}
-        - {x: 59, y: 34}
-        - {x: 61, y: 32}
-        - {x: 64, y: 32}
-        - {x: 64, y: 40}
-        - {x: 63, y: 42}
-    - name: def_special_7
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: def_special_7
       rect:
         serializedVersion: 2
         x: 256
@@ -1434,16 +979,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -17, y: 62}
-        - {x: -34, y: 43}
-        - {x: -34, y: -1}
-        - {x: -33, y: -2}
-        - {x: 27, y: -2}
-        - {x: 52, y: 12}
-        - {x: 54, y: 16}
-        - {x: 54, y: 62}
-    - name: blitz_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: blitz_0
       rect:
         serializedVersion: 2
         x: 384
@@ -1453,17 +992,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 31, y: 50}
-        - {x: -7, y: 50}
-        - {x: -17, y: 35}
-        - {x: -31, y: 11}
-        - {x: -31, y: -2}
-        - {x: 42, y: -2}
-        - {x: 46, y: 3}
-        - {x: 46, y: 18}
-        - {x: 34, y: 49}
-    - name: blitz_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: blitz_1
       rect:
         serializedVersion: 2
         x: 512
@@ -1473,18 +1005,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 46, y: 7}
-        - {x: 46, y: 37}
-        - {x: 33, y: 50}
-        - {x: -22, y: 50}
-        - {x: -31, y: 31}
-        - {x: -31, y: -2}
-        - {x: 40, y: -2}
-        - {x: 41, y: 1}
-        - {x: 40, y: 4}
-        - {x: 41, y: 4}
-    - name: blitz_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: blitz_2
       rect:
         serializedVersion: 2
         x: 640
@@ -1494,13 +1018,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -20, y: 71}
-        - {x: -20, y: -2}
-        - {x: 33, y: -2}
-        - {x: 57, y: 26}
-        - {x: 57, y: 71}
-    - name: blitz_3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: blitz_3
       rect:
         serializedVersion: 2
         x: 768
@@ -1510,19 +1031,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 61, y: 42}
-        - {x: 64, y: 51}
-        - {x: 64, y: 73}
-        - {x: 57, y: 79}
-        - {x: -1, y: 79}
-        - {x: -18, y: 74}
-        - {x: -18, y: -2}
-        - {x: 40, y: -2}
-        - {x: 42, y: 0}
-        - {x: 42, y: 1}
-        - {x: 39, y: 17}
-    - name: blitz_4
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: blitz_4
       rect:
         serializedVersion: 2
         x: 896
@@ -1532,15 +1044,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 21, y: 111}
-        - {x: 4, y: 111}
-        - {x: -22, y: 72}
-        - {x: -22, y: -2}
-        - {x: 33, y: -2}
-        - {x: 33, y: 45}
-        - {x: 31, y: 97}
-    - name: blitz_5
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: blitz_5
       rect:
         serializedVersion: 2
         x: 1024
@@ -1550,24 +1057,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 23, y: 112}
-        - {x: 5, y: 112}
-        - {x: -22, y: 61}
-        - {x: -22, y: -1}
-        - {x: -13, y: -2}
-        - {x: 32, y: -2}
-        - {x: 33, y: 1}
-        - {x: 33, y: 25}
-        - {x: 31, y: 102}
-      - - {x: 26, y: 14}
-        - {x: 26, y: 13}
-        - {x: 31, y: 8}
-        - {x: 34, y: 9}
-        - {x: 34, y: 13}
-        - {x: 31, y: 16}
-        - {x: 28, y: 16}
-    - name: blitz_6
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: blitz_6
       rect:
         serializedVersion: 2
         x: 0
@@ -1577,16 +1070,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 2, y: 101}
-        - {x: -21, y: 60}
-        - {x: -22, y: 54}
-        - {x: -22, y: -1}
-        - {x: -13, y: -2}
-        - {x: 33, y: -2}
-        - {x: 33, y: 74}
-        - {x: 24, y: 101}
-    - name: off_special_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: off_special_0
       rect:
         serializedVersion: 2
         x: 128
@@ -1596,16 +1083,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 26, y: 69}
-        - {x: -8, y: 69}
-        - {x: -25, y: 60}
-        - {x: -25, y: -2}
-        - {x: 15, y: -2}
-        - {x: 19, y: 1}
-        - {x: 42, y: 39}
-        - {x: 42, y: 63}
-    - name: off_special_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: off_special_1
       rect:
         serializedVersion: 2
         x: 256
@@ -1615,16 +1096,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 4, y: 63}
-        - {x: -7, y: 54}
-        - {x: -18, y: 42}
-        - {x: -18, y: -2}
-        - {x: 24, y: -2}
-        - {x: 41, y: 36}
-        - {x: 41, y: 59}
-        - {x: 33, y: 63}
-    - name: off_special_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: off_special_2
       rect:
         serializedVersion: 2
         x: 384
@@ -1634,23 +1109,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 12, y: 49}
-        - {x: 14, y: 45}
-        - {x: 11, y: 41}
-        - {x: 11, y: 37}
-        - {x: 35, y: 41}
-        - {x: 42, y: 52}
-        - {x: 42, y: 72}
-        - {x: 34, y: 76}
-        - {x: 3, y: 76}
-        - {x: -18, y: 62}
-        - {x: -18, y: -2}
-        - {x: 10, y: -2}
-        - {x: 19, y: 1}
-        - {x: 19, y: 27}
-        - {x: 9, y: 38}
-    - name: off_special_3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: off_special_3
       rect:
         serializedVersion: 2
         x: 512
@@ -1660,14 +1122,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -18, y: 77}
-        - {x: -18, y: -2}
-        - {x: 20, y: -2}
-        - {x: 41, y: 52}
-        - {x: 41, y: 71}
-        - {x: 27, y: 77}
-    - name: off_special_4
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: off_special_4
       rect:
         serializedVersion: 2
         x: 640
@@ -1677,20 +1135,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 22, y: 74}
-        - {x: 0, y: 74}
-        - {x: -10, y: 69}
-        - {x: -18, y: 53}
-        - {x: -15, y: 42}
-        - {x: -11, y: 40}
-        - {x: -18, y: 12}
-        - {x: -18, y: -2}
-        - {x: 21, y: -2}
-        - {x: 42, y: 22}
-        - {x: 42, y: 59}
-        - {x: 33, y: 72}
-    - name: off_special_5
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: off_special_5
       rect:
         serializedVersion: 2
         x: 768
@@ -1700,15 +1148,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -25, y: 68}
-        - {x: -25, y: -2}
-        - {x: 5, y: -2}
-        - {x: 15, y: -1}
-        - {x: 25, y: 30}
-        - {x: 25, y: 44}
-        - {x: 13, y: 68}
-    - name: off_special_6
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: off_special_6
       rect:
         serializedVersion: 2
         x: 896
@@ -1718,17 +1161,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 18, y: 63}
-        - {x: 3, y: 63}
-        - {x: -13, y: 52}
-        - {x: -18, y: 42}
-        - {x: -18, y: -2}
-        - {x: 14, y: -2}
-        - {x: 27, y: 10}
-        - {x: 27, y: 50}
-        - {x: 25, y: 61}
-    - name: off_special_7
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: off_special_7
       rect:
         serializedVersion: 2
         x: 1024
@@ -1738,21 +1174,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 20, y: 28}
-        - {x: 29, y: 22}
-        - {x: 40, y: 35}
-        - {x: 40, y: 57}
-        - {x: 21, y: 71}
-        - {x: 5, y: 71}
-        - {x: -8, y: 64}
-        - {x: -18, y: 18}
-        - {x: -18, y: -2}
-        - {x: 7, y: -2}
-        - {x: 14, y: 2}
-        - {x: 22, y: 19}
-        - {x: 22, y: 25}
-    - name: off_special_8
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: off_special_8
       rect:
         serializedVersion: 2
         x: 0
@@ -1762,17 +1187,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -18, y: 60}
-        - {x: -18, y: -2}
-        - {x: 22, y: -2}
-        - {x: 39, y: 8}
-        - {x: 39, y: 73}
-        - {x: 38, y: 75}
-        - {x: 21, y: 86}
-        - {x: 8, y: 86}
-        - {x: 3, y: 80}
-    - name: off_special_9
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: off_special_9
       rect:
         serializedVersion: 2
         x: 128
@@ -1782,30 +1200,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 14, y: 27}
-        - {x: 28, y: 68}
-        - {x: 28, y: 78}
-        - {x: 20, y: 86}
-        - {x: 14, y: 86}
-        - {x: 10, y: 82}
-        - {x: 10, y: 71}
-        - {x: 12, y: 69}
-        - {x: 10, y: 69}
-        - {x: 10, y: 72}
-        - {x: 8, y: 76}
-        - {x: -3, y: 78}
-        - {x: -20, y: 66}
-        - {x: -21, y: 63}
-        - {x: -22, y: 51}
-        - {x: -22, y: 41}
-        - {x: -19, y: 0}
-        - {x: -15, y: -2}
-        - {x: 7, y: -2}
-        - {x: 14, y: -1}
-        - {x: 17, y: 6}
-        - {x: 13, y: 8}
-    - name: off_special_10
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: off_special_10
       rect:
         serializedVersion: 2
         x: 256
@@ -1815,16 +1213,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -4, y: 95}
-        - {x: -6, y: 94}
-        - {x: -17, y: 75}
-        - {x: -17, y: -2}
-        - {x: 9, y: -2}
-        - {x: 18, y: 21}
-        - {x: 18, y: 89}
-        - {x: 15, y: 95}
-    - name: back_attack_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: back_attack_0
       rect:
         serializedVersion: 2
         x: 384
@@ -1834,15 +1226,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -15, y: 82}
-        - {x: -18, y: 79}
-        - {x: -18, y: -2}
-        - {x: 17, y: -2}
-        - {x: 25, y: 28}
-        - {x: 25, y: 73}
-        - {x: 5, y: 82}
-    - name: back_attack_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: back_attack_1
       rect:
         serializedVersion: 2
         x: 512
@@ -1852,22 +1239,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 17, y: 65}
-        - {x: -3, y: 81}
-        - {x: -15, y: 81}
-        - {x: -22, y: 79}
-        - {x: -36, y: 65}
-        - {x: -38, y: 61}
-        - {x: -38, y: 56}
-        - {x: -35, y: 53}
-        - {x: -34, y: 3}
-        - {x: -32, y: -1}
-        - {x: 14, y: -1}
-        - {x: 18, y: 6}
-        - {x: 25, y: 49}
-        - {x: 25, y: 64}
-    - name: back_attack_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: back_attack_2
       rect:
         serializedVersion: 2
         x: 640
@@ -1877,15 +1252,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -29, y: 83}
-        - {x: -63, y: 78}
-        - {x: -63, y: 37}
-        - {x: -40, y: -2}
-        - {x: 15, y: -2}
-        - {x: 15, y: 63}
-        - {x: -14, y: 83}
-    - name: back_attack_3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: back_attack_3
       rect:
         serializedVersion: 2
         x: 768
@@ -1895,16 +1265,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -41, y: 83}
-        - {x: -42, y: 81}
-        - {x: -42, y: 31}
-        - {x: -32, y: -2}
-        - {x: 6, y: -2}
-        - {x: 15, y: 1}
-        - {x: 15, y: 67}
-        - {x: -8, y: 83}
-    - name: grab_head_butt_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: grab_head_butt_0
       rect:
         serializedVersion: 2
         x: 896
@@ -1914,20 +1278,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 34, y: 54}
-        - {x: 34, y: 63}
-        - {x: 26, y: 64}
-        - {x: 8, y: 77}
-        - {x: 1, y: 79}
-        - {x: -10, y: 79}
-        - {x: -23, y: 66}
-        - {x: -23, y: -2}
-        - {x: 27, y: -2}
-        - {x: 26, y: 4}
-        - {x: 19, y: 28}
-        - {x: 33, y: 50}
-    - name: grab_head_butt_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: grab_head_butt_1
       rect:
         serializedVersion: 2
         x: 1024
@@ -1937,21 +1291,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 25, y: 65}
-        - {x: -21, y: 77}
-        - {x: -24, y: 77}
-        - {x: -33, y: 71}
-        - {x: -33, y: 39}
-        - {x: -31, y: 36}
-        - {x: -20, y: 33}
-        - {x: -26, y: 0}
-        - {x: -25, y: -2}
-        - {x: 28, y: -2}
-        - {x: 19, y: 27}
-        - {x: 34, y: 49}
-        - {x: 34, y: 63}
-    - name: grab_head_butt_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: grab_head_butt_2
       rect:
         serializedVersion: 2
         x: 0
@@ -1961,18 +1304,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 30, y: 72}
-        - {x: -20, y: 72}
-        - {x: -24, y: 66}
-        - {x: -26, y: 44}
-        - {x: -26, y: 0}
-        - {x: -23, y: -2}
-        - {x: 20, y: -2}
-        - {x: 25, y: 0}
-        - {x: 34, y: 27}
-        - {x: 34, y: 71}
-    - name: knife_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: knife_0
       rect:
         serializedVersion: 2
         x: 128
@@ -1982,13 +1317,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -16, y: 79}
-        - {x: -18, y: 65}
-        - {x: -18, y: -2}
-        - {x: 22, y: -2}
-        - {x: 22, y: 79}
-    - name: knife_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: knife_1
       rect:
         serializedVersion: 2
         x: 256
@@ -1998,15 +1330,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -4, y: 77}
-        - {x: -18, y: 66}
-        - {x: -18, y: -2}
-        - {x: 18, y: -2}
-        - {x: 44, y: 31}
-        - {x: 44, y: 64}
-        - {x: 21, y: 77}
-    - name: pipe_0
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: pipe_0
       rect:
         serializedVersion: 2
         x: 384
@@ -2016,15 +1343,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -28, y: 92}
-        - {x: -30, y: 87}
-        - {x: -30, y: 70}
-        - {x: -19, y: -2}
-        - {x: 15, y: -2}
-        - {x: 15, y: 75}
-        - {x: 13, y: 92}
-    - name: pipe_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: pipe_1
       rect:
         serializedVersion: 2
         x: 512
@@ -2034,15 +1356,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -11, y: 81}
-        - {x: -26, y: 56}
-        - {x: -26, y: -2}
-        - {x: 6, y: -2}
-        - {x: 26, y: 26}
-        - {x: 26, y: 72}
-        - {x: 11, y: 81}
-    - name: pipe_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: pipe_2
       rect:
         serializedVersion: 2
         x: 640
@@ -2052,17 +1369,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 19, y: 72}
-        - {x: 8, y: 63}
-        - {x: 1, y: 55}
-        - {x: -16, y: 12}
-        - {x: -17, y: 1}
-        - {x: -13, y: -2}
-        - {x: 40, y: -2}
-        - {x: 40, y: 62}
-        - {x: 34, y: 72}
-    - name: pipe_3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: pipe_3
       rect:
         serializedVersion: 2
         x: 768
@@ -2072,16 +1382,8 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.2631579}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 20, y: 69}
-        - {x: 2, y: 64}
-        - {x: -16, y: 29}
-        - {x: -16, y: 6}
-        - {x: -13, y: -2}
-        - {x: 40, y: -2}
-        - {x: 42, y: 9}
-        - {x: 42, y: 50}
-        - {x: 40, y: 69}
+      outline: []
+      tessellationDetail: -1
     outline: []
   spritePackingTag: 
   userData: 

@@ -1,0 +1,70 @@
+
+Axel"
+standing#"
+walk)"
+jump"
+prepare_jump"
+fall"
+land"	
+vault"
+failed_vault"
+
+grab_front"
+	grab_back"
+front_grabbed"
+back_grabbed"
+grab_hit"
+hit"
+knocked_down"
+
+lying_down"
+stand_up"
+shocked"
+pick"
+	grabbed_1"
+	grabbed_2"
+	grabbed_3"
+
+thrown"
+	grabbed_4"
+	grabbed_5"
+run$"
+roll_up"
+	roll_down"
+throw_front_to_back+"
+	back_slamA"
+static_jump¸"
+forward_jumpð"
+	jump_down"	
+punch"
+
+hard_punch"
+
+kick_1"
+
+kick_2"
+grab_forward_atack"
+grab_static_attack"
+def_special"
+
+offspeciald"	
+blitz0"
+back_attack"
+grab_forward_end"
+back_grab_swing"
+back_grab_throw-"
+baseball_swing"
+pipe_attack"
+toss_weapon"
+knife_attack"
+team_attackî"
+
+blitz_pipe0"
+blitz_sword?"
+offspecial_sword"
+blitz_10"
+blitz_2$"
+blitz_3I"
+recover_on_pit"
+
+kick_32abundle:Axel:axel_portrait

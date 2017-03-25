@@ -1,0 +1,2382 @@
+fileFormatVersion: 2
+guid: 3cc2218243fc04c3b9a71a30995ee4af
+timeCreated: 1490394442
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: 6 - Axel_0
+    21300002: 6 - Axel_1
+    21300004: 6 - Axel_2
+    21300006: 6 - Axel_3
+    21300008: 6 - Axel_4
+    21300010: 6 - Axel_5
+    21300012: 6 - Axel_6
+    21300014: 6 - Axel_7
+    21300016: 6 - Axel_8
+    21300018: 6 - Axel_9
+    21300020: 6 - Axel_10
+    21300022: 6 - Axel_11
+    21300024: 6 - Axel_12
+    21300026: 6 - Axel_13
+    21300028: 6 - Axel_14
+    21300030: 6 - Axel_15
+    21300032: 6 - Axel_16
+    21300034: 6 - Axel_17
+    21300036: 6 - Axel_18
+    21300038: 6 - Axel_19
+    21300040: 6 - Axel_20
+    21300042: 6 - Axel_21
+    21300044: 6 - Axel_22
+    21300046: 6 - Axel_23
+    21300048: 6 - Axel_24
+    21300050: 6 - Axel_25
+    21300052: 6 - Axel_26
+    21300054: 6 - Axel_27
+    21300056: 6 - Axel_28
+    21300058: 6 - Axel_29
+    21300060: 6 - Axel_30
+    21300062: 6 - Axel_31
+    21300064: 6 - Axel_32
+    21300066: 6 - Axel_33
+    21300068: 6 - Axel_34
+    21300070: 6 - Axel_35
+    21300072: 6 - Axel_36
+    21300074: 6 - Axel_37
+    21300076: 6 - Axel_38
+    21300078: 6 - Axel_39
+    21300080: 6 - Axel_40
+    21300082: 6 - Axel_41
+    21300084: 6 - Axel_42
+    21300086: 6 - Axel_43
+    21300088: 6 - Axel_44
+    21300090: 6 - Axel_45
+    21300092: 6 - Axel_46
+    21300094: 6 - Axel_47
+    21300096: 6 - Axel_48
+    21300098: 6 - Axel_49
+    21300100: 6 - Axel_50
+    21300102: 6 - Axel_51
+    21300104: 6 - Axel_52
+    21300106: 6 - Axel_53
+    21300108: 6 - Axel_54
+    21300110: 6 - Axel_55
+    21300112: 6 - Axel_56
+    21300114: 6 - Axel_57
+    21300116: 6 - Axel_58
+    21300118: 6 - Axel_59
+    21300120: 6 - Axel_60
+    21300122: 6 - Axel_61
+    21300124: 6 - Axel_62
+    21300126: 6 - Axel_63
+    21300128: 6 - Axel_64
+    21300130: 6 - Axel_65
+    21300132: 6 - Axel_66
+    21300134: 6 - Axel_67
+    21300136: 6 - Axel_68
+    21300138: 6 - Axel_69
+    21300140: 6 - Axel_70
+    21300142: 6 - Axel_71
+    21300144: 6 - Axel_72
+    21300146: 6 - Axel_73
+    21300148: 6 - Axel_74
+    21300150: 6 - Axel_75
+    21300152: 6 - Axel_76
+    21300154: 6 - Axel_77
+    21300156: 6 - Axel_78
+    21300158: 6 - Axel_79
+    21300160: 6 - Axel_80
+    21300162: 6 - Axel_81
+    21300164: 6 - Axel_82
+    21300166: 6 - Axel_83
+    21300168: 6 - Axel_84
+    21300170: 6 - Axel_85
+    21300172: 6 - Axel_86
+    21300174: 6 - Axel_87
+    21300176: 6 - Axel_88
+    21300178: 6 - Axel_89
+    21300180: 6 - Axel_90
+    21300182: 6 - Axel_91
+    21300184: 6 - Axel_92
+    21300186: 6 - Axel_93
+    21300188: 6 - Axel_94
+    21300190: 6 - Axel_95
+    21300192: 6 - Axel_96
+    21300194: 6 - Axel_97
+    21300196: 6 - Axel_98
+    21300198: 6 - Axel_99
+    21300200: 6 - Axel_100
+    21300202: 6 - Axel_101
+    21300204: 6 - Axel_102
+    21300206: 6 - Axel_103
+    21300208: 6 - Axel_104
+    21300210: 6 - Axel_105
+    21300212: 6 - Axel_106
+    21300214: 6 - Axel_107
+    21300216: 6 - Axel_108
+    21300218: 6 - Axel_109
+    21300220: 6 - Axel_110
+    21300222: 6 - Axel_111
+    21300224: 6 - Axel_112
+    21300226: 6 - Axel_113
+    21300228: 6 - Axel_114
+    21300230: 6 - Axel_115
+    21300232: 6 - Axel_116
+    21300234: 6 - Axel_117
+    21300236: 6 - Axel_118
+    21300238: 6 - Axel_119
+    21300240: 6 - Axel_120
+    21300242: 6 - Axel_121
+    21300244: 6 - Axel_122
+    21300246: 6 - Axel_123
+    21300248: 6 - Axel_124
+    21300250: 6 - Axel_125
+    21300252: 6 - Axel_126
+    21300254: 6 - Axel_127
+    21300256: 6 - Axel_128
+    21300258: 6 - Axel_129
+    21300260: 6 - Axel_130
+    21300262: 6 - Axel_131
+    21300264: 6 - Axel_132
+    21300266: 6 - Axel_133
+    21300268: 6 - Axel_134
+    21300270: 6 - Axel_135
+    21300272: 6 - Axel_136
+    21300274: 6 - Axel_137
+    21300276: 6 - Axel_138
+    21300278: 6 - Axel_139
+    21300280: 6 - Axel_140
+    21300282: 6 - Axel_141
+    21300284: 6 - Axel_142
+    21300286: 6 - Axel_143
+    21300288: 6 - Axel_144
+    21300290: 6 - Axel_145
+    21300292: 6 - Axel_146
+    21300294: 6 - Axel_147
+    21300296: 6 - Axel_148
+    21300298: 6 - Axel_149
+    21300300: 6 - Axel_150
+    21300302: 6 - Axel_151
+    21300304: 6 - Axel_152
+    21300306: 6 - Axel_153
+    21300308: 6 - Axel_154
+    21300310: 6 - Axel_155
+    21300312: 6 - Axel_156
+    21300314: 6 - Axel_157
+    21300316: 6 - Axel_158
+    21300318: 6 - Axel_159
+    21300320: 6 - Axel_160
+    21300322: 6 - Axel_161
+    21300324: 6 - Axel_162
+    21300326: 6 - Axel_163
+    21300328: 6 - Axel_164
+    21300330: 6 - Axel_165
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -2
+  maxTextureSize: 4096
+  textureSettings:
+    filterMode: 0
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 15
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: 6 - Axel_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2340
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_1
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 2340
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_2
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 2340
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_3
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 2340
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_4
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 2340
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_5
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 2340
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_6
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 2340
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_7
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 2340
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_8
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 2340
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_9
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 2340
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_10
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 2340
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_11
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 2340
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2160
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_13
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 2160
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_14
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 2160
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_15
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 2160
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_16
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 2160
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_17
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 2160
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_18
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 2160
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_19
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 2160
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_20
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 2160
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_21
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 2160
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_22
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 2160
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_23
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 2160
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1980
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_25
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1980
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_26
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1980
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_27
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 1980
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_28
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1980
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_29
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 1980
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_30
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 1980
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_31
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 1980
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_32
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1980
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_33
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 1980
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_34
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 1980
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_35
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 1980
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_36
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1800
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_37
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1800
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_38
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1800
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_39
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 1800
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_40
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1800
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_41
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 1800
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_42
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 1800
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_43
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 1800
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_44
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1800
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_45
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 1800
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_46
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 1800
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_47
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 1800
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1620
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_49
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1620
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_50
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1620
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_51
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 1620
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_52
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1620
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_53
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 1620
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_54
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 1620
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_55
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 1620
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_56
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1620
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_57
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 1620
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_58
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 1620
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_59
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 1620
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_60
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1440
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_61
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1440
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_62
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1440
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_63
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 1440
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_64
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1440
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_65
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 1440
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_66
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 1440
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_67
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 1440
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_68
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1440
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_69
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 1440
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_70
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 1440
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_71
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 1440
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_72
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1260
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_73
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1260
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_74
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1260
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_75
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 1260
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_76
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1260
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_77
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 1260
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_78
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 1260
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_79
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 1260
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_80
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1260
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_81
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 1260
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_82
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 1260
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_83
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 1260
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_84
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1080
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_85
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1080
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_86
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1080
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_87
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 1080
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_88
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1080
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_89
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 1080
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_90
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 1080
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_91
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 1080
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_92
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1080
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_93
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 1080
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_94
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 1080
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_95
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 1080
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_96
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 900
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_97
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 900
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_98
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 900
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_99
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 900
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_100
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 900
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_101
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 900
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_102
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 900
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_103
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 900
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_104
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 900
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_105
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 900
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_106
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 900
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_107
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 900
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_108
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 720
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_109
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 720
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_110
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 720
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_111
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 720
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_112
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 720
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_113
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 720
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_114
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 720
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_115
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 720
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_116
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 720
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_117
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 720
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_118
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 720
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_119
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 720
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_120
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 540
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_121
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 540
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_122
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 540
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_123
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 540
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_124
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 540
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_125
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 540
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_126
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 540
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_127
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 540
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_128
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 540
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_129
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 540
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_130
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 540
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_131
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 540
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_132
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 360
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_133
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 360
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_134
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 360
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_135
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 360
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_136
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 360
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_137
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 360
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_138
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 360
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_139
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 360
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_140
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 360
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_141
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 360
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_142
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 360
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_143
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 360
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_144
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 180
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_145
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 180
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_146
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 180
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_147
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 180
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_148
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 180
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_149
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 180
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_150
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 180
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_151
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 180
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_152
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 180
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_153
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 180
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_154
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 180
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_155
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 180
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_156
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_157
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_158
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_159
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_160
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_161
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 0
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_162
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 0
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_163
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 0
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_164
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 0
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 6 - Axel_165
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 0
+        width: 192
+        height: 180
+      alignment: 9
+      pivot: {x: 0.3360313, y: 0.29198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

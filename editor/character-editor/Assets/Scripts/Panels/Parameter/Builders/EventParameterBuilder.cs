@@ -191,9 +191,9 @@ namespace RetroBread{
 			public override string ToString(GenericParameter parameter){
 				string paramsString;
 				if (parameter.SafeBool (0)) {
-					parameter.SafeFloat(0) + "%, " + parameter.SafeFloat(1) + "%, " + parameter.SafeFloat(2) + "%";
+					paramsString = parameter.SafeFloat(0) + "%, " + parameter.SafeFloat(1) + "%, " + parameter.SafeFloat(2) + "%";
 				} else {
-					parameter.SafeFloat(0) + ", " + parameter.SafeFloat(1) + ", " + parameter.SafeFloat(2);
+					paramsString = parameter.SafeFloat(0) + ", " + parameter.SafeFloat(1) + ", " + parameter.SafeFloat(2);
 				}
 				return "inpulse"
 					+ SubjectString(parameter, 0)
