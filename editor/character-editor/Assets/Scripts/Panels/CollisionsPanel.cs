@@ -83,9 +83,11 @@ namespace RetroBread{
 			Editor.Box currentBox = currentCollision.boxesPerFrame[frameId];
 			_enabledToggle.isOn = currentCollision.enabledFrames[frameId];
 			if (currentBox != null){
-				_boxPanel.SetPoints(currentBox.pointOne, currentBox.pointTwo);
-			}else{
-				_boxPanel.SetPoints(FixedVector3.Zero, FixedVector3.Zero);
+				if (!(currentBox.pointOne.Equals(FixedVector3.Zero) && currentBox.pointTwo.Equals(FixedVector3.Zero))){
+					_boxPanel.SetPoints(currentBox.pointOne, currentBox.pointTwo);
+				}else if (_enabledToggle.isOn){
+					OnBoxChanged();
+				}
 			}
 			_boxPanel.SetInteractible(_enabledToggle.isOn);
 			_copyButton.interactable = _enabledToggle.isOn;
