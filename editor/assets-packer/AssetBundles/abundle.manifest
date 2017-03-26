@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 858544659
+CRC: 1658758994
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 5f8e7b84f28859b381bd6b056ac6a537
+    Hash: 17c2cf2f7f681e397e4befc452a19f37
   TypeTreeHash:
     serializedVersion: 2
     Hash: e27d5c94a5b9210ad2776257b243880f
@@ -47,18 +47,18 @@ ClassTypes:
   Script: {instanceID: 0}
 Assets:
 - Assets/Prefabs/Characters/Axel.prefab
+- Assets/__temp_clip_info__/3d_rocha clipInfo.bytes
 - Assets/Prefabs/Characters/bat.prefab
 - Assets/Prefabs/Characters/hd_axel.prefab
-- Assets/Prefabs/Characters/3d_rocha.prefab
 - Assets/__temp_clip_info__/sparks clipInfo.bytes
-- Assets/Prefabs/Characters/pixel_axel.prefab
-- Assets/__temp_clip_info__/3d_rocha clipInfo.bytes
 - Assets/__temp_clip_info__/Axel clipInfo.bytes
-- Assets/Characters/axel_portrait.jpg
+- Assets/Prefabs/Characters/3d_rocha.prefab
 - Assets/__temp_clip_info__/hd_axel clipInfo.bytes
-- Assets/Prefabs/Effects/sparks.prefab
-- Assets/Prefabs/Effects/sparks_particles.prefab
 - Assets/__temp_clip_info__/pixel_axel clipInfo.bytes
+- Assets/Prefabs/Characters/pixel_axel.prefab
+- Assets/Characters/axel_portrait.jpg
+- Assets/Prefabs/Effects/sparks.prefab
 - Assets/__temp_clip_info__/bat clipInfo.bytes
+- Assets/Prefabs/Effects/sparks_particles.prefab
 - Assets/Characters/axel_HD_portrait.jpg
 Dependencies: []

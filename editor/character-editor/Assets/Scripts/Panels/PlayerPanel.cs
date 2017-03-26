@@ -58,8 +58,8 @@ namespace RetroBread{
 
 		void OnFrameChanged(){
 			internalChange = true;
-			_frameInput.text = "" + CharacterEditor.Instance.SelectedFrame;
-			_slider.value = CharacterEditor.Instance.SelectedFrame * 1.0f / CurrentAnimationSize();
+			_frameInput.text = "" + (CharacterEditor.Instance.SelectedFrame+1);
+			_slider.value = CharacterEditor.Instance.SelectedFrame * 1.0f / (CurrentAnimationSize()-1);
 			UpdateModelAnimation();
 			internalChange = false;
 		}
@@ -112,8 +112,8 @@ namespace RetroBread{
 		public void OnFrameFieldChanged(string newFrameString){
 			if (internalChange) return;
 			int newFrame;
-			if (int.TryParse(newFrameString, out newFrame) && newFrame >= 0 && newFrame < CurrentAnimationSize()) {
-				CharacterEditor.Instance.SelectedFrame = newFrame;
+			if (int.TryParse(newFrameString, out newFrame) && newFrame >= 1 && newFrame <= CurrentAnimationSize()) {
+				CharacterEditor.Instance.SelectedFrame = (newFrame-1);
 			}
 		}
 

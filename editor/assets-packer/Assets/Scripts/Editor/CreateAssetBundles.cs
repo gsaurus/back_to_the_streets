@@ -60,9 +60,12 @@ public class CreateAssetBundles{
 				// num clips
 				writer.Write((uint)controller.animationClips.Length);
 				// write each clip name and size:
+				int numFrames;
 				foreach(AnimationClip clip in controller.animationClips){
 					writer.Write(clip.name);
-					writer.Write(Mathf.CeilToInt(clip.averageDuration / Time.fixedDeltaTime));
+					// Num frames is total lenght - 1
+					numFrames = Mathf.CeilToInt(clip.averageDuration / Time.fixedDeltaTime) - 1;
+					writer.Write(numFrames);
 				}
 				writer.Close();
 
