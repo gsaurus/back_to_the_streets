@@ -40,12 +40,12 @@ namespace RetroBread{
 		}
 		
 		public void SetPoints(FixedVector3 point1, FixedVector3 point2){
-			_x1Field.text = "" + point1.X;
-			_y1Field.text = "" + point1.Y;
-			_z1Field.text = "" + point1.Z;
-			_x2Field.text = "" + point2.X;
-			_y2Field.text = "" + point2.Y;
-			_z2Field.text = "" + point2.Z;
+			_x1Field.text = "" + (point1.X*15);
+			_y1Field.text = "" + (point1.Y*15);
+			_z1Field.text = "" + (point1.Z*15);
+			_x2Field.text = "" + ((point1.X - point2.X)*15);
+			_y2Field.text = "" + ((point1.Y - point2.Y)*15);
+			_z2Field.text = "" + ((point1.Z - point2.Z)*15);
 		}
 
 		public FixedVector3 GetPoint1(){
@@ -53,6 +53,7 @@ namespace RetroBread{
 			StringFieldUtils.TryEvaluate(_x1Field.text, out x);
 			StringFieldUtils.TryEvaluate(_y1Field.text, out y);
 			StringFieldUtils.TryEvaluate(_z1Field.text, out z);
+			x /= 15; y /= 15; z /= 15;
 			return new FixedVector3(x, y, z);
 		}
 
@@ -61,6 +62,9 @@ namespace RetroBread{
 			StringFieldUtils.TryEvaluate(_x2Field.text, out x);
 			StringFieldUtils.TryEvaluate(_y2Field.text, out y);
 			StringFieldUtils.TryEvaluate(_z2Field.text, out z);
+			x /= 15; y /= 15; z /= 15;
+			FixedVector3 p1 = GetPoint1();
+			x = (float)p1.X - x; y = (float)p1.Y - y; z = (float)p1.Z - z;
 			return new FixedVector3(x, y, z);
 		}
 
