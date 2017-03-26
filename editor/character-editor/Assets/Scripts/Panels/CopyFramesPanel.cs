@@ -44,10 +44,12 @@ namespace RetroBread{
 			List<bool> enablings;
 			if (isHitFrame){
 				Editor.HitBox hitBox = CharacterEditor.Instance.GetHitBox(listId);
+				hitBox.EnsureBoxExists(CharacterEditor.Instance.CurrentAnimation().numFrames-1);
 				boxes = hitBox.boxesPerFrame;
 				enablings = hitBox.enabledFrames;
 			}else {
 				Editor.CollisionBox collisionBox = CharacterEditor.Instance.GetCollisionBox(listId);
+				collisionBox.EnsureBoxExists(CharacterEditor.Instance.CurrentAnimation().numFrames-1);
 				boxes = collisionBox.boxesPerFrame;
 				enablings = collisionBox.enabledFrames;
 			}
@@ -58,12 +60,15 @@ namespace RetroBread{
 					int first;
 					int last;
 					if (int.TryParse(subComponents[0], out first) && int.TryParse(subComponents[1], out last)){
-						PopulateList(first, last, boxes, enablings);
+						first = Mathf.Clamp(first, 1, boxes.Count);
+						last = Mathf.Clamp(last, first, boxes.Count);
+						PopulateList(first-1, last-1, boxes, enablings);
 					}
 				}else{
 					int frameId;
-					if (int.TryParse(component, out frameId) && frameId >= 0 && frameId < boxes.Count){
-						SetBox(frameId, boxes, enablings);
+					if (int.TryParse(component, out frameId)){
+						frameId = Mathf.Clamp(frameId, 1, boxes.Count);
+						SetBox(frameId-1, boxes, enablings);
 					}
 				}
 			}
