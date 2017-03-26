@@ -64,6 +64,7 @@ namespace RetroBread{
 
 		public void OnChange(int itemId){
 			parameter.stringsList[paramItemId] = _dropdown.options[itemId].text;
+			CharacterEditor.Instance.RefreshEvents();
 		}
 
 

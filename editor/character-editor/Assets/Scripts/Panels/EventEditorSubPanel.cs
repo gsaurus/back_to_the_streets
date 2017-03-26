@@ -61,6 +61,8 @@ public class EventEditorSubPanel : MonoBehaviour {
 		}
 		UpdateParamsList();
 		UpdateTypesDropdown();
+		CheckParameterChanges();
+		UpdateParameter();
 	}
 
 

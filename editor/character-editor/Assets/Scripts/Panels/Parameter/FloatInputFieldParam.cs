@@ -52,8 +52,7 @@ namespace RetroBread{
 			float floatValue;
 			bool changed = false;
 			bool haveMinMax = minValue != maxValue || minValue != -1;
-			if (float.TryParse(text, out floatValue)) {
-
+			if (StringFieldUtils.TryEvaluate(text, out floatValue)) {
 				if (haveMinMax) {
 					if (floatValue < minValue) {
 						floatValue = minValue;
@@ -68,6 +67,7 @@ namespace RetroBread{
 					_field.text = "" + parameter.floatsList[paramItemId];
 				}
 			}
+			CharacterEditor.Instance.RefreshEvents();
 		}
 
 

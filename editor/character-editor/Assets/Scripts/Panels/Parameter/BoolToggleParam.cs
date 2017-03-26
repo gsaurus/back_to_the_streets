@@ -45,6 +45,7 @@ namespace RetroBread{
 
 		public void OnChange(bool value){
 			parameter.boolsList[paramItemId] = value;
+			CharacterEditor.Instance.RefreshEvents();
 		}
 
 

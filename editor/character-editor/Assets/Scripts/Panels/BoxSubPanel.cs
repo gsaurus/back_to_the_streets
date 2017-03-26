@@ -50,17 +50,17 @@ namespace RetroBread{
 
 		public FixedVector3 GetPoint1(){
 			float x, y, z;
-			float.TryParse(_x1Field.text, out x);
-			float.TryParse(_y1Field.text, out y);
-			float.TryParse(_z1Field.text, out z);
+			StringFieldUtils.TryEvaluate(_x1Field.text, out x);
+			StringFieldUtils.TryEvaluate(_y1Field.text, out y);
+			StringFieldUtils.TryEvaluate(_z1Field.text, out z);
 			return new FixedVector3(x, y, z);
 		}
 
 		public FixedVector3 GetPoint2(){
 			float x, y, z;
-			float.TryParse(_x2Field.text, out x);
-			float.TryParse(_y2Field.text, out y);
-			float.TryParse(_z2Field.text, out z);
+			StringFieldUtils.TryEvaluate(_x2Field.text, out x);
+			StringFieldUtils.TryEvaluate(_y2Field.text, out y);
+			StringFieldUtils.TryEvaluate(_z2Field.text, out z);
 			return new FixedVector3(x, y, z);
 		}
 

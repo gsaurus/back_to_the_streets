@@ -41,10 +41,12 @@ namespace RetroBread{
 //			newOptions.Add(Application.temporaryCachePath);
 //			newOptions.Add(Application.streamingAssetsPath);
 //			_eventsList.Options = newOptions;
+			RefreshEventsList();
 		}
 
 
 		void RefreshEventsList(){
+			if (refreshing) return;
 			CharacterAnimation currentAnim = CharacterEditor.Instance.CurrentAnimation();
 			if (currentAnim == null || currentAnim.events.Count == 0) {
 				_eventsList.Options = new List<string>();
@@ -52,15 +54,20 @@ namespace RetroBread{
 				_editButton.interactable = false;
 				return;
 			}
+			refreshing = true;
 			List<string> newEvents = new List<string>();
-			foreach (ConditionalEvent e in currentAnim.events) {
-				newEvents.Add(e.ToString());
+			int currentEventId = CharacterEditor.Instance.SelectedEventId;
+			for (int eventId = 0 ; eventId < currentAnim.events.Count ; ++eventId) {
+				CharacterEditor.Instance.SelectedEventId = eventId;
+				newEvents.Add(currentAnim.events[eventId].ToString());
 			}
+			CharacterEditor.Instance.SelectedEventId = currentEventId;
 			int currentSelection = CharacterEditor.Instance.SelectedEventId;
 			_eventsList.Options = newEvents;
 			_eventsList.SelectedItem = currentSelection;
 			_removeButton.interactable = true;
 			_editButton.interactable = true;
+			refreshing = false;
 		}
 
 		public void OnEventSelectionChanged(int itemId){

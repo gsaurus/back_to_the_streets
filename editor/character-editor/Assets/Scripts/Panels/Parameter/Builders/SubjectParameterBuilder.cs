@@ -19,8 +19,18 @@ public class SubjectParameterBuilder: ParameterBuilder {
 	private abstract class InternSubjectBuilder{
 		
 		public string typeName { get; private set; }
+		private bool isInToString = false;
+		public string ToString(GenericParameter parameter){
+			if (isInToString) {
+				return "ERROR - RECURSIVE SUBJECT";
+			}
+				isInToString = true;
+				string theToString = InternalToString(parameter);
+				isInToString = false;
+				return theToString;
+		}
 
-		public abstract string ToString(GenericParameter parameter);
+		public abstract string InternalToString(GenericParameter parameter);
 		public abstract void Build(GameObject parent, GenericParameter parameter);
 
 		public InternSubjectBuilder(string typeName){
@@ -96,7 +106,7 @@ public class SubjectParameterBuilder: ParameterBuilder {
     // 0: owner
     private class BuildOwnerSubject: InternSubjectBuilder{
         public BuildOwnerSubject():base("Owner"){}
-        public override string ToString(GenericParameter parameter){
+		public override string InternalToString(GenericParameter parameter){
             return "Owner" + SubjectString(parameter, 0);
         }
         public override void Build(GameObject parent, GenericParameter parameter){
@@ -107,7 +117,7 @@ public class SubjectParameterBuilder: ParameterBuilder {
     // 1: owner_or_self
     private class BuildOwnerOrSelfSubject: InternSubjectBuilder{
         public BuildOwnerOrSelfSubject():base("Owner or Self"){}
-        public override string ToString(GenericParameter parameter){
+		public override string InternalToString(GenericParameter parameter){
             return "OwnerOrSelf" + SubjectString(parameter, 0);
         }
         public override void Build(GameObject parent, GenericParameter parameter){
@@ -118,7 +128,7 @@ public class SubjectParameterBuilder: ParameterBuilder {
     // 2: parent
     private class BuildParentSubject: InternSubjectBuilder{
         public BuildParentSubject():base("Parent"){}
-        public override string ToString(GenericParameter parameter){
+		public override string InternalToString(GenericParameter parameter){
             return "Parent" + SubjectString(parameter, 0);
         }
         public override void Build(GameObject parent, GenericParameter parameter){
@@ -130,7 +140,7 @@ public class SubjectParameterBuilder: ParameterBuilder {
 	// 3: grabbed
 	private class BuildGrabbedSubject: InternSubjectBuilder{
 		public BuildGrabbedSubject():base("Anchored"){}
-		public override string ToString(GenericParameter parameter){
+		public override string InternalToString(GenericParameter parameter){
             string options = ParseOptionsList(parameter.SafeIntsListToString(0), parameter.SafeInt(1) == 0);
             return "Anchored" + SubjectString(parameter, 0) + "(" + options + ")";
 		}
@@ -146,7 +156,7 @@ public class SubjectParameterBuilder: ParameterBuilder {
 	// 4: hitter
 	private class BuildHitterSubject: InternSubjectBuilder{
 		public BuildHitterSubject():base("Hitter"){}
-		public override string ToString(GenericParameter parameter){
+		public override string InternalToString(GenericParameter parameter){
             string types = ParseOptionsList(parameter.SafeIntsListToString(0), parameter.SafeInt(2) == 0);
             string boxes = ParseOptionsList(parameter.SafeIntsListToString(1), parameter.SafeInt(3) == 0);
             return "Hitter" + SubjectString(parameter, 0) + "(types:" + types + ", boxes:" + boxes + ")"; 
@@ -166,7 +176,7 @@ public class SubjectParameterBuilder: ParameterBuilder {
 	// 5: hitten
 	private class BuildHittenSubject: InternSubjectBuilder{
 		public BuildHittenSubject():base("Hitten"){}
-        public override string ToString(GenericParameter parameter){
+		public override string InternalToString(GenericParameter parameter){
             string types = ParseOptionsList(parameter.SafeIntsListToString(0), parameter.SafeInt(1) == 0);
             string boxes = ParseOptionsList(parameter.SafeIntsListToString(1), parameter.SafeInt(2) == 0);
             return "Hitten" + SubjectString(parameter, 0) + "(types:" + types + ", boxes:" + boxes + ")"; 
@@ -185,7 +195,7 @@ public class SubjectParameterBuilder: ParameterBuilder {
 	// 6: colliding
 	private class BuildCollidingSubject: InternSubjectBuilder{
 		public BuildCollidingSubject():base("Colliding"){}
-		public override string ToString(GenericParameter parameter){
+		public override string InternalToString(GenericParameter parameter){
             return "Colliding" + SubjectString(parameter, 0);
 		}
 		public override void Build(GameObject parent, GenericParameter parameter){
@@ -197,7 +207,7 @@ public class SubjectParameterBuilder: ParameterBuilder {
 	// 7: all subjects
 	private class AllSubject: InternSubjectBuilder{
 		public AllSubject():base("All"){}
-		public override string ToString(GenericParameter parameter){
+		public override string InternalToString(GenericParameter parameter){
 			return "All";
 		}
 		public override void Build(GameObject parent, GenericParameter parameter){

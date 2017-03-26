@@ -50,9 +50,11 @@ namespace RetroBread{
 
 		public void OnChange(string text){
 			int intValue;
+			float floatValue;
 			bool changed = false;
 			bool haveMinMax = minValue != maxValue || minValue != -1;
-			if (int.TryParse(text, out intValue)) {
+			if (StringFieldUtils.TryEvaluate(text, out floatValue)) {
+				intValue = (int) floatValue;
 				if (haveMinMax) {
 					if (intValue < minValue) {
 						intValue = minValue;
@@ -67,6 +69,7 @@ namespace RetroBread{
 					_field.text = "" + intValue;
 				}
 			}
+			CharacterEditor.Instance.RefreshEvents();
 		}
 
 
