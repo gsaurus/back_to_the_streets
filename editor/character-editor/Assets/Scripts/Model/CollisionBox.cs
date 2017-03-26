@@ -33,17 +33,19 @@ namespace RetroBread.Editor{
 		public static CollisionBox LoadFromStorage(Storage.CollisionBox storageBox, Storage.Character storageCharacter){
 
 			CollisionBox newBox = new CollisionBox();
-
-			// Populate boxes
-			newBox.boxesPerFrame = new List<Box>(storageBox.boxIds.Length);
-			newBox.enabledFrames = new List<bool>(storageBox.boxIds.Length); 
-			foreach(int boxId in storageBox.boxIds){
-				if (boxId == Box.invalidBoxId) {
-					newBox.enabledFrames.Add(false);
-					newBox.boxesPerFrame.Add(new Box());
-				}else {
-					newBox.enabledFrames.Add(true);
-					newBox.boxesPerFrame.Add(Box.LoadFromStorage(storageCharacter.boxes[boxId]));
+			int[] boxIds = storageBox.boxIds;
+			if (boxIds != null && boxIds.Length > 0){
+				// Populate boxes
+				newBox.boxesPerFrame = new List<Box>(boxIds.Length);
+				newBox.enabledFrames = new List<bool>(boxIds.Length); 
+				foreach(int boxId in storageBox.boxIds){
+					if (boxId == Box.invalidBoxId) {
+						newBox.enabledFrames.Add(false);
+						newBox.boxesPerFrame.Add(new Box());
+					}else {
+						newBox.enabledFrames.Add(true);
+						newBox.boxesPerFrame.Add(Box.LoadFromStorage(storageCharacter.boxes[boxId]));
+					}
 				}
 			}
 

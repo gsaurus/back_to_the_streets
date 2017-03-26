@@ -63,8 +63,9 @@ public class CreateAssetBundles{
 				int numFrames;
 				foreach(AnimationClip clip in controller.animationClips){
 					writer.Write(clip.name);
-					// Num frames is total lenght - 1
-					numFrames = Mathf.CeilToInt(clip.averageDuration / Time.fixedDeltaTime) - 1;
+					numFrames = Mathf.CeilToInt(clip.averageDuration / Time.fixedDeltaTime);
+					// Num frames is total lenght - 1, except if there is one frame, in which it lasts for 1 frame
+					if (numFrames > 1) numFrames -= 1;
 					writer.Write(numFrames);
 				}
 				writer.Close();
