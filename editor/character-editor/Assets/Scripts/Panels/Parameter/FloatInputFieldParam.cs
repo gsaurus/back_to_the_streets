@@ -67,7 +67,6 @@ namespace RetroBread{
 					_field.text = "" + parameter.floatsList[paramItemId];
 				}
 			}
-			CharacterEditor.Instance.RefreshEvents();
 		}
 
 

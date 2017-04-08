@@ -69,7 +69,6 @@ namespace RetroBread{
 					_field.text = "" + intValue;
 				}
 			}
-			CharacterEditor.Instance.RefreshEvents();
 		}
 
 

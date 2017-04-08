@@ -80,69 +80,70 @@ public class VersusWorldController:Controller<WorldModel>{
 			model.teamsModelId = StateManager.state.AddModel(teamsManagerModel);
 
 
-			// Create some dummy enemy
-			FixedVector3 initialPosition = GetRandomSpawnPosition(model);
-			playerModel = new GameEntityModel(
-				StateManager.state,
-				physicsModel,
-				new PhysicPointModel(
-					null,
-					initialPosition,
-					new FixedVector3(0, 0.5, 0),
-					DefaultVCFactoryIds.PhysicPointControllerFactoryId,
-					SorVCFactories.Point2DViewFactoryId,
-					DefaultUpdateOrder.PhysicsUpdateOrder
-				),
-				new AnimationModel(
-					null,
-					"Axel_HD",
-					"idle",
-					CharacterLoader.GetCharacterSkinName("Axel_HD", 0)
-				),
-				null, // no input
-				DefaultVCFactoryIds.GameEntityControllerFactoryId,
-				SorVCFactories.Entity2DViewFactoryId,
-				DefaultUpdateOrder.EntitiesUpdateOrder
-			);
-			// Model initial state
-			GameEntityModel playerEntity = (GameEntityModel)playerModel;
-			playerEntity.mIsFacingRight = initialPosition.X < 0;
-			// hardcoded energy
-			playerEntity.customVariables["energy"] = 100;
-			teamsManagerModel.teams[2].entities.Add(StateManager.state.AddModel(playerModel));
+//			// Create some dummy enemy
+//			FixedVector3 initialPosition = GetRandomSpawnPosition(model);
+//			playerModel = new GameEntityModel(
+//				StateManager.state,
+//				physicsModel,
+//				new PhysicPointModel(
+//					null,
+//					initialPosition,
+//					new FixedVector3(0, 0.5, 0),
+//					DefaultVCFactoryIds.PhysicPointControllerFactoryId,
+//					SorVCFactories.Point2DViewFactoryId,
+//					DefaultUpdateOrder.PhysicsUpdateOrder
+//				),
+//				new AnimationModel(
+//					null,
+//					"Axel",
+//					"standing",
+//					CharacterLoader.GetCharacterSkinName("Axel", 0)
+//				),
+//				null, // no input
+//				DefaultVCFactoryIds.GameEntityControllerFactoryId,
+//				SorVCFactories.Entity2DViewFactoryId,
+//				DefaultUpdateOrder.EntitiesUpdateOrder
+//			);
+//			// Model initial state
+//			GameEntityModel playerEntity = (GameEntityModel)playerModel;
+//			playerEntity.mIsFacingRight = initialPosition.X < 0;
+//			// hardcoded energy
+//			playerEntity.customVariables["energy"] = 100;
+//			teamsManagerModel.teams[2].entities.Add(StateManager.state.AddModel(playerModel));
 
 
-			// Create some weapon
-			initialPosition = new FixedVector3(2, 8, 3);
-			playerModel = new GameEntityModel(
-				StateManager.state,
-				physicsModel,
-				new PhysicPointModel(
-					null,
-					initialPosition,
-					new FixedVector3(0, 0.5, 0),
-					DefaultVCFactoryIds.PhysicPointControllerFactoryId,
-					SorVCFactories.Point2DViewFactoryId,
-					DefaultUpdateOrder.PhysicsUpdateOrder
-				),
-				new AnimationModel(
-					null,
-					"Bat_HD",
-					"bat_air",
-					CharacterLoader.GetCharacterSkinName("Bat_HD", 0)
-				),
-				null, // no input
-				DefaultVCFactoryIds.GameEntityControllerFactoryId,
-				SorVCFactories.Entity2DViewFactoryId,
-				DefaultUpdateOrder.EntitiesUpdateOrder
-			);
+//			// Create some weapon
+//			initialPosition = new FixedVector3(2, 8, 3);
+//			playerModel = new GameEntityModel(
+//				StateManager.state,
+//				physicsModel,
+//				new PhysicPointModel(
+//					null,
+//					initialPosition,
+//					new FixedVector3(0, 0.5, 0),
+//					DefaultVCFactoryIds.PhysicPointControllerFactoryId,
+//					SorVCFactories.Point2DViewFactoryId,
+//					DefaultUpdateOrder.PhysicsUpdateOrder
+//				),
+//				new AnimationModel(
+//					null,
+//					"Bat_HD",
+//					"bat_air",
+//					CharacterLoader.GetCharacterSkinName("Bat_HD", 0)
+//				),
+//				null, // no input
+//				DefaultVCFactoryIds.GameEntityControllerFactoryId,
+//				SorVCFactories.Entity2DViewFactoryId,
+//				DefaultUpdateOrder.EntitiesUpdateOrder
+//			);
+
 //			// Model initial state
 //			playerEntity = (GameEntityModel)playerModel;
 //			playerEntity.isFacingRight = initialPosition.X < 0;
 //			// hardcoded energy
 //			playerEntity.customVariables["energy"] = 100;
 			// Goodies going on team 0
-			teamsManagerModel.teams[0].entities.Add(StateManager.state.AddModel(playerModel));
+//			teamsManagerModel.teams[0].entities.Add(StateManager.state.AddModel(playerModel));
 
 		} else {
 			teamsManagerModel = StateManager.state.GetModel(model.teamsModelId) as TeamsManagerModel;
@@ -197,9 +198,9 @@ public class VersusWorldController:Controller<WorldModel>{
 					),
 					new AnimationModel(
 						null,
-						"Axel_HD",
-						"idle",
-						CharacterLoader.GetCharacterSkinName("Axel_HD", 0)
+						"Axel",
+						"standing",
+						CharacterLoader.GetCharacterSkinName("Axel", 0)
 					),
 					inputModel,
 					DefaultVCFactoryIds.GameEntityControllerFactoryId,
@@ -310,10 +311,11 @@ public class VersusWorldController:Controller<WorldModel>{
 //		HUDLoader.LoadHud("hud_bundle");
 
 		// TODO: setup based on players added
-		CharacterLoader.LoadCharacter("Axel_HD");
-		CharacterLoader.LoadCharacter("Bat_HD");
-		CharacterLoader.LoadCharacter("happy char");
-		CharacterLoader.LoadCharacter("Axel_px");
+		CharacterLoader.LoadCharacter("Axel");
+//		CharacterLoader.LoadCharacter("Axel_HD");
+//		CharacterLoader.LoadCharacter("Bat_HD");
+//		CharacterLoader.LoadCharacter("happy char");
+//		CharacterLoader.LoadCharacter("Axel_px");
 
 	}
 

@@ -46,7 +46,6 @@ namespace RetroBread{
 
 		public void OnChange(string text){
 			parameter.stringsList[paramItemId] = text;
-			CharacterEditor.Instance.RefreshEvents();
 		}
 
 

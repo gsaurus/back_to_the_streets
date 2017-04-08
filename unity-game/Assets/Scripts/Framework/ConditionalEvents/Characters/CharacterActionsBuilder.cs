@@ -33,6 +33,7 @@ namespace RetroBread{
 
 		// The public builder method
 		public static List<EventAction<GameEntityModel>> Build(Storage.Character charData, int[] eventIds){
+			if (eventIds == null || eventIds.Length == 0) return new List<EventAction<GameEntityModel>>();
 			List<EventAction<GameEntityModel>> actions = new List<EventAction<GameEntityModel>>(eventIds.Length);
 			EventAction<GameEntityModel> action;
 			foreach (int eventId in eventIds) {

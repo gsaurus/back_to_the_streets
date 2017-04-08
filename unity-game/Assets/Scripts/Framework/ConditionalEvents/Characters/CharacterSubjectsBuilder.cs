@@ -8,7 +8,8 @@ namespace RetroBread{
 public static class CharacterSubjectsBuilder {
 
 	public enum PredefinedSubjects {
-		none			= -1,
+		none			= -2,
+		globalVar		= -1,
 		self			= 0
 	}
 
@@ -45,14 +46,15 @@ public static class CharacterSubjectsBuilder {
 
 	// The public builder method
 	public static List<EventSubject<GameEntityModel>> Build(Storage.Character charData, int[] subjectIds){
-		if (subjectIds == null) return new List<EventSubject<GameEntityModel>>();
-		List<EventSubject<GameEntityModel>> subjects = new List<EventSubject<GameEntityModel>>(subjectIds.Length);EventSubject<GameEntityModel> subject;
+		List<EventSubject<GameEntityModel>> subjects = new List<EventSubject<GameEntityModel>>(subjectIds == null ? 1 : subjectIds.Length);
 
 		// Build default subjects
 		subjects.Add(BuildDefaultSubject(GetSelf));
+		if (subjectIds == null) return subjects;
 		int numDefaultSubjects = subjects.Count;
 
 		// Build custom subjects
+		EventSubject<GameEntityModel> subject;
 		foreach (int subjectId in subjectIds) {
 			subject = BuildFromParameter(charData.genericParameters[subjectId], numDefaultSubjects);
 			if (subject != null) {

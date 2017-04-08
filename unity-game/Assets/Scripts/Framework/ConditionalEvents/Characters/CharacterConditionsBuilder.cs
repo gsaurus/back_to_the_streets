@@ -119,11 +119,11 @@ namespace RetroBread{
 			// If it's equal to a static frame, no delegate required, return frame directly
 			if (subjectId == (int)CharacterSubjectsBuilder.PredefinedSubjects.self
 				&& comparisonOperator == ConditionUtils<GameEntityModel>.ComparisonOperation.equal
-				&& numeratorSubjectId == (int)CharacterSubjectsBuilder.PredefinedSubjects.none
+				&& numeratorSubjectId-2 == (int)CharacterSubjectsBuilder.PredefinedSubjects.none
 			){
 				keyFrame = staticComparisonFrame;
 				if (keyFrame < 0)
-					keyFrame = animation.numFrames;
+					keyFrame = animation.numFrames - 1;
 				return null;
 			}
 
@@ -297,7 +297,7 @@ namespace RetroBread{
 			return delegate(GameEntityModel mainModel, List<GameEntityModel>[] subjectModels){
 				int varValue;
 				if (!TryGetVariableValue(mainModel, varName, out varValue)){
-					return false;
+					varValue = 0;
 				}
 				return CompareWithNumerator(mainModel, numeratorSubjectId, numeratorSubjectVarName, varValue, staticComparisonValue, comparisonOperator, subjectModels);
 			};
@@ -431,9 +431,10 @@ namespace RetroBread{
 			int variableValue;
 			string resultingText = text;
 			foreach (Group g in groups) {
-				if (TryGetVariableValue(model, g.Value, out variableValue)){
-					resultingText.Replace(g.Value, variableValue + "");
+				if (!TryGetVariableValue(model, g.Value, out variableValue)){
+					variableValue = 0;
 				}
+				resultingText.Replace(g.Value, variableValue + "");
 			}
 			return resultingText;
 		}
@@ -447,7 +448,7 @@ namespace RetroBread{
 				return true;
 			}
 			// Look at model variables
-			if (model.customVariables.TryGetValue (varName, out varValue)){
+			if (model.customVariables.TryGetValue(varName, out varValue)){
 				return true;
 			}
 			varValue = -1;
@@ -489,7 +490,7 @@ namespace RetroBread{
 			foreach (GameEntityModel comparisonModel in comparisonSubject) {
 
 				if (!TryGetVariableValue(comparisonModel, numeratorSubjectVarName, out variableValue)) {
-					return false;
+					variableValue = 0;
 				}
 				if (!ConditionUtils<GameEntityModel>.Compare(comparisonOperator, comparisonValue, variableValue)){
 					return false;
