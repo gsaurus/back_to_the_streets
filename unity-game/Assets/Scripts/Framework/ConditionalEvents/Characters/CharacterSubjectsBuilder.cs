@@ -302,34 +302,34 @@ public static class CharacterSubjectsBuilder {
 	// Filter hit by types list
 	private static bool isHitConformingType(HitInformation hit, AnyOrAllOptions typesOptions, int[] types){
 		if (typesOptions == AnyOrAllOptions.anyOf){
-			return types.Contains((int)hit.hitData.type);
+			return types != null && types.Contains((int)hit.hitData.type);
 		} else{
-			return !types.Contains((int)hit.hitData.type);
+			return types == null || !types.Contains((int)hit.hitData.type);
 		}
 	}
 
 	// Filter hit by collision IDs list
 	private static bool isHitConformingCollisionId(HitInformation hit, AnyOrAllOptions collisionIdsOptions, int[] collisionIds){
 		if (collisionIdsOptions == AnyOrAllOptions.anyOf){
-			return collisionIds.Contains(hit.collisionId);
+				return collisionIds != null && collisionIds.Contains(hit.collisionId);
 		} else{
-			return !collisionIds.Contains(hit.collisionId);
+				return collisionIds == null || !collisionIds.Contains(hit.collisionId);
 		}
 	}
 
 	// Filter hit by hit IDs list
 	private static bool isHitConformingHitId(HitInformation hit, AnyOrAllOptions hitIdsOptions, int[] hitIds){
 		if (hitIdsOptions == AnyOrAllOptions.anyOf){
-			return hitIds.Contains(hit.hitData.hitboxID);
+			return hitIds != null && hitIds.Contains(hit.hitData.hitboxID);
 		} else{
-			return !hitIds.Contains(hit.hitData.hitboxID);
+				return hitIds == null || !hitIds.Contains(hit.hitData.hitboxID);
 		}
 	}
 
 	// Filter hit by hitter entity location
 	private static GameEntityModel getHitEntityIfConformingOrientationOptions(HitInformation hit, OrientationOptions orientationOptions, GameEntityModel model){
-		if (orientationOptions == OrientationOptions.any) return null;
 		GameEntityModel hitterModel = StateManager.state.GetModel(hit.entityId) as GameEntityModel;
+		if (orientationOptions == OrientationOptions.any) return hitterModel;
 
 		PhysicPointModel modelPoint = GameEntityController.GetPointModel(model);
 		PhysicPointModel hitterPoint = GameEntityController.GetPointModel(hitterModel);

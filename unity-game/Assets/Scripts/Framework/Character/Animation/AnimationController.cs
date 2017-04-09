@@ -119,9 +119,9 @@ public class AnimationController:Controller<AnimationModel>{
 	protected override void Update(AnimationModel model){
 
 		GameEntityModel entityModel = StateManager.state.GetModel(model.ownerId) as GameEntityModel;
-		if (entityModel != null && entityModel.pauseTimer > 0){
-			return;
-		}
+//		if (entityModel != null && entityModel.pauseTimer > 0){
+//			return;
+//		}
 
 		// reset animation & frame changed variables
 		model.ResetNextParameters();
