@@ -18,7 +18,7 @@ public abstract class ParameterBuilder{
 
 
 	protected static string SafeToString(string[] stringsArray, int type, string kind) {
-		if (type >= 0 && type < stringsArray.Length) {
+		if (stringsArray != null && type >= 0 && type < stringsArray.Length) {
             return stringsArray[type].ToLower();
 		}
 		return "<invalid " + kind + ">";

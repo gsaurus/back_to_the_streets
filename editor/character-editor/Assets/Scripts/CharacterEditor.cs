@@ -437,7 +437,7 @@ public class CharacterEditor : SingletonMonoBehaviour<CharacterEditor> {
 
 	public ConditionalEvent CurrentEvent(){
 		CharacterAnimation currentAnim = CurrentAnimation();
-		if (currentAnim == null || currentAnim.events.Count == 0) {
+		if (currentAnim == null || currentAnim.events.Count <= selectedEventId) {
 			return null;
 		}
 		return currentAnim.events[selectedEventId];
