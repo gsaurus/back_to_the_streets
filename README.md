@@ -10,12 +10,13 @@
 7. Run, and you should see your characters in action.
 
 ## Workflow to edit source code
-BTTS code relyes in a pure model-view-controller architecture.
+BTTS code relies in a pure model-view-controller architecture.
 You can edit View and Controller code directly on the unity-game project, but the Model code is in separate projects.
 In the folder data-model you find:
 * storage model: entities storage format, shared by the editors and the game
-* engine model: 
-The serializer projects are directly related with protocol buffeers serialization.
+* engine model: low level data information (generic entities, etc)
+* game model: game specific information
+* The serializer projects are directly related with protocol buffers serialization.
 When you edit the model, the resulting dlls must be copied to the editor and unity-game projects. Ideally they all share it
-but at the present momment they have to be copied around. To do so use the command "build_all" passing "Debug" as argument.
+but at the present moment they have to be copied around. To do so use the command "build_all" passing "Debug" as argument.
 This command will compile the model sources into dlls, and copy them to editor and unity-game projects
